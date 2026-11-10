@@ -1,0 +1,43 @@
+suppressPackageStartupMessages({library(haven); library(dplyr)})
+base <- "<repo>/benchmark/.cache/claude-code/balan-2022-local-elites-state-capacity/blind/2026-11-10-b/mount/balan_2022_local_elites_state_capacity/Replication Materials - Updated October 2025/Data/01_base"
+rd <- function(f, ...) read_dta(file.path(base, f), ...)
+lab <- function(x) { l <- attr(x, "labels"); if (!is.null(l)) print(l) }
+ra <- rd("admin_data/randomization_assignment.dta")
+rs <- rd("admin_data/randomization_schedule.dta")
+st <- rd("admin_data/stratum.dta")
+tn <- rd("admin_data/tax_payments_neighborhoods.dta")
+cat("--- treatment labels\n"); lab(ra$treatment); lab(rs$treatment)
+cat("--- ra treat x rs treat\n"); m <- merge(ra[,c("a7","treatment","stratum")], rs[,c("a7","treatment","month")], by="a7", suffixes=c(".ra",".rs"))
+print(table(as.numeric(m$treatment.ra), as.numeric(m$treatment.rs)))
+cat("--- month x treatment (rs)\n"); print(table(m$month, as.numeric(m$treatment.rs)))
+cat("--- tax_payments_neighborhoods\n"); print(head(as.data.frame(tn), 5)); for (v in names(tn)) {cat(v, attr(tn[[v]],"label"), "\n"); lab(tn[[v]])}
+mm <- merge(m, tn[,c("a7","stratum","program","program_start")], by="a7")
+cat("strata ra vs tn identical:", all(mm$stratum.x == mm$stratum.y), "\n")
+print(table(as.numeric(mm$program), as.numeric(mm$treatment.rs)))
+print(table(mm$program_start, mm$month))
+ms <- merge(ra[,c("a7","stratum")], st[,c("a7","stratum")], by="a7"); cat("ra vs stratum.dta same:", all(ms$stratum.x==ms$stratum.y), length(unique(ms$stratum.y)), "\n")
+# registration
+reg <- rd("admin_data/registration_noPII.dta")
+cat("--- registration filters\n")
+for (v in c("carto_pay","first","who","house","exempt","tot_complete","double_sensi","dup_poly","pilot","tmt","commune")) { cat(v, "\n"); print(table(as.numeric(reg[[v]]), useNA="ifany")); lab(reg[[v]]) }
+cat("a7 in randomization:", sum(reg$a7 %in% ra$a7), "\n")
+cat("dup compound1:", sum(duplicated(reg$compound1)), "\n")
+r2 <- reg %>% filter(a7 %in% ra$a7)
+print(table(tot=r2$tot_complete, pilot=r2$pilot, useNA="ifany"))
+print(table(carto=as.numeric(r2$carto_pay), dup=r2$dup_poly, useNA="ifany"))
+print(table(a7eq = r2$a7 == r2$a7_compound, useNA="ifany"))
+print(table(a7beq = r2$a7 == r2$a7b, useNA="ifany"))
+cat("compound1 %/% 1000 == a7:", mean(r2$compound1 %/% 1000 == r2$a7), "\n")
+x <- r2 %>% filter(tot_complete==1, pilot==0); cat("tot1 pilot0:", nrow(x), " dup cmp:", sum(duplicated(x$compound1)), "\n")
+x2 <- x %>% filter(!duplicated(compound1)); cat("after dedup", nrow(x2), "\n")
+x3 <- x2 %>% left_join(rs[,c("a7","treatment")], by="a7"); print(table(as.numeric(x3$treatment)))
+print(table(month=format(x3$today, "%m"), tr=as.numeric(x3$treatment), useNA="ifany"))
+# payments
+tp <- rd("admin_data/tax_payments_noPII.dta")
+cat("--- payments\n")
+for (v in c("paid","error_code","unmatched_compound","dup_receipt","mult_tax","lateCollection","rate_verified","house","error_rate")) { cat(v, "\n"); print(table(as.numeric(tp[[v]]), useNA="ifany")); lab(tp[[v]]) }
+print(table(tp$amountCF, useNA="ifany"))
+cat("dup compound in payments:", sum(duplicated(tp$compound1[!is.na(tp$compound1)])), "\n")
+cat("pay cmp in reg x2:", sum(tp$compound1 %in% x2$compound1), "\n")
+print(table(paid=as.numeric(tp$paid), inreg=tp$compound1 %in% x2$compound1, useNA="ifany"))
+print(table(unm=tp$unmatched_compound, inreg=tp$compound1 %in% x2$compound1, useNA="ifany"))

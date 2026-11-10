@@ -1,0 +1,114 @@
+Neighborhoods by de facto arm:
+
+  0   1   2   3   4 
+  5 110 111  80  50 
+Periods arms 2 vs 1: window 2018-06-20 to 2018-12-09
+   period
+arm  1  2  3 <NA>
+  1 41 32 18   19
+  2 33 36 42    0
+Periods arms 3 vs 1: window 2018-06-30 to 2018-11-27
+   period
+arm  1  2  3 <NA>
+  1 30 31 14   35
+  3 30 30 20    0
+Payers with imputed revenue: 7 
+                             t4_1               t4_2               t4_4
+Dependent Var.:              paid               paid               paid
+                                                                       
+local           0.0244** (0.0076) 0.0425*** (0.0065) 0.0431*** (0.0065)
+Fixed-Effects:  ----------------- ------------------ ------------------
+stratum                       Yes                Yes                Yes
+period                         No                Yes                Yes
+house_f                        No                 No                Yes
+_______________ _________________ __________________ __________________
+S.E.: Clustered            by: a7             by: a7             by: a7
+Observations               29,367             27,083             27,081
+R2                        0.01385            0.01917            0.02006
+Within R2                 0.00190            0.00565            0.00581
+
+                              t4_5            t4b_2            t4b_4
+Dependent Var.:               paid          revenue          revenue
+                                                                    
+local           0.0520*** (0.0074) 100.1*** (22.25) 92.06*** (19.99)
+Fixed-Effects:  ------------------ ---------------- ----------------
+stratum                        Yes              Yes              Yes
+period                         Yes              Yes              Yes
+house_f                        Yes               No              Yes
+_______________ __________________ ________________ ________________
+S.E.: Clustered             by: a7           by: a7           by: a7
+Observations                23,234           27,083           27,081
+R2                         0.02400          0.01644          0.02696
+Within R2                  0.00738          0.00220          0.00188
+---
+Signif. codes: 0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+                            t7_1          t7_2
+Dependent Var.:             paid       revenue
+                                              
+cli             0.0199* (0.0080) 30.41 (21.77)
+Fixed-Effects:  ---------------- -------------
+stratum                      Yes           Yes
+period                       Yes           Yes
+house_f                      Yes           Yes
+_______________ ________________ _____________
+S.E.: Clustered           by: a7        by: a7
+Observations              20,386        20,386
+R2                       0.02179       0.03234
+Within R2                0.00151       0.00027
+---
+Signif. codes: 0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+                                t8
+Dependent Var.:               paid
+                                  
+pay_ease        0.0593*** (0.0068)
+Fixed-Effects:  ------------------
+house_f                        Yes
+stratum                        Yes
+_______________ __________________
+S.E.: Clustered             by: a7
+Observations                 8,623
+R2                         0.05915
+Within R2                  0.02033
+---
+Signif. codes: 0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+                             t6
+Dependent Var.:      visit_post
+                               
+local           0.0345 (0.0253)
+Fixed-Effects:  ---------------
+house_f                     Yes
+stratum                     Yes
+period                      Yes
+_______________ _______________
+S.E.: Clustered          by: a7
+Observations             16,068
+R2                      0.02772
+Within R2               0.00104
+---
+Signif. codes: 0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+                              t5
+Dependent Var.:       paid_bribe
+                                
+local           0.0138. (0.0074)
+Fixed-Effects:  ----------------
+stratum                      Yes
+_______________ ________________
+S.E.: Clustered           by: a7
+Observations               1,217
+R2                       0.03426
+Within R2                0.00248
+---
+Signif. codes: 0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+RESULT:compliance_local_table4_panelA_col1=0.024357
+RESULT:compliance_local_table4_panelA_col2=0.042499
+RESULT:compliance_local_house_fe_table4_panelA_col4=0.043119
+RESULT:compliance_local_exempt_excluded_table4_panelA_col5=0.052015
+RESULT:revenue_local_table4_panelB_col2=100.096189
+RESULT:revenue_local_house_fe_table4_panelB_col4=92.059900
+RESULT:n_obs_table4_col1=29367.000000
+RESULT:n_obs_table4_col2=27083.000000
+RESULT:paid_bribe_endline_local_table5_panelB=0.013748
+RESULT:visited_by_collector_local_table6_col1=0.034447
+RESULT:compliance_cli_table7_col1=0.019919
+RESULT:revenue_cli_table7_col2=30.413935
+RESULT:compliance_ease_of_payment_cli_table8_panelA_col2=0.059271

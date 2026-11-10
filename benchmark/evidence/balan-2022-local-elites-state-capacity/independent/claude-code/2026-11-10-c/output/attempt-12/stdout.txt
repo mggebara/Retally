@@ -1,0 +1,103 @@
+bribe : Did you (or a family member) pay the transport of the collector? 
+visited : Has your household been visited by a tax collector or another authority in 2018 
+visits : How many times did they come in total since June, including the visit to assign 
+paid_self : To date, has your household paid the property tax in 2018? 
+replacement : DID WE REPLACE THE OLD RESPONDENT FROM SURVEY 1 
+treatment : 
+code : ECRIVEZ LE CODE DU REPONDANT 
+treated_twice : 
+titling_respondent : 
+e1 treatment vs t
+      
+          0    1    2    3    4 <NA>
+  0      54    0    1    0    0    0
+  1       0 1382    3    2    2    0
+  2       0    3 1355    1    2    0
+  3       0    5    2  945    1    0
+  4       0    0    0    0  660    0
+  <NA>   20  330  340  304  117   73
+bribe x t
+      
+          0    1    2    3    4 <NA>
+  0      17  384  410  274  192   38
+  1       0    8   15   12    6    0
+  <NA>   57 1328 1276  966  584   35
+bribe nonNA by visited/paid_self:
+        visited
+bribe_na    0    1    2 <NA>
+   FALSE    0 1356    0    0
+   TRUE   273   33  404 3536
+        paid_self
+bribe_na    0    1 <NA>
+   FALSE  929  383   44
+   TRUE   636   40 3570
+today range by bribe nonNA:
+$`FALSE`
+[1] NA NA
+
+$`TRUE`
+[1] "2019-03-22" "2019-09-13"
+
+dup code: 1300 
+transport-like names:
+ [1] "transport"                       "cash_fee"                        "cash_fee_month"                  "cash_fee_month2"                 "access_transport_survey_e"       "satisfaction_transport_survey_e"
+ [7] "responsible_transport_survey_e"  "bribe"                           "bribe_amt"                       "bribe2a"                         "bribe2a_amt"                     "bribe2b"                        
+[13] "bribe2b_amt"                     "bribe3"                          "bribe3_amt"                      "bribe_freq"                      "bribe_amt1"                      "paid_businessfee_survey_e"      
+[19] "paid_mktvendorfee_survey_e"      "taxsource_mktvendorfee_survey_e" "solicited_mktvendorfee_survey_e" "required_mktvendorfee_survey_e"  "required_businessfee_survey_e"   "taxsource_businessfee_survey_e" 
+[25] "solicited_businessfee_survey_e"  "cash_fee_month2_1"               "cash_fee_month2_2"               "cash_fee_month2_3"               "cash_fee_month2_4"               "cash_fee_month2_5"              
+[31] "cash_fee_month2_6"               "cash_fee_month2_7"               "cash_fee_month2_8"               "cash_fee_month2_9"               "cash_fee_month2_10"              "cash_fee_month2_11"             
+[37] "cash_fee_month2_12"              "cash_fee_month2_13"              "cash_fee_month2_14"              "cash_fee_month2_15"              "cash_fee_month2_16"              "cash_fee_month2_17"             
+[43] "cash_fee_month2_18"              "cash_fee_month2_19"              "cash_fee_month2_20"              "cash_fee_month2_21"              "cash_fee_month2_22"              "cash_fee_month2_23"             
+[49] "cash_fee_month2_24"              "cash_fee_month2_25"              "cash_fee_month2_26"              "cash_fee_month2_27"              "cash_fee_month2_28"              "cash_fee_month2_29"             
+[55] "cash_fee_month2_30"              "cash_fee_month2_31"             
+why_pay_o : HE INSISTED ON WHAT OTHER REASON? 
+why_pay_o_other : HE INSISTED ON WHAT OTHER REASON? (Other) 
+pay_tot : Now, could you please sum all the formal payments you have made to government of 
+pay_tot2 : Now please count up all the total such informal payments you made in the last 6 
+social3_pay_2 : How many of them paid 2018 property taxes?
+ 
+social3_nopay_2 : G70_2-G36_2-G36a_2-social3_nopay_2 
+pay_gov2_4 : Is there any other payments to government officials that you made in the past si 
+pay_gov2_8 : Is there any other payments to government officials that you made in the past si 
+pay_gov2_11 : Is there any other payments to government officials that you made in the past si 
+pay_gov2_12 : Is there any other payments to government officials that you made in the past si 
+pay_gov2_13 : Is there any other payments to government officials that you made in the past si 
+pay_gov2_16 : Is there any other payments to government officials that you made in the past si 
+pay_gov2_0 : Is there any other payments to government officials that you made in the past si 
+round2 has bribe? FALSE 
+bribe : BribeSelf 
+transport : How much money have you spent on transport in the past seven days 
+a7 : Location of interview - Polygon ID 
+today : Date of Survey 
+visited : Visited 
+visit : C'EST QUELLE VISITE? C'EST-A-DIRE: AUJOURD'HUI C'EST LE X-IEME VISITE QUE VOUS A 
+ec dim 3600 1591 
+      
+         0   1   2   3   4 <NA>
+  1     40 848 851 622 376   91
+  2      0  15  12   9   3    0
+  <NA>  10 227 230 149 101   16
+ec code in e1 code: NaN 
+[1] "2017-01-18" "2017-06-02"
+visited : Has your household been visited by a tax collector or another authority in 2018 
+visits : How many times did they come in total since June, including the visit to assign 
+present : IS THERE AN ADULT FROM THE HOUSE OF THE PROPERTY OWNER WITH WHOM YOU CAN DO THE 
+visited x visits (L+C):
+      
+          0    1    2    3    4    5    6    7    8    9   10 <NA>
+  0       0    0    0    0    0    0    0    0    0    0    0 2239
+  1      40 7049 5468 1685  301  119   20    9    5    1   12    8
+  2      45 3947 1105  184   23    5    2    1    0    0    1  180
+  <NA>    0    0    0    0    0    0    0    0    0    0    0 5079
+tot_complete x visited NA:
+   
+    FALSE  TRUE
+  0    19  5079
+  1 22430     0
+dup compound among L+C midline: 7227  complete dups: 4916 
+dup_compound:
+    0     1     2     3  <NA> 
+23437   427    17     4  3643 
+first_attempt:
+    0     1  <NA> 
+ 1245 26270    13 

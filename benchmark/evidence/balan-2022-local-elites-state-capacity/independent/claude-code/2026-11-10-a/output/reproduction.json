@@ -1,0 +1,34 @@
+{
+  "schema": 1,
+  "entry_id": "balan-2022-local-elites-state-capacity",
+  "mode": "independent",
+  "run_id": "2026-11-10-a",
+  "reproducer": "claude-code",
+  "language": "r",
+  "final": {"script": "script.R", "stdout": "stdout.txt", "stderr": "stderr.txt", "exit_code": 0},
+  "attempts": [
+    {"dir": "attempt-1", "exit_code": 0, "kind": ""},
+    {"dir": "attempt-2", "exit_code": 0, "kind": ""},
+    {"dir": "attempt-3", "exit_code": 0, "kind": ""},
+    {"dir": "attempt-4", "exit_code": 0, "kind": ""},
+    {"dir": "attempt-5", "exit_code": 0, "kind": ""},
+    {"dir": "attempt-6", "exit_code": 0, "kind": ""},
+    {"dir": "attempt-7", "exit_code": 0, "kind": ""},
+    {"dir": "attempt-8", "exit_code": 1, "kind": ""},
+    {"dir": "attempt-9", "exit_code": 0, "kind": ""}
+  ],
+  "deviations": [
+    "The package ships only raw (01_base) data, so the analysis file was rebuilt: properties = non-pilot registration records with house type low/high (villas excluded) that carry a numeric tax liability on the tax roll (drops 'Voir le tract', 'Paye', blank and villa rows), deduplicated by compound code. This gives 28,921 Local+Central properties vs 28,872 in the paper.",
+    "De facto assignment: the paper says one CXL neighborhood was run by the chief alone; registration records show chief-only teams in CXL neighborhoods 654 and 639. Neighborhood 654 was recoded to Local (a guess).",
+    "Time fixed effects: property-level registration date; two-month (61-day) bins starting at floor of the midpoint between the two arms' first registration days, ending at the midpoint between their last days; properties outside dropped. Local-Central gives 213 clusters (as in the paper) but 27,507 obs (paper 27,764); CLI-Central gives 155 clusters (paper 165).",
+    "Revenue = receipt amount (amountCF) matched by compound code, 0 for non-payers; two receipts with amounts above 1.4 million CF (max liability 13,200 CF) were set to the property's liability.",
+    "Exempt (Table 4 col 5) = collector designated exempt in the registration record. House FE = registration house type (low/high band).",
+    "Table 6 outcome: midline (tot_complete==1, first record per compound) visits >= 2 (registration visit counted in 'visits'), 0 if household reported no visit; 99999 codes set missing.",
+    "Table 5 endline bribe: endline round 1 'bribe' (paid the collector's transport), asked only of households visited with someone present; set to 0 for households reporting no visit or a visit with nobody home (N = 1,222 vs paper 1,169).",
+    "Table 8: chief consultation pay_ease (0-2; 'don't know' set missing), CLI properties, house and stratum FE, N = 8,159 (paper 8,135)."
+  ],
+  "notes": "Independent reconstruction from paper text and raw admin/survey data. Strata from randomization_assignment.dta (32 strata); SEs clustered by neighborhood (a7) with fixest. Nine exploratory runs (no RESULT lines) inspected the data, sample definition and time-window variants; attempt-8 crashed in a diagnostic table (exploratory only). The first estimating run is the final run. After it, I compared the results with the claims using check_attempt: two claims were outside tolerance (revenue_cli_table7_col2 reproduced 17.96 vs claimed 46.57; visited_by_collector_local_table6_col1 reproduced 0.030 vs claimed -0.009). I did not change the script after the comparison. The main uncertainty is the exact time-window construction (online Appendix A2.5 is not in the paper text) and the analysis-sample cleaning, which cannot be fully reconstructed from the noPII raw files. No runs hung.",
+  "files_read_outside_mount": [],
+  "started_at": "2026-11-10T17:04:28Z",
+  "finished_at": "2026-11-10T17:17:31Z"
+}

@@ -1,0 +1,70 @@
+Exempte strings:
+
+                        Couvent           Ecole          Eglise       Handicape 
+          40253              10              22              89             109 
+     Orphelinat Pensionner Etat   Troisieme age           Veuve            <NA> 
+             11             334            3247            2690              26 
+reg exempt vs taxroll Exempte nonempty:
+      tr_ex
+regex  FALSE  TRUE  <NA>
+  0    16446     0    17
+  1       99  6512     4
+  <NA> 23708     0     5
+taxroll exempt reason labelled col:
+
+ <NA> 
+46791 
+MontantIF x house:
+               
+                    1     2     3
+                    0   132     0
+  11000 FC          0  1239     0
+  13200 FC          0  1172     0
+  1500 FC       10081     0     0
+  2000 FC       10028     0     0
+  2500 FC       10155     0     0
+  3000 FC        9970     0     0
+  6600 FC           0  1239     0
+  8800 FC           0  1340     0
+  Mesurage          0     0   285
+  Payé            248     0     0
+  Voir le tract     0   876     0
+  <NA>             22     4     0
+exempt (any) by tr:
+   
+        FALSE      TRUE
+  0 0.8987500 0.1012500
+  1 0.8645327 0.1354673
+  2 0.8517810 0.1482190
+  3 0.8766394 0.1233606
+  4 0.8271239 0.1728761
+odd payments:
+  compound1 amountCF rateUSD house Peripherie Maison_Moyenne error_rate TDM
+1    507014  1421700    0.30    NA         NA             NA          1   8
+2    635123       NA    1.59    NA         NA             NA          1  50
+3    650022       NA    0.79    NA         NA             NA          1  14
+4    650038       NA    0.79    NA         NA             NA          1  14
+5    653002  1662800    1.00    NA         NA             NA          1  88
+6    653096       50    1.59    NA          1             NA          1  88
+7    670057       NA      NA    NA         NA             NA         NA   7
+8    670144       NA      NA    NA         NA             NA         NA   7
+rateUSD x amountCF:
+      
+         50 1500 2000 2500 3000 6600 8800 11000 13200 1421700 1662800 <NA>
+  0.3     0    0    0    0    0    0    0     0     0       1       0    0
+  0.79    0 1210    4    6    1    0    0     0     0       0       0    2
+  1       0    0    2    0    0    0    0     0     3       0       1    0
+  1.06    0    2  917    3    4    0    0     0     0       0       0    0
+  1.32    0    0    1  604    0    1    0     0     0       0       0    0
+  1.5     0    0    0    0    5    0    0     0     0       0       0    0
+  1.59    1    0    0    1  470    1    2     0     0       0       0    1
+  3.49    0    0    0    0    0  146    1     0     0       0       0    0
+  4.56    0    0    0    0    0    0    1     0     0       0       0    0
+  4.66    0    0    0    0    0    1   95     1     0       0       0    0
+  5.82    0    0    0    0    0    1    1    54     0       0       0    0
+  6.99    0    0    0    0    0    0    1     1    56       0       0    0
+  79      0    2    0    0    0    0    0     0     0       0       0    0
+  106     0    0    1    0    0    0    0     0     0       0       0    0
+  132     0    0    0    5    0    0    0     0     0       0       0    0
+  159     0    0    0    0    3    0    0     0     0       0       0    0
+  <NA>    0   40   28   24   18    3    2     1     2       0       0    2

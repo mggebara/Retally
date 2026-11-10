@@ -1,0 +1,21 @@
+Error in `summarise()`:
+ℹ In argument: `mmonth = as.numeric(names(which.max(table(month)))[1])`.
+ℹ In group 9: `a7 = 108`.
+Caused by error:
+! `mmonth` must be size 1, not 0.
+ℹ To return more or less than 1 row per group, use `reframe()`.
+Backtrace:
+     ▆
+  1. ├─md %>% filter(!is.na(a7)) %>% group_by(a7) %>% ...
+  2. ├─dplyr::summarise(...)
+  3. ├─dplyr:::summarise.grouped_df(...)
+  4. │ └─dplyr:::summarise_cols(.data, dplyr_quosures(...), by, "summarise")
+  5. │   └─base::withCallingHandlers(...)
+  6. ├─dplyr:::dplyr_internal_error(...)
+  7. │ └─rlang::abort(class = c(class, "dplyr:::internal_error"), dplyr_error_data = data)
+  8. │   └─rlang:::signal_abort(cnd, .file)
+  9. │     └─base::signalCondition(cnd)
+ 10. └─dplyr (local) `<fn>`(`<dpl:::__>`)
+ 11.   └─dplyr (local) handler(cnd)
+ 12.     └─rlang::abort(message, class = error_class, parent = parent, call = error_call)
+Execution halted

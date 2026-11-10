@@ -1,0 +1,37 @@
+nb names: a7 nb names: paid nb names: amount nb names: grid_nm nb names: hh_final nb names: poly_size nb names: stratum nb names: program nb names: nganza nb names: program_start nb names: non_residential nb names: num_compounds nb names: compliance nb names: revenue_per_person 
+ra names: a7 ra names: rouge ra names: geo_stratum ra names: jontax ra names: stratum_jon ra names: commune ra names: joncomp2016 ra names: chef_collect_types ra names: chef_collect_ever ra names: salongo_freq ra names: chef_collect_proptax_ever ra names: appoint_yr ra names: chef_stratum ra names: chef_collect_stratum ra names: stratum ra names: stratum_count ra names: treatment ra names: rand1 ra names: rank1 ra names: count1 ra names: numtoselect1_control ra names: probleft2_control ra names: rand2 ra names: probleft3_control ra names: numtoselect1_central ra names: probleft2_central ra names: probleft3_central ra names: numtoselect1_local ra names: probleft2_local ra names: probleft3_local ra names: numtoselect1_centralwinfo ra names: probleft2_centralwinfo ra names: numtoselect1_centralxlocal ra names: probleft2_centralxlocal ra names: probleft3_centralwinfo ra names: rand3 ra names: order_treatment 
+nb arm table: 
+ Central     CLI Control     CXL   Local    <NA>      108      78       5      49     107       9  
+reg names: start reg names: end reg names: today reg names: today_fr reg names: a7 reg names: a7b reg names: tmt reg names: carto_pay reg names: first reg names: north_east reg names: col_change reg names: who reg names: chief_asst_pres reg names: house reg names: correct reg names: house_correct reg names: breminder_mm2 reg names: other_flyers0 reg names: bother_flyers1 reg names: col_code reg names: mm_num reg names: mm_rate reg names: old_code reg names: compound1 reg names: compound2 reg names: present_sensi reg names: present_info_owner reg names: status reg names: owner_found reg names: owner_where reg names: tenants reg names: exempt reg names: why_exempt reg names: exempt_other reg names: exempt_enum reg names: why_exempt2 reg names: why_exempt2_other reg names: designate reg names: designate_why reg names: designate_why_other reg names: read_flyers reg names: read_flyer2 reg names: treatment_fr reg names: treatment_tsh reg names: rate_assigned reg names: read_language reg names: read_who reg names: read_which_chef reg names: what_rate_periph reg names: what_rate_periph_other reg names: read_message_fr reg names: read_message_tsh reg names: who_give_flier reg names: collect_now reg names: collect_who reg names: why_nocollect reg names: why_nocollect_other reg names: collect_success reg names: amt_paid reg names: appointment reg names: apt_date reg names: chalk_check reg names: compound1_p reg names: compound2_p reg names: periph_vs_mm_p reg names: mm_rate_pp reg names: what_rate_periph_p reg names: other_amt reg names: advance reg names: past_advance reg names: past_advance_amt reg names: metainstanceid reg names: key reg names: time reg names: know_eachother reg names: commune reg names: quartier reg names: present reg names: other_flyers reg names: other_flyers_other reg names: other_flyers_2 reg names: other_flyers_2_other reg names: reminder_mm reg names: rate reg names: what_rate reg names: what_rate_other reg names: other_flyers1 reg names: reminder_mm1 reg names: reminder_mm2 reg names: reminder_mm3 reg names: a7_compound reg names: date reg names: date_f reg names: month_tmpp reg names: day_tmpp reg names: month_tmp_fr reg names: type reg names: short_label reg names: value_label reg names: keep reg names: labelenglish reg names: tot_complete reg names: double_sensi reg names: dup_poly reg names: pilot 
+house table: 
+     1     2     3  39566  5834   261  
+pay names: compound1 pay names: house pay names: tdm pay names: did pay names: rateusd pay names: amountcf pay names: colcode pay names: error_code pay names: polygon pay names: colcode2 pay names: error_colcode pay names: bonus2 pay names: a7 pay names: error_rate pay names: peripherie pay names: maison_moyenne pay names: villas pay names: paid pay names: bonus_paye_carto pay names: amountusd pay names: endofcollect pay names: date pay names: latecollection pay names: unmatched_compound pay names: code pay names: dup_receipt pay names: mult_tax pay names: rate_verified 
+payment id: compound1 
+mean compliance: 0.077863436123348 
+periods Local Central 2016-04-18 2016-11-12 
+    1    2    3    4 <NA>    37   33   37   20   88  
+periods CLI Central 2016-04-18 2016-11-10 
+    1    2    3    4 <NA>    31   31   30   16   78  
+N Local+Central: 28714 
+taxes_paid ~ local | stratum coef 0.0219195917093131 se 0.00908627975481104 N 28714 
+taxes_paid ~ local | stratum + period coef 0.0215270692729962 se 0.0122969891856113 N 17205 
+taxes_paid ~ local | stratum + period + house_n coef 0.0215682340496046 se 0.0123138953232927 N 17205 
+taxes_paid ~ local | stratum + period + house_n coef 0.0276456784590778 se 0.0140898647982469 N 14821 
+FAIL revenue ~ local | stratum + period in feols(as.formula(fml), data = data, cluster = ~a7...: 
+The dependent variable is a constant. The estimation with fixed-effects
+cannot be done. 
+FAIL revenue ~ local | stratum + period + house_n in feols(as.formula(fml), data = data, cluster = ~a7...: 
+The dependent variable is a constant. The estimation with fixed-effects
+cannot be done. 
+taxes_paid ~ cli | stratum + period + house_n coef 0.00549133603301336 se 0.0103098209406065 N 14688 
+FAIL revenue ~ cli | stratum + period + house_n in feols(as.formula(fml), data = data, cluster = ~a7...: 
+The dependent variable is a constant. The estimation with fixed-effects
+cannot be done. 
+bribe var: bribe 
+    0    1 <NA>  1307   41 2602  
+bribe_b ~ local | stratum coef 0.010904776016905 se 0.0134120200072158 N 778 
+visited table: 
+     0     1     2   3614 24005  8761  
+visited_b ~ local | house_n + stratum + period coef -0.0231821835423789 se 0.0174043432197117 N 13404 
+chief id: compound1 ease var: pay_ease 
+taxes_paid ~ ease | house_n + stratum coef 0.0560027931356645 se 0.00785213702893113 N 8355 

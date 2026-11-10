@@ -1,0 +1,29 @@
+{
+  "schema": 1,
+  "entry_id": "balan-2022-local-elites-state-capacity",
+  "mode": "blind",
+  "run_id": "2026-11-10-a",
+  "reproducer": "claude-code",
+  "language": "r",
+  "final": {"script": "script.R", "stdout": "stdout.txt", "stderr": "stderr.txt", "exit_code": 0},
+  "attempts": [
+    {"dir": "attempt-1", "exit_code": 1, "kind": ""},
+    {"dir": "attempt-2", "exit_code": 0, "kind": ""},
+    {"dir": "attempt-3", "exit_code": 0, "kind": ""},
+    {"dir": "attempt-4", "exit_code": 0, "kind": ""}
+  ],
+  "deviations": [
+    "Property sample built from taxroll_noPII.dta (one row per registered compound) merged to registration_noPII.dta for house band and collector exemption; villas (house type 3) dropped. Compliance = compound appears in tax_payments_noPII.dta (receipt data); revenue = amountCF, 0 for non-payers.",
+    "Revenue: 7 payers with missing or implausible receipt amounts (>13,200 CF, two records of >1.4m CF) were assigned the median amount paid in their house band.",
+    "De facto treatment: neighborhood 654 (CXL in the schedule) coded Local, identified as the misassigned neighborhood (chief-only registration, coded Local in the endline survey).",
+    "Randomization strata: the 'stratum' variable of randomization_assignment.dta (32 strata).",
+    "Time fixed effects: each neighborhood's campaign date is the median registration date in it; window from the midpoint of the two arms' earliest neighborhood dates to the midpoint of their latest; consecutive two-calendar-month bins from the window start; neighborhoods outside the window dropped. This drops 19 Central neighborhoods in Local vs Central and 35 in CLI vs Central.",
+    "Table 6 col 1: midline surveys with tot_complete==1, deduplicated by compound, merged to the register for house band; outcome = 1 if reported visits (which include the registration visit) >= 2, 0 if not visited or visits <= 1.",
+    "Table 5 endline bribe: endline_round1 respondents with a non-missing 'visited' answer, deduplicated by respondent code; outcome = 1 if paid the collector's transport, 0 if answered no or if not visited / nobody home; Local vs Central by survey neighborhood a7.",
+    "Table 8 panel A col 2: CLI-arm properties matched to chief_consultations.dta pay_ease (0-2 scale), house and stratum FE."
+  ],
+  "notes": "Four exploratory runs (attempt-1 crashed in a descriptive helper on a Date column; none printed RESULT lines) inspected the raw data files; the first estimating script is the final run. The authors' code is not in the package (no script files in the mount); README.pdf and output.tex were not opened. While reading paper.txt for method, the Table 4/5/6/7/8 text was read in passing (some unwithheld cells such as cluster counts and a few non-target coefficients are visible there); no specification was changed after the estimating run, and no adjustment was made toward any paper number. Main uncertainty: the exact construction of the campaign-period time fixed effects (neighborhood date definition and bin boundaries), which governs n_obs_table4_col2 and all time-FE columns; and the endline/midline sample definitions. No sandbox run hung.",
+  "files_read_outside_mount": [],
+  "started_at": "2026-11-10T17:04:28Z",
+  "finished_at": "2026-11-10T17:12:30Z"
+}

@@ -1,0 +1,35 @@
+analysis rows: 45177; tmt table:
+
+    0     1     2     3     4  <NA> 
+  797 14489 14383  9422  6071    15 
+Table 4
+  taxes_paid ~ t_l | stratum               b=0.0226 se=0.0081 N=28872 G=221
+  taxes_paid ~ t_l | stratum + fe_CvL      b=0.0322 se=0.0072 N=27764 G=213
+  taxes_paid ~ t_l | stratum + house + fe_CvL b=0.0331 se=0.0072 N=27764 G=213
+  taxes_paid ~ t_l | stratum + house + fe_CvL b=0.0396 se=0.0083 N=23803 G=213
+  taxes_paid_amt ~ t_l | stratum + fe_CvL  b=79.6398 se=22.8562 N=27764 G=213
+  taxes_paid_amt ~ t_l | stratum + house + fe_CvL b=68.8553 se=20.5596 N=27764 G=213
+  central mean col1 0.0682 col2 0.0634
+Table 6
+  visit_post_carto ~ t_l | house + stratum + fe_CvL6 b=-0.0088 se=0.0258 N=18152 G=209
+Table 7
+  taxes_paid ~ t_cli | house + stratum + fe_CvCLI b=0.0242 se=0.0091 N=20636 G=165
+  taxes_paid_amt ~ t_cli | house + stratum + fe_CvCLI b=46.5658 se=21.1998 N=20636 G=165
+Table 8
+  endline rows 3887, duplicated compound codes 6
+  taxes_paid ~ pay_ease | house + stratum  b=0.0561 se=0.0071 N=8135 G=80
+Table 5
+  bribe ~ t_l | stratum                    b=0.0173 se=0.0089 N=1178 G=210
+RESULT:compliance_local_table4_panelA_col1=0.022573
+RESULT:compliance_local_table4_panelA_col2=0.032213
+RESULT:compliance_local_house_fe_table4_panelA_col4=0.033083
+RESULT:compliance_local_exempt_excluded_table4_panelA_col5=0.039584
+RESULT:revenue_local_table4_panelB_col2=79.639810
+RESULT:revenue_local_house_fe_table4_panelB_col4=68.855292
+RESULT:n_obs_table4_col1=28872.000000
+RESULT:n_obs_table4_col2=27764.000000
+RESULT:paid_bribe_endline_local_table5_panelB=0.017288
+RESULT:visited_by_collector_local_table6_col1=-0.008777
+RESULT:compliance_cli_table7_col1=0.024207
+RESULT:revenue_cli_table7_col2=46.565834
+RESULT:compliance_ease_of_payment_cli_table8_panelA_col2=0.056125

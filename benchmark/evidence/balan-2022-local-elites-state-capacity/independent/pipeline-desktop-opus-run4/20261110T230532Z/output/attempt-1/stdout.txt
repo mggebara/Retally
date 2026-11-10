@@ -1,0 +1,55 @@
+
+== tax_payments_neighborhoods : 356 rows, 14 cols
+a7 paid amount grid_nm hh_final poly_size stratum program nganza program_start non_residential num_compounds compliance revenue_per_person 
+
+== randomization_assignment : 356 rows, 37 cols
+a7 rouge geo_stratum jontax stratum_jon commune joncomp2016 chef_collect_types chef_collect_ever salongo_freq chef_collect_proptax_ever appoint_yr chef_stratum chef_collect_stratum stratum stratum_count treatment rand1 rank1 count1 numtoselect1_control probleft2_control rand2 probleft3_control numtoselect1_central probleft2_central probleft3_central numtoselect1_local probleft2_local probleft3_local numtoselect1_centralwinfo probleft2_centralwinfo numtoselect1_centralxlocal probleft2_centralxlocal probleft3_centralwinfo rand3 order_treatment 
+Program variable: program 
+   
+    Central Control
+  0       0     145
+  1     211       0
+program (de facto) vs assignment:
+         
+          Central CLI Control CXL Local <NA>
+  Central      64  45       1  31    63    7
+  Control      44  33       4  18    44    2
+Neighborhood counts by arm:
+
+Central Control 
+    211     145 
+
+== registration : 48034 rows, 105 cols
+start end today today_fr a7 a7b tmt carto_pay first north_east col_change who chief_asst_pres house correct house_correct breminder_mm2 other_flyers0 bother_flyers1 col_code mm_num mm_rate old_code compound1 compound2 present_sensi present_info_owner status owner_found owner_where tenants exempt why_exempt exempt_other exempt_enum why_exempt2 why_exempt2_other designate designate_why designate_why_other read_flyers read_flyer2 treatment_fr treatment_tsh rate_assigned read_language read_who read_which_chef what_rate_periph what_rate_periph_other read_message_fr read_message_tsh who_give_flier collect_now collect_who why_nocollect why_nocollect_other collect_success amt_paid appointment apt_date chalk_check compound1_p compound2_p periph_vs_mm_p mm_rate_pp what_rate_periph_p other_amt advance past_advance past_advance_amt metainstanceid key time know_eachother commune quartier present other_flyers other_flyers_other other_flyers_2 other_flyers_2_other reminder_mm rate what_rate what_rate_other other_flyers1 reminder_mm1 reminder_mm2 reminder_mm3 a7_compound date date_f month_tmpp day_tmpp month_tmp_fr type short_label value_label keep labelEnglish tot_complete double_sensi dup_poly pilot 
+
+== taxroll : 47930 rows, 12 cols
+compound1 DateRDV MontantIF Bonus DatePaye Exempte NbrLoc Exempté Bonus2 Observations Date a7 
+
+== tax_payments : 3733 rows, 28 cols
+compound1 house TDM did rateUSD amountCF colcode error_code polygon colcode2 error_colcode Bonus2 a7 error_rate Peripherie Maison_Moyenne Villas paid Bonus_paye_carto amountUSD endOfCollect date lateCollection unmatched_compound code dup_receipt mult_tax rate_verified 
+Base source: taxroll 
+house table:
+
+      périphérie   maison moyenne villa/apartement             <NA> 
+           41596             6044              285                5 
+exempt table:
+
+    0     1  <NA> 
+17086  6870 23974 
+pilot table:
+
+    0     1  <NA> 
+46765  1160     5 
+Villas flagged: 285 
+Using tax_payments file; id: compound1  amount: amountCF 
+paid summary:
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+0.00000 0.00000 0.00000 0.07715 0.00000 1.00000 
+amt summary:
+     Min.   1st Qu.    Median      Mean   3rd Qu.      Max. 
+      0.0       0.0       0.0     276.2       0.0 1662800.0 
+Properties by arm:
+
+Central Control 
+  27196   18115 
+Periods for Local vs Central : Inf to -Inf 

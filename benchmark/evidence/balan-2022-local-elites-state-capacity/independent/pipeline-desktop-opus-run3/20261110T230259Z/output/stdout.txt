@@ -1,0 +1,40 @@
+DEVIATION: Campaign start per neighborhood taken from earliest 2018 registration dates in the property register (program_start in the neighborhood file is 2016-dated and missing for many neighborhoods)
+DEVIATION: 7 payer amounts that were missing, non-positive or above 15x the median payment were replaced by the median payment for that house type
+DEVIATION: Time FE built as two-month campaign periods with neighborhoods starting outside the Local/Central overlap window pooled into the edge periods instead of being dropped (paper does not detail period construction)
+OLS estimation, Dep. Var.: taxes_paid
+Observations: 44,600
+Fixed-effects: stratum: 27,  period: 3,  house_n: 2
+Standard-errors: Clustered (a7) 
+      Estimate Std. Error  t value   Pr(>|t|)    
+cli   0.003015   0.009290 0.324584 7.4569e-01    
+local 0.033610   0.007970 4.217076 3.1747e-05 ***
+cxl   0.001882   0.009782 0.192419 8.4753e-01    
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+RMSE: 0.267509     Adj. R2: 0.015402
+                 Within R2: 0.002841
+OLS estimation, Dep. Var.: taxes_paid
+Observations: 44,600
+Fixed-effects: stratum: 27
+Standard-errors: Clustered (a7) 
+       Estimate Std. Error   t value Pr(>|t|)    
+cli   -0.002421   0.010226 -0.236795 0.812958    
+local  0.023181   0.009063  2.557902 0.010962 *  
+cxl   -0.008764   0.010488 -0.835631 0.403947    
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+RMSE: 0.268359     Adj. R2: 0.009201
+                 Within R2: 0.001921
+RESULT:compliance_local_table4_panelA_col1=0.02193083
+RESULT:n_obs_table4_col1=28714
+RESULT:compliance_local_table4_panelA_col2=0.032444779
+RESULT:n_obs_table4_col2=28714
+RESULT:compliance_local_house_fe_table4_panelA_col4=0.03308141
+RESULT:compliance_local_exempt_excluded_table4_panelA_col5=0.039810621
+RESULT:revenue_local_table4_panelB_col2=83.590318
+RESULT:revenue_local_house_fe_table4_panelB_col4=74.114055
+RESULT:compliance_cli_table7_col1=0.0034193295
+RESULT:revenue_cli_table7_col2=-5.7355457
+RESULT:paid_bribe_endline_local_table5_panelB=0.010904776
+RESULT:visited_by_collector_local_table6_col1=-0.0057978028
+RESULT:compliance_ease_of_payment_cli_table8_panelA_col2=0.056242045

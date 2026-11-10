@@ -1,0 +1,63 @@
+# Exploratory run 2: treatment counts, registration filters, payments matching, dates, midline/endline variables (no estimates)
+suppressPackageStartupMessages({library(haven); library(dplyr)})
+B <- "<repo>/benchmark/.cache/claude-code/balan-2022-local-elites-state-capacity/independent/2026-11-10-d/mount/balan_2022_local_elites_state_capacity/Replication Materials - Updated October 2025/Data/01_base"
+ra <- read_dta(file.path(B, "admin_data/randomization_assignment.dta"))
+rs <- read_dta(file.path(B, "admin_data/randomization_schedule.dta"))
+cat("assignment treatment:\n"); print(table(zap_labels(ra$treatment)))
+cat("schedule treatment:\n"); print(table(zap_labels(rs$treatment)))
+x <- merge(ra[, c("a7","treatment","stratum")], rs[, c("a7","treatment","month")], by = "a7")
+cat("assign vs schedule treatment:\n"); print(table(zap_labels(x$treatment.x), zap_labels(x$treatment.y)))
+cat("schedule month by treatment:\n"); print(table(zap_labels(x$treatment.y), x$month))
+
+rg <- read_dta(file.path(B, "admin_data/registration_noPII.dta"))
+rg <- zap_labels(rg)
+cat("\nregistration rows", nrow(rg), "\n")
+cat("a7 in assignment:", sum(rg$a7 %in% ra$a7), "\n")
+cat("tmt table:\n"); print(table(rg$tmt, useNA = "a"))
+rg2 <- merge(rg, x[, c("a7","treatment.x","treatment.y","month","stratum")], by = "a7", all.x = TRUE)
+cat("tmt vs schedule treatment:\n"); print(table(rg2$tmt, rg2$treatment.y, useNA = "a"))
+cat("house:\n"); print(table(rg$house, useNA="a"))
+cat("pilot:\n"); print(table(rg$pilot, useNA="a"))
+cat("tot_complete:\n"); print(table(rg$tot_complete, useNA="a"))
+cat("double_sensi:\n"); print(table(rg$double_sensi, useNA="a"))
+cat("dup_poly:\n"); print(table(rg$dup_poly, useNA="a"))
+cat("carto_pay:\n"); print(table(rg$carto_pay, useNA="a"))
+cat("dup compound1:", sum(duplicated(rg$compound1)), "\n")
+cat("a7 == a7_compound:", sum(rg$a7 == rg$a7_compound), " compound1%/%1000==a7:", sum(rg$compound1 %/% 1000 == rg$a7), "\n")
+cat("exempt:\n"); print(table(rg$exempt, useNA="a"))
+f <- rg2
+cat("\ncounts by schedule treatment, all rows:\n"); print(table(f$treatment.y, useNA="a"))
+f1 <- f[!is.na(f$treatment.y), ]
+cat("in 356:\n"); print(table(f1$treatment.y))
+f2 <- f1[f1$house %in% c(1,2), ]; cat("house 1/2:\n"); print(table(f2$treatment.y))
+f3 <- f2[f2$pilot == 0, ]; cat("+pilot==0:\n"); print(table(f3$treatment.y))
+f4 <- f3[!duplicated(f3$compound1), ]; cat("+dedup compound:\n"); print(table(f4$treatment.y))
+f5 <- f3[f3$tot_complete == 1, ]; cat("pilot0 + tot_complete:\n"); print(table(f5$treatment.y))
+f6 <- f3[f3$double_sensi == 0, ]; cat("pilot0 + double_sensi0:\n"); print(table(f6$treatment.y))
+f7 <- f2[f2$double_sensi == 0 & f2$tot_complete==1, ]; cat("house12 + ds0 + tc1:\n"); print(table(f7$treatment.y))
+cat("today range by treatment:\n")
+f2$d <- as.Date(f2$today)
+print(f2 %>% group_by(treatment.y) %>% summarise(mn = min(d, na.rm=TRUE), mx = max(d, na.rm=TRUE), q01 = quantile(d, .01, type=1, na.rm=TRUE), q99 = quantile(d, .99, type=1, na.rm=TRUE), n = n()))
+cat("month vs registration month (house12):\n"); print(table(f2$month, format(f2$d, "%m")))
+
+tp <- zap_labels(read_dta(file.path(B, "admin_data/tax_payments_noPII.dta")))
+cat("\npayments: rows", nrow(tp), " dup compound1:", sum(duplicated(tp$compound1[!is.na(tp$compound1)])), "\n")
+print(table(tp$paid, useNA="a")); print(table(tp$error_code, useNA="a")); print(table(tp$amountCF, useNA="a"))
+print(table(tp$house, useNA="a")); print(table(tp$Villas, useNA="a"))
+cat("payment compounds in registration:", sum(tp$compound1 %in% rg$compound1), "\n")
+cat("payment compounds in house12 356:", sum(tp$compound1 %in% f2$compound1), "\n")
+print(table(tp$paid, tp$compound1 %in% f2$compound1, useNA="a"))
+print(table(tp$unmatched_compound, tp$compound1 %in% f2$compound1, useNA="a"))
+print(table(tp$dup_receipt, useNA="a")); print(table(tp$mult_tax, useNA="a")); print(table(tp$lateCollection, useNA="a"))
+
+md <- read_dta(file.path(B, "survey_data/midline_noPII.dta"))
+cat("\nmidline rows", nrow(md), "\n")
+for (v in names(md)) { lab <- attr(md[[v]], "label"); cat(v, ":", if (is.null(lab)) "" else substr(lab, 1, 70), "| NA=", sum(is.na(md[[v]])), "\n") }
+e1 <- read_dta(file.path(B, "survey_data/endline_round1_noPII.dta"))
+cat("\nendline1 rows", nrow(e1), "\n")
+for (v in grep("transport|bribe|^a7|strat|compound|tmt|treat|paid|code|dup|month|polygon|respondent", names(e1), value = TRUE)) {
+  lab <- attr(e1[[v]], "label"); cat(v, ":", if (is.null(lab)) "" else substr(lab, 1, 90), "| NA=", sum(is.na(e1[[v]])), "| nu=", length(unique(e1[[v]])), "\n") }
+e2 <- read_dta(file.path(B, "survey_data/endline_round2_noPII.dta"))
+cat("\nendline2 rows", nrow(e2), "\n")
+for (v in grep("transport|bribe|^a7|strat|compound|tmt|treat|code|dup|polygon|respondent", names(e2), value = TRUE)) {
+  lab <- attr(e2[[v]], "label"); cat(v, ":", if (is.null(lab)) "" else substr(lab, 1, 90), "| NA=", sum(is.na(e2[[v]])), "| nu=", length(unique(e2[[v]])), "\n") }

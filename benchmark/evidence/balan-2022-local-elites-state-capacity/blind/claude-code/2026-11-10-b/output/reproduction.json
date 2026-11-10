@@ -1,0 +1,33 @@
+{
+  "schema": 1,
+  "entry_id": "balan-2022-local-elites-state-capacity",
+  "mode": "blind",
+  "run_id": "2026-11-10-b",
+  "reproducer": "claude-code",
+  "language": "r",
+  "final": {"script": "script.R", "stdout": "stdout.txt", "stderr": "stderr.txt", "exit_code": 0},
+  "attempts": [
+    {"dir": "attempt-1", "exit_code": 0, "kind": ""},
+    {"dir": "attempt-2", "exit_code": 0, "kind": ""},
+    {"dir": "attempt-3", "exit_code": 1, "kind": "error"},
+    {"dir": "attempt-4", "exit_code": 0, "kind": ""},
+    {"dir": "attempt-5", "exit_code": 0, "kind": ""},
+    {"dir": "attempt-6", "exit_code": 0, "kind": ""},
+    {"dir": "attempt-7", "exit_code": 0, "kind": ""}
+  ],
+  "deviations": [
+    "Register built from registration_noPII.dta: randomized neighborhoods (pilot dropped), tot_complete==1, unique compound codes, villas (house type 3) excluded. This gives 29,384 Local+Central properties, more than the paper's Table 2 counts. The authors' further cleaning of the register is not documented in the paper and could not be reconstructed.",
+    "De facto treatment: neighborhood 654 (CXL in the schedule) recoded to Local. It was identified from chief-only collectors in the registration data and Local coding in the endline survey.",
+    "Randomization stratum taken from randomization_assignment.dta (group of geographic stratum, 2016 campaign status and chief collection experience; 32 strata).",
+    "Compliance = the property's tax ID appears in tax_payments_noPII.dta. Revenue = amount paid (CF), 0 for non-payers. Eight payment records with missing or implausible amounts (<1500 or >13200 CF, all flagged error_rate) were set to the property's tax-roll liability.",
+    "Time fixed effects (online App. A2.5 not available): each neighborhood is dated by its first registration day. Start and end are the midpoints of the two arms' first and last registration days; two-month periods run from start; neighborhoods starting outside [start, end] are dropped.",
+    "Exempt (col 5) = collector-designated exempt in registration or an exemption reason in the tax roll.",
+    "Endline bribe outcome = 'paid the transport of the collector' (bribe), 0/1, among complete endline_round1 interviews where it was asked; Local vs Central, stratum FE.",
+    "Visited by collector (midline) = reported visits >= 2 (the visits count includes the registration visit), 0 if not visited. House type is merged from the register by compound code, so midline households whose compound code does not match the register drop out.",
+    "Table 8 ease of payment = chief_consultations pay_ease (0-2, 'don't know' dropped), merged to the CLI register by compound code."
+  ],
+  "notes": "Independent blind reproduction from the paper text and raw data files only. No author scripts, result tables, README.pdf or output.tex were opened. Attempts 1-7 were exploratory (no RESULT lines); attempt-3 crashed on a summarise bug and was fixed. All 13 quantities were estimated with fixest OLS, SEs clustered by neighborhood. No run hung.",
+  "files_read_outside_mount": [],
+  "started_at": "2026-11-10T17:04:28Z",
+  "finished_at": "2026-11-10T17:12:00Z"
+}

@@ -1,0 +1,42 @@
+suppressPackageStartupMessages({library(haven); library(dplyr)})
+base <- "<repo>/benchmark/.cache/claude-code/balan-2022-local-elites-state-capacity/blind/2026-11-10-b/mount/balan_2022_local_elites_state_capacity/Replication Materials - Updated October 2025/Data/01_base"
+rd <- function(f, ...) read_dta(file.path(base, f), ...)
+lab <- function(x) { l <- attr(x, "labels"); if (!is.null(l)) print(l) }
+ra <- rd("admin_data/randomization_assignment.dta")
+rs <- rd("admin_data/randomization_schedule.dta") %>% mutate(tr = as.numeric(treatment))
+reg <- rd("admin_data/registration_noPII.dta") %>% filter(a7 %in% ra$a7, tot_complete == 1)
+reg <- reg %>% left_join(rs[, c("a7", "tr", "month")], by = "a7")
+cat("--- tmt vs schedule treatment\n"); print(table(tmt = reg$tmt, tr = reg$tr, useNA = "ifany"))
+nb <- reg %>% group_by(a7) %>% summarise(tr = first(tr), month = first(month), n = n(),
+  tmt_mode = names(sort(table(tmt), decreasing = TRUE))[1],
+  d0 = suppressWarnings(min(today, na.rm = TRUE)), d1 = suppressWarnings(max(today, na.rm = TRUE)),
+  nNA = sum(is.na(today)), mfr = paste(unique(month_tmp_fr), collapse = ","))
+cat("--- neighborhoods where tmt mode != tr\n"); print(as.data.frame(nb %>% filter(as.character(tr) != tmt_mode)))
+cat("--- neighborhoods with all-NA dates or long span\n"); print(as.data.frame(nb %>% filter(nNA == n | is.infinite(d0) | as.numeric(d1 - d0) > 25)), max = 2000)
+cat("--- per-arm d0 range\n"); print(as.data.frame(nb %>% group_by(tr) %>% summarise(min = min(d0[is.finite(d0)]), max = max(d0[is.finite(d0)]), maxd1 = max(d1[is.finite(d1)]), n = n())))
+cat("--- month vs d0 month\n"); print(table(nb$month, format(nb$d0, "%m"), useNA = "ifany"))
+cat("--- house x tr\n"); print(table(house = as.numeric(reg$house), tr = reg$tr))
+cat("--- exempt x tr\n"); print(table(ex = as.numeric(reg$exempt), tr = reg$tr, useNA = "ifany"))
+cat("--- who x tr\n"); print(table(who = as.numeric(reg$who), tr = reg$tr, useNA = "ifany"))
+cat("--- first x tr\n"); print(table(first = as.numeric(reg$first), tr = reg$tr, useNA = "ifany"))
+cat("--- today NA x tr\n"); print(table(na = is.na(reg$today), tr = reg$tr))
+cat("--- carto_pay NA x tr\n"); print(table(na = is.na(reg$carto_pay), tr = reg$tr))
+tr0 <- rd("admin_data/taxroll_noPII.dta")
+cat("--- in taxroll x tr\n"); print(table(intr = reg$compound1 %in% tr0$compound1, tr = reg$tr))
+cat("--- in taxroll x house\n"); print(table(intr = reg$compound1 %in% tr0$compound1, h = as.numeric(reg$house)))
+cat("taxroll a7 in ra:", sum(tr0$a7 %in% ra$a7), "\n")
+tp <- rd("admin_data/tax_payments_noPII.dta")
+cat("--- big amounts\n"); print(as.data.frame(tp %>% filter(amountCF > 13200 | amountCF < 1500 | is.na(amountCF)) %>% select(compound1, amountCF, error_code, paid, a7, date)))
+cat("--- error_code x inreg\n"); print(table(err = tp$error_code, inreg = tp$compound1 %in% reg$compound1, useNA = "ifany"))
+cat("--- lateCollection x inreg\n"); print(table(late = tp$lateCollection, inreg = tp$compound1 %in% reg$compound1, useNA = "ifany"))
+cat("--- payment a7 vs compound a7\n"); print(table(tp$a7 == tp$compound1 %/% 1000, useNA = "ifany"))
+cat("--- payment date range by tr\n"); tq <- tp %>% left_join(rs[, c("a7", "tr")], by = "a7"); print(tapply(tq$date, tq$tr, function(x) paste(range(x, na.rm = TRUE), collapse = " to ")))
+cc <- rd("survey_data/chief_consultations.dta")
+cat("--- pay_ease / willingness labels\n"); lab(cc$pay_ease); lab(cc$willingness); print(table(as.numeric(cc$pay_ease), useNA = "ifany")); print(table(as.numeric(cc$willingness), useNA = "ifany"))
+cat("cc a7 tr:\n"); print(table(rs$tr[match(cc$a7, rs$a7)], useNA = "ifany"))
+cat("cc compound in reg:", mean(cc$compound1 %in% reg$compound1), "\n")
+for (f in c("survey_data/midline_noPII.dta", "survey_data/endline_round1_noPII.dta", "survey_data/endline_round2_noPII.dta")) {
+  h <- rd(f, n_max = 0); cat("\n====", f, ncol(h), "cols\n")
+  keyv <- grep("^(a7|compound|code|visit|visited|visits|transport|bribe|polygon|today|house|treatment|tmt|month|survey|respondent|id|key|baseline|tot_complete|sample)", names(h), value = TRUE)
+  cat(paste(keyv, collapse = " "), "\n")
+}

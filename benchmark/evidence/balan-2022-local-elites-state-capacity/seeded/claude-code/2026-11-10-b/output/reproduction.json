@@ -1,0 +1,18 @@
+{
+  "schema": 1,
+  "entry_id": "balan-2022-local-elites-state-capacity",
+  "mode": "seeded",
+  "run_id": "2026-11-10-b",
+  "reproducer": "claude-code",
+  "language": "r",
+  "final": {"script": "script.R", "stdout": "stdout.txt", "stderr": "stderr.txt", "exit_code": 0},
+  "attempts": [
+    {"dir": "attempt-1", "exit_code": 0, "kind": ""},
+    {"dir": "attempt-2", "exit_code": 0, "kind": "claim"}
+  ],
+  "deviations": [],
+  "notes": "Data/03_clean_combined/analysis_data.dta is not shipped, so the script rebuilds it in R by translating 2_Data_Construction.do: fliers plus pilot fliers, stratum, assignment with the pilot rows and the a7==654 fix, registration, taxroll, de-duplicated midline, TDM payments. It uses Stata merge semantics, keeping master values for overlapping variables, and rebuilds taxes_paid, rate and taxes_paid_amt, the TDM date corrections, the sequential carto-date imputation and today_alt, then drops rows with missing rate. The regressions then follow Table4/5/6/7/8.do with fixest (cluster a7, fixef.rm='none'). Table 8 reproduces the 1:m merge with the endline survey (duplicated master rows) and the m:1 merge with chief_consultations. attempt-1 was exploratory (variable listing). attempt-2 was the first full run: all claims matched except the endline bribe coefficient (0.0173 vs 0.018). The final run fixes a Stata-semantics translation issue. 'replace bribe = bribe2a if bribe==.' only fills system-missing values, not extended missing (.d), and 'visits!=.' / 'visits>1' are true for .d in Table 6. The R code now tracks haven tagged missings for these. Final bribe coefficient is 0.0175 (rounds to 0.018) and Table 6 is -0.0090. Table 4 N matches exactly (28872, 27764).",
+  "files_read_outside_mount": [],
+  "started_at": "2026-11-10T17:03:00Z",
+  "finished_at": "2026-11-10T17:11:30Z"
+}

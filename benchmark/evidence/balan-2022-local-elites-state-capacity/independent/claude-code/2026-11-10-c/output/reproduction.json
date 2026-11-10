@@ -1,0 +1,38 @@
+{
+  "schema": 1,
+  "entry_id": "balan-2022-local-elites-state-capacity",
+  "mode": "independent",
+  "run_id": "2026-11-10-c",
+  "reproducer": "claude-code",
+  "language": "r",
+  "final": {"script": "script.R", "stdout": "stdout.txt", "stderr": "stderr.txt", "exit_code": 0},
+  "attempts": [
+    {"dir": "attempt-1", "exit_code": 0, "kind": ""},
+    {"dir": "attempt-2", "exit_code": 0, "kind": ""},
+    {"dir": "attempt-3", "exit_code": 0, "kind": ""},
+    {"dir": "attempt-4", "exit_code": 0, "kind": ""},
+    {"dir": "attempt-5", "exit_code": 0, "kind": ""},
+    {"dir": "attempt-6", "exit_code": 0, "kind": ""},
+    {"dir": "attempt-7", "exit_code": 0, "kind": ""},
+    {"dir": "attempt-8", "exit_code": 0, "kind": ""},
+    {"dir": "attempt-9", "exit_code": 0, "kind": ""},
+    {"dir": "attempt-10", "exit_code": 0, "kind": ""},
+    {"dir": "attempt-11", "exit_code": 0, "kind": ""},
+    {"dir": "attempt-12", "exit_code": 0, "kind": ""}
+  ],
+  "deviations": [
+    "Property universe taken from admin_data/hh_distances.dta (45,177 properties) with registration attributes merged by compound code; its arm counts match Table 2 except Central (+12) and CLI (+3), so the Local+Central base is 28,884 rather than 28,872.",
+    "De facto treatment: neighborhood a7=654 (assigned CXL; registration done by the chief alone; 93 properties) recoded to Local, which makes the Local and CXL counts equal Table 2 exactly.",
+    "Compliance = tax ID appears in tax_payments_noPII.dta, excluding receipts flagged error_code==1 (tax-ID/neighborhood mismatch); with this the Central mean (0.068) and revenue mean (193.7 vs 192.9) match Table 4 column 1.",
+    "Revenue: 8 receipt amounts that are not an official liability (e.g. 1,662,800 and 1,421,700 CF, 50 CF, missing) were replaced by the official liability implied by the receipt's USD rate (rateUSD*1900 snapped to the nearest official amount).",
+    "Time fixed effects: property-level registration date; two-month (61-day) periods from floor(midpoint of the two arms' first registration days) to floor(midpoint of their last registration days); properties outside dropped. The exact rule of online Appendix A2.5 is not in the provided text; this gives 27,446 obs / 213 clusters for Local-Central (paper 27,764 / 213) and 19,567 / 155 for CLI-Central (paper 20,636 / 165). Extensive searches over alternative date definitions did not reproduce both paper sample sizes.",
+    "House FE: registration house type 2 (high-value band) vs 1; exempt (Table 4 col 5) = collector-designated exempt in registration (missing treated as not exempt).",
+    "Endline bribe (Table 5): endline_round1 'bribe' (paid the collector's transport); the question is only asked if the household reported a visit with someone home, so households reporting no visit / no one home are coded 0; one record per respondent code; Local+Central; stratum FE only. N=1,217 (paper 1,169), Central mean 0.013 (paper 0.014).",
+    "Table 6 col 1: midline, first complete survey per compound; visited after registration = reported total visits >= 2 (the visit count includes the registration visit), 0 if no visit reported; merged to the windowed Local-Central property sample for house/period FE. N=16,323 (paper 18,162).",
+    "Table 8 Panel A col 2: chief_consultations pay_ease (0-2; 8888 'don't know' set to missing), CLI properties, house and stratum FE (N=8,136 vs paper 8,135)."
+  ],
+  "notes": "Independent reproduction from paper text and data only (no author code opened). Exploratory runs (attempts 1-12) inspected file structures and searched for the property universe and time-window rule; none printed RESULT lines. The final script was run once; its RESULT lines were not compared against claims to drive any change (no claim attempts). Main gaps: the campaign-period time window (online Appendix A2.5 not available) yields smaller samples than the paper for columns with time FE (27,446 vs 27,764; CLI 19,567 vs 20,636), which moves the time-FE coefficients (Local col2 0.036 vs 0.032; CLI revenue 33.7 vs 46.6). Table 6 visited sign differs (0.028 vs -0.009), likely due to the visit definition/sample. Documents read inside the mount: README.pdf and output.tex (LaTeX table shell; appendix text absent). No sandbox run hung.",
+  "files_read_outside_mount": [],
+  "started_at": "2026-11-10T17:04:27Z",
+  "finished_at": "2026-11-10T17:23:00Z"
+}

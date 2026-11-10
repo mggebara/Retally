@@ -1,0 +1,31 @@
+{
+  "schema": 1,
+  "entry_id": "balan-2022-local-elites-state-capacity",
+  "mode": "blind",
+  "run_id": "2026-11-10-d",
+  "reproducer": "claude-code",
+  "language": "r",
+  "final": {"script": "script.R", "stdout": "stdout.txt", "stderr": "stderr.txt", "exit_code": 0},
+  "attempts": [
+    {"dir": "attempt-1", "exit_code": 0, "kind": ""},
+    {"dir": "attempt-2", "exit_code": 0, "kind": ""},
+    {"dir": "attempt-3", "exit_code": 0, "kind": ""},
+    {"dir": "attempt-4", "exit_code": 0, "kind": ""},
+    {"dir": "attempt-5", "exit_code": 0, "kind": ""},
+    {"dir": "attempt-6", "exit_code": 0, "kind": ""},
+    {"dir": "attempt-7", "exit_code": 0, "kind": ""}
+  ],
+  "deviations": [
+    "Analysis data rebuilt from raw base files (authors' cleaning code withheld). Register = registration_noPII rows in the 356 randomised neighbourhoods, pilot==0, tot_complete==1, house band 1/2 (villas excluded), deduplicated on compound1 (tax ID). This yields 29,384 Local+Central properties; the authors' exact register cleaning rules are unknown.",
+    "Compliance = tax ID appears in tax_payments_noPII (after dropping duplicate receipt copies, dup_receipt>=1). Revenue = sum of amountCF for the tax ID; 7 payers with missing amounts or amounts above the top statutory liability (13,200 CF; e.g. 1,421,700 and 1,662,800 CF entry errors) are set to their statutory liability (3,000 or 13,200 CF).",
+    "Time fixed effects: property-level registration dates (registration start timestamp). Arm first/last days = min/max registration date of each arm; window from floor of the midpoint of the two first days to the midpoint of the two last days; two-month calendar periods counted from the window start; properties outside the window dropped. The paper's note to Table 4 col 3 (time periods vary within neighbourhood) motivated property-level dating.",
+    "De facto treatment: neighbourhood a7 654 (assigned CXL) coded Local, identified from chief-only registration teams and the endline file's treatment code.",
+    "Table 6 col 1: midline complete non-pilot surveys excluding flagged duplicates/unknown compounds, one row per compound; visited after registration = total reported visits >= 2 (the visits question includes the registration visit), 0 if visited==No or visits<=1; merged to the register by tax ID for house type and time period.",
+    "Table 5 endline bribe: endline_round1 complete surveys; outcome 1 if paid collector 'transport' (bribe==1), 0 if bribe==0 or the household reported no visit / no one home (question skipped); don't know/refuse dropped.",
+    "Table 8: CLI register properties merged to chief_consultations by compound1, pay_ease in {0,1,2} (don't know dropped); 0-2 coding (slope identical to a 1-3 coding)."
+  ],
+  "notes": "Seven exploratory runs (variable listings, tabulations, date/sample diagnostics; no RESULT lines) then one final run estimating all 13 quantities with fixest (feols, SEs clustered by neighbourhood a7, randomisation stratum = randomization_assignment$stratum). No error repairs and no claim comparisons. Read the redacted paper.txt for method only. The final L/C window retained 213 of 221 clusters. Uncertainties: register sample cleaning (counts exceed the paper's Table 2 arm sizes by ~1-2%), payment-amount cleaning, the exact construction of campaign-period dates (registration dates for some neighbourhoods look like late data entry), midline duplicate handling, and the coding of non-asked endline bribe responses. No hung runs.",
+  "files_read_outside_mount": [],
+  "started_at": "2026-11-10T17:04:29Z",
+  "finished_at": "2026-11-10T17:15:00Z"
+}

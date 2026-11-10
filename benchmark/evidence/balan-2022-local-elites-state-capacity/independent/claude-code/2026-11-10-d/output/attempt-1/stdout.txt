@@ -1,0 +1,368 @@
+
+========== admin_data/randomization_assignment.dta 
+rows: 356  cols: 37 
+a7                           nu=356    num min=100 max=6104 mean=567.5 NA=0 :: G1-A7
+rouge                        nu=2      num min=0 max=1 mean=0.03652 NA=0 :: 
+geo_stratum                  nu=12     num min=1 max=12 mean=6.489 NA=0 :: 
+jontax                       nu=2      num min=0 max=1 mean=0.5899 NA=0 :: (mean) jontax
+stratum_jon                  nu=27     num min=1 max=33 mean=13.54 NA=0 :: (first) stratum_jon
+commune                      nu=4      num min=1 max=5 mean=3.694 NA=0 :: (first) commune
+joncomp2016                  nu=2      num min=1 max=2 mean=1.334 NA=0 :: 
+chef_collect_types           nu=15     num min=0 max=2 mean=0.3286 NA=0 :: (mean) chef_collect_types
+chef_collect_ever            nu=12     num min=0 max=1 mean=0.285 NA=0 :: (mean) chef_collect_ever
+salongo_freq                 nu=47     num min=0 max=7.833 mean=3.414 NA=0 :: (mean) salongo_freq
+chef_collect_proptax_ever    nu=20     num min=0 max=1 mean=0.7482 NA=0 :: (mean) chef_collect_proptax_ever
+appoint_yr                   nu=149    num min=1982 max=2018 mean=2006 NA=0 :: (mean) appoint_yr
+chef_stratum                 nu=3      num min=1 max=2 mean=1.4 NA=26 :: (first) chef_stratum
+chef_collect_stratum         nu=2      num min=1 max=2 mean=1.169 NA=0 :: 
+stratum                      nu=32     num min=1 max=32 mean=17.05 NA=0 :: group(geo_stratum jontax chef_collect_stratum)
+stratum_count                nu=14     num min=5 max=19 mean=12.54 NA=0 :: 
+treatment                    nu=5      num min=0 max=4 mean=2.174 NA=0 :: 0
+ treatment                    nu=5      num min=0 max=4 mean=2.174 NA=0 :: 1
+ treatment                    nu=5      num min=0 max=4 mean=2.174 NA=0 :: 2
+ treatment                    nu=5      num min=0 max=4 mean=2.174 NA=0 :: 3
+ treatment                    nu=5      num min=0 max=4 mean=2.174 NA=0 :: 4
+     labels: Control=0; Central=1; Local=2; Central With Info=3; Central X Local=4 
+rand1                        nu=220    num min=0.004743 max=0.9736 mean=0.4053 NA=0 :: 
+rank1                        nu=18     num min=1 max=19 mean=3.197 NA=0 :: unique rank of (rand1)    by stratum
+count1                       nu=19     num min=1 max=19 mean=8.402 NA=0 :: 
+numtoselect1_control         nu=14     num min=0.07022 max=0.2669 mean=0.1761 NA=0 :: 
+probleft2_control            nu=14     num min=0.07022 max=0.2669 mean=0.1761 NA=0 :: 
+rand2                        nu=220    num min=0.004743 max=0.9736 mean=0.4053 NA=0 :: 
+probleft3_control            nu=1      num min=Inf max=-Inf mean=NaN NA=356 :: 
+numtoselect1_central         nu=15     num min=1.254 max=5.954 mean=3.937 NA=5 :: 
+probleft2_central            nu=15     num min=0.01425 max=0.9544 mean=0.5349 NA=5 :: 
+probleft3_central            nu=1      num min=Inf max=-Inf mean=NaN NA=356 :: 
+numtoselect1_local           nu=13     num min=0.9129 max=5.934 mean=3.96 NA=115 :: 
+probleft2_local              nu=13     num min=0.02075 max=0.9336 mean=0.4996 NA=115 :: 
+probleft3_local              nu=1      num min=Inf max=-Inf mean=NaN NA=356 :: 
+numtoselect1_centralwinfo    nu=9      num min=0.6107 max=4.885 mean=2.942 NA=225 :: 
+probleft2_centralwinfo       nu=9      num min=0.05344 max=0.8855 mean=0.3996 NA=225 :: 
+numtoselect1_centralxlocal   nu=9      num min=0.3893 max=3.115 mean=1.875 NA=225 :: 
+probleft2_centralxlocal      nu=9      num min=0.1145 max=0.9466 mean=0.6004 NA=225 :: 
+probleft3_centralwinfo       nu=1      num min=Inf max=-Inf mean=NaN NA=356 :: 
+rand3                        nu=356    num min=0.004743 max=0.995 mean=0.5134 NA=0 :: 
+order_treatment              nu=110    num min=1 max=110 mean=47.17 NA=0 :: unique rank of (rand3)    by treatment
+
+========== admin_data/randomization_schedule.dta 
+rows: 356  cols: 9 
+a7                           nu=356    num min=100 max=6104 mean=567.5 NA=0 :: G1-A7
+treatment                    nu=5      num min=0 max=4 mean=2.174 NA=0 :: (first) treatment
+month                        nu=7      num min=1 max=7 mean=3.514 NA=0 :: 
+chef_code                    nu=156    num min=1001 max=60920000 mean=405200 NA=115 :: 
+agent1_code                  nu=31     num min=1 max=109 mean=47.78 NA=166 :: 
+agent2_code                  nu=31     num min=1 max=109 mean=46.08 NA=166 :: 
+agent_code                   nu=10     num min=5 max=107 mean=48.14 NA=305 :: 
+chef_group                   nu=3      num min=1 max=2 mean=1.486 NA=249 :: 
+order_for_assigning          nu=17     num min=1 max=17 mean=6.969 NA=0 :: 
+
+========== admin_data/stratum.dta 
+rows: 356  cols: 13 
+a7                           nu=356    num min=100 max=6104 mean=567.5 NA=0 :: G1-A7
+rouge                        nu=2      num min=0 max=1 mean=0.03652 NA=0 :: 
+geo_stratum                  nu=12     num min=1 max=12 mean=6.489 NA=0 :: 
+jontax                       nu=2      num min=0 max=1 mean=0.5899 NA=0 :: (mean) jontax
+stratum_jon                  nu=27     num min=1 max=33 mean=13.54 NA=0 :: (first) stratum_jon
+commune                      nu=4      num min=1 max=5 mean=3.694 NA=0 :: (first) commune
+joncomp2016                  nu=2      num min=1 max=2 mean=1.334 NA=0 :: 
+salongo_freq                 nu=11     num min=0 max=12 mean=3.587 NA=0 :: How many times per month do you typically organize salongo? [0 if never]
+collect_ever                 nu=2      num min=0 max=1 mean=0.4354 NA=0 :: Have you ever collected taxes in Kananga?
+     labels: No=0; Yes=1 
+collect_what_1               nu=2      num min=0 max=1 mean=0.4213 NA=0 :: Which taxes have you collected? - Property tax
+     labels: No=0; Yes=1; HE/SHE DOESN'T KNOW=8888 
+chef_stratum                 nu=3      num min=1 max=2 mean=1.565 NA=25 :: 
+comp_stratum                 nu=2      num min=1 max=2 mean=1.076 NA=0 :: 
+stratum                      nu=55     num min=1 max=55 mean=26.9 NA=0 :: group(geo_stratum jontax comp_stratum collect_what_1)
+
+========== admin_data/tax_payments_noPII.dta 
+rows: 3733  cols: 28 
+compound1                    nu=3700   num min=1e+05 max=6104000 mean=512200 NA=34 :: Number of compound
+house                        nu=3      num min=1 max=2 mean=1.836 NA=3660 :: 
+TDM                          nu=45     num min=1 max=99 mean=27.27 NA=453 :: TDM
+did                          nu=273    num min=6 max=31880 mean=653.3 NA=1267 :: did
+rateUSD                      nu=17     num min=0.3 max=159 mean=1.832 NA=120 :: rateUSD
+amountCF                     nu=12     num min=50 max=1663000 mean=3576 NA=5 :: amountcf
+colcode                      nu=248    num min=0 max=895 mean=214 NA=223 :: colcode
+error_code                   nu=3      num min=0 max=1 mean=0.0595 NA=2 :: 
+polygon                      nu=338    num min=2 max=6104 mean=520.5 NA=4 :: 
+colcode2                     nu=208    num min=0 max=895 mean=252.3 NA=1412 :: 
+error_colcode                nu=2      num min=1 max=1 mean=1 NA=3454 :: 
+Bonus2                       nu=3      chr ex= | Non | Oui :: 
+a7                           nu=338    num min=2 max=6104 mean=520.5 NA=4 :: From repertoire_all
+error_rate                   nu=3      num min=0 max=1 mean=0.08736 NA=1123 :: 
+Peripherie                   nu=2      num min=1 max=1 mean=1 NA=1360 :: 
+Maison_Moyenne               nu=2      num min=1 max=1 mean=1 NA=3505 :: 
+Villas                       nu=2      num min=1 max=1 mean=1 NA=3728 :: 
+paid                         nu=3      num min=1 max=3 mean=1.106 NA=1529 :: 1
+ paid                         nu=3      num min=1 max=3 mean=1.106 NA=1529 :: 2
+ paid                         nu=3      num min=1 max=3 mean=1.106 NA=1529 :: 3
+ paid                         nu=3      num min=1 max=3 mean=1.106 NA=1529 :: 4
+ paid                         nu=3      num min=1 max=3 mean=1.106 NA=1529 :: 5
+     labels: master only (1)=1; using only (2)=2; matched (3)=3; missing updated (4)=4; nonmissing conflict (5)=5 
+Bonus_paye_carto             nu=2      num min=1 max=1 mean=1 NA=3616 :: 
+amountUSD                    nu=3      num min=4.66 max=5.82 mean=5.24 NA=3731 :: amountUSD
+endOfCollect                 nu=22     chr ex=2018-10-31 | 2018-09-26 | 2018-12-21 | 2018-07-15 :: 
+date                         nu=222    chr ex=2018-10-26 | 2018-09-07 | 2018-11-30 | 2018-07-10 :: 
+lateCollection               nu=3      num min=0 max=1 mean=0.1316 NA=108 :: 
+unmatched_compound           nu=3      num min=0 max=1 mean=0.009377 NA=107 :: 
+code                         nu=83     num min=1 max=251 mean=85.84 NA=3628 :: 
+dup_receipt                  nu=5      num min=0 max=3 mean=0.07547 NA=3627 :: 
+mult_tax                     nu=3      num min=0 max=1 mean=0.0566 NA=3627 :: 
+rate_verified                nu=2      num min=0 max=1 mean=0.01902 NA=0 :: 
+
+========== admin_data/tax_payments_neighborhoods.dta 
+rows: 356  cols: 14 
+a7                           nu=356    num min=100 max=704 mean=451.3 NA=0 :: Neighborhood
+paid                         nu=36     num min=0 max=69 mean=5.396 NA=0 :: Number unique payers
+amount                       nu=94     num min=0 max=198000 mean=14820 NA=0 :: Total amount paid
+grid_nm                      nu=9      num min=1 max=11 mean=4.77 NA=0 :: Satellite grid (for straficiation)
+hh_final                     nu=177    num min=4 max=372 mean=136 NA=0 :: Estimated house count
+poly_size                    nu=3      num min=1 max=3 mean=2.051 NA=0 :: Population terciles (for stratification)
+stratum                      nu=27     num min=1 max=33 mean=13.36 NA=0 :: Strata for randomization
+program                      nu=2      num min=0 max=1 mean=0.5927 NA=0 :: Assigned to tax campaign
+nganza                       nu=1      num min=0 max=0 mean=0 NA=0 :: Nganza commune
+program_start                nu=77     chr ex=NA | 2016-10-13 | 2016-08-15 | 2016-05-20 :: Start of tax campaign
+non_residential              nu=1      num min=0 max=0 mean=0 NA=0 :: Neighborhood without residential properties
+num_compounds                nu=137    num min=2 max=420 mean=77.09 NA=0 :: (count) respondent
+compliance                   nu=153    num min=0 max=0.6316 mean=0.0693 NA=0 :: Property tax compliance (neighborhood level)
+revenue_per_person           nu=170    num min=0 max=9429 mean=223 NA=0 :: Property tax revenue per capita  (neighborhood level)
+
+========== admin_data/taxroll_noPII.dta 
+rows: 47930  cols: 12 
+compound1                    nu=47930  num min=1e+05 max=6104000 mean=559500 NA=0 :: Write the code for the parcelle
+DateRDV                      nu=151    chr ex= | 27-Nov-18 | 5-Dec-18 | Aug 18, 2018 :: DAY
+MontantIF                    nu=21     chr ex=3000 FC | 2500 FC | 1500 FC | 2000 FC :: 
+Bonus                        nu=7      chr ex=900FC | 750FC | 450FC | 600FC :: 
+DatePaye                     nu=73     chr ex= | 14 septembre 2018 | 27 juin 2018 | 28 juin 2018 :: 
+Exempte                      nu=9      chr ex= | Troisieme age | Veuve | Pensionner Etat :: 
+NbrLoc                       nu=7      num min=0 max=5 mean=0.1333 NA=47082 :: NUMBER OF TENANTS
+Exempté                     nu=9      num min=1 max=10 mean=3.742 NA=47655 :: WHY IS IT EXEMPTED?
+     labels: Membre de la famille=1; Troisieme Age=2; Pensionner dEtat=3; Handicappé=4; Veuve=5; Orphelin=6; Couuvent=7; Eglise=8; Ecole=9; Autre=10 
+Bonus2                       nu=3      chr ex= | Non | Oui :: 
+Observations                 nu=1      chr ex= :: 
+Date                         nu=10     chr ex= | 12 mars 2018 | 2 avril 2018 | 3 avril 2018 :: 
+a7                           nu=363    num min=100 max=6104 mean=559.4 NA=0 :: 
+
+========== admin_data/registration_noPII.dta 
+rows: 48034  cols: 105 
+start                        nu=46521  chr ex=2018-07-16 13:09:22 | 2018-07-16 11:32:28 | 2018-07-16 11:33:46 | 2018-07-16 12:53:15 :: Start Time
+end                          nu=45964  chr ex=2018-07-16 13:16:05 | 2018-07-16 11:33:34 | 2018-07-16 11:42:04 | 2018-07-16 13:03:04 :: End Time
+today                        nu=140    chr ex=2018-07-16 | 2018-07-17 | 2018-07-30 | 2018-07-31 :: Date of Survey
+today_fr                     nu=140    chr ex=16 juillet 2018 | 17 juillet 2018 | 30 juillet 2018 | 31 juillet 2018 :: 
+a7                           nu=363    num min=100 max=6104 mean=559.1 NA=0 :: Location of interview - Polygon ID
+a7b                          nu=369    num min=100 max=6104 mean=562.1 NA=841 :: Location of interview - Polygon ID
+tmt                          nu=6      num min=0 max=4 mean=2.241 NA=7175 :: 
+carto_pay                    nu=2      num min=0 max=0 mean=0 NA=6792 :: IS THIS A CARTO SURVEY OR A SURVEY TO RECORD A PAYMENT DONE DURING THE CARTOGRAP
+     labels: SONDAGE CARTOGRAPHIE=0; SONDAGE PAIEMENT=1 
+first                        nu=3      num min=0 max=1 mean=0.04497 NA=1182 :: IS THIS THE FIRST CARTO SURVEY YOU HAVE DONE IN THIS POLYGON TODAY?
+     labels: Non=0; Oui=1 
+north_east                   nu=3      num min=0 max=1 mean=0.9839 NA=45927 :: HAVE YOU STARTED CARTOGRAPHIE IN THE NORTHEASTERN PART OF THE POLYGON?
+     labels: Non=0; Oui=1 
+col_change                   nu=3      num min=0 max=1 mean=0.01602 NA=3290 :: HAVE THE COLLECTORS WITH YOU CHANGED SINCE YOU STARTED CARTO IN THIS POLYGON TOD
+     labels: Non=0; Oui=1 
+who                          nu=4      num min=0 max=2 mean=0.5568 NA=91 :: Are you with a collector, a chief or both ?
+     labels: Agent DGRKOC=0; Chef=1; Les deux=2 
+chief_asst_pres              nu=3      num min=0 max=1 mean=0.899 NA=32544 :: IS HIS ASSISTANT PRESENT?
+     labels: Non=0; Oui=1 
+house                        nu=3      num min=1 max=3 mean=1.138 NA=0 :: WHAT KIND OF HOUSE DID THE COLLECTOR SAY THIS IS
+     labels: périphérie=1; maison moyenne=2; villa/apartement=3 
+correct                      nu=3      num min=0 max=1 mean=0.9765 NA=1 :: IN YOUR OPINION WAS THIS THE CORRECT CHOICE
+     labels: Non=0; Oui=1 
+house_correct                nu=4      num min=1 max=3 mean=1.908 NA=46903 :: IN YOUR OPINION WHAT DO YOU THINK THE CORRECT TYPE OF HOUSE IS ?
+     labels: périphérie=1; maison moyenne=2; villa/apartement=3 
+breminder_mm2                nu=3      num min=0 max=1 mean=0.9832 NA=43869 :: G0-G3b-reminder_mm2
+other_flyers0                nu=3      num min=0 max=1 mean=0.9876 NA=43117 :: DID THE COLLECTOR FILL IN AND STAPLE THE SECOND FLYER (MM)?
+     labels: Non=0; Oui=1 
+bother_flyers1               nu=3      num min=0 max=1 mean=0.9819 NA=47757 :: G0-G3b-other_flyers1
+col_code                     nu=41     num min=1 max=692000 mean=658.2 NA=43000 :: BEFORE THE HYPHEN
+mm_num                       nu=901    num min=0 max=692000 mean=1193 NA=43000 :: AFTER THE HYPHEN
+mm_rate                      nu=5      num min=6600 max=13200 mean=9835 NA=43000 :: WHAT RATE IS ON THE MM FLIER?
+     labels: 6600=6600; 8800=8800; 11000=11000; 13200=13200 
+old_code                     nu=3233   num min=0 max=1e+07 mean=33130 NA=18 :: If there is an old code, from the previous campaign please erase it and write th
+compound1                    nu=47978  num min=1e+05 max=6104000 mean=559200 NA=0 :: Write the code for the parcelle
+compound2                    nu=47969  num min=56460 max=6104000 mean=559400 NA=0 :: Write the code for the parcelle again
+present_sensi                nu=3      num min=0 max=1 mean=0.736 NA=287 :: IS THERE AN ADULT WHO LIVES ON THE COMPOUND PRESENT RIGHT NOW TO RECEIVE THE INF
+     labels: Non=0; Oui=1 
+present_info_owner           nu=3      num min=0 max=1 mean=0.5132 NA=35429 :: IS THERE AN ADULT AROUND WHO KNOWS THE NAME OF THE OWNER OR THE PERSON RESPONSIB
+     labels: Non=0; Oui=1 
+status                       nu=4      num min=1 max=3 mean=1.711 NA=12614 :: Is this the owner of this house, a renter or a relative of the owner?
+     labels: Property owner=1; Renter=2; Family member of property owner=3 
+owner_found                  nu=3      num min=0 max=1 mean=0.1635 NA=45655 :: Did you find the owner or an adult family member who lives on the compound?
+     labels: Non=0; Oui=1 
+owner_where                  nu=6      num min=0 max=4 mean=0.8568 NA=46044 :: Where are they?
+     labels: ILS VIVENT AILLEURS EN DEHORS DE KANANGA=0; ILS VIVENT AILLEURS A KANANGA=1; ILS SONT SORTIS MOMENTAIREMENT=2; ILS SONT EN VOYAGE=3; PERSONNE NE SAIT OÙ ILS SONT MAIS ILS VIVENT SUR LA PARCELLE=4 
+tenants                      nu=13     num min=0 max=12 mean=0.3622 NA=26023 :: NUMBER OF TENANTS
+exempt                       nu=3      num min=0 max=1 mean=0.287 NA=24003 :: ACCORDING TO THE COLLECTORS, IS THIS HOUSEHOLD EXEMPTED?
+     labels: Non=0; Oui=1 
+why_exempt                   nu=10     num min=1 max=9 mean=3.453 NA=41239 :: WHY IS IT EXEMPTED?
+     labels: Troisieme age=2; Pensionner d'etat=3; Handicapé=4; Veuve=5; Orphelinat=6; Couvent=7; Eglise=8; Ecole=9 
+exempt_other                 nu=47     chr ex= | . | En construction | Aveugle :: ACCORDING TO THE COLLECTORS, IS THIS HOUSEHOLD EXEMPTED? (Other)
+exempt_enum                  nu=3      num min=0 max=1 mean=0.2512 NA=13661 :: ACCORDING TO YOU, SHOULD THIS HOUSEHOLD BE EXEMPTED?
+     labels: Non=0; Oui=1 
+why_exempt2                  nu=9      num min=2 max=9 mean=3.374 NA=39507 :: WHAT EXEMPTION?
+     labels: Troisieme age=2; Pensionner d'etat=3; Handicapé=4; Veuve=5; Orphelinat=6; Couvent=7; Eglise=8; Ecole=9 
+why_exempt2_other            nu=42     chr ex= | . | Malvoyant | En construction :: WHAT EXEMPTION? (Other)
+designate                    nu=3      num min=0 max=1 mean=0.9781 NA=45658 :: Did the collector designate one of the renters as the person responsible for com
+     labels: Non=0; Oui=1 
+designate_why                nu=4      num min=1 max=3 mean=1.159 NA=47990 :: Why did the collector not do this?
+     labels: IL N'Y AVAIT PAS UN LOCATAIRE QUI A ACCEPTE DE FAIRE CELA=1; LE PERCEPTEUR A OUBLIE=2; LE PERCEPTEUR NE VOULAIT PAS=3 
+designate_why_other          nu=10     chr ex= | . | Le locataire a refuse | Le locataire ira donne le tract au proprietaire pour venir payer :: Why did the collector not do this? (Other)
+read_flyers                  nu=3      num min=0 max=1 mean=0.9471 NA=29657 :: DID THE COLLECTOR READ ALL OF THE FLYER
+     labels: Non=0; Oui=1 
+read_flyer2                  nu=28     chr ex= | 0 | 1 2 3 4 | 2 :: WHAT PARTS DID THE COLLECTOR READ?
+treatment_fr                 nu=125    chr ex= | Payez l'impôt foncier afin de montrer que vous avez confiance en l'État et ses agents. | Le Gouvernement Provincial pourra améliorer les infrastructures publiques à Kananga seulement si les résidents paient l'impôt foncier. | Si vous refusez de payer l'impôt foncier, vous pourriez être interpellé à la DGRKOC pour le suivi et le contrôle. :: 
+treatment_tsh                nu=118    chr ex= | Futayi bitadi bia mpangu bua kuleja ne nudi ne dieyemena mu mbulamatadi ne bena mudimu bende. | Mbulamatadi wa Province neikale ne bua kulongolola bintu bia mu Kananga anu bikala bantu bafuta bitadi bia mpangu. | Wewe mubenge kufuta tshitadi tshia lupangu, udi mua kubikidibua kudi DGRKOC bua kulondolola ni kukontolola. :: 
+rate_assigned                nu=5      num min=1500 max=3000 mean=2244 NA=16137 :: 
+read_language                nu=3      num min=1 max=2 mean=1.969 NA=30631 :: IN WHICH LANGUAGES DID THE COLLECTOR READ THE FLYER
+     labels: Francais=1; Tshiluba=2 
+read_who                     nu=4      num min=0 max=2 mean=0.6242 NA=47736 :: WHICH COLLECTOR READ THE TRACT?
+     labels: Agent DGRKOC=0; Chef=1; Les deux=2 
+read_which_chef              nu=3      num min=1 max=2 mean=1.625 NA=47858 :: DID THE CHEF OR THE ASSISTANT READ THE FLIER?
+     labels: Chef=1; Assistant=2 
+what_rate_periph             nu=5      num min=1500 max=3000 mean=2246 NA=34267 :: WHAT TAX RATE DID THE COLLECTOR SAY THE HOUSEHOLD SHOULD PAY?
+     labels: 1500=1500; 2000=2000; 2500=2500; 3000=3000 
+what_rate_periph_other       nu=8      chr ex=. |  | Maison moyen | 11000 :: WHAT TAX RATE DID THE COLLECTOR SAY THE HOUSEHOLD SHOULD PAY? (Other)
+read_message_fr              nu=3      num min=0 max=1 mean=0.9777 NA=47496 :: DID THE COLLECTOR READ OUT THE CORRECT TREATMENT MESSAGE :
+     labels: Non=0; Oui=1 
+read_message_tsh             nu=3      num min=0 max=1 mean=0.9458 NA=31169 :: DID THE COLLECTOR READ OUT THE CORRECT TREATMENT MESSAGE :
+     labels: Non=0; Oui=1 
+who_give_flier               nu=8      num min=1 max=7 mean=2.604 NA=16480 :: TO WHOM DID THE COLLECTORS GIVE THE FLIER?
+     labels: LE PROPRIETAIRE=1; LA FEMME DU PROPRIETAIRE=2; UN AUTRE ADULTE DANS LA FAMILLE DU PROPRIETAIRE=3; UN ENFANT DANS LA FAMILLE DU PROPRIETAIRE=4; UN LOCATAIRE=5; UN VOISIN=6; PERSONNE - ILS ONT REFUSE DE L'ACCEPTER=7 
+collect_now                  nu=3      num min=0 max=1 mean=0.2826 NA=19509 :: Did the collector try to collect taxes on the spot ?
+     labels: Non=0; Oui=1 
+collect_who                  nu=4      num min=0 max=2 mean=0.4061 NA=40103 :: WHICH COLLECTOR TRIED TO COLLECT TAXES ON THE SPOT?
+     labels: Agent DGRKOC=0; Chef=1; Les deux=2 
+why_nocollect                nu=3      num min=1 max=2 mean=1.127 NA=28416 :: WHY DID THE COLLECTOR NOT TRY TO COLLECT ON THE SPOT?
+     labels: PROPRIETAIRE N'EST PAS PRESENT=1; LE PROPRIETAIRE N'A PAS L'ARGENT=2; JE NE SAIS PAS=8888 
+why_nocollect_other          nu=63     chr ex= | Exempte | . | Exempter par age. :: WHY DID THE COLLECTOR NOT TRY TO COLLECT ON THE SPOT? (Other)
+collect_success              nu=3      num min=0 max=1 mean=0.03423 NA=39972 :: DID THE PERSON PAY ?
+     labels: Non=0; Oui=1 
+amt_paid                     nu=9      num min=1500 max=13200 mean=2400 NA=47758 :: HOW MUCH DID THEY PAY?
+     labels: 1500=1500; 2000=2000; 2500=2500; 3000=3000; 6600=6600; 8800=8800; 11000=11000; 13200=13200 
+appointment                  nu=3      num min=0 max=1 mean=0.09628 NA=40379 :: WAS AN APPOINTMENT MADE?
+     labels: Non=0; Oui=1 
+apt_date                     nu=167    chr ex= | Oct 5, 2018 | Sep 15, 2018 | Sep 17, 2018 :: DAY
+chalk_check                  nu=3      num min=0 max=1 mean=0.9983 NA=816 :: THE COMPOUND CODE FOR THIS PARCELLE IS . IS THIS THE SAME CODE THE COLLECTOR WRO
+     labels: Non=0; Oui=1 
+compound1_p                  nu=1      num min=Inf max=-Inf mean=NaN NA=48034 :: Write the code for the parcelle
+compound2_p                  nu=1      num min=Inf max=-Inf mean=NaN NA=48034 :: Write the code for the parcelle again
+periph_vs_mm_p               nu=1      num min=Inf max=-Inf mean=NaN NA=48034 :: EST-CE QU'IL S'AGISSAIT D'UNE MAISON DE TYPE PERIPHERIE OU DE TYPE MAISON MOYENN
+     labels: périphérie=1; maison moyenne=2 
+mm_rate_pp                   nu=1      num min=Inf max=-Inf mean=NaN NA=48034 :: HOW MUCH DID HE COLLECT?
+     labels: 6600=6600; 8800=8800; AUTRE=9999; 11000=11000; 13200=13200 
+what_rate_periph_p           nu=1      num min=Inf max=-Inf mean=NaN NA=48034 :: HOW MUCH DID HE COLLECT?
+     labels: 1500=1500; 2000=2000; 2500=2500; 3000=3000; AUTRE=9999 
+other_amt                    nu=1      num min=Inf max=-Inf mean=NaN NA=48034 :: WHAT OTHER AMOUNT?
+advance                      nu=1      num min=Inf max=-Inf mean=NaN NA=48034 :: WAS THIS AN ADVANCE PAIEMENT?
+     labels: Non=0; Oui=1 
+past_advance                 nu=1      num min=Inf max=-Inf mean=NaN NA=48034 :: HAD HE ALREADY PAID AN ADVANCE AND NOW HE IS COMPLETING THE PAYMENT?
+     labels: Non=0; Oui=1 
+past_advance_amt             nu=1      num min=Inf max=-Inf mean=NaN NA=48034 :: HOW MUCH DID HE COLLECT LAST TIME (AS AN ADVANCE)?
+metainstanceid               nu=48034  chr ex=uuid:5d2e218e-3d1e-4f28-8d47-6daf15ac0987 | uuid:ce22b0cb-fb42-40bc-ad2b-cf37f0203806 | uuid:eb9429b3-b99d-4418-8293-9cf10e4d85b9 | uuid:2bf2378f-45d9-4579-aed6-e007e5f43367 :: meta-instanceID
+key                          nu=48034  chr ex=uuid:5d2e218e-3d1e-4f28-8d47-6daf15ac0987 | uuid:ce22b0cb-fb42-40bc-ad2b-cf37f0203806 | uuid:eb9429b3-b99d-4418-8293-9cf10e4d85b9 | uuid:2bf2378f-45d9-4579-aed6-e007e5f43367 :: KEY
+time                         nu=531    chr ex= | 1:12:00 PM | 12:24:00 PM | 12:00:00 PM :: GX1-time
+know_eachother               nu=3      num min=0 max=1 mean=0.211 NA=5341 :: DOES THE RESPONDENT AND THE COLLECTOR/CHIEF SEEMS TO KNOW EACHOTHER
+     labels: Non=0; Oui=1 
+commune                      nu=5      num min=1 max=4 mean=3.01 NA=91 :: Commune:
+     labels: Lukonga=1; Ndesha=2; Katoka=3; Kananga=4 
+quartier                     nu=21     num min=1 max=25 mean=16.86 NA=169 :: Quartier:
+present                      nu=3      num min=0 max=1 mean=0.8497 NA=47748 :: 
+other_flyers                 nu=3      num min=0 max=1 mean=0.9032 NA=48003 :: 
+other_flyers_other           nu=3      chr ex= | . | Il n’a pas pu donné le tract :: 
+other_flyers_2               nu=2      num min=1 max=1 mean=1 NA=48029 :: 
+other_flyers_2_other         nu=1      num min=Inf max=-Inf mean=NaN NA=48034 :: 
+reminder_mm                  nu=1      num min=Inf max=-Inf mean=NaN NA=48034 :: G6-G7-reminder_mm
+rate                         nu=5      num min=1500 max=3000 mean=2290 NA=47622 :: G6-G7-rate
+what_rate                    nu=9      num min=1500 max=13200 mean=2501 NA=47637 :: G6-G7-what_rate
+what_rate_other              nu=1      num min=Inf max=-Inf mean=NaN NA=48034 :: G6-G7-what_rate_other
+other_flyers1                nu=3      num min=0 max=1 mean=0.9735 NA=47129 :: DID THE COLLECTOR FILL OUT AND STAPLE THE SECOND FLYER (VILLA)?
+     labels: Non=0; Oui=1 
+reminder_mm1                 nu=2      chr ex= | OK :: G7-G8-reminder_mm1
+reminder_mm2                 nu=2      chr ex= | OK :: DID THE COLLECTOR STRIKE OUT THE PERIPHERY RATE ON THE MAIN FLYER?
+reminder_mm3                 nu=2      chr ex= | OK :: G7-G8-reminder_mm3
+a7_compound                  nu=366    num min=100 max=6104 mean=559.1 NA=0 :: 
+date                         nu=1      chr ex= 5 Jun 2019 :: 
+date_f                       nu=1      chr ex=2019-06-05 :: 
+month_tmpp                   nu=1      num min=Inf max=-Inf mean=NaN NA=48034 :: 
+day_tmpp                     nu=10     num min=1 max=30 mean=25.59 NA=45236 :: 
+month_tmp_fr                 nu=11     chr ex=juillet | aout | octobre | septembre :: 
+type                         nu=2      chr ex=ampm | mili :: 
+short_label                  nu=1      chr ex= :: short_label
+value_label                  nu=1      chr ex= :: 
+keep                         nu=1      num min=Inf max=-Inf mean=NaN NA=48034 :: 
+labelEnglish                 nu=1      chr ex= :: label::English
+tot_complete                 nu=2      num min=0 max=1 mean=0.9984 NA=0 :: 
+double_sensi                 nu=2      num min=0 max=1 mean=0.001041 NA=0 :: 
+dup_poly                     nu=2      num min=0 max=0 mean=0 NA=77 :: 
+pilot                        nu=2      num min=0 max=1 mean=0.02446 NA=0 :: 
+
+========== survey_data/chief_consultations.dta 
+rows: 10036  cols: 31 
+start                        nu=80     chr ex=2018-08-01 12:15:21 | 2018-09-17 10:28:06 | 2018-09-12 10:37:44 | 2018-09-17 10:13:58 :: Start Time
+end                          nu=80     chr ex=2018-08-01 15:27:27 | 2018-09-17 13:17:51 | 2018-09-12 14:56:30 | 2018-09-17 15:50:36 :: End Time
+today                        nu=25     chr ex=2018-08-01 | 2018-09-17 | 2018-09-12 | 2018-07-24 :: Date of Survey
+a7                           nu=80     num min=100 max=6103 mean=596.9 NA=0 :: Lieu d'interview - Numéro de polygone
+a7b                          nu=80     num min=100 max=6103 mean=596.9 NA=0 :: ECRIVEZ LE POLYGONE ENCORE UNE FOIS
+who_chief                    nu=50     chr ex=23 | 19 | 11 | 30 :: NOM DU CHEF
+col_focus                    nu=5      num min=0 max=3 mean=2.226 NA=3409 :: PENDANT LA DERNIERE SERIE DES PARCELLES, À QUEL POINT ÉTAIENT LES PERCEPTEURS AT
+     labels: PAS ATTENTIF=0; UN PEU ATTENTIF=1; ATTENTIF=2; TRES ATTENTIF=3 
+chef_info_use                nu=4      num min=1 max=3 mean=2.176 NA=3409 :: PENDANT LA DERNIERE SERIE, A QUEL POINT EST-CE QUE LE CHEF A CONNU LES PARCELLES
+     labels: IL NE LES CONNAIT PAS=0; IL LES CONNAIT UN PEU=1; IL LES CONNAIT=2; IL LES CONNAIT TRES BIEN=3 
+key                          nu=82     chr ex=uuid:88a72011-1ba2-4697-ba06-e5c5f51d1174 | uuid:b74b74c3-0aaa-49d5-838c-4fd326c33cb5 | uuid:3df38f3a-ce81-46a1-bbff-59cf5eba67d0 | uuid:bf868275-7f5f-47a3-9c40-743c68712c88 :: KEY
+compound1                    nu=10036  num min=1e+05 max=6103000 mean=597000 NA=0 :: ECRIVEZ LE CODE DE LA PARCELLE
+polymult                     nu=80     num min=1e+05 max=6103000 mean=596900 NA=0 :: 
+compound                     nu=245    num min=1 max=427 mean=72.72 NA=0 :: 
+pay_ease                     nu=4      num min=0 max=2 mean=0.7626 NA=1315 :: EST CE QUE LE PROPRIÉTAIRE A LES MOYENS ÉCONOMIQUES DE PAYER ? SÉLECTIONNER LA R
+     labels: Diffilement=0; Facilement=1; Très facilement=2; Je ne sais pas=8888 
+willingness                  nu=4      num min=1 max=3 mean=1.987 NA=4363 :: EST CE QUE LE PROPRIÉTAIRE A LA VOLONTÉ DE PAYER ? SELECTIONNER LE JUGEMENT DU C
+     labels: Pas du tout=1; Un peu=2; Beaucoup=3; Je ne sais pas=8888 
+convinced                    nu=2      num min=0 max=1 mean=0.8692 NA=0 :: CONVAINQUANT?
+     labels: Non=0; Oui=1 
+key2                         nu=10036  chr ex=uuid:3971f79d-ed66-4caa-a182-527f3f9ee01a/R[1] | uuid:3971f79d-ed66-4caa-a182-527f3f9ee01a/R[2] | uuid:3971f79d-ed66-4caa-a182-527f3f9ee01a/R[3] | uuid:3971f79d-ed66-4caa-a182-527f3f9ee01a/R[4] :: KEY
+setofr                       nu=1015   chr ex=uuid:3971f79d-ed66-4caa-a182-527f3f9ee01a/R | uuid:88a72011-1ba2-4697-ba06-e5c5f51d1174/R | uuid:8788d2db-9b90-4913-b184-8f4b95fe89b1/R | uuid:cd94600e-d383-445e-a01f-b7882c7a4a05/R :: SET-OF-R
+date                         nu=1      chr ex=22 Feb 2019 :: Date de l'interview
+date_f                       nu=1      chr ex=2019-02-22 :: 
+type                         nu=1      chr ex= :: type
+short_label                  nu=1      chr ex= :: short_label
+value_label                  nu=1      chr ex= :: 
+keep                         nu=1      num min=Inf max=-Inf mean=NaN NA=10036 :: 
+labelFrançais               nu=1      chr ex= :: label::Français
+dup_code                     nu=1      num min=0 max=0 mean=0 NA=0 :: 
+compound1_carto              nu=61     num min=45 max=240 mean=127.7 NA=9961 :: 
+_erge                        nu=2      num min=1 max=3 mean=2.992 NA=0 :: 1
+ _erge                        nu=2      num min=1 max=3 mean=2.992 NA=0 :: 2
+ _erge                        nu=2      num min=1 max=3 mean=2.992 NA=0 :: 3
+ _erge                        nu=2      num min=1 max=3 mean=2.992 NA=0 :: 4
+ _erge                        nu=2      num min=1 max=3 mean=2.992 NA=0 :: 5
+     labels: master only (1)=1; using only (2)=2; matched (3)=3; missing updated (4)=4; nonmissing conflict (5)=5 
+carto_complete               nu=1      num min=Inf max=-Inf mean=NaN NA=10036 :: 
+skipped_code                 nu=2      num min=1 max=1 mean=1 NA=10018 :: 
+_merge                       nu=2      num min=1 max=3 mean=1.004 NA=0 :: 1
+ _merge                       nu=2      num min=1 max=3 mean=1.004 NA=0 :: 2
+ _merge                       nu=2      num min=1 max=3 mean=1.004 NA=0 :: 3
+ _merge                       nu=2      num min=1 max=3 mean=1.004 NA=0 :: 4
+ _merge                       nu=2      num min=1 max=3 mean=1.004 NA=0 :: 5
+     labels: master only (1)=1; using only (2)=2; matched (3)=3; missing updated (4)=4; nonmissing conflict (5)=5 
+tot_complete_cc              nu=1      num min=1 max=1 mean=1 NA=0 :: 
+
+========== admin_data/tax_payment_timing_noPII.dta 
+rows: 4732  cols: 19 
+TDMnumber                    nu=11     chr ex=3 | 9 | 35 | 8 :: TDM number
+date                         nu=4622   chr ex=05-07-2018 00:00:00 | 07-07-2018 00:00:00 | 10-07-2018 00:00:00 | 16-07-2018 00:00:00 :: date
+compound1                    nu=3395   num min=2e+05 max=1.26e+10 mean=3694000 NA=0 :: compound
+amountCF                     nu=23     num min=0 max=18890000 mean=8716 NA=3 :: amountCF
+amountUSD                    nu=4      num min=4.66 max=6.99 mean=5.823 NA=4729 :: amountUSD
+colcode                      nu=9      num min=14 max=101 mean=52.22 NA=4674 :: colcode
+collector_ID                 nu=45     num min=44 max=125 mean=93.67 NA=137 :: collector_ID
+tdm                          nu=46     chr ex=TDM 3 | TDM 9 | TDM 35 | TDM 8 :: prenom
+rateUSD                      nu=35     num min=0 max=99910 mean=67.83 NA=137 :: rateUSD
+date_download                nu=4593   chr ex= | 2018-06-28 14:29:02.773000000 | 2018-06-28 14:29:02.780000000 | 2018-06-28 14:29:02.787000000 :: date_download
+downloadnum                  nu=525    num min=10560 max=11180 mean=10880 NA=137 :: downloadnum
+download_userID              nu=2      num min=2 max=2 mean=2 NA=137 :: download_userID
+today                        nu=183    chr ex=NA | 2018-06-15 | 2018-06-20 | 2018-06-26 :: 
+time                         nu=4192   chr ex=NA | 2018-06-14 23:59:16.992 | 2018-06-19 23:59:30.304 | 2018-06-25 23:59:20.064 :: 
+hours                        nu=18     num min=0 max=21 mean=9.751 NA=0 :: 
+minutes                      nu=60     num min=0 max=59 mean=28.57 NA=0 :: 
+seconds                      nu=60     num min=0 max=59 mean=28.8 NA=0 :: 
+hours_minutes_seconds        nu=4281   num min=0 max=21.47 mean=10.24 NA=0 :: 
+error_code                   nu=1      num min=Inf max=-Inf mean=NaN NA=4732 :: 

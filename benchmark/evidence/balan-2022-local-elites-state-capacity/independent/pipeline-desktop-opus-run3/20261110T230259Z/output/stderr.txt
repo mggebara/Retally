@@ -1,0 +1,57 @@
+nb names: a7 nb names: paid nb names: amount nb names: grid_nm nb names: hh_final nb names: poly_size nb names: stratum nb names: program nb names: nganza nb names: program_start nb names: non_residential nb names: num_compounds nb names: compliance nb names: revenue_per_person 
+ra names: a7 ra names: rouge ra names: geo_stratum ra names: jontax ra names: stratum_jon ra names: commune ra names: joncomp2016 ra names: chef_collect_types ra names: chef_collect_ever ra names: salongo_freq ra names: chef_collect_proptax_ever ra names: appoint_yr ra names: chef_stratum ra names: chef_collect_stratum ra names: stratum ra names: stratum_count ra names: treatment ra names: rand1 ra names: rank1 ra names: count1 ra names: numtoselect1_control ra names: probleft2_control ra names: rand2 ra names: probleft3_control ra names: numtoselect1_central ra names: probleft2_central ra names: probleft3_central ra names: numtoselect1_local ra names: probleft2_local ra names: probleft3_local ra names: numtoselect1_centralwinfo ra names: probleft2_centralwinfo ra names: numtoselect1_centralxlocal ra names: probleft2_centralxlocal ra names: probleft3_centralwinfo ra names: rand3 ra names: order_treatment 
+nb arm table: 
+ Central     CLI Control     CXL   Local    <NA>      108      78       5      49     107       9  
+reg names: start reg names: end reg names: today reg names: today_fr reg names: a7 reg names: a7b reg names: tmt reg names: carto_pay reg names: first reg names: north_east reg names: col_change reg names: who reg names: chief_asst_pres reg names: house reg names: correct reg names: house_correct reg names: breminder_mm2 reg names: other_flyers0 reg names: bother_flyers1 reg names: col_code reg names: mm_num reg names: mm_rate reg names: old_code reg names: compound1 reg names: compound2 reg names: present_sensi reg names: present_info_owner reg names: status reg names: owner_found reg names: owner_where reg names: tenants reg names: exempt reg names: why_exempt reg names: exempt_other reg names: exempt_enum reg names: why_exempt2 reg names: why_exempt2_other reg names: designate reg names: designate_why reg names: designate_why_other reg names: read_flyers reg names: read_flyer2 reg names: treatment_fr reg names: treatment_tsh reg names: rate_assigned reg names: read_language reg names: read_who reg names: read_which_chef reg names: what_rate_periph reg names: what_rate_periph_other reg names: read_message_fr reg names: read_message_tsh reg names: who_give_flier reg names: collect_now reg names: collect_who reg names: why_nocollect reg names: why_nocollect_other reg names: collect_success reg names: amt_paid reg names: appointment reg names: apt_date reg names: chalk_check reg names: compound1_p reg names: compound2_p reg names: periph_vs_mm_p reg names: mm_rate_pp reg names: what_rate_periph_p reg names: other_amt reg names: advance reg names: past_advance reg names: past_advance_amt reg names: metainstanceid reg names: key reg names: time reg names: know_eachother reg names: commune reg names: quartier reg names: present reg names: other_flyers reg names: other_flyers_other reg names: other_flyers_2 reg names: other_flyers_2_other reg names: reminder_mm reg names: rate reg names: what_rate reg names: what_rate_other reg names: other_flyers1 reg names: reminder_mm1 reg names: reminder_mm2 reg names: reminder_mm3 reg names: a7_compound reg names: date reg names: date_f reg names: month_tmpp reg names: day_tmpp reg names: month_tmp_fr reg names: type reg names: short_label reg names: value_label reg names: keep reg names: labelenglish reg names: tot_complete reg names: double_sensi reg names: dup_poly reg names: pilot 
+house table: 
+     1     2     3  39566  5834   261  
+reg date col today share in 2018-19: 0.941541850220264 
+reg date col start share in 2018-19: 1 
+reg date col time share in 2018-19: 0 
+reg date col date_f share in 2018-19: 1 
+reg date col end share in 2018-19: 0.988370044052863 
+chosen reg date col: start 1 
+program_start non-missing: 211 reg-based start non-missing: 347 
+reg-based start range: 2018-06-15 2018-12-08 
+pay names: compound1 pay names: house pay names: tdm pay names: did pay names: rateusd pay names: amountcf pay names: colcode pay names: error_code pay names: polygon pay names: colcode2 pay names: error_colcode pay names: bonus2 pay names: a7 pay names: error_rate pay names: peripherie pay names: maison_moyenne pay names: villas pay names: paid pay names: bonus_paye_carto pay names: amountusd pay names: endofcollect pay names: date pay names: latecollection pay names: unmatched_compound pay names: code pay names: dup_receipt pay names: mult_tax pay names: rate_verified 
+payment id: compound1 
+amount column: amountcf 
+payment rows: 3733 
+pay$paid table: 
+pv    1    3 <NA>  2087  117 1529  
+matched props compound-only: 3535 compound+a7: 3523 
+receipts per compound: 
+    1  3699  
+payer amount quantiles: 
+     0%      1%     10%     50%     90%     99%   99.9%    100%       50    1500    1500    2000    6600   13200   13200 1662800  
+top payer amounts: 1662800 top payer amounts: 1421700 top payer amounts: 13200 top payer amounts: 13200 top payer amounts: 13200 top payer amounts: 13200 top payer amounts: 13200 top payer amounts: 13200 top payer amounts: 13200 top payer amounts: 13200 top payer amounts: 13200 top payer amounts: 13200 top payer amounts: 13200 top payer amounts: 13200 top payer amounts: 13200 
+mean compliance: 0.0775991189427313 
+mean revenue: 215.311674008811 non-missing: 45400 
+compliance by arm: 
+   Central        CLI    Control        CXL      Local  0.07012969 0.07578710 0.00125000 0.06764466 0.09518422  
+revenue by arm: 
+ Central      CLI  Control      CXL    Local  205.6612 200.9845   8.2500 183.1948 260.7842  
+periods Local Central 2018-06-19 2018-12-07 
+  1  2  3  91 65 59  
+periods CLI Central 2018-06-30 2018-11-25 
+  1  2  3  89 59 38  
+N Local+Central: 28714 
+taxes_paid ~ local | stratum coef 0.0219308298473491 se 0.00908125885754096 N 28714 
+taxes_paid ~ local | stratum + period coef 0.032444779103321 se 0.00792649751179864 N 28714 
+taxes_paid ~ local | stratum + period + house_n coef 0.0330814096764586 se 0.00788629220522634 N 28714 
+taxes_paid ~ local | stratum + period + house_n coef 0.0398106210237823 se 0.00903532896749335 N 24618 
+revenue ~ local | stratum + period coef 83.5903178356173 se 23.943302251794 N 28714 
+revenue ~ local | stratum + period + house_n coef 74.1140551709602 se 22.5375994166725 N 28714 
+N pooled Table 7 sample: 44600 
+taxes_paid ~ cli + local + cxl | stratum + period coef 0.00341932954378181 se 0.00930958263452526 N 44600 
+revenue ~ cli + local + cxl | stratum + period coef -5.73554574757016 se 27.2303943990491 N 44600 
+taxes_paid ~ cli + local + cxl | stratum + period + house_n coef 0.00301539034658585 se 0.00929000648460304 N 44600 
+taxes_paid ~ cli + local + cxl | stratum coef -0.00242142846066699 se 0.0102258570437928 N 44600 
+bribe var: bribe 
+    0    1 <NA>  1307   41 2602  
+bribe_b ~ local | stratum coef 0.010904776016905 se 0.0134120200072158 N 778 
+visited table: 
+     0     1     2   3614 24005  8761  
+visited_b ~ local | house_n + stratum + period coef -0.00579780279405212 se 0.0164344171898178 N 22139 
+chief id: compound1 ease var: pay_ease 
+taxes_paid ~ ease | house_n + stratum coef 0.0562420451891948 se 0.00782901802399437 N 8355 

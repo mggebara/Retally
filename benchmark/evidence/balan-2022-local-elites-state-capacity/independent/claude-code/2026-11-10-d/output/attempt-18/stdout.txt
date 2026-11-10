@@ -1,0 +1,45 @@
+Arms 1,2: window 2018-06-19 to 2018-12-11; N before 28884, after 27453; clusters 221 -> 213
+
+Table 4
+  compliance col1                                    b=0.0210 se=0.0077 N=28884
+  compliance col2                                    b=0.0358 se=0.0066 N=27453
+  compliance col4                                    b=0.0362 se=0.0066 N=27453
+  compliance col5                                    b=0.0439 se=0.0076 N=23527
+  revenue col1                                       b=50.0672 se=23.4806 N=28884
+  revenue col2                                       b=84.2514 se=21.4860 N=27453
+  revenue col4                                       b=77.3679 se=19.6330 N=27453
+  Central means: col1 compliance 0.068 revenue 193.5; col2 compliance 0.059 revenue 176.9
+
+Table 5
+  paid bribe endline                                 b=0.0137 se=0.0074 N=1217
+  Central mean 0.013
+
+Table 6
+  visited by collector                               b=0.0276 se=0.0252 N=16332
+  Central mean 0.415
+Arms 1,3: window 2018-06-30 to 2018-11-28; N before 23926, after 19820; clusters 190 -> 157
+
+Table 7
+  CLI compliance                                     b=0.0240 se=0.0079 N=19820
+  CLI revenue                                        b=38.1544 se=18.5268 N=19820
+
+Table 8
+  ease of payment (CLI)                              b=0.0591 se=0.0071 N=8136
+  clusters 80
+
+DEVIATION: time periods use each property's registration date; the paper's exact period construction (online Appendix A2.5) is not available, so the trimmed samples differ from the paper's (Local/Central col 2 has the paper's 213 clusters but fewer properties; CLI/Central keeps 155 rather than 165 clusters).
+DEVIATION: payment records flagged error_code==1 are not counted; two payment amounts above 13,200 CF (1.42m and 1.66m CF) are capped at 13,200 CF.
+DEVIATION: endline bribe outcome set to 0 for households reporting no collector visit (question asked only of visited households).
+RESULT:compliance_local_table4_panelA_col1=0.020967
+RESULT:compliance_local_table4_panelA_col2=0.035816
+RESULT:compliance_local_house_fe_table4_panelA_col4=0.036226
+RESULT:compliance_local_exempt_excluded_table4_panelA_col5=0.043914
+RESULT:revenue_local_table4_panelB_col2=84.251351
+RESULT:revenue_local_house_fe_table4_panelB_col4=77.367889
+RESULT:n_obs_table4_col1=28884
+RESULT:n_obs_table4_col2=27453
+RESULT:paid_bribe_endline_local_table5_panelB=0.013748
+RESULT:visited_by_collector_local_table6_col1=0.027613
+RESULT:compliance_cli_table7_col1=0.024012
+RESULT:revenue_cli_table7_col2=38.154372
+RESULT:compliance_ease_of_payment_cli_table8_panelA_col2=0.059098

@@ -1,0 +1,128 @@
+registration columns: start end today today_fr a7 a7b tmt carto_pay first north_east col_change who chief_asst_pres house correct house_correct breminder_mm2 other_flyers0 bother_flyers1 col_code mm_num mm_rate old_code compound1 compound2 present_sensi present_info_owner status owner_found owner_where tenants exempt why_exempt exempt_other exempt_enum why_exempt2 why_exempt2_other designate designate_why designate_why_other read_flyers read_flyer2 treatment_fr treatment_tsh rate_assigned read_language read_who read_which_chef what_rate_periph what_rate_periph_other read_message_fr read_message_tsh who_give_flier collect_now collect_who why_nocollect why_nocollect_other collect_success amt_paid appointment apt_date chalk_check compound1_p compound2_p periph_vs_mm_p mm_rate_pp what_rate_periph_p other_amt advance past_advance past_advance_amt metainstanceid key time know_eachother commune quartier present other_flyers other_flyers_other other_flyers_2 other_flyers_2_other reminder_mm rate what_rate what_rate_other other_flyers1 reminder_mm1 reminder_mm2 reminder_mm3 a7_compound date date_f month_tmpp day_tmpp month_tmp_fr type short_label value_label keep labelEnglish tot_complete double_sensi dup_poly pilot 
+registration raw rows: 48034 
+compound ids appearing in more than one neighborhood: 0 
+dup_poly :
+
+    0  <NA> 
+47957    77 
+double_sensi :
+
+    0     1 
+47984    50 
+tot_complete :
+
+    0     1 
+   77 47957 
+registration rows (dedup): 47978  neighborhoods: 363 
+house:
+
+    1     2     3 
+41641  6052   285 
+pilot:
+
+    0     1 
+46803  1175 
+taxroll columns: compound1 DateRDV MontantIF Bonus DatePaye Exempte NbrLoc Exempté Bonus2 Observations Date a7 
+randomization columns: a7 rouge geo_stratum jontax stratum_jon commune joncomp2016 chef_collect_types chef_collect_ever salongo_freq chef_collect_proptax_ever appoint_yr chef_stratum chef_collect_stratum stratum stratum_count treatment rand1 rank1 count1 numtoselect1_control probleft2_control rand2 probleft3_control numtoselect1_central probleft2_central probleft3_central numtoselect1_local probleft2_local probleft3_local numtoselect1_centralwinfo probleft2_centralwinfo numtoselect1_centralxlocal probleft2_centralxlocal probleft3_centralwinfo rand3 order_treatment 
+randomization neighborhoods: 356 
+randomization treatment column: treatment 
+                   mapped
+raw                   0   1   2   3   4
+  Central             0 110   0   0   0
+  Central With Info   0   0   0  80   0
+  Central X Local     0   0   0   0  51
+  Control             5   0   0   0   0
+  Local               0   0 110   0   0
+strata: 32  missing: 0 
+neighborhood registration tmt vs randomization:
+      rand
+reg     0  1  2  3  4 <NA>
+  0     5  0  0  0  0    0
+  1     0 80  0  0  0    0
+  2     0  0 97  0  0    0
+  3     0  0  0 77  0    0
+  4     0  0  0  0 51    0
+  <NA>  0 30 13  3  0    7
+neighborhoods whose de facto treatment differs from assignment: 0 
+tax_payments columns: compound1 house TDM did rateUSD amountCF colcode error_code polygon colcode2 error_colcode Bonus2 a7 error_rate Peripherie Maison_Moyenne Villas paid Bonus_paye_carto amountUSD endOfCollect date lateCollection unmatched_compound code dup_receipt mult_tax rate_verified 
+payments dup_receipt :
+z
+   0    1    2    3 <NA> 
+ 101    3    1    1 3627 
+payments lateCollection :
+z
+   0    1 <NA> 
+3148  477  108 
+payments mult_tax :
+z
+   0    1 <NA> 
+ 100    6 3627 
+payments error_code :
+z
+   0    1 <NA> 
+3509  222    2 
+payments unmatched_compound :
+z
+   0    1 <NA> 
+3592   34  107 
+payments error_rate :
+z
+   0    1 <NA> 
+2382  228 1123 
+payments endOfCollect :
+z
+21380 21389 21397 21411 21425 21432 21439 21453 21460 21467 21481 21488 21495 
+  474   251   134   325   322    78   296   204   102   319   209    79   210 
+21503 21508 21509 21516 21522 21525 21536 21539  <NA> 
+   47   105   270    30    98    20    16    23   121 
+payments paid :
+z
+   1    3 <NA> 
+2087  117 1529 
+payments rate_verified :
+z
+   0    1 
+3662   71 
+amountCF quantiles (raw):
+     0%     10%     25%     50%     75%     90%     95%     99%    100% 
+     50    1500    1500    2000    2500    6600    8800   13200 1662800 
+payment rows dropped (duplicate receipt / late collection): 480 of 3733 
+DEVIATION: Dropped duplicate receipts and late-collection payments and counted one payment (max amount) per property, since summed amounts double-counted revenue
+payment id column: compound1  amount column: amountCF  payment a7 column: a7 
+  payer records: 3232  matched on (a7,id): 3221  matched on id only: 10  unmatched: 1 
+timing from registration column: today  missing: 2793 
+  filled 2793 dates from start 
+DEVIATION: Campaign-wave FE built from property-level registration date (alternate date fields, then neighborhood median, where missing)
+pilot neighborhoods dropped: 7 
+Treatment allocation (neighborhoods / properties):
+  0   1   2   3   4 
+  5 110 110  80  51 
+
+    0     1     2     3     4 
+  800 14702 14601 10042  6373 
+today_alt summary:
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+  21350   21397   21439   21440   21487   21529 
+mean compliance by arm:
+         0          1          2          3          4 
+0.00000000 0.06692967 0.07780289 0.06791476 0.05131021 
+mean revenue by arm:
+       0        1        2        3        4 
+  0.0000 195.1639 324.7483 177.7933 140.8285 
+mean revenue per payer by arm:
+       1        2        3        4 
+2915.955 4173.988 2617.889 2744.648 
+DEVIATION: Campaign-wave bins made open-ended at the first and last wave so early/late registration dates are not dropped
+RESULT:compliance_local_table4_panelA_col1=0.01334033267
+RESULT:compliance_local_table4_panelA_col2=0.02258786702
+RESULT:compliance_local_house_fe_table4_panelA_col4=0.02328626915
+RESULT:compliance_local_exempt_excluded_table4_panelA_col5=0.02817863355
+RESULT:revenue_local_table4_panelB_col2=115.1581277
+RESULT:revenue_local_house_fe_table4_panelB_col4=89.99662877
+RESULT:n_obs_table4_col1=29303
+RESULT:n_obs_table4_col2=29303
+RESULT:paid_bribe_endline_local_table5_panelB=0.01819014243
+RESULT:visited_by_collector_local_table6_col1=0.008351130348
+RESULT:compliance_cli_table7_col1=0.008674444493
+RESULT:revenue_cli_table7_col2=6.016496355
+RESULT:compliance_ease_of_payment_cli_table8_panelA_col2=0.0560205743

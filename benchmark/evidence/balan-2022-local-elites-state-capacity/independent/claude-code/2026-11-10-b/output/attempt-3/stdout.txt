@@ -1,0 +1,805 @@
+month_tmp_fr:
+
+               aout     avril  decembre   février   juillet      juin      mars  novembre   octobre septembre 
+     2798      8884       646      1957       210      5925      5484       319      6483      7926      7402 
+time head:
+ [1] "" "" "" "" "" "" "" "" "" "" "" "" "" "" "" "" "" "" "" ""
+rows in 356 nbhds: 46859  nbhds: 356 
+
+    0     1     2     3     4 
+  800 14829 14630 10147  6453 
+
+    0 
+46859 
+
+    1     2     3 
+40560  6014   285 
+
+    0     1 
+   68 46791 
+
+    0     1 
+46809    50 
+non-villa by treatment
+
+    0     1     2     3     4 
+  800 14711 14604 10048  6411 
+dup compound1 within non-villa: 56 
+
+    0     1     2     3     4 
+  800 14702 14601 10042  6373 
+tot_complete==1:
+
+    0     1     2     3     4 
+  800 14690 14601 10042  6373 
+double_sensi==0 & tot_complete:
+
+    0     1     2     3     4 
+  800 14690 14601 10042  6323 
+missing today by treatment:
+   
+    FALSE  TRUE
+  0   800     0
+  1 13339  1372
+  2 13965   639
+  3 10048     0
+  4  5624   787
+missing today by a7 (C/L):
+    a7 treatment month   n nmiss
+1  224         1     7  86    86
+2  238         1     7 171   136
+3  327         2     5 128   128
+4  343         1     7 253   253
+5  356         1     7 187   187
+6  514         2     6  64    64
+7  533         1     7 198   198
+8  538         2     3 131   131
+9  544         1     7 194   194
+10 588         2     2  92    92
+11 596         1     7 196   196
+12 658         2     3 144   144
+13 664         2     4  80    80
+14 678         1     7 122   122
+all nbhd counts (non-villa):
+   treatment month  k    n      d0min      d0max
+1          0     1  1  131 2018-07-09 2018-07-09
+2          0     2  1  206 2018-08-06 2018-08-06
+3          0     3  1  214 2018-09-03 2018-09-03
+4          0     4  1  147 2018-10-01 2018-10-01
+5          0     5  1  102 2018-10-29 2018-10-29
+6          1     1 30 3562 2018-06-15 2018-06-23
+7          1     3 30 4296 2018-08-13 2018-08-17
+8          1     5 30 3775 2018-10-08 2018-10-15
+9          1     6 10 1442 2018-10-16 2018-11-08
+10         1     7 10 1636 2018-11-07        Inf
+11         2     1 20 2740 2018-06-24 2018-12-03
+12         2     2 20 2507 2018-07-30        Inf
+13         2     3 20 2717 2018-08-27        Inf
+14         2     4 18 2197 2018-09-24        Inf
+15         2     5 15 2169 2018-10-22        Inf
+16         2     6 14 1823 2018-11-19        Inf
+17         2     7  3  451 2018-12-03 2018-12-06
+18         3     2 30 3413 2018-07-16 2018-07-20
+19         3     4 30 3880 2018-09-10 2018-09-14
+20         3     6 20 2755 2018-11-05 2018-11-12
+21         4     1 11 1332 2018-07-02 2018-12-03
+22         4     2  9 1163 2018-08-06 2018-10-30
+23         4     3 10 1303 2018-09-03 2018-12-05
+24         4     4  9 1151 2018-10-01 2018-10-30
+25         4     5  5  462 2018-10-29        Inf
+26         4     6  5  711 2018-12-06        Inf
+27         4     7  2  289 2018-10-29 2018-12-07
+payments in reg:
+
+FALSE  TRUE 
+  140  3593 
+  compound1  a7 amountCF       date house paid error_code
+1    507014 507  1421700 2018-10-23    NA    1          0
+2    635123 635       NA 2018-08-29    NA    1          0
+3    650022 650       NA 2018-10-19    NA    1          0
+4    650038 650       NA 2018-10-22    NA    1          0
+5    653002 653  1662800 2018-11-15    NA    1          0
+6    653096 653       50 2018-11-14    NA    1          0
+7    670057 670       NA       <NA>    NA   NA          0
+8    670144 670       NA       <NA>    NA   NA          0
+payment a7 vs compound a7 mismatch: 9 
+payment date - reg date by arm-month (days):
+   rtreat rmonth   n   q10 q50   q90       dmin       dmax
+1       0      3   1 112.0 112 112.0 2018-12-24 2018-12-24
+2       1      1 468   4.0  14  22.7 2018-06-15 2018-11-13
+3       1      3 296   5.0  14  22.0 2018-08-02 2018-09-26
+4       1      5 205   2.0  11  22.0 2018-10-08 2018-12-10
+5       1      6  47   0.6   8  10.8 2018-08-01 2018-11-23
+6       1      7  20   6.0   6   6.0 2018-11-13 2018-12-06
+7       2      1 247   1.0  13  29.4 2018-06-25 2018-12-16
+8       2      2 322   1.0  11  24.0 2018-07-30 2018-12-03
+9       2      3 205   4.3  13  22.0 2018-08-28 2019-01-30
+10      2      4 209   2.0  13  23.8 2018-09-24 2018-12-17
+11      2      5 270   5.0  14  24.0 2018-10-22 2018-12-15
+12      2      6  99   2.0   7  18.2 2018-11-20 2018-12-28
+13      2      7  16   6.0   8  11.0 2018-12-12 2018-12-17
+14      3      2 324   1.0  15  23.0 2018-07-16 2018-11-30
+15      3      4 322   1.0  12  31.7 2018-06-28 2018-11-28
+16      3      6 105   0.0   8  14.0 2018-11-05 2018-12-03
+17      4      1 134   0.0   8  23.0 2018-07-02 2018-12-14
+18      4      2  70   2.9   9  25.0 2018-06-05 2018-11-26
+19      4      3 102   2.0   9  23.0 2018-09-03 2018-11-22
+20      4      4  78   4.0  12  23.4 2018-09-14 2018-11-21
+21      4      5  13   6.2   9  21.6 2018-10-30 2018-12-14
+22      4      6  23    NA  NA    NA 2018-11-26 2018-12-18
+23      4      7  17   4.8  11  22.6 2018-11-01 2018-11-23
+paid var x error_code
+      
+          0    1 <NA>
+  1    1909  178    0
+  3     106   11    0
+  <NA> 1494   33    2
+
+===== survey_data/midline_noPII.dta 302 
+a7 | G1-A7
+compound | Number of compound
+start | Start Time
+end | End Time
+today | Date of Survey
+key | KEY
+a7b | G1-A7b
+a7c | G1-A7c
+a7_check | G1-A7_check
+a7d | G1-A7d
+treatment | 
+month | 
+compound2 | Number of compound
+nocode | Ask the people in this household why there is no code, and choose the appropriat
+possible_compound | ACCORDING TO YOU, WHAT SHOULD THE NUMBER HAVE BEEN HAD IT NOT BEEN ERASED?
+why_no_code | WRITE WHY YOU CANNOT EVEN ESTIMATE THE CODE
+revisits_dates | HOW MANY SEPARATE DATES ARE WRITTEN IN CHALK NEXT TO THE CODE?
+date1 | SELECT THE FIRST DATE WRITTEN ON THE WALL
+date2 | SELECT THE NEXT DATE WRITTEN ON THE WALL
+date3 | SELECT THE NEXT DATE WRITTEN ON THE WALL
+date4 | SELECT THE NEXT DATE WRITTEN ON THE WALL
+date5 | SELECT THE NEXT DATE WRITTEN ON THE WALL
+date6 | SELECT THE NEXT DATE WRITTEN ON THE WALL
+date7 | SELECT THE NEXT DATE WRITTEN ON THE WALL
+date8 | SELECT THE NEXT DATE WRITTEN ON THE WALL
+date9 | SELECT THE NEXT DATE WRITTEN ON THE WALL
+date10 | SELECT THE NEXT DATE WRITTEN ON THE WALL
+survey1 | DID A MEMBER OF THIS PARCELLE PARTICIPATE IN SURVEY 1?
+survey1_code | WRITE THE CODE OF THE RESPONDENT FROM SURVEY 1.
+survey1_resp_same | ARE YOU INTERVIEWING THE SAME RESPONDENT AS SURVEY 1? NAME: .
+survey1_resp_diff | YOU SHOULD FIND THE ORIGINAL SURVEY 1 RESPONDENT IF AT ALL POSSIBLE. 
+
+IF NOT, W
+survey_chef | DID A MEMBER OF THIS PARCELLE PARTICIPATE IN THE CHEF SURVEY?
+survey_chef_code | WRITE THE CODE OF THE RESPONDENT FROM CHEF SURVEY.
+chef_resp_same | ARE YOU INTERVIEWING THE SAME RESPONDENT AS THE CHEF SURVEY? NAME: .
+chef_resp_diff | YOU SHOULD FIND THE CHEF IF POSSIBLE
+
+IF NOT, WHY ARE YOU INTERVIEWING ANOTHER P
+compound_chef | DOES THIS COMPOUND BELONG TO THE CHEF DE LOCALITE WHO IS WORKING ON THE TAX CAMP
+compound_assis | DOES THIS COMPOUND BELONG TO THE ASSISTANT OF THE CHEF DE LOCALITE WHO IS WORKIN
+exempt | IS THIS A CHURCH OR STATE BUILDING THAT IS EXEMPTED?
+first_attempt | IS THIS THE FIRST TIME YOU HAVE VISITED THIS COMPOUND FOR THE MONITORING SURVEY?
+present | IS THERE AN ADULT FROM THE HOUSE OF THE PROPERTY OWNER WITH WHOM YOU CAN DO THE
+abandoned | IN YOUR OPINION, IS THIS PARCELLE ABANDONED?
+lang | What is the language of the interview?
+visited | Has your household been visited by a tax collector or another authority in 2018
+visits | How many times did they come in total since June, including the visit to assign
+flier | Did your household receive a flier about this campaign?
+paid_self | To date, has your household paid the property tax in 2018?
+taxed_dk | Is there someone else here who might know if your household has paid?
+paid_who | Whom did your household pay?
+why_pay | Among the following options, which was the most important reason why your househ
+why_pay_o | HE INSISTED ON WHAT OTHER REASON?
+pubgoods | In your opinion, how much of the money collected in property taxes will be spent
+sanctions | In your opinion, do you think a public authority will pursue and enforce sanctio
+bribe_amt | How much did you pay?
+whopay | Did you pay them, or did another member of your household?
+whopay2 | Which other member of your household paid?
+neighbor_know | Do you know how much the collectors asked your neighbors or friends to pay?
+num_500 | NOMBRE DE VOISINS/AMIS QUI DEVAIENT PAYER 500 FC
+num_1000 | NOMBRE DE VOISINS/AMIS QUI DEVAIENT PAYER 1000 FC
+num_1500 | NOMBRE DE VOISINS/AMIS QUI DEVAIENT PAYER 1500 FC
+num_2000 | NOMBRE DE VOISINS/AMIS QUI DEVAIENT PAYER 2000 FC
+num_2500 | NOMBRE DE VOISINS/AMIS QUI DEVAIENT PAYER 2500 FC
+num_3000 | NOMBRE DE VOISINS/AMIS QUI DEVAIENT PAYER 3000 FC
+num_4000 | NOMBRE DE VOISINS/AMIS QUI DEVAIENT PAYER 4000 FC
+num_5000 | NOMBRE DE VOISINS/AMIS QUI DEVAIENT PAYER 5000 FC
+num_6000 | NOMBRE DE VOISINS/AMIS QUI DEVAIENT PAYER 6000 FC
+num_6600 | NOMBRE DE VOISINS/AMIS QUI DEVAIENT PAYER 6600 FC
+num_7000 | NOMBRE DE VOISINS/AMIS QUI DEVAIENT PAYER 7000 FC
+num_8000 | NOMBRE DE VOISINS/AMIS QUI DEVAIENT PAYER 8000 FC
+num_8800 | NOMBRE DE VOISINS/AMIS QUI DEVAIENT PAYER 8800 FC
+num_9000 | NOMBRE DE VOISINS/AMIS QUI DEVAIENT PAYER 9000 FC
+num_10000 | NOMBRE DE VOISINS/AMIS QUI DEVAIENT PAYER 1000 FC
+num_11000 | NOMBRE DE VOISINS/AMIS QUI DEVAIENT PAYER 11000 FC
+num_12000 | NOMBRE DE VOISINS/AMIS QUI DEVAIENT PAYER 12000 FC
+num_13000 | NOMBRE DE VOISINS/AMIS QUI DEVAIENT PAYER 13000 FC
+num_13200 | NOMBRE DE VOISINS/AMIS QUI DEVAIENT PAYER 13200 FC
+num_9999 | NOMBRE DE VOISINS/AMIS QUI DEVAIENT PAYER PLUS QUE 13200 FC
+rand_neighbor | random number determining if the question neighbor_know2 is asked
+neighbor_know2 | Do you have any sense if it was the same, more, or less than what they asked you
+num_less | NUMBER WHO PAID LESS
+num_same | NUMBER WHO PAID SAME
+num_more | NUMBER WHO PAID MORE
+rand_discount | 
+discount_know | Have you heard of anyone receiving an official reduction in the amount they were
+discount_self | Did you receive a reduction?
+salongo | Did someone from your household participate in Salongo in the past two weeks?
+salongo_hours | For how many hours did they participate in Salongo
+sex_prop | Is the owner a man or a woman?
+age_prop | How old is the owner?
+age_prop_guess | Please estimate the owner's age.
+whopay3 | Is the person who paid available for a short survey?
+whopay3c | WHAT IS THE RELATION BETWEEN THE PERSON WITH WHOM YOU ARE DOING THE SURVEY AND T
+exempt_not | ACCORDING TO YOU (THE ENUMERATOR), SHOULD THIS PERSON HAVE BEEN EXEMPTED?
+tot_complete_short | 
+sample_select | 
+long_select | 
+nocode_rand | 
+nocode_select | 
+paid_rand | 
+paid_select | 
+status | Are you the owner of this house, or do you rent?
+crieur | Did you hear the cry-er using the megaphone in your neighborhood to inform peopl
+col_type_fr | Was it the DGRKOC agents, the locality chief (or his deputy), or both who visite
+col_type_tsh | Was it the DGRKOC agents, the locality chief (or his deputy), or both who visite
+chef_type | Which chefs visited you for this property tax campaign?
+visits_other1a | Aside from their visits to your compound, have you spoken with a DGRKOC tax coll
+visits_other1b | How many times did you speak with them about the property tax in total?
+visits_other2a | Have you spoken with a DGRKOC tax collector or the chef de localité (and/or his
+visits_other2b | How many times did you speak with them about the property tax in total?
+know_col | The collectors who came to your house this year to collect IF/IRL --- did you kn
+know_how | How did you know them?
+vis12 | PROPERTY TAX:
+paid_amt | If you are comfortable with it, can I also ask you the amount you paid?
+paid_nb | COMMENTAIRES:
+receipt | Did the tax collector give you a receipt?
+no_receipt | Why did he not give you a receipt?
+receipt_type | Was the receipt printed by a portable printer, or handwritten?
+receipt_later | To date, did the collector ever come back to collect the rest of the money?
+receipt_show | Would you mind showing me the receipt you received?  This will help us check tha
+receipt_noshow | WHY DID THE PERSON REFUSE TO SHOW YOU THE RECEIPT.
+code_same | HERE IS THE CODE OF THE PARCELLE:. DOES THIS MATCH THE CODE ON THE RECEIPT? THE
+code_diff | IF NOT, WRITE THE CODE WRITTEN ON THE RECEIPT.
+col_code | WRITE THE COLLECTOR CODE
+receipt_photo_ok | May I take a photo of the receipt?
+receipt_photo_no | WHY DID THE PERSON REFUSE TO LET YOU PHOTOGRAPH THE RECEIPT?
+receipt_photo_no_other | WHY DID THE PERSON REFUSE TO LET YOU PHOTOGRAPH THE RECEIPT? (Other)
+receipt_photo | TAKE A PHOTO OF THE RECEIPT. MAKE SURE IT IS CLEAR.
+amount_match | IS THE AMOUNT PAID ON THE RECEIPT THE SAME AS THE AMOUNT THE RESPONDENT TOLD YOU
+amount_new | WRITE THE AMOUNT WRITTEN ON THE RECEIPT
+amount_match_no | I see that the amount written on the receipt does not match what you told me. Mi
+tax_obs | DO YOU HAVE ANY OTHER OBSERVATIONS ABOUT THIS PERSON'S EXPERIENCE WITH THE TAX C
+tot_complete_control | 
+consent7 | Do you have any questions, or would you like more information about the activiti
+hh_head | IS THIS THE HOUSEHOLD HEAD?
+hh_relation | What is your relationship with the household head?
+hh_relation_other | What is your relationship with the household head? (Other)
+born_kga | Were you born in Kananga?
+move_kga | What year did you move to Kananga?
+sex | SELECT THE SEX OF THE INTERVIEWEE.
+age | How old were you at your last birthday?
+edu | What is the highest level of school you have reached?
+edu2 | What is the last class reached in that level?
+dgrkoc_submit | In general, think of what the DGRKOC tax collectors will do with the money they
+dgrkoc_steal | How much of this money will they put in their pockets?
+chef_submit | In general, think of what the chefs de localite (and their deputies) will do wit
+chef_steal | How much of this money will they put in their pockets?
+gov_use | Now I would like to ask you what you think the provincial government will do wit
+gov_steal | Corruption and waste:
+neighbors_pay | In your opinion, how many of your neighbors have already paid the property tax i
+tax_oblig | Now, I would like to ask you if you think it is currently an obligation to pay I
+dgrkoc_perform | Overall, how would you rate the performance of the tax ministry in Kananga?
+gov_perform | Overall, how would you rate the performance of the provincial government in Kana
+chef_perform | Overall, how would you rate the performance of your locality chief and his deput
+salongo2 | Did you participate in Salongo in the past two weeks?
+salongo_who | Who organised Salongo?
+conflict | Now imagine that you have a conflict with your neighbor (for example a dispute a
+trust_gov | The provincial government
+trust_dgrkoc | I am going to name a number of organizations. For each one, could you tell me ho
+trust_chef | I am going to name a number of organizations. For each one, could you tell me ho
+payment | Now, please take this 500 FC to thank you for the time you have spent with me to
+tot_complete_long | 
+photo | Take a photo of the respondent.
+hh_photo | TAKE A PICTURE OF THE HOUSE. BE SURE THAT THE PHOTO IS CLEAR. WE ARE GOING TO US
+walls | OBSERVE THE PRINCIPAL MATERIAL OF THE WALLS OF THE MAIN HOUSE.
+walls_other | OBSERVE THE PRINCIPAL MATERIAL OF THE WALLS OF THE MAIN HOUSE. (Other)
+roof | OBSERVE THE PRINCIPAL MATERIAL OF THE ROOF.
+roof2 | WHAT IS THE CONDITION OF THE ROOF?
+ravine | IS THIS COMPOUND THREATENED BY A RAVINE?
+metainstanceid | meta-instanceID
+a3 | G1-A3
+a4 | G1-A4
+tmt | 
+commune | 
+quartier | 
+locality | 
+survey_chec_code | 
+attempt | 
+attempt2 | 
+attempt3 | 
+job | What type of work does the property owner do now?
+job_other | What type of work does the property owner do now? (Other)
+job_gov | Does a close member of the family of the property owner work for the provincial
+tribe | What is his tribe?
+move_ave | For how many years has he lived on this avenue?
+ave_vis2 | Pourquoi ils n'ont pas visité votre maison?
+ave_vis2_other | other: Pourquoi ils n'ont pas visité votre maison?
+exempt_not_enums | SELON VOUS (L'ENQUETEUR), EST-CE QUE CETTE PARCELLE AURAIT DU ETRE EXEMPTE? SI O
+bribe | Whom did your household pay?
+whopay3d | POURQUOI EST-CE QUE LE PAYEUR N'EST PAS DISPONIBLE?
+whopay3d_other | Other: POURQUOI EST-CE QUE LE PAYEUR N'EST PAS DISPONIBLE?
+whopaprenom | OK, FAITES UN EFFORT DE CONTACTER LA PERSONNE ET FIXEZ UN RENDEZVOUS AVEC LUI. A
+appt | G2-G3-appt
+whoreceipt | SI VOUS NE POUVEZ PAS  L'ATTEINDRE, REVENEZ A CETTE PARCELLE PLUS TARD.
+consent1b | Maintenant, je voudrais vous demander si vous pouvez faire un entretien court. V
+consent2 | G2-G4-G5-consent2
+consent3 | G2-G4-G5-consent3
+consent3b | Avant de continuer, laissez-moi souligner une chose très importante. Si à n'impo
+consent4 | G2-G4-G5-consent4
+consent6 | I would also like to ask your permission to take an audio recording of our inter
+record | NOW TURN ON THE AUDIO RECORDING.
+rumor1 | Before they came, had you heard of the on the ground campaign to collect propert
+rumor2 | Before today, had you heard of the on the ground campaign to collect property ta
+rumor3 | Who told you about the campaign?
+rumor3_other | Other: Who told you about the campaign?
+tdm | When the collectors came to your house to collect the tax, did they have a porta
+name_match | G2-G4-G6-G10-name_match
+name_match_no | Reason for this difference between the name written on the receipt and the name
+bribe2a | Apart from the  that you paid, did the collector ask you for another small sum o
+bribe2a_amt | How much did you pay?
+bribe2b | Apart from the  that you paid, did the collector ask you for another small sum o
+bribe2b_amt | How much did you pay?
+bribe3 | Did the collector ask you for another small sum apart from the tax (for example,
+bribe3_amt | How much did you pay?
+dgrkoc_imp | To what degree do you think the work done by the DGRKOC tax collectors is import
+gov_imp | To what degree do you think the work done by the chief of locality and his deput
+chef_imp | To what degree do you think the work done by the chief of locality and his deput
+salongo_acceptability | Imagine your chef de localité asks several members of the community to participa
+trust_police | I am going to name a number of organizations. For each one, could you tell me ho
+trust_kin | I am going to name a number of organizations. For each one, could you tell me ho
+provide0 | Acknowledge : I am going to list some services/infrastructure many communities h
+provide_schools | The Schools . I am going to list some services/infrastructure many communities h
+provide_schools_other | Other: The Schools . I am going to list some services/infrastructure many commun
+provide_water | Water system/wells .I am going to list some services/infrastructure many communi
+provide_water_other | Other: Water system/wells .I am going to list some services/infrastructure many
+provide_health | Health care. I am going to list some services/infrastructure many communities ha
+provide_health_other | Other : Health care. I am going to list some services/infrastructure many commun
+provide_security | Economic development. I am going to list some services/infrastructure many commu
+provide_security_other | Other: Economic development. I am going to list some services/infrastructure man
+provide_welfare | Keeping people safe. I am going to list some services/infrastructure many commun
+provide_welfare_other | Other:Keeping people safe. I am going to list some services/infrastructure many
+provide_development | Helping poor people. I am going to list some services/infrastructure many commun
+provide_development_ot | Other: Helping poor people. I am going to list some services/infrastructure many
+provide_roads | Road maintenance. I am going to list some services/infrastructure many communiti
+provide_roads_other | Other : Road maintenance. I am going to list some services/infrastructure many c
+know_dgrkoc | Do you know the name of the provincial tax ministry in Kananga?
+dgrkoc_info | EXPLAIN WHAT THE DGRKOC IS.
+attempt_check | 
+make_appt | G2-G3-make_appt
+first | 
+miss_visit | G3-G4-miss_visit
+flier_remember | G3-G4-flier_remember
+trust | To what extent do you trust the state and its agents?
+province | Where does the property owner's family come from originally? Which province?
+country | Which country?
+territory | Which territory?
+subtribe | What is his subtribe?
+subtribe_o | WRITE THE SUBTRIBE
+v260 | G3-G5-G13-G6b-G20-salongo_acceptability_t
+provide_schools_oth | G3-G5-G13-G6b-G23-provide_schools_other
+provide_health_othe | G3-G5-G13-G6b-G23-provide_health_other
+provide_security_ot | G3-G5-G13-G6b-G23-provide_security_other
+provide_welfare_oth | G3-G5-G13-G6b-G23-provide_welfare_other
+v289 | G3-G5-G13-G6b-G23-provide_development_other
+v290 | G3-G5-G13-G6b-G23-provide_development_t
+v257 | G3-G5-G13-G6b-G20-salongo_acceptability_t
+v286 | G3-G5-G13-G6b-G23-provide_development_other
+v287 | G3-G5-G13-G6b-G23-provide_development_t
+v226 | G3-G5-G13-G6b-G23-provide_development_other
+v228 | G3-G5-G13-G6b-G23-provide_development_other
+rand_recording | 
+recording1 | 
+consent07 | G3-G4-consent07
+consent08 | G3-G4-consent08
+consent09 | G3-G4-consent09
+record_short_finished | G3-G4-record_short_finished
+record02 | G3-G4-record02
+paid_who1 | Whom did your household pay?
+paid_who2 | Whom did your household pay?
+paid_who3 | Whom did your household pay?
+chef_type1 | 
+chef_type2 | 
+chef_type3 | 
+know_how1 | 
+know_how2 | 
+know_how3 | 
+know_how4 | 
+date | 
+date_f | 
+date_tmp1 | 
+date_tmp2 | 
+date_tmp3 | 
+date_tmpp1 | 
+date_tmpp2 | 
+date_tmpp3 | 
+type | type
+short_label | short_label
+value_label | 
+keep | 
+labelEnglish | label::English
+labelFrancais | label::Francais
+tot_complete_temp | 
+_long | 
+control | 
+short | 
+short_empty | 
+tot_complete | 
+pilot | 
+new_survey_version | 
+survey_length | 
+dup_real | 
+monitoring_survey_twice | 
+unknown_compound | 
+dup_compound | 
+
+===== survey_data/endline_round1_noPII.dta 960 
+today | Date of Survey
+compound_code | ECRIVEZ LE CODE PARCELLAIRE
+a7 | G1-A7
+a7b | G1-A7b
+a7c | G1-A7c
+a7_check | G1-A7_check
+treatment | 
+a7d | G1-A7d
+code | ECRIVEZ LE CODE DU REPONDANT
+code2 | ECRIVEZ LE CODE DU REPONDANT
+a7_previous | WHAT POLYGONE WERE THEY IN BEFORE?
+a7_currently | WHAT POLYGONE ARE THEY IN NOW ?
+compound_code2 | ECRIVEZ LE CODE PARCELLAIRE
+code_erased | WAS THE CODE ERASED?
+code_found | COMME LE CODE A ETE EFFACE DEMANDEZ AU REPONDANT S'IL A GARDE LE TRACT PRINCIPAL
+compound_code_prev | WHAT WAS PREV COMPOUND CODE?
+titling_respondent | 
+titling_respondent_short | 
+chef_code | 
+access_survey_e | Imagine that some time in the future you have a dispute with a neighbor over the
+stay_compound | How likely is it that you will keep living in this same compound for the next 10
+sell_compound | How likely is it that you or a family member will sell your compound in the next
+benefit_formalize1_survey_e | Travel outside Kananga for a long time ?
+benefit_formalize2_survey_e | Invest in their compound?
+benefit_formalize3_survey_e | Get help from the government in the case of a property dispute
+benefit_formalize4_survey_e | Leave a cousin from their extended family in charge of the compound.
+transport | How much money have you spent on transport in the past seven days?
+liquidity_bind_date | On what dates did you find yourself short of cash for these expenditures?
+access_water_survey_e | Piped Water (exclusive access in your house)
+access_power_survey_e | Electricity
+access_trash_survey_e | Trash collection
+access_sewage_survey_e | Sewage collection
+access_transport_survey_e | Public Transportation
+access_roads_survey_e | Paved Roads in your own street
+access_lights_survey_e | Public street lightning in your own street
+access_health_survey_e | Health care
+access_educ_survey_e | Education
+access_pension_survey_e | A retirement fund (or pension)
+satisfaction_water_survey_e | Piped Water (exclusive access in your house)
+satisfaction_power_survey_e | Electricity
+satisfaction_trash_survey_e | Trash collection
+satisfaction_sewage_survey_e | Sewage collection
+satisfaction_transport_survey_e | Public Transportation
+satisfaction_roads_survey_e | Paved Roads in your own street
+satisfaction_lights_survey_e | Public street lightning in your own street
+satisfaction_health_survey_e | G12-H28-satisfaction_health_survy_e
+satisfaction_educ_surveye | G12-H28-satisfaction_educ_survey-e
+satisfaction_pension_survey_e | A retirement fund (or pension)
+responsible_water_survey_e | Piped Water (exclusive access in your house)
+responsible_power_survey_e | Electricity
+responsible_trash_survey_e | Trash collection
+responsible_sewage_survey_e | Sewage collection
+responsible_transport_survey_e | Public Transportation
+responsible_roads_survey_e | Paved Roads in your own street
+responsible_lights_survey_e | Public street lightning in your own street
+responsible_health_survey_e | Health care
+responsible_educ_survey_e | Education
+responsible_pension_survey_e | A retirement fund (or pension)
+paid_landtax_survey_e | Did you pay this tax in 2018?
+visited | Has your household been visited by a tax collector or another authority in 2018
+visits | How many times did they come in total since June, including the visit to assign
+paid_self | To date, has your household paid the property tax in 2018?
+bribe | Did you (or a family member) pay the transport of the collector?
+bribe_amt | How much did you pay?
+visits_other1a | Aside from their visits to your compound, have you spoken with a DGRKOC tax coll
+visits_other1b | How many times did you speak with them about the property tax in total?
+visits_other2a | Have you spoken with a DGRKOC tax collector or the chef de localité (and/or his
+visits_other2b | How many times did you speak with them about the property tax in total?
+paid_amt | If you are comfortable with it, can I also ask you the amount you paid?
+paid_nb | COMMENTAIRES:
+code_same | G14-H36-I8-J6-code_same
+code_diff | IF NOT, WRITE THE CODE WRITTEN ON THE RECEIPT.
+col_code | WRITE THE COLLECTOR CODE
+bribe2a | Apart from the  that you paid, did the collector ask you for another small sum o
+bribe2a_amt | How much did you pay?
+bribe2b | Apart from the  that you paid, did the collector ask you for another small sum o
+bribe2b_amt | How much did you pay?
+bribe3 | Did the collector ask you for another small sum apart from the tax (for example,
+bribe3_amt | How much did you pay?
+taxmorale_survey_e | Which of these two statements is closest to your own view? (a) Citizens should a
+bribe_freq | How many bribed tax collectors in 2016?
+bribe_amt1 | If you had to guess, how much would one have to bribe a tax collector?
+taxnoncompliance3_survey_e | How likely is it that households that did not pay the property tax in 2018 will
+paid_incometax_survey_e | Did you pay this tax in 2018?
+paid_vehicletax_survey_e | Did you pay this tax in 2018?
+paid_faketax_survey_e | Did you pay this tax in 2018?
+statecapacity1_survey_e | Imagine that many of the roads in central Kananga have been badly damamged due t
+statecapacity2_survey_e | If the government did not end up fixing the streets that were damaged by bad wea
+trust5_survey_e | NGOs
+trust1_survey_e | Avenue and locality chiefs
+trust4_survey_e | Quartier chief and bourgmestre
+trust2_survey_e | The national government (in Kinshasa)
+trust3_survey_e | The provincial government
+trust6_survey_e | The tax ministry
+trust7_survey_2 | Foreign research organizations
+civpolparticpi1_survey_e | Attended a community meeting
+civpolparticpi4_survey_e | Joined or participated in the meetings of a civic asociation, such as a club, a
+civpolparticpi5_survey_e | Gone to a political party meeting
+civpolparticip6_survey_e | Did you vote in the 2018 national election?
+required_incometax_survey_e | Do you think that you are required to pay this tax?
+taxsource_incometax_survey_e | To whom is this tax owed?
+solicited_incometax_survey_e | Were you solicited to pay this tax in 2018?
+paid_businessfee_survey_e | Did you pay this tax in 2018?
+required_landtax_survey_e | Do you think that you are required to pay this tax?
+taxsource_landtax_survey_e | To whom is this tax owed?
+solicited_landtax_survey_e | Were you solicited to pay this tax in 2018?
+required_vehicletax_survey_e | Do you think that you are required to pay this tax?
+required_faketax_survey_e | Do you think that you are required to pay this tax?
+taxsource_faketax_survey_e | To whom is this tax owed?
+solicited_faketax_survey_e | Were you solicited to pay this tax in 2018?
+paid_mktvendorfee_survey_e | Did you pay this tax in 2018?
+treated_twice | 
+taxsource_mktvendorfee_survey_e | To whom is this tax owed?
+solicited_mktvendorfee_survey_e | Were you solicited to pay this tax in 2018?
+required_mktvendorfee_survey_e | Do you think that you are required to pay this tax?
+required_businessfee_survey_e | Do you think that you are required to pay this tax?
+taxsource_businessfee_survey_e | To whom is this tax owed?
+solicited_businessfee_survey_e | Were you solicited to pay this tax in 2018?
+taxsource_vehicletax_survey_e | To whom is this tax owed?
+solicited_vehicletax_survey_e | Were you solicited to pay this tax in 2018?
+date | 
+paid_who_1 | Whom did your household pay? - 1
+paid_who_2 | Whom did your household pay? - 2
+paid_who_3 | Whom did your household pay? - 3
+paid_who_4 | Whom did your household pay? - 4
+liquidity_bind_date_1 | On what dates did you find yourself short of cash for these expenditures?  - 1
+liquidity_bind_date_2 | On what dates did you find yourself short of cash for these expenditures?  - 2
+liquidity_bind_date_3 | On what dates did you find yourself short of cash for these expenditures?  - 3
+liquidity_bind_date_4 | On what dates did you find yourself short of cash for these expenditures?  - 4
+liquidity_bind_date_5 | On what dates did you find yourself short of cash for these expenditures?  - 5
+liquidity_bind_date_6 | On what dates did you find yourself short of cash for these expenditures?  - 6
+liquidity_bind_date_7 | On what dates did you find yourself short of cash for these expenditures?  - 7
+liquidity_bind_date_8 | On what dates did you find yourself short of cash for these expenditures?  - 8
+liquidity_bind_date_9 | On what dates did you find yourself short of cash for these expenditures?  - 9
+liquidity_bind_date_10 | On what dates did you find yourself short of cash for these expenditures?  - 10
+liquidity_bind_date_11 | On what dates did you find yourself short of cash for these expenditures?  - 11
+liquidity_bind_date_12 | On what dates did you find yourself short of cash for these expenditures?  - 12
+liquidity_bind_date_13 | On what dates did you find yourself short of cash for these expenditures?  - 13
+liquidity_bind_date_14 | On what dates did you find yourself short of cash for these expenditures?  - 14
+liquidity_bind_date_15 | On what dates did you find yourself short of cash for these expenditures?  - 15
+liquidity_bind_date_16 | On what dates did you find yourself short of cash for these expenditures?  - 16
+liquidity_bind_date_17 | On what dates did you find yourself short of cash for these expenditures?  - 17
+liquidity_bind_date_18 | On what dates did you find yourself short of cash for these expenditures?  - 18
+liquidity_bind_date_19 | On what dates did you find yourself short of cash for these expenditures?  - 19
+liquidity_bind_date_20 | On what dates did you find yourself short of cash for these expenditures?  - 20
+liquidity_bind_date_21 | On what dates did you find yourself short of cash for these expenditures?  - 21
+liquidity_bind_date_22 | On what dates did you find yourself short of cash for these expenditures?  - 22
+liquidity_bind_date_23 | On what dates did you find yourself short of cash for these expenditures?  - 23
+liquidity_bind_date_24 | On what dates did you find yourself short of cash for these expenditures?  - 24
+liquidity_bind_date_25 | On what dates did you find yourself short of cash for these expenditures?  - 25
+liquidity_bind_date_26 | On what dates did you find yourself short of cash for these expenditures?  - 26
+liquidity_bind_date_27 | On what dates did you find yourself short of cash for these expenditures?  - 27
+liquidity_bind_date_28 | On what dates did you find yourself short of cash for these expenditures?  - 28
+liquidity_bind_date_29 | On what dates did you find yourself short of cash for these expenditures?  - 29
+liquidity_bind_date_30 | On what dates did you find yourself short of cash for these expenditures?  - 30
+liquidity_bind_date_31 | On what dates did you find yourself short of cash for these expenditures?  - 31
+survey_length | 
+dup_respondent | 
+dup_compound | 
+income_paid | G57-G63-G63a-income_paid
+patent_paid | G57-G63-G63b-patent_paid
+property_paid | G57-G63-G63c-property_paid
+vehicle_paid | G57-G63-G63d-vehicle_paid
+fake_paid | G57-G63-G63e-fake_paid
+market_paid | G57-G63-G63g-market_paid
+required_servicetax_survey_e | G57-G63-G63b-required_servicetax_survey_e
+solicited_servicetax_survey_e | G57-G63-G63b-solicited_servicetax_survey_e
+paid_service_tax_survey_e | G57-G63-G63b-paid_service_tax_survey_e
+taxnoncompliance3_survey_2 | 
+
+===== survey_data/endline_round2_noPII.dta 536 
+today | Date of Survey
+a7 | G1-A7
+a7b | G1-A7b
+a7c | G1-A7c
+a7_check | G1-A7_check
+treatment | 
+a7d | G1-A7d
+code | ECRIVEZ LE CODE DU REPONDANT
+code2 | ECRIVEZ LE CODE DU REPONDANT
+a7_previous | WHAT POLYGONE WERE THEY IN BEFORE?
+a7_currently | WHAT POLYGONE ARE THEY IN NOW ?
+chef_code | 
+access_survey_e | Imagine that some time in the future you have a dispute with a neighbor over the
+stay_compound | How likely is it that you will keep living in this same compound for the next 10
+sell_compound | How likely is it that you or a family member will sell your compound in the next
+benefit_formalize1_survey_e | Travel outside Kananga for a long time ?
+benefit_formalize2_survey_e | Invest in their compound?
+benefit_formalize3_survey_e | Get help from the government in the case of a property dispute
+benefit_formalize4_survey_e | Leave a cousin from their extended family in charge of the compound.
+transport | How much money have you spent on transport in the past seven days?
+liquidity_bind_date | On what dates did you find yourself short of cash for these expenditures?
+access_water_survey_e | Piped Water (exclusive access in your house)
+access_power_survey_e | Electricity
+access_trash_survey_e | Trash collection
+access_sewage_survey_e | Sewage collection
+access_transport_survey_e | Public Transportation
+access_roads_survey_e | Paved Roads in your own street
+access_lights_survey_e | Public street lightning in your own street
+access_health_survey_e | Health care
+access_educ_survey_e | Education
+access_pension_survey_e | A retirement fund (or pension)
+satisfaction_water_survey_e | Piped Water (exclusive access in your house)
+satisfaction_power_survey_e | Electricity
+satisfaction_trash_survey_e | Trash collection
+satisfaction_sewage_survey_e | Sewage collection
+satisfaction_transport_survey_e | Public Transportation
+satisfaction_roads_survey_e | Paved Roads in your own street
+satisfaction_lights_survey_e | Public street lightning in your own street
+satisfaction_health_survey_e | G12-H28-satisfaction_health_survy_e
+satisfaction_educ_survey_e | G12-H28-satisfaction_educ_survey-e
+satisfaction_pension_survey_e | A retirement fund (or pension)
+responsible_water_survey_e | Piped Water (exclusive access in your house)
+responsible_power_survey_e | Electricity
+responsible_trash_survey_e | Trash collection
+responsible_sewage_survey_e | Sewage collection
+responsible_transport_survey_e | Public Transportation
+responsible_roads_survey_e | Paved Roads in your own street
+responsible_lights_survey_e | Public street lightning in your own street
+responsible_health_survey_e | Health care
+responsible_educ_survey_e | Education
+responsible_pension_survey_e | A retirement fund (or pension)
+paid_landtax_survey_e | Did you pay this tax this year?
+taxmorale_survey_e | Which of these two statements is closest to your own view? (a) Citizens should a
+bribe_freq | How many bribed tax collectors this year?
+bribe_amt1 | If you had to guess, how much would one have to bribe a tax collector?
+taxnoncompliance3_survey_e | How likely is it that households that did not pay the property tax this year wil
+paid_faketax_survey_e | Did you pay this tax this year?
+statecapacity1_survey_e | Imagine that many of the roads in central Kananga have been badly damaged due to
+statecapacity2_survey_e | If the government did not end up fixing the streets that were damaged by bad wea
+trust5_survey_e | NGOs
+trust1_survey_e | Avenue and locality chiefs
+trust4_survey_e | Quartier chief and bourgmestre
+trust2_survey_e | The national government (in Kinshasa)
+trust3_survey_e | The provincial government
+trust6_survey_e | The tax ministry
+trust7_survey_2 | Foreign research organizations
+civpolparticpi1_survey_e | Attended a community meeting
+civpolparticpi4_survey_e | Joined or participated in the meetings of a civic asociation, such as a club, a
+civpolparticpi5_survey_e | Gone to a political party meeting
+civpolparticip6_survey_e | Did you vote in the 2018 national election?
+required_mktvendorfee_survey_e | Do you think that you are required to pay this tax?
+required_businessfee_survey_e | Do you think that you are required to pay this tax?
+taxsource_businessfee_survey_e | To whom is this tax owed?
+solicited_businessfee_survey_e | Were you solicited to pay this tax this year?
+taxsource_vehicletax_survey_e | To whom is this tax owed?
+solicited_vehicletax_survey_e | Were you solicited to pay this tax this year?
+date | 
+liquidity_bind_date_1 | On what dates did you find yourself short of cash for these expenditures?  - 1
+liquidity_bind_date_2 | On what dates did you find yourself short of cash for these expenditures?  - 2
+liquidity_bind_date_3 | On what dates did you find yourself short of cash for these expenditures?  - 3
+liquidity_bind_date_4 | On what dates did you find yourself short of cash for these expenditures?  - 4
+liquidity_bind_date_5 | On what dates did you find yourself short of cash for these expenditures?  - 5
+liquidity_bind_date_6 | On what dates did you find yourself short of cash for these expenditures?  - 6
+liquidity_bind_date_7 | On what dates did you find yourself short of cash for these expenditures?  - 7
+liquidity_bind_date_8 | On what dates did you find yourself short of cash for these expenditures?  - 8
+liquidity_bind_date_9 | On what dates did you find yourself short of cash for these expenditures?  - 9
+liquidity_bind_date_10 | On what dates did you find yourself short of cash for these expenditures?  - 10
+liquidity_bind_date_11 | On what dates did you find yourself short of cash for these expenditures?  - 11
+liquidity_bind_date_12 | On what dates did you find yourself short of cash for these expenditures?  - 12
+liquidity_bind_date_13 | On what dates did you find yourself short of cash for these expenditures?  - 13
+liquidity_bind_date_14 | On what dates did you find yourself short of cash for these expenditures?  - 14
+liquidity_bind_date_15 | On what dates did you find yourself short of cash for these expenditures?  - 15
+liquidity_bind_date_16 | On what dates did you find yourself short of cash for these expenditures?  - 16
+liquidity_bind_date_17 | On what dates did you find yourself short of cash for these expenditures?  - 17
+liquidity_bind_date_18 | On what dates did you find yourself short of cash for these expenditures?  - 18
+liquidity_bind_date_19 | On what dates did you find yourself short of cash for these expenditures?  - 19
+liquidity_bind_date_20 | On what dates did you find yourself short of cash for these expenditures?  - 20
+liquidity_bind_date_21 | On what dates did you find yourself short of cash for these expenditures?  - 21
+liquidity_bind_date_22 | On what dates did you find yourself short of cash for these expenditures?  - 22
+liquidity_bind_date_23 | On what dates did you find yourself short of cash for these expenditures?  - 23
+liquidity_bind_date_24 | On what dates did you find yourself short of cash for these expenditures?  - 24
+liquidity_bind_date_25 | On what dates did you find yourself short of cash for these expenditures?  - 25
+liquidity_bind_date_26 | On what dates did you find yourself short of cash for these expenditures?  - 26
+liquidity_bind_date_27 | On what dates did you find yourself short of cash for these expenditures?  - 27
+liquidity_bind_date_28 | On what dates did you find yourself short of cash for these expenditures?  - 28
+liquidity_bind_date_29 | On what dates did you find yourself short of cash for these expenditures?  - 29
+liquidity_bind_date_30 | On what dates did you find yourself short of cash for these expenditures?  - 30
+liquidity_bind_date_31 | On what dates did you find yourself short of cash for these expenditures?  - 31
+pay_gov2_11 | Payments to govt officials: interurban transport
+dup_respondent | 
+
+===== survey_data/baseline_noPII.dta 425 
+today | Date of Survey
+a7 | G1-A7
+a7b | G1-A7b
+a7c | G1-A7c
+a7_check | G1-A7_check
+a7d | G1-A7d
+code | WRITE THE CODE OF THE REPEAT PARTICIPANT.
+title_tmt | 
+visit | C'EST QUELLE VISITE? C'EST-A-DIRE: AUJOURD'HUI C'EST LE X-IEME VISITE QUE VOUS A
+visit_interest | Would you be interested in receiving a visit from this program?
+novisit_why | Why are you not interested in obtaining an offical title for this compound?
+novisit_why_other | Why are you not interested in obtaining an offical title for this compound?  (Ot
+visit_next_c | G15-visit_next_C
+campaign_visit | campaign_visit
+appt_date | OK. FIX A RENDEZVOUS WITH THE HEAD OF THE HOUSEHOLD OR HIS WIFE TO DO THE SURVEY
+transport | How much money have you spent on transport in the past seven days
+access5 | Public Transportation
+satisfied5 | Public Transportation
+provides5 | Public Transportation
+paid2017_2 | Did you receive a receipt the last time you paid the property tax?
+paid2017_3 | Would you mind showing me the receipt you received?  This will help us check tha
+paid2017_4_new | WHY DID THE PERSON REFUSE TO SHOW YOU THE RECEIPT.
+paid2017_4_other_new | WHY DID THE PERSON REFUSE TO SHOW YOU THE RECEIPT. (Other)
+paid2017_5 | IS THIS A VALID RECEIPT?
+paid2017_6_new | OBSERVATIONS:
+paid2017_7 | May I take a photo of the receipt?
+paid2017_8 | WHY DID THE PERSON REFUSE TO LET YOU PHOTOGRAPH THE RECEIPT?
+paid2017_8_other | WHY DID THE PERSON REFUSE TO LET YOU PHOTOGRAPH THE RECEIPT? (Other)
+paid2017_9_new | TAKE A PHOTO OF THE RECEIPT. MAKE SURE IT IS CLEAR.
+pay_gov1_6 | What payments did you make in the past six months? - Transportation Tax
+erreur_code | 
+tmp_code | 
+max_code_end | 
+poly_from_code | 
+dup_code | 
+paid2017_4 | WHY DID THE PERSON REFUSE TO SHOW YOU THE RECEIPT.
+paid2017_4_other | WHY DID THE PERSON REFUSE TO SHOW YOU THE RECEIPT. (Other)
+paid2017_9 | TAKE A PHOTO OF THE RECEIPT. MAKE SURE IT IS CLEAR.
+survey3 | c(`Old Respondent` = 0, `New Respondent` = 1)
+visit_interest2 | G6-G14-visit_interest2
+round | 
+compound_code | ECRIVEZ LE CODE PARCELLAIRE
+compound_code2 | ECRIVEZ LE CODE PARCELLAIRE
+compound_code_prev | WHAT WAS PREV COMPOUND CODE?
+
+chief consultations
+
+   0    1    2 <NA> 
+3237 4317 1167 1315 
+    Diffilement      Facilement Très facilement  Je ne sais pas 
+              0               1               2            8888 
+
+   1    2    3 <NA> 
+1645 2455 1573 4363 
+   Pas du tout         Un peu       Beaucoup Je ne sais pas 
+             1              2              3           8888 
+dup compound1: 0  na: 0  nbhds: 80 
+
+    3 
+10036 
+cc compound1 in reg: 9899 
+
+ <NA> 
+10036 
+
+    0 
+10036 
+
+    1     3 
+10018    18 
+
+    1 
+10036 
+
+    1  <NA> 
+   18 10018 

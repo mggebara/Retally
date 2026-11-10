@@ -1,0 +1,211 @@
+tibble [2 × 20] (S3: tbl_df/tbl/data.frame)
+ $ a7                     : num [1:2] 517 517
+  ..- attr(*, "label")= chr "G1-A7"
+  ..- attr(*, "format.stata")= chr "%10.0g"
+ $ compound               : num [1:2] 517007 517029
+  ..- attr(*, "label")= chr "Number of compound"
+  ..- attr(*, "format.stata")= chr "%10.0g"
+ $ treatment              : num [1:2] 1 1
+  ..- attr(*, "format.stata")= chr "%10.0g"
+ $ month                  : num [1:2] NA NA
+  ..- attr(*, "format.stata")= chr "%10.0g"
+ $ compound2              : num [1:2] 517007 517029
+  ..- attr(*, "label")= chr "Number of compound"
+  ..- attr(*, "format.stata")= chr "%10.0g"
+ $ exempt                 : num [1:2] 0 0
+ $ first_attempt          : num [1:2] 1 1
+ $ present                : num [1:2] 1 1
+ $ visited                : num [1:2] 1 1
+ $ visits                 : num [1:2] 1 3
+  ..- attr(*, "label")= chr "How many times did they come in total since June, including the visit to assign"
+  ..- attr(*, "format.stata")= chr "%10.0g"
+ $ col_type_fr            : chr [1:2] "" ""
+  ..- attr(*, "label")= chr "Was it the DGRKOC agents, the locality chief (or his deputy), or both who visite"
+  ..- attr(*, "format.stata")= chr "%26s"
+ $ control                : num [1:2] NA NA
+  ..- attr(*, "format.stata")= chr "%10.0g"
+ $ short                  : num [1:2] 1 1
+  ..- attr(*, "format.stata")= chr "%10.0g"
+ $ tot_complete           : num [1:2] 1 1
+  ..- attr(*, "format.stata")= chr "%10.0g"
+ $ pilot                  : num [1:2] 0 0
+  ..- attr(*, "format.stata")= chr "%10.0g"
+ $ new_survey_version     : num [1:2] 0 0
+  ..- attr(*, "format.stata")= chr "%10.0g"
+ $ dup_real               : num [1:2] 0 0
+  ..- attr(*, "format.stata")= chr "%10.0g"
+ $ monitoring_survey_twice: num [1:2] 0 0
+  ..- attr(*, "format.stata")= chr "%10.0g"
+ $ unknown_compound       : num [1:2] 0 0
+  ..- attr(*, "format.stata")= chr "%10.0g"
+ $ dup_compound           : num [1:2] 0 0
+  ..- attr(*, "format.stata")= chr "%12.0g"
+midline treatment var vs ra:
+      
+           0     1     2     3     4  <NA>
+  0      836     0     0     0     0     0
+  1        0 13990     0     0     0    45
+  2        0     1 13208     0     0    15
+  3        0     1     0  9513     0   258
+  4        0     0     0     0  6123    39
+  5        0     0     0     0     0   153
+  <NA>     0   138    94    54    30  1296
+# A tibble: 3 × 4
+     a7     n t     coltype
+  <dbl> <int> <chr> <chr>  
+1   374    62 4     " 62"  
+2   639   113 4     " 113" 
+3   654    96 4     " 96"  
+   a7 ra_t chef_only both   n
+1 102    4         0    0  66
+2 112    4         0    0 219
+3 204    4         0    0 136
+4 219    4         0    0 116
+5 220    4         0    0 105
+6 222    4         0    0 213
+-- tot_complete 
+
+    0     1 
+ 9414 36380 
+-- pilot 
+
+    0     1 
+44442  1352 
+-- dup_real 
+
+    0     1 
+45790     4 
+-- dup_compound 
+
+    0     1     2     3  <NA> 
+38202   650    24     4  6914 
+-- monitoring_survey_twice 
+
+    0     1 
+45586   208 
+-- unknown_compound 
+
+    0     1 
+45715    79 
+-- control 
+
+    1  <NA> 
+ 4710 41084 
+-- short 
+
+    1  <NA> 
+29655 16139 
+-- first_attempt 
+
+    0     1  <NA> 
+ 1716 42707  1371 
+-- present 
+
+    0     1     2     3  <NA> 
+ 7883 14479 15816  7061   555 
+-- new_survey_version 
+
+    0     1 
+ 6740 39054 
+compound unique among tot_complete==1: 28147  of  36380 
+      
+       FALSE  TRUE  <NA>
+  0        0     0  3628
+  1    12191 12585    11
+  2     6742  1800   349
+  <NA>     0     0  8488
+ [1] "treatment"                       "replacement"                    
+ [3] "why_replace"                     "replace_approved"               
+ [5] "code_found"                      "titling_respondent"             
+ [7] "titling_respondent_short"        "replacement_possible"           
+ [9] "chef_status"                     "consent1_short"                 
+[11] "consent1_med"                    "consent1_long"                  
+[13] "consent1_titling_short"          "hh_head_newresp"                
+[15] "relation_newresp"                "sex_newresp"                    
+[17] "age_newresp"                     "edu_newresp"                    
+[19] "edu2_newresp"                    "job1_newresp"                   
+[21] "job1_newresp_other"              "kga_born_newresp"               
+[23] "kga_move_newresp"                "kga_mig1_newresp"               
+[25] "kga_mig2_newresp"                "ave_born_newresp"               
+[27] "ave_move_newresp"                "kga_mig3_newresp"               
+[29] "kga_mig4_newresp"                "rand_status"                    
+[31] "title_status_c"                  "title_status_t"                 
+[33] "transport"                       "access_transport_survey_e"      
+[35] "satisfaction_transport_survey_e" "responsible_water_survey_e"     
+[37] "responsible_power_survey_e"      "responsible_trash_survey_e"     
+[39] "responsible_sewage_survey_e"     "responsible_transport_survey_e" 
+[41] "responsible_roads_survey_e"      "responsible_lights_survey_e"    
+[43] "responsible_health_survey_e"     "responsible_educ_survey_e"      
+[45] "responsible_pension_survey_e"    "bribe"                          
+[47] "bribe_amt"                       "bribe2a"                        
+[49] "bribe2a_amt"                     "bribe2b"                        
+[51] "bribe2b_amt"                     "bribe3"                         
+[53] "bribe3_amt"                      "bribe_freq"                     
+[55] "bribe_amt1"                      "gov_resp"                       
+[57] "resp_imp1"                       "resp_imp2"                      
+[59] "newstatus"                       "treated_twice"                  
+[61] "tot_complete_titling"            "tot_complete_monitoring"        
+[63] "dup_respondent"                  "tot_complete"                   
+[65] "dup_compound"                    "consent1"                       
+[67] "pilot"                           "max_tot_complete"               
+                 No                 Yes HE/SHE DOESN'T KNOW DOESN'T WANT TO SAY 
+                  0                   1                8888                9999 
+
+   0    1 <NA> 
+1315   41 4246 
+      
+          0    1    2    3    4 <NA>
+  0      17  384  407  274  195   38
+  1       0    8   15   12    6    0
+  <NA>   57 1328 1260  966  600   35
+      
+          0    1    2    3    4 <NA>
+  0      54    0    1    0    0    0
+  1       0 1382    3    2    2    0
+  2       0    3 1336    1   21    0
+  3       0    5    2  945    1    0
+  4       0    0    0    0  660    0
+  <NA>   20  330  340  304  117   73
+-- tot_complete 
+
+   0    1 
+1652 3950 
+-- dup_compound 
+
+   0    1 <NA> 
+4046   14 1542 
+-- consent1 
+
+   1 <NA> 
+  29 5573 
+-- replacement_possible 
+
+   0    1 <NA> 
+ 522  176 4904 
+       
+           0    1    2 <NA>
+  FALSE  273   33  404 3536
+  TRUE     0 1356    0    0
+       
+           0    1 <NA>
+  FALSE  636   40 3570
+  TRUE   929  383   44
+unique code: 4302  rows  5602 
+[1] "transport"                       "access_transport_survey_e"      
+[3] "satisfaction_transport_survey_e" "responsible_transport_survey_e" 
+[5] "bribe_freq"                      "bribe_amt1"                     
+[7] "dup_respondent"                  "tot_complete"                   
+ [1] "a7"                    "Ua7"                   "a7b"                  
+ [4] "transport"             "bribe_amt1"            "bribe_amt"            
+ [7] "bribe1"                "long_complete"         "tot_compounds"        
+[10] "tot_s1_repeats"        "num_complete"          "a7_ss"                
+[13] "a7_rr"                 "a7b_rr"                "complete"             
+[16] "a7_s2"                 "dup"                   "a7_tab2"              
+[19] "code_dup_tab"          "amount_tot_tab"        "dup_payer"            
+[22] "dup_num"               "dup_compound"          "code_dup"             
+[25] "dup_code"              "bribe_propensity_col1" "bribe_propensity_col2"
+[28] "bribe_propensity_col3" "bribe_propensity_col4" "bribe_propensity_col5"
+[31] "bribe_propensity"      "a7_s1"                 "bribe_freq"           
+[34] "bribe"                 "bribe_self"            "bribes_all"           
+[37] "bribes_total"          "bribe_amt_self"        "bribe_self_reclassify"
+[40] "bribe_reclassify"     

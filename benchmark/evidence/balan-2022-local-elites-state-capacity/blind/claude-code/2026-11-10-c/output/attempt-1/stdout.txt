@@ -1,0 +1,276 @@
+
+===== randomization_assignment.dta 356 x 37 
+a7                           numeric  nuniq=356    NA=0      [G1-A7] 100,101,102,103,104,105
+rouge                        numeric  nuniq=2      NA=0      [] 0,1
+geo_stratum                  numeric  nuniq=12     NA=0      [] 1,2,3,4,5,6
+jontax                       numeric  nuniq=2      NA=0      [(mean) jontax] 0,1
+stratum_jon                  numeric  nuniq=27     NA=0      [(first) stratum_jon] 1,2,3,4,5,6
+commune                      numeric  nuniq=4      NA=0      [(first) commune] 1,2,3,5
+joncomp2016                  numeric  nuniq=2      NA=0      [] 1,2
+chef_collect_types           numeric  nuniq=15     NA=0      [(mean) chef_collect_types] 0,0.16667,0.2,0.25,0.33333,0.4
+chef_collect_ever            numeric  nuniq=12     NA=0      [(mean) chef_collect_ever] 0,0.16667,0.2,0.25,0.33333,0.4
+salongo_freq                 numeric  nuniq=47     NA=0      [(mean) salongo_freq] 0,1,1.3333,1.5,1.75,1.8333
+chef_collect_proptax_ever    numeric  nuniq=20     NA=0      [(mean) chef_collect_proptax_ever] 0,0.2,0.25,0.33333,0.33529,0.39583
+appoint_yr                   numeric  nuniq=149    NA=0      [(mean) appoint_yr] 1982,1990.2,1990.2,1992.5,1992.8,1993.3
+chef_stratum                 numeric  nuniq=3      NA=26     [(first) chef_stratum] 1,2
+chef_collect_stratum         numeric  nuniq=2      NA=0      [] 1,2
+stratum                      numeric  nuniq=32     NA=0      [group(geo_stratum jontax chef_collect_stratum)] 1,2,3,4,5,6
+stratum_count                numeric  nuniq=14     NA=0      [] 5,6,7,8,9,10
+treatment                    haven_labelled nuniq=5      NA=0      [0] 0,1,2,3,4
+ treatment                    haven_labelled nuniq=5      NA=0      [1] 0,1,2,3,4
+ treatment                    haven_labelled nuniq=5      NA=0      [2] 0,1,2,3,4
+ treatment                    haven_labelled nuniq=5      NA=0      [3] 0,1,2,3,4
+ treatment                    haven_labelled nuniq=5      NA=0      [4] 0,1,2,3,4
+rand1                        numeric  nuniq=220    NA=0      [] 0.0047433,0.006654,0.0066808,0.0073682,0.008403,0.013008
+rank1                        numeric  nuniq=18     NA=0      [unique rank of (rand1)    by stratum] 1,2,3,4,5,6
+count1                       numeric  nuniq=19     NA=0      [] 1,2,3,4,5,6
+numtoselect1_control         numeric  nuniq=14     NA=0      [] 0.070225,0.08427,0.098315,0.11236,0.1264,0.14045
+probleft2_control            numeric  nuniq=14     NA=0      [] 0.070225,0.08427,0.098315,0.11236,0.1264,0.14045
+rand2                        numeric  nuniq=220    NA=0      [] 0.0047433,0.006654,0.0066808,0.0073682,0.008403,0.013008
+probleft3_control            numeric  nuniq=1      NA=356    [] 
+numtoselect1_central         numeric  nuniq=15     NA=5      [] 1.2536,1.567,1.8803,2.1937,2.8205,3.1339
+probleft2_central            numeric  nuniq=15     NA=5      [] 0.014245,0.1339,0.19373,0.25356,0.32764,0.38746
+probleft3_central            numeric  nuniq=1      NA=356    [] 
+numtoselect1_local           numeric  nuniq=13     NA=115    [] 0.91286,1.3693,1.8257,2.2822,2.7386,3.195
+probleft2_local              numeric  nuniq=13     NA=115    [] 0.020747,0.10788,0.19502,0.28216,0.36929,0.47718
+probleft3_local              numeric  nuniq=1      NA=356    [] 
+numtoselect1_centralwinfo    numeric  nuniq=9      NA=225    [] 0.61069,1.2214,1.8321,2.4427,3.0534,3.6641
+probleft2_centralwinfo       numeric  nuniq=9      NA=225    [] 0.053435,0.22137,0.27481,0.44275,0.61069,0.66412
+numtoselect1_centralxlocal   numeric  nuniq=9      NA=225    [] 0.38931,0.77863,1.1679,1.5573,1.9466,2.3359
+probleft2_centralxlocal      numeric  nuniq=9      NA=225    [] 0.1145,0.16794,0.33588,0.38931,0.55725,0.72519
+probleft3_centralwinfo       numeric  nuniq=1      NA=356    [] 
+rand3                        numeric  nuniq=356    NA=0      [] 0.0047433,0.006654,0.0066808,0.0073682,0.008403,0.013008
+order_treatment              numeric  nuniq=110    NA=0      [unique rank of (rand3)    by treatment] 1,2,3,4,5,6
+
+===== randomization_schedule.dta 356 x 9 
+a7                           numeric  nuniq=356    NA=0      [G1-A7] 100,101,102,103,104,105
+treatment                    numeric  nuniq=5      NA=0      [(first) treatment] 0,1,2,3,4
+month                        numeric  nuniq=7      NA=0      [] 1,2,3,4,5,6
+chef_code                    numeric  nuniq=156    NA=115    [] 1001,1025,1136,1166,1193,2048
+agent1_code                  numeric  nuniq=31     NA=166    [] 1,8,9,10,14,16
+agent2_code                  numeric  nuniq=31     NA=166    [] 1,8,9,10,14,16
+agent_code                   numeric  nuniq=10     NA=305    [] 5,23,29,43,48,51
+chef_group                   numeric  nuniq=3      NA=249    [] 1,2
+order_for_assigning          numeric  nuniq=17     NA=0      [] 1,2,3,4,5,6
+
+===== stratum.dta 356 x 13 
+a7                           numeric  nuniq=356    NA=0      [G1-A7] 100,101,102,103,104,105
+rouge                        numeric  nuniq=2      NA=0      [] 0,1
+geo_stratum                  numeric  nuniq=12     NA=0      [] 1,2,3,4,5,6
+jontax                       numeric  nuniq=2      NA=0      [(mean) jontax] 0,1
+stratum_jon                  numeric  nuniq=27     NA=0      [(first) stratum_jon] 1,2,3,4,5,6
+commune                      numeric  nuniq=4      NA=0      [(first) commune] 1,2,3,5
+joncomp2016                  numeric  nuniq=2      NA=0      [] 1,2
+salongo_freq                 numeric  nuniq=11     NA=0      [How many times per month do you typically organize salongo? ] 0,1,2,3,4,5
+collect_ever                 haven_labelled nuniq=2      NA=0      [Have you ever collected taxes in Kananga?] 0,1
+collect_what_1               haven_labelled nuniq=2      NA=0      [Which taxes have you collected? - Property tax] 0,1
+chef_stratum                 numeric  nuniq=3      NA=25     [] 1,2
+comp_stratum                 numeric  nuniq=2      NA=0      [] 1,2
+stratum                      numeric  nuniq=55     NA=0      [group(geo_stratum jontax comp_stratum collect_what_1)] 1,2,3,4,5,6
+
+===== tax_payments_noPII.dta 3733 x 28 
+compound1                    numeric  nuniq=3700   NA=34     [Number of compound] 1e+05,100010,102010,102010,102010,102050
+house                        numeric  nuniq=3      NA=3660   [] 1,2
+TDM                          numeric  nuniq=45     NA=453    [TDM] 1,2,3,4,5,7
+did                          numeric  nuniq=273    NA=1267   [did] 6,7,8,9,10,11
+rateUSD                      numeric  nuniq=17     NA=120    [rateUSD] 0.3,0.79,1,1.06,1.32,1.5
+amountCF                     numeric  nuniq=12     NA=5      [amountcf] 50,1500,2000,2500,3000,6600
+colcode                      numeric  nuniq=248    NA=223    [colcode] 0,1,2,7,8,9
+error_code                   numeric  nuniq=3      NA=2      [] 0,1
+polygon                      numeric  nuniq=338    NA=4      [] 2,100,102,103,104,105
+colcode2                     numeric  nuniq=208    NA=1412   [] 0,1,2,5,6,7
+error_colcode                numeric  nuniq=2      NA=3454   [] 1
+Bonus2                       character nuniq=3      NA=0      [] |Non|Oui
+a7                           numeric  nuniq=338    NA=4      [From repertoire_all] 2,100,102,103,104,105
+error_rate                   numeric  nuniq=3      NA=1123   [] 0,1
+Peripherie                   numeric  nuniq=2      NA=1360   [] 1
+Maison_Moyenne               numeric  nuniq=2      NA=3505   [] 1
+Villas                       numeric  nuniq=2      NA=3728   [] 1
+paid                         haven_labelled nuniq=3      NA=1529   [1] 1,3
+ paid                         haven_labelled nuniq=3      NA=1529   [2] 1,3
+ paid                         haven_labelled nuniq=3      NA=1529   [3] 1,3
+ paid                         haven_labelled nuniq=3      NA=1529   [4] 1,3
+ paid                         haven_labelled nuniq=3      NA=1529   [5] 1,3
+Bonus_paye_carto             numeric  nuniq=2      NA=3616   [] 1
+amountUSD                    numeric  nuniq=3      NA=3731   [amountUSD] 4.66,5.82
+endOfCollect                 Date     nuniq=22     NA=121    [] 2018-10-31|2018-09-26|2018-12-21|2018-07-15
+date                         Date     nuniq=222    NA=61     [] 2018-10-26|2018-09-07|2018-11-30|2018-07-10
+lateCollection               numeric  nuniq=3      NA=108    [] 0,1
+unmatched_compound           numeric  nuniq=3      NA=107    [] 0,1
+code                         numeric  nuniq=83     NA=3628   [] 1,4,6,14,15,16
+dup_receipt                  numeric  nuniq=5      NA=3627   [] 0,1,2,3
+mult_tax                     numeric  nuniq=3      NA=3627   [] 0,1
+rate_verified                numeric  nuniq=2      NA=0      [] 0,1
+
+===== tax_payment_timing_noPII.dta 4732 x 19 
+TDMnumber                    character nuniq=11     NA=0      [TDM number] 3|9|35|8
+date                         character nuniq=4622   NA=0      [date] 05-07-2018 00:00:00|07-07-2018 00:00:00|10-07-2018 00:00:00|16-07-2018 00:00:00
+compound1                    numeric  nuniq=3395   NA=0      [compound] 2e+05,200800,201000,201000,201000,202000
+amountCF                     numeric  nuniq=23     NA=3      [amountCF] 0,50,1500,2000,2500,3000
+amountUSD                    numeric  nuniq=4      NA=4729   [amountUSD] 4.66,5.82,6.99
+colcode                      numeric  nuniq=9      NA=4674   [colcode] 14,18,25,45,75,82
+collector_ID                 numeric  nuniq=45     NA=137    [collector_ID] 44,69,70,71,72,73
+tdm                          character nuniq=46     NA=0      [prenom] TDM 3|TDM 9|TDM 35|TDM 8
+rateUSD                      numeric  nuniq=35     NA=137    [rateUSD] 0,0.79,1,1.06,1.32,1.59
+date_download                character nuniq=4593   NA=0      [date_download] |2018-06-28 14:29:02.77300|2018-06-28 14:29:02.78000|2018-06-28 14:29:02.78700
+downloadnum                  numeric  nuniq=525    NA=137    [downloadnum] 10556,10560,10565,10567,10568,10569
+download_userID              numeric  nuniq=2      NA=137    [download_userID] 2
+today                        Date     nuniq=183    NA=48     [] NA|2018-06-15|2018-06-20|2018-06-26
+time                         POSIXct  nuniq=4192   NA=48     [] NA|2018-06-14 23:59:16.992|2018-06-19 23:59:30.304|2018-06-25 23:59:20.064
+hours                        numeric  nuniq=18     NA=0      [] 0,5,6,7,8,9
+minutes                      numeric  nuniq=60     NA=0      [] 0,1,2,3,4,5
+seconds                      numeric  nuniq=60     NA=0      [] 0,1,2,3,4,5
+hours_minutes_seconds        numeric  nuniq=4281   NA=0      [] 0,5.6322,5.6739,5.6853,5.7389,5.7822
+error_code                   numeric  nuniq=1      NA=4732   [] 
+
+===== taxroll_noPII.dta 47930 x 12 
+compound1                    numeric  nuniq=47930  NA=0      [Write the code for the parcelle] 1e+05,1e+05,1e+05,1e+05,1e+05,100010
+DateRDV                      character nuniq=151    NA=0      [DAY] |27-Nov-18|5-Dec-18|Aug 18, 2018
+MontantIF                    character nuniq=21     NA=0      [] 3000 FC|2500 FC|1500 FC|2000 FC
+Bonus                        character nuniq=7      NA=0      [] 900FC|750FC|450FC|600FC
+DatePaye                     character nuniq=73     NA=0      [] |14 septembre 2018|27 juin 2018|28 juin 2018
+Exempte                      character nuniq=9      NA=0      [] |Troisieme age|Veuve|Pensionner Etat
+NbrLoc                       numeric  nuniq=7      NA=47082  [NUMBER OF TENANTS] 0,1,2,3,4,5
+Exempté                     haven_labelled nuniq=9      NA=47655  [WHY IS IT EXEMPTED?] 1,2,3,4,5,6
+Bonus2                       character nuniq=3      NA=0      [] |Non|Oui
+Observations                 character nuniq=1      NA=0      [] 
+Date                         character nuniq=10     NA=0      [] |12 mars 2018|2 avril 2018|3 avril 2018
+a7                           numeric  nuniq=363    NA=0      [] 100,101,102,103,104,105
+
+===== campaign_2016_neighborhoods.dta 434 x 13 
+a7                           numeric  nuniq=434    NA=0      [(p 50) a7] 100,101,102,103,104,105
+tot_compounds                numeric  nuniq=190    NA=0      [(count) nonmissing] 13,18,32,33,34,36
+tot_s1_repeats               numeric  nuniq=6      NA=0      [(max) id_new] 0,1,2,3,4,5
+target_surveys               numeric  nuniq=4      NA=0      [] 5,6,7,8
+prob                         numeric  nuniq=273    NA=0      [] 0.0066138,0.011976,0.015924,0.016234,0.016835,0.017668
+skip                         numeric  nuniq=16     NA=0      [] 1,2,3,4,5,6
+Ordre                        numeric  nuniq=28     NA=1      [Ordre] 1,2,3,4,5,6
+today                        Date     nuniq=155    NA=4      [today] 2016-09-08|2016-10-29|2016-08-12|2016-07-29
+DateTerminée                numeric  nuniq=1      NA=434    [Date Terminée] 
+Obs                          numeric  nuniq=1      NA=434    [Obs] 
+program                      numeric  nuniq=3      NA=1      [] 0,1
+nganza                       numeric  nuniq=2      NA=0      [] 0,1
+num_poly                     numeric  nuniq=4      NA=0      [] 1,2,3,4
+
+===== tax_payments_neighborhoods.dta 356 x 14 
+a7                           numeric  nuniq=356    NA=0      [Neighborhood] 100,101,102,103,104,105
+paid                         numeric  nuniq=36     NA=0      [Number unique payers] 0,1,2,3,4,5
+amount                       numeric  nuniq=94     NA=0      [Total amount paid] 0,500,2000,4000,4200,4700
+grid_nm                      numeric  nuniq=9      NA=0      [Satellite grid (for straficiation)] 1,2,3,4,5,6
+hh_final                     numeric  nuniq=177    NA=0      [Estimated house count] 4,25,27,29,39,41
+poly_size                    numeric  nuniq=3      NA=0      [Population terciles (for stratification)] 1,2,3
+stratum                      numeric  nuniq=27     NA=0      [Strata for randomization] 1,2,3,4,5,6
+program                      numeric  nuniq=2      NA=0      [Assigned to tax campaign] 0,1
+nganza                       numeric  nuniq=1      NA=0      [Nganza commune] 0
+program_start                Date     nuniq=77     NA=145    [Start of tax campaign] NA|2016-10-13|2016-08-15|2016-05-20
+non_residential              numeric  nuniq=1      NA=0      [Neighborhood without residential properties] 0
+num_compounds                numeric  nuniq=137    NA=0      [(count) respondent] 2,8,9,10,14,15
+compliance                   numeric  nuniq=153    NA=0      [Property tax compliance (neighborhood level)] 0,0.008,0.0087719,0.011494,0.011905,0.013514
+revenue_per_person           numeric  nuniq=170    NA=0      [Property tax revenue per capita  (neighborhood level)] 0,16,17.241,17.544,22.989,23.81
+
+===== registration_noPII.dta 48034 x 105 
+start                        POSIXct  nuniq=46521  NA=0      [Start Time] 2018-07-16 13:09:22|2018-07-16 11:32:28|2018-07-16 11:33:46|2018-07-16 12:53:15
+end                          POSIXct  nuniq=45964  NA=601    [End Time] 2018-07-16 13:16:05|2018-07-16 11:33:34|2018-07-16 11:42:04|2018-07-16 13:03:04
+today                        Date     nuniq=140    NA=2798   [Date of Survey] 2018-07-16|2018-07-17|2018-07-30|2018-07-31
+today_fr                     character nuniq=140    NA=0      [] 16 juillet 2018|17 juillet 2018|30 juillet 2018|31 juillet 2018
+a7                           numeric  nuniq=363    NA=0      [Location of interview - Polygon ID] 100,101,102,103,104,105
+a7b                          numeric  nuniq=369    NA=841    [Location of interview - Polygon ID] 100,101,102,103,104,105
+tmt                          numeric  nuniq=6      NA=7175   [] 0,1,2,3,4
+carto_pay                    haven_labelled nuniq=2      NA=6792   [IS THIS A CARTO SURVEY OR A SURVEY TO RECORD A PAYMENT DONE ] 0
+first                        haven_labelled nuniq=3      NA=1182   [IS THIS THE FIRST CARTO SURVEY YOU HAVE DONE IN THIS POLYGON] 0,1
+north_east                   haven_labelled nuniq=3      NA=45927  [HAVE YOU STARTED CARTOGRAPHIE IN THE NORTHEASTERN PART OF TH] 0,1
+col_change                   haven_labelled nuniq=3      NA=3290   [HAVE THE COLLECTORS WITH YOU CHANGED SINCE YOU STARTED CARTO] 0,1
+who                          haven_labelled nuniq=4      NA=91     [Are you with a collector, a chief or both ?] 0,1,2
+chief_asst_pres              haven_labelled nuniq=3      NA=32544  [IS HIS ASSISTANT PRESENT?] 0,1
+house                        haven_labelled nuniq=3      NA=0      [WHAT KIND OF HOUSE DID THE COLLECTOR SAY THIS IS] 1,2,3
+correct                      haven_labelled nuniq=3      NA=1      [IN YOUR OPINION WAS THIS THE CORRECT CHOICE] 0,1
+house_correct                haven_labelled nuniq=4      NA=46903  [IN YOUR OPINION WHAT DO YOU THINK THE CORRECT TYPE OF HOUSE ] 1,2,3
+breminder_mm2                numeric  nuniq=3      NA=43869  [G0-G3b-reminder_mm2] 0,1
+other_flyers0                haven_labelled nuniq=3      NA=43117  [DID THE COLLECTOR FILL IN AND STAPLE THE SECOND FLYER (MM)?] 0,1
+bother_flyers1               numeric  nuniq=3      NA=47757  [G0-G3b-other_flyers1] 0,1
+col_code                     numeric  nuniq=41     NA=43000  [BEFORE THE HYPHEN] 1,2,3,4,5,6
+mm_num                       numeric  nuniq=901    NA=43000  [AFTER THE HYPHEN] 0,1,2,3,4,5
+mm_rate                      haven_labelled nuniq=5      NA=43000  [WHAT RATE IS ON THE MM FLIER?] 6600,8800,11000,13200
+old_code                     numeric  nuniq=3233   NA=18     [If there is an old code, from the previous campaign please e] 0,1,2,3,8,30
+compound1                    numeric  nuniq=47978  NA=0      [Write the code for the parcelle] 1e+05,1e+05,1e+05,1e+05,1e+05,100010
+compound2                    numeric  nuniq=47969  NA=0      [Write the code for the parcelle again] 56464,1e+05,1e+05,1e+05,1e+05,1e+05
+present_sensi                haven_labelled nuniq=3      NA=287    [IS THERE AN ADULT WHO LIVES ON THE COMPOUND PRESENT RIGHT NO] 0,1
+present_info_owner           haven_labelled nuniq=3      NA=35429  [IS THERE AN ADULT AROUND WHO KNOWS THE NAME OF THE OWNER OR ] 0,1
+status                       haven_labelled nuniq=4      NA=12614  [Is this the owner of this house, a renter or a relative of t] 1,2,3
+owner_found                  haven_labelled nuniq=3      NA=45655  [Did you find the owner or an adult family member who lives o] 0,1
+owner_where                  haven_labelled nuniq=6      NA=46044  [Where are they?] 0,1,2,3,4
+tenants                      numeric  nuniq=13     NA=26023  [NUMBER OF TENANTS] 0,1,2,3,4,5
+exempt                       haven_labelled nuniq=3      NA=24003  [ACCORDING TO THE COLLECTORS, IS THIS HOUSEHOLD EXEMPTED?] 0,1
+why_exempt                   haven_labelled nuniq=10     NA=41239  [WHY IS IT EXEMPTED?] 1,2,3,4,5,6
+exempt_other                 character nuniq=47     NA=0      [ACCORDING TO THE COLLECTORS, IS THIS HOUSEHOLD EXEMPTED? (Ot] |.|En construction|Aveugle
+exempt_enum                  haven_labelled nuniq=3      NA=13661  [ACCORDING TO YOU, SHOULD THIS HOUSEHOLD BE EXEMPTED?] 0,1
+why_exempt2                  haven_labelled nuniq=9      NA=39507  [WHAT EXEMPTION?] 2,3,4,5,6,7
+why_exempt2_other            character nuniq=42     NA=0      [WHAT EXEMPTION? (Other)] |.|Malvoyant|En construction
+designate                    haven_labelled nuniq=3      NA=45658  [Did the collector designate one of the renters as the person] 0,1
+designate_why                haven_labelled nuniq=4      NA=47990  [Why did the collector not do this?] 1,2,3
+designate_why_other          character nuniq=10     NA=0      [Why did the collector not do this? (Other)] |.|Le locataire a refuse|Le locataire ira donne le
+read_flyers                  haven_labelled nuniq=3      NA=29657  [DID THE COLLECTOR READ ALL OF THE FLYER] 0,1
+read_flyer2                  character nuniq=28     NA=0      [WHAT PARTS DID THE COLLECTOR READ?] |0|1 2 3 4|2
+treatment_fr                 character nuniq=125    NA=0      [] |Payez l'impôt foncier afi|Le Gouvernement Provincia|Si vous refusez de payer 
+treatment_tsh                character nuniq=118    NA=0      [] |Futayi bitadi bia mpangu |Mbulamatadi wa Province n|Wewe mubenge kufuta tshit
+rate_assigned                numeric  nuniq=5      NA=16137  [] 1500,2000,2500,3000
+read_language                haven_labelled nuniq=3      NA=30631  [IN WHICH LANGUAGES DID THE COLLECTOR READ THE FLYER] 1,2
+read_who                     haven_labelled nuniq=4      NA=47736  [WHICH COLLECTOR READ THE TRACT?] 0,1,2
+read_which_chef              haven_labelled nuniq=3      NA=47858  [DID THE CHEF OR THE ASSISTANT READ THE FLIER?] 1,2
+what_rate_periph             haven_labelled nuniq=5      NA=34267  [WHAT TAX RATE DID THE COLLECTOR SAY THE HOUSEHOLD SHOULD PAY] 1500,2000,2500,3000
+what_rate_periph_other       character nuniq=8      NA=0      [WHAT TAX RATE DID THE COLLECTOR SAY THE HOUSEHOLD SHOULD PAY] .||Maison moyen|11000
+read_message_fr              haven_labelled nuniq=3      NA=47496  [DID THE COLLECTOR READ OUT THE CORRECT TREATMENT MESSAGE :] 0,1
+read_message_tsh             haven_labelled nuniq=3      NA=31169  [DID THE COLLECTOR READ OUT THE CORRECT TREATMENT MESSAGE :] 0,1
+who_give_flier               haven_labelled nuniq=8      NA=16480  [TO WHOM DID THE COLLECTORS GIVE THE FLIER?] 1,2,3,4,5,6
+collect_now                  haven_labelled nuniq=3      NA=19509  [Did the collector try to collect taxes on the spot ?] 0,1
+collect_who                  haven_labelled nuniq=4      NA=40103  [WHICH COLLECTOR TRIED TO COLLECT TAXES ON THE SPOT?] 0,1,2
+why_nocollect                haven_labelled nuniq=3      NA=28416  [WHY DID THE COLLECTOR NOT TRY TO COLLECT ON THE SPOT?] 1,2
+why_nocollect_other          character nuniq=63     NA=0      [WHY DID THE COLLECTOR NOT TRY TO COLLECT ON THE SPOT? (Other] |Exempte|.|Exempter par age.
+collect_success              haven_labelled nuniq=3      NA=39972  [DID THE PERSON PAY ?] 0,1
+amt_paid                     haven_labelled nuniq=9      NA=47758  [HOW MUCH DID THEY PAY?] 1500,2000,2500,3000,6600,8800
+appointment                  haven_labelled nuniq=3      NA=40379  [WAS AN APPOINTMENT MADE?] 0,1
+apt_date                     character nuniq=167    NA=0      [DAY] |Oct 5, 2018|Sep 15, 2018|Sep 17, 2018
+chalk_check                  haven_labelled nuniq=3      NA=816    [THE COMPOUND CODE FOR THIS PARCELLE IS . IS THIS THE SAME CO] 0,1
+compound1_p                  numeric  nuniq=1      NA=48034  [Write the code for the parcelle] 
+compound2_p                  numeric  nuniq=1      NA=48034  [Write the code for the parcelle again] 
+periph_vs_mm_p               haven_labelled nuniq=1      NA=48034  [EST-CE QU'IL S'AGISSAIT D'UNE MAISON DE TYPE PERIPHERIE OU D] 
+mm_rate_pp                   haven_labelled nuniq=1      NA=48034  [HOW MUCH DID HE COLLECT?] 
+what_rate_periph_p           haven_labelled nuniq=1      NA=48034  [HOW MUCH DID HE COLLECT?] 
+other_amt                    numeric  nuniq=1      NA=48034  [WHAT OTHER AMOUNT?] 
+advance                      haven_labelled nuniq=1      NA=48034  [WAS THIS AN ADVANCE PAIEMENT?] 
+past_advance                 haven_labelled nuniq=1      NA=48034  [HAD HE ALREADY PAID AN ADVANCE AND NOW HE IS COMPLETING THE ] 
+past_advance_amt             numeric  nuniq=1      NA=48034  [HOW MUCH DID HE COLLECT LAST TIME (AS AN ADVANCE)?] 
+metainstanceid               character nuniq=48034  NA=0      [meta-instanceID] uuid:5d2e218e-3d1e-4f28-8|uuid:ce22b0cb-fb42-40bc-a|uuid:eb9429b3-b99d-4418-8|uuid:2bf2378f-45d9-4579-a
+key                          character nuniq=48034  NA=0      [KEY] uuid:5d2e218e-3d1e-4f28-8|uuid:ce22b0cb-fb42-40bc-a|uuid:eb9429b3-b99d-4418-8|uuid:2bf2378f-45d9-4579-a
+time                         character nuniq=531    NA=0      [GX1-time] |1:12:00 PM|12:24:00 PM|12:00:00 PM
+know_eachother               haven_labelled nuniq=3      NA=5341   [DOES THE RESPONDENT AND THE COLLECTOR/CHIEF SEEMS TO KNOW EA] 0,1
+commune                      haven_labelled nuniq=5      NA=91     [Commune:] 1,2,3,4
+quartier                     haven_labelled nuniq=21     NA=169    [Quartier:] 1,2,3,4,5,6
+present                      numeric  nuniq=3      NA=47748  [] 0,1
+other_flyers                 numeric  nuniq=3      NA=48003  [] 0,1
+other_flyers_other           character nuniq=3      NA=0      [] |.|Il n’a pas pu donné le tr
+other_flyers_2               numeric  nuniq=2      NA=48029  [] 1
+other_flyers_2_other         numeric  nuniq=1      NA=48034  [] 
+reminder_mm                  numeric  nuniq=1      NA=48034  [G6-G7-reminder_mm] 
+rate                         numeric  nuniq=5      NA=47622  [G6-G7-rate] 1500,2000,2500,3000
+what_rate                    numeric  nuniq=9      NA=47637  [G6-G7-what_rate] 1500,2000,2500,3000,6600,8800
+what_rate_other              numeric  nuniq=1      NA=48034  [G6-G7-what_rate_other] 
+other_flyers1                haven_labelled nuniq=3      NA=47129  [DID THE COLLECTOR FILL OUT AND STAPLE THE SECOND FLYER (VILL] 0,1
+reminder_mm1                 character nuniq=2      NA=0      [G7-G8-reminder_mm1] |OK
+reminder_mm2                 character nuniq=2      NA=0      [DID THE COLLECTOR STRIKE OUT THE PERIPHERY RATE ON THE MAIN ] |OK
+reminder_mm3                 character nuniq=2      NA=0      [G7-G8-reminder_mm3] |OK
+a7_compound                  numeric  nuniq=366    NA=0      [] 100,101,102,103,104,105
+date                         character nuniq=1      NA=0      []  5 Jun 2019
+date_f                       Date     nuniq=1      NA=0      [] 2019-06-05
+month_tmpp                   numeric  nuniq=1      NA=48034  [] 
+day_tmpp                     numeric  nuniq=10     NA=45236  [] 1,3,5,6,26,27
+month_tmp_fr                 character nuniq=11     NA=0      [] juillet|aout|octobre|septembre
+type                         character nuniq=2      NA=0      [] ampm|mili
+short_label                  character nuniq=1      NA=0      [short_label] 
+value_label                  character nuniq=1      NA=0      [] 
+keep                         numeric  nuniq=1      NA=48034  [] 
+labelEnglish                 character nuniq=1      NA=0      [label::English] 
+tot_complete                 numeric  nuniq=2      NA=0      [] 0,1
+double_sensi                 numeric  nuniq=2      NA=0      [] 0,1
+dup_poly                     numeric  nuniq=2      NA=77     [] 0
+pilot                        numeric  nuniq=2      NA=0      [] 0,1

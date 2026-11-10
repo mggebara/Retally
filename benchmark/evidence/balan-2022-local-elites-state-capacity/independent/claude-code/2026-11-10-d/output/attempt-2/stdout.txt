@@ -1,0 +1,586 @@
+assignment treatment:
+
+  0   1   2   3   4 
+  5 110 110  80  51 
+schedule treatment:
+
+  0   1   2   3   4 
+  5 110 110  80  51 
+assign vs schedule treatment:
+   
+      0   1   2   3   4
+  0   5   0   0   0   0
+  1   0 110   0   0   0
+  2   0   0 110   0   0
+  3   0   0   0  80   0
+  4   0   0   0   0  51
+schedule month by treatment:
+   
+     1  2  3  4  5  6  7
+  0  1  1  1  1  1  0  0
+  1 30  0 30  0 30 10 10
+  2 20 20 20 18 15 14  3
+  3  0 30  0 30  0 20  0
+  4 11  9 10  9  5  5  2
+
+registration rows 48034 
+a7 in assignment: 46859 
+tmt table:
+
+    0     1     2     3     4  <NA> 
+  800 11248 12555  9808  6448  7175 
+tmt vs schedule treatment:
+      
+           0     1     2     3     4  <NA>
+  0      799     1     0     0     0     0
+  1        1 11243     1     0     3     0
+  2        0     2 12551     1     1     0
+  3        0     1     1  9806     0     0
+  4        0     1     0     0  6447     0
+  <NA>     0  3581  2077   340     2  1175
+house:
+
+    1     2     3  <NA> 
+41686  6063   285     0 
+pilot:
+
+    0     1  <NA> 
+46859  1175     0 
+tot_complete:
+
+    0     1  <NA> 
+   77 47957     0 
+double_sensi:
+
+    0     1  <NA> 
+47984    50     0 
+dup_poly:
+
+    0  <NA> 
+47957    77 
+carto_pay:
+
+    0  <NA> 
+41242  6792 
+dup compound1: 56 
+a7 == a7_compound: 48017  compound1%/%1000==a7: 48033 
+exempt:
+
+    0     1  <NA> 
+17135  6896 24003 
+
+counts by schedule treatment, all rows:
+
+    0     1     2     3     4  <NA> 
+  800 14829 14630 10147  6453  1175 
+in 356:
+
+    0     1     2     3     4 
+  800 14829 14630 10147  6453 
+house 1/2:
+
+    0     1     2     3     4 
+  800 14711 14604 10048  6411 
++pilot==0:
+
+    0     1     2     3     4 
+  800 14711 14604 10048  6411 
++dedup compound:
+
+    0     1     2     3     4 
+  800 14702 14601 10042  6373 
+pilot0 + tot_complete:
+
+    0     1     2     3     4 
+  800 14690 14601 10042  6373 
+pilot0 + double_sensi0:
+
+    0     1     2     3     4 
+  800 14711 14604 10048  6361 
+house12 + ds0 + tc1:
+
+    0     1     2     3     4 
+  800 14690 14601 10042  6323 
+today range by treatment:
+# A tibble: 5 × 6
+  treatment.y mn         mx         q01        q99            n
+        <dbl> <date>     <date>     <date>     <date>     <int>
+1           0 2018-07-09 2018-11-02 2018-07-09 2018-11-02   800
+2           1 2018-06-15 2018-12-11 2018-06-15 2018-12-08 14711
+3           2 2018-06-24 2018-12-11 2018-06-25 2018-12-11 14604
+4           3 2018-07-16 2018-11-14 2018-07-16 2018-11-13 10048
+5           4 2018-07-02 2018-12-10 2018-07-02 2018-12-10  6411
+month vs registration month (house12):
+   
+      06   07   08   09   10   11   12
+  1 5476 1129  378  148  101   83  450
+  2    0 4738 2227  129   50   53    0
+  3    0    0 6222 1317  198  177  341
+  4    0    0    0 5720 1410   74   91
+  5    0    0    0    0 5974  115  122
+  6    0    0    0    0   50 5906   93
+  7    0    0    0    0   86   69  849
+
+payments: rows 3733  dup compound1: 0 
+
+   1    3 <NA> 
+2087  117 1529 
+
+   0    1 <NA> 
+3509  222    2 
+
+     50    1500    2000    2500    3000    6600    8800   11000   13200 1421700 
+      1    1254     953     643     501     153     103      57      61       1 
+1662800    <NA> 
+      1       5 
+
+   1    2 <NA> 
+  12   61 3660 
+
+   1 <NA> 
+   5 3728 
+payment compounds in registration: 3698 
+payment compounds in house12 356: 3593 
+      
+       FALSE TRUE <NA>
+  1       27 2060    0
+  3        0  117    0
+  <NA>   113 1416    0
+      
+       FALSE TRUE <NA>
+  0        1 3591    0
+  1       34    0    0
+  <NA>   105    2    0
+
+   0    1    2    3 <NA> 
+ 101    3    1    1 3627 
+
+   0    1 <NA> 
+ 100    6 3627 
+
+   0    1 <NA> 
+3148  477  108 
+
+midline rows 45794 
+a7 : G1-A7 | NA= 452 
+compound : Number of compound | NA= 13 
+start : Start Time | NA= 1 
+end : End Time | NA= 1089 
+today : Date of Survey | NA= 1 
+key : KEY | NA= 0 
+a7b : G1-A7b | NA= 502 
+a7c : G1-A7c | NA= 0 
+a7_check : G1-A7_check | NA= 0 
+a7d : G1-A7d | NA= 0 
+treatment :  | NA= 1612 
+month :  | NA= 6733 
+compound2 : Number of compound | NA= 14 
+nocode : Ask the people in this household why there is no code, and choose the  | NA= 37540 
+possible_compound : ACCORDING TO YOU, WHAT SHOULD THE NUMBER HAVE BEEN HAD IT NOT BEEN ERA | NA= 35530 
+why_no_code : WRITE WHY YOU CANNOT EVEN ESTIMATE THE CODE | NA= 0 
+revisits_dates : HOW MANY SEPARATE DATES ARE WRITTEN IN CHALK NEXT TO THE CODE? | NA= 1480 
+date1 : SELECT THE FIRST DATE WRITTEN ON THE WALL | NA= 0 
+date2 : SELECT THE NEXT DATE WRITTEN ON THE WALL | NA= 0 
+date3 : SELECT THE NEXT DATE WRITTEN ON THE WALL | NA= 0 
+date4 : SELECT THE NEXT DATE WRITTEN ON THE WALL | NA= 0 
+date5 : SELECT THE NEXT DATE WRITTEN ON THE WALL | NA= 0 
+date6 : SELECT THE NEXT DATE WRITTEN ON THE WALL | NA= 0 
+date7 : SELECT THE NEXT DATE WRITTEN ON THE WALL | NA= 0 
+date8 : SELECT THE NEXT DATE WRITTEN ON THE WALL | NA= 0 
+date9 : SELECT THE NEXT DATE WRITTEN ON THE WALL | NA= 0 
+date10 : SELECT THE NEXT DATE WRITTEN ON THE WALL | NA= 0 
+survey1 : DID A MEMBER OF THIS PARCELLE PARTICIPATE IN SURVEY 1? | NA= 21 
+survey1_code : WRITE THE CODE OF THE RESPONDENT FROM SURVEY 1. | NA= 43418 
+survey1_resp_same : ARE YOU INTERVIEWING THE SAME RESPONDENT AS SURVEY 1? NAME: . | NA= 43550 
+survey1_resp_diff : YOU SHOULD FIND THE ORIGINAL SURVEY 1 RESPONDENT IF AT ALL POSSIBLE. 
+ | NA= 45395 
+survey_chef : DID A MEMBER OF THIS PARCELLE PARTICIPATE IN THE CHEF SURVEY? | NA= 19 
+survey_chef_code : WRITE THE CODE OF THE RESPONDENT FROM CHEF SURVEY. | NA= 45142 
+chef_resp_same : ARE YOU INTERVIEWING THE SAME RESPONDENT AS THE CHEF SURVEY? NAME: . | NA= 45235 
+chef_resp_diff : YOU SHOULD FIND THE CHEF IF POSSIBLE
+
+IF NOT, WHY ARE YOU INTERVIEWING | NA= 45726 
+compound_chef : DOES THIS COMPOUND BELONG TO THE CHEF DE LOCALITE WHO IS WORKING ON TH | NA= 45503 
+compound_assis : DOES THIS COMPOUND BELONG TO THE ASSISTANT OF THE CHEF DE LOCALITE WHO | NA= 26307 
+exempt : IS THIS A CHURCH OR STATE BUILDING THAT IS EXEMPTED? | NA= 1589 
+first_attempt : IS THIS THE FIRST TIME YOU HAVE VISITED THIS COMPOUND FOR THE MONITORI | NA= 1371 
+present : IS THERE AN ADULT FROM THE HOUSE OF THE PROPERTY OWNER WITH WHOM YOU C | NA= 555 
+abandoned : IN YOUR OPINION, IS THIS PARCELLE ABANDONED? | NA= 37913 
+lang : What is the language of the interview? | NA= 8469 
+visited : Has your household been visited by a tax collector or another authorit | NA= 8488 
+visits : How many times did they come in total since June, including the visit  | NA= 12476 
+flier : Did your household receive a flier about this campaign? | NA= 14980 
+paid_self : To date, has your household paid the property tax in 2018? | NA= 13853 
+taxed_dk : Is there someone else here who might know if your household has paid? | NA= 40439 
+paid_who : Whom did your household pay? | NA= 0 
+why_pay : Among the following options, which was the most important reason why y | NA= 41570 
+why_pay_o : HE INSISTED ON WHAT OTHER REASON? | NA= 45243 
+pubgoods : In your opinion, how much of the money collected in property taxes wil | NA= 16415 
+sanctions : In your opinion, do you think a public authority will pursue and enfor | NA= 13931 
+bribe_amt : How much did you pay? | NA= 45439 
+whopay : Did you pay them, or did another member of your household? | NA= 41521 
+whopay2 : Which other member of your household paid? | NA= 43960 
+neighbor_know : Do you know how much the collectors asked your neighbors or friends to | NA= 24979 
+num_500 : NOMBRE DE VOISINS/AMIS QUI DEVAIENT PAYER 500 FC | NA= 45025 
+num_1000 : NOMBRE DE VOISINS/AMIS QUI DEVAIENT PAYER 1000 FC | NA= 44987 
+num_1500 : NOMBRE DE VOISINS/AMIS QUI DEVAIENT PAYER 1500 FC | NA= 44444 
+num_2000 : NOMBRE DE VOISINS/AMIS QUI DEVAIENT PAYER 2000 FC | NA= 44410 
+num_2500 : NOMBRE DE VOISINS/AMIS QUI DEVAIENT PAYER 2500 FC | NA= 44372 
+num_3000 : NOMBRE DE VOISINS/AMIS QUI DEVAIENT PAYER 3000 FC | NA= 44415 
+num_4000 : NOMBRE DE VOISINS/AMIS QUI DEVAIENT PAYER 4000 FC | NA= 44989 
+num_5000 : NOMBRE DE VOISINS/AMIS QUI DEVAIENT PAYER 5000 FC | NA= 44978 
+num_6000 : NOMBRE DE VOISINS/AMIS QUI DEVAIENT PAYER 6000 FC | NA= 45004 
+num_6600 : NOMBRE DE VOISINS/AMIS QUI DEVAIENT PAYER 6600 FC | NA= 45017 
+num_7000 : NOMBRE DE VOISINS/AMIS QUI DEVAIENT PAYER 7000 FC | NA= 45035 
+num_8000 : NOMBRE DE VOISINS/AMIS QUI DEVAIENT PAYER 8000 FC | NA= 45023 
+num_8800 : NOMBRE DE VOISINS/AMIS QUI DEVAIENT PAYER 8800 FC | NA= 45030 
+num_9000 : NOMBRE DE VOISINS/AMIS QUI DEVAIENT PAYER 9000 FC | NA= 45042 
+num_10000 : NOMBRE DE VOISINS/AMIS QUI DEVAIENT PAYER 1000 FC | NA= 45040 
+num_11000 : NOMBRE DE VOISINS/AMIS QUI DEVAIENT PAYER 11000 FC | NA= 45016 
+num_12000 : NOMBRE DE VOISINS/AMIS QUI DEVAIENT PAYER 12000 FC | NA= 45040 
+num_13000 : NOMBRE DE VOISINS/AMIS QUI DEVAIENT PAYER 13000 FC | NA= 45038 
+num_13200 : NOMBRE DE VOISINS/AMIS QUI DEVAIENT PAYER 13200 FC | NA= 45041 
+num_9999 : NOMBRE DE VOISINS/AMIS QUI DEVAIENT PAYER PLUS QUE 13200 FC | NA= 45049 
+rand_neighbor : random number determining if the question neighbor_know2 is asked | NA= 20349 
+neighbor_know2 : Do you have any sense if it was the same, more, or less than what they | NA= 38635 
+num_less : NUMBER WHO PAID LESS | NA= 45659 
+num_same : NUMBER WHO PAID SAME | NA= 45647 
+num_more : NUMBER WHO PAID MORE | NA= 45661 
+rand_discount :  | NA= 14787 
+discount_know : Have you heard of anyone receiving an official reduction in the amount | NA= 38303 
+discount_self : Did you receive a reduction? | NA= 45601 
+salongo : Did someone from your household participate in Salongo in the past two | NA= 18964 
+salongo_hours : For how many hours did they participate in Salongo | NA= 36740 
+sex_prop : Is the owner a man or a woman? | NA= 19910 
+age_prop : How old is the owner? | NA= 32954 
+age_prop_guess : Please estimate the owner's age. | NA= 32302 
+whopay3 : Is the person who paid available for a short survey? | NA= 43960 
+whopay3c : WHAT IS THE RELATION BETWEEN THE PERSON WITH WHOM YOU ARE DOING THE SU | NA= 44589 
+exempt_not : ACCORDING TO YOU (THE ENUMERATOR), SHOULD THIS PERSON HAVE BEEN EXEMPT | NA= 40808 
+tot_complete_short :  | NA= 9390 
+sample_select :  | NA= 43283 
+long_select :  | NA= 17519 
+nocode_rand :  | NA= 38003 
+nocode_select :  | NA= 45372 
+paid_rand :  | NA= 45794 
+paid_select :  | NA= 44741 
+status : Are you the owner of this house, or do you rent? | NA= 38956 
+crieur : Did you hear the cry-er using the megaphone in your neighborhood to in | NA= 38960 
+col_type_fr : Was it the DGRKOC agents, the locality chief (or his deputy), or both  | NA= 0 
+col_type_tsh : Was it the DGRKOC agents, the locality chief (or his deputy), or both  | NA= 0 
+chef_type : Which chefs visited you for this property tax campaign? | NA= 0 
+visits_other1a : Aside from their visits to your compound, have you spoken with a DGRKO | NA= 40311 
+visits_other1b : How many times did you speak with them about the property tax in total | NA= 45584 
+visits_other2a : Have you spoken with a DGRKOC tax collector or the chef de localité (a | NA= 44524 
+visits_other2b : How many times did you speak with them about the property tax in total | NA= 45769 
+know_col : The collectors who came to your house this year to collect IF/IRL ---  | NA= 39542 
+know_how : How did you know them? | NA= 0 
+vis12 : PROPERTY TAX: | NA= 41570 
+paid_amt : If you are comfortable with it, can I also ask you the amount you paid | NA= 42732 
+paid_nb : COMMENTAIRES: | NA= 0 
+receipt : Did the tax collector give you a receipt? | NA= 42385 
+no_receipt : Why did he not give you a receipt? | NA= 45017 
+receipt_type : Was the receipt printed by a portable printer, or handwritten? | NA= 43436 
+receipt_later : To date, did the collector ever come back to collect the rest of the m | NA= 45361 
+receipt_show : Would you mind showing me the receipt you received?  This will help us | NA= 43258 
+receipt_noshow : WHY DID THE PERSON REFUSE TO SHOW YOU THE RECEIPT. | NA= 44190 
+code_same : HERE IS THE CODE OF THE PARCELLE:. DOES THIS MATCH THE CODE ON THE REC | NA= 44966 
+code_diff : IF NOT, WRITE THE CODE WRITTEN ON THE RECEIPT. | NA= 45759 
+col_code : WRITE THE COLLECTOR CODE | NA= 45070 
+receipt_photo_ok : May I take a photo of the receipt? | NA= 44926 
+receipt_photo_no : WHY DID THE PERSON REFUSE TO LET YOU PHOTOGRAPH THE RECEIPT? | NA= 45793 
+receipt_photo_no_other : WHY DID THE PERSON REFUSE TO LET YOU PHOTOGRAPH THE RECEIPT? (Other) | NA= 45794 
+receipt_photo : TAKE A PHOTO OF THE RECEIPT. MAKE SURE IT IS CLEAR. | NA= 0 
+amount_match : IS THE AMOUNT PAID ON THE RECEIPT THE SAME AS THE AMOUNT THE RESPONDEN | NA= 44927 
+amount_new : WRITE THE AMOUNT WRITTEN ON THE RECEIPT | NA= 45757 
+amount_match_no : I see that the amount written on the receipt does not match what you t | NA= 45768 
+tax_obs : DO YOU HAVE ANY OTHER OBSERVATIONS ABOUT THIS PERSON'S EXPERIENCE WITH | NA= 39071 
+tot_complete_control :  | NA= 38979 
+consent7 : Do you have any questions, or would you like more information about th | NA= 43352 
+hh_head : IS THIS THE HOUSEHOLD HEAD? | NA= 43683 
+hh_relation : What is your relationship with the household head? | NA= 45381 
+hh_relation_other : What is your relationship with the household head? (Other) | NA= 0 
+born_kga : Were you born in Kananga? | NA= 44238 
+move_kga : What year did you move to Kananga? | NA= 45265 
+sex : SELECT THE SEX OF THE INTERVIEWEE. | NA= 44834 
+age : How old were you at your last birthday? | NA= 44835 
+edu : What is the highest level of school you have reached? | NA= 45053 
+edu2 : What is the last class reached in that level? | NA= 45054 
+dgrkoc_submit : In general, think of what the DGRKOC tax collectors will do with the m | NA= 44979 
+dgrkoc_steal : How much of this money will they put in their pockets? | NA= 44979 
+chef_submit : In general, think of what the chefs de localite (and their deputies) w | NA= 45259 
+chef_steal : How much of this money will they put in their pockets? | NA= 45259 
+gov_use : Now I would like to ask you what you think the provincial government w | NA= 44979 
+gov_steal : Corruption and waste: | NA= 44979 
+neighbors_pay : In your opinion, how many of your neighbors have already paid the prop | NA= 44100 
+tax_oblig : Now, I would like to ask you if you think it is currently an obligatio | NA= 43686 
+dgrkoc_perform : Overall, how would you rate the performance of the tax ministry in Kan | NA= 43779 
+gov_perform : Overall, how would you rate the performance of the provincial governme | NA= 43757 
+chef_perform : Overall, how would you rate the performance of your locality chief and | NA= 44044 
+salongo2 : Did you participate in Salongo in the past two weeks? | NA= 45341 
+salongo_who : Who organised Salongo? | NA= 44896 
+conflict : Now imagine that you have a conflict with your neighbor (for example a | NA= 43686 
+trust_gov : The provincial government | NA= 43721 
+trust_dgrkoc : I am going to name a number of organizations. For each one, could you  | NA= 43724 
+trust_chef : I am going to name a number of organizations. For each one, could you  | NA= 43712 
+payment : Now, please take this 500 FC to thank you for the time you have spent  | NA= 0 
+tot_complete_long :  | NA= 43706 
+photo : Take a photo of the respondent. | NA= 0 
+hh_photo : TAKE A PICTURE OF THE HOUSE. BE SURE THAT THE PHOTO IS CLEAR. WE ARE G | NA= 0 
+walls : OBSERVE THE PRINCIPAL MATERIAL OF THE WALLS OF THE MAIN HOUSE. | NA= 9874 
+walls_other : OBSERVE THE PRINCIPAL MATERIAL OF THE WALLS OF THE MAIN HOUSE. (Other) | NA= 0 
+roof : OBSERVE THE PRINCIPAL MATERIAL OF THE ROOF. | NA= 9865 
+roof2 : WHAT IS THE CONDITION OF THE ROOF? | NA= 45780 
+ravine : IS THIS COMPOUND THREATENED BY A RAVINE? | NA= 780 
+metainstanceid : meta-instanceID | NA= 0 
+a3 : G1-A3 | NA= 0 
+a4 : G1-A4 | NA= 0 
+tmt :  | NA= 44620 
+commune :  | NA= 44441 
+quartier :  | NA= 44441 
+locality :  | NA= 44441 
+survey_chec_code :  | NA= 45778 
+attempt :  | NA= 43461 
+attempt2 :  | NA= 44540 
+attempt3 :  | NA= 45489 
+job : What type of work does the property owner do now? | NA= 14755 
+job_other : What type of work does the property owner do now? (Other) | NA= 0 
+job_gov : Does a close member of the family of the property owner work for the p | NA= 17044 
+tribe : What is his tribe? | NA= 0 
+move_ave : For how many years has he lived on this avenue? | NA= 25971 
+ave_vis2 : Pourquoi ils n'ont pas visité votre maison? | NA= 45748 
+ave_vis2_other : other: Pourquoi ils n'ont pas visité votre maison? | NA= 45793 
+exempt_not_enums : SELON VOUS (L'ENQUETEUR), EST-CE QUE CETTE PARCELLE AURAIT DU ETRE EXE | NA= 45740 
+bribe : Whom did your household pay? | NA= 22046 
+whopay3d : POURQUOI EST-CE QUE LE PAYEUR N'EST PAS DISPONIBLE? | NA= 45770 
+whopay3d_other : Other: POURQUOI EST-CE QUE LE PAYEUR N'EST PAS DISPONIBLE? | NA= 45794 
+whopaprenom : OK, FAITES UN EFFORT DE CONTACTER LA PERSONNE ET FIXEZ UN RENDEZVOUS A | NA= 45764 
+appt : G2-G3-appt | NA= 0 
+whoreceipt : SI VOUS NE POUVEZ PAS  L'ATTEINDRE, REVENEZ A CETTE PARCELLE PLUS TARD | NA= 0 
+consent1b : Maintenant, je voudrais vous demander si vous pouvez faire un entretie | NA= 0 
+consent2 : G2-G4-G5-consent2 | NA= 0 
+consent3 : G2-G4-G5-consent3 | NA= 0 
+consent3b : Avant de continuer, laissez-moi souligner une chose très importante. S | NA= 0 
+consent4 : G2-G4-G5-consent4 | NA= 0 
+consent6 : I would also like to ask your permission to take an audio recording of | NA= 0 
+record : NOW TURN ON THE AUDIO RECORDING. | NA= 0 
+rumor1 : Before they came, had you heard of the on the ground campaign to colle | NA= 44831 
+rumor2 : Before today, had you heard of the on the ground campaign to collect p | NA= 45785 
+rumor3 : Who told you about the campaign? | NA= 45478 
+rumor3_other : Other: Who told you about the campaign? | NA= 0 
+tdm : When the collectors came to your house to collect the tax, did they ha | NA= 44966 
+name_match : G2-G4-G6-G10-name_match | NA= 45726 
+name_match_no : Reason for this difference between the name written on the receipt and | NA= 45780 
+bribe2a : Apart from the  that you paid, did the collector ask you for another s | NA= 44975 
+bribe2a_amt : How much did you pay? | NA= 45786 
+bribe2b : Apart from the  that you paid, did the collector ask you for another s | NA= 45757 
+bribe2b_amt : How much did you pay? | NA= 45793 
+bribe3 : Did the collector ask you for another small sum apart from the tax (fo | NA= 43133 
+bribe3_amt : How much did you pay? | NA= 45790 
+dgrkoc_imp : To what degree do you think the work done by the DGRKOC tax collectors | NA= 45169 
+gov_imp : To what degree do you think the work done by the chief of locality and | NA= 45171 
+chef_imp : To what degree do you think the work done by the chief of locality and | NA= 45455 
+salongo_acceptability : Imagine your chef de localité asks several members of the community to | NA= 43971 
+trust_police : I am going to name a number of organizations. For each one, could you  | NA= 45741 
+trust_kin : I am going to name a number of organizations. For each one, could you  | NA= 45740 
+provide0 : Acknowledge : I am going to list some services/infrastructure many com | NA= 0 
+provide_schools : The Schools . I am going to list some services/infrastructure many com | NA= 45164 
+provide_schools_other : Other: The Schools . I am going to list some services/infrastructure m | NA= 45794 
+provide_water : Water system/wells .I am going to list some services/infrastructure ma | NA= 45167 
+provide_water_other : Other: Water system/wells .I am going to list some services/infrastruc | NA= 0 
+provide_health : Health care. I am going to list some services/infrastructure many comm | NA= 45169 
+provide_health_other : Other : Health care. I am going to list some services/infrastructure m | NA= 45794 
+provide_security : Economic development. I am going to list some services/infrastructure  | NA= 45168 
+provide_security_other : Other: Economic development. I am going to list some services/infrastr | NA= 45794 
+provide_welfare : Keeping people safe. I am going to list some services/infrastructure m | NA= 45170 
+provide_welfare_other : Other:Keeping people safe. I am going to list some services/infrastruc | NA= 45794 
+provide_development : Helping poor people. I am going to list some services/infrastructure m | NA= 45173 
+provide_development_ot : Other: Helping poor people. I am going to list some services/infrastru | NA= 45794 
+provide_roads : Road maintenance. I am going to list some services/infrastructure many | NA= 45166 
+provide_roads_other : Other : Road maintenance. I am going to list some services/infrastruct | NA= 0 
+know_dgrkoc : Do you know the name of the provincial tax ministry in Kananga? | NA= 45741 
+dgrkoc_info : EXPLAIN WHAT THE DGRKOC IS. | NA= 0 
+attempt_check :  | NA= 0 
+make_appt : G2-G3-make_appt | NA= 45575 
+first :  | NA= 45187 
+miss_visit : G3-G4-miss_visit | NA= 45794 
+flier_remember : G3-G4-flier_remember | NA= 45648 
+trust : To what extent do you trust the state and its agents? | NA= 44502 
+province : Where does the property owner's family come from originally? Which pro | NA= 17584 
+country : Which country? | NA= 0 
+territory : Which territory? | NA= 0 
+subtribe : What is his subtribe? | NA= 27061 
+subtribe_o : WRITE THE SUBTRIBE | NA= 0 
+v260 : G3-G5-G13-G6b-G20-salongo_acceptability_t | NA= 45794 
+provide_schools_oth : G3-G5-G13-G6b-G23-provide_schools_other | NA= 45794 
+provide_health_othe : G3-G5-G13-G6b-G23-provide_health_other | NA= 45794 
+provide_security_ot : G3-G5-G13-G6b-G23-provide_security_other | NA= 0 
+provide_welfare_oth : G3-G5-G13-G6b-G23-provide_welfare_other | NA= 0 
+v289 : G3-G5-G13-G6b-G23-provide_development_other | NA= 45794 
+v290 : G3-G5-G13-G6b-G23-provide_development_t | NA= 0 
+v257 : G3-G5-G13-G6b-G20-salongo_acceptability_t | NA= 0 
+v286 : G3-G5-G13-G6b-G23-provide_development_other | NA= 45794 
+v287 : G3-G5-G13-G6b-G23-provide_development_t | NA= 0 
+v226 : G3-G5-G13-G6b-G23-provide_development_other | NA= 45794 
+v228 : G3-G5-G13-G6b-G23-provide_development_other | NA= 45794 
+rand_recording :  | NA= 45511 
+recording1 :  | NA= 0 
+consent07 : G3-G4-consent07 | NA= 45736 
+consent08 : G3-G4-consent08 | NA= 0 
+consent09 : G3-G4-consent09 | NA= 0 
+record_short_finished : G3-G4-record_short_finished | NA= 0 
+record02 : G3-G4-record02 | NA= 0 
+paid_who1 : Whom did your household pay? | NA= 41770 
+paid_who2 : Whom did your household pay? | NA= 45543 
+paid_who3 : Whom did your household pay? | NA= 45791 
+chef_type1 :  | NA= 43088 
+chef_type2 :  | NA= 45461 
+chef_type3 :  | NA= 45790 
+know_how1 :  | NA= 44632 
+know_how2 :  | NA= 45707 
+know_how3 :  | NA= 45791 
+know_how4 :  | NA= 45793 
+date :  | NA= 0 
+date_f :  | NA= 1 
+date_tmp1 :  | NA= 0 
+date_tmp2 :  | NA= 0 
+date_tmp3 :  | NA= 8262 
+date_tmpp1 :  | NA= 0 
+date_tmpp2 :  | NA= 0 
+date_tmpp3 :  | NA= 37533 
+type : type | NA= 0 
+short_label : short_label | NA= 0 
+value_label :  | NA= 0 
+keep :  | NA= 45793 
+labelEnglish : label::English | NA= 0 
+labelFrancais : label::Francais | NA= 0 
+tot_complete_temp :  | NA= 0 
+_long :  | NA= 43779 
+control :  | NA= 41084 
+short :  | NA= 16139 
+short_empty :  | NA= 37288 
+tot_complete :  | NA= 0 
+pilot :  | NA= 0 
+new_survey_version :  | NA= 0 
+survey_length :  | NA= 1135 
+dup_real :  | NA= 0 
+monitoring_survey_twice :  | NA= 0 
+unknown_compound :  | NA= 0 
+dup_compound :  | NA= 6914 
+
+endline1 rows 5602 
+compound_code : ECRIVEZ LE CODE PARCELLAIRE | NA= 33 | nu= 4370 
+a7 : G1-A7 | NA= 1 | nu= 364 
+a7b : G1-A7b | NA= 1 | nu= 366 
+a7c : G1-A7c | NA= 0 | nu= 3 
+a7_check : G1-A7_check | NA= 0 | nu= 2 
+treatment :  | NA= 1184 | nu= 6 
+a7d : G1-A7d | NA= 0 | nu= 3 
+code : ECRIVEZ LE CODE DU REPONDANT | NA= 4 | nu= 4302 
+code2 : ECRIVEZ LE CODE DU REPONDANT | NA= 5 | nu= 4301 
+a7_previous : WHAT POLYGONE WERE THEY IN BEFORE? | NA= 5492 | nu= 78 
+a7_currently : WHAT POLYGONE ARE THEY IN NOW ? | NA= 5261 | nu= 144 
+compound_code2 : ECRIVEZ LE CODE PARCELLAIRE | NA= 36 | nu= 4224 
+code_erased : WAS THE CODE ERASED? | NA= 35 | nu= 3 
+code_found : COMME LE CODE A ETE EFFACE DEMANDEZ AU REPONDANT S'IL A GARDE LE TRACT PRINCIPAL | NA= 4372 | nu= 882 
+compound_code_prev : WHAT WAS PREV COMPOUND CODE? | NA= 5397 | nu= 158 
+titling_respondent :  | NA= 40 | nu= 3 
+titling_respondent_short :  | NA= 3360 | nu= 2 
+chef_code :  | NA= 2961 | nu= 187 
+stay_compound : How likely is it that you will keep living in this same compound for the next 10 | NA= 5100 | nu= 5 
+sell_compound : How likely is it that you or a family member will sell your compound in the next | NA= 5100 | nu= 6 
+transport : How much money have you spent on transport in the past seven days? | NA= 1631 | nu= 110 
+cash_fee_month : In the past 30 days, were there days in which you could not have paid this fee? | NA= 1627 | nu= 3 
+cash_fee_month2 : Which days could you NOT have paid this fee? | NA= 5168 | nu= 2 
+access_transport_survey_e : Public Transportation | NA= 5102 | nu= 3 
+satisfaction_transport_survey_e : Public Transportation | NA= 5572 | nu= 6 
+responsible_transport_survey_e : Public Transportation | NA= 5102 | nu= 5 
+paid_landtax_survey_e : Did you pay this tax in 2018? | NA= 1724 | nu= 3 
+paid_self : To date, has your household paid the property tax in 2018? | NA= 3614 | nu= 3 
+bribe : Did you (or a family member) pay the transport of the collector? | NA= 4246 | nu= 3 
+bribe_amt : How much did you pay? | NA= 5563 | nu= 10 
+paid_amt : If you are comfortable with it, can I also ask you the amount you paid? | NA= 5346 | nu= 30 
+paid_nb : COMMENTAIRES: | NA= 0 | nu= 13 
+code_same : G14-H36-I8-J6-code_same | NA= 5565 | nu= 3 
+code_diff : IF NOT, WRITE THE CODE WRITTEN ON THE RECEIPT. | NA= 5600 | nu= 3 
+col_code : WRITE THE COLLECTOR CODE | NA= 5573 | nu= 24 
+bribe2a : Apart from the  that you paid, did the collector ask you for another small sum o | NA= 5569 | nu= 3 
+bribe2a_amt : How much did you pay? | NA= 5601 | nu= 2 
+bribe2b : Apart from the  that you paid, did the collector ask you for another small sum o | NA= 5599 | nu= 2 
+bribe2b_amt : How much did you pay? | NA= 5602 | nu= 1 
+bribe3 : Did the collector ask you for another small sum apart from the tax (for example, | NA= 4081 | nu= 3 
+bribe3_amt : How much did you pay? | NA= 5595 | nu= 6 
+bribe_freq : How many bribed tax collectors in 2016? | NA= 2596 | nu= 13 
+bribe_amt1 : If you had to guess, how much would one have to bribe a tax collector? | NA= 2034 | nu= 21 
+paid_incometax_survey_e : Did you pay this tax in 2018? | NA= 1653 | nu= 3 
+paid_vehicletax_survey_e : Did you pay this tax in 2018? | NA= 1649 | nu= 3 
+paid_faketax_survey_e : Did you pay this tax in 2018? | NA= 1680 | nu= 3 
+paid_businessfee_survey_e : Did you pay this tax in 2018? | NA= 1654 | nu= 3 
+paid_mktvendorfee_survey_e : Did you pay this tax in 2018? | NA= 1644 | nu= 3 
+treated_twice :  | NA= 5346 | nu= 3 
+paid_who_1 : Whom did your household pay? - 1 | NA= 4418 | nu= 3 
+paid_who_2 : Whom did your household pay? - 2 | NA= 4418 | nu= 3 
+paid_who_3 : Whom did your household pay? - 3 | NA= 4418 | nu= 3 
+paid_who_4 : Whom did your household pay? - 4 | NA= 4418 | nu= 3 
+cash_fee_month2_1 : Which days could you NOT have paid this fee? - 1 | NA= 3062 | nu= 3 
+cash_fee_month2_2 : Which days could you NOT have paid this fee? - 2 | NA= 3062 | nu= 3 
+cash_fee_month2_3 : Which days could you NOT have paid this fee? - 3 | NA= 3062 | nu= 3 
+cash_fee_month2_4 : Which days could you NOT have paid this fee? - 4 | NA= 3062 | nu= 3 
+cash_fee_month2_5 : Which days could you NOT have paid this fee? - 5 | NA= 3062 | nu= 3 
+cash_fee_month2_6 : Which days could you NOT have paid this fee? - 6 | NA= 3062 | nu= 3 
+cash_fee_month2_7 : Which days could you NOT have paid this fee? - 7 | NA= 3062 | nu= 3 
+cash_fee_month2_8 : Which days could you NOT have paid this fee? - 8 | NA= 3062 | nu= 3 
+cash_fee_month2_9 : Which days could you NOT have paid this fee? - 9 | NA= 3062 | nu= 3 
+cash_fee_month2_10 : Which days could you NOT have paid this fee? - 10 | NA= 3062 | nu= 3 
+cash_fee_month2_11 : Which days could you NOT have paid this fee? - 11 | NA= 3062 | nu= 3 
+cash_fee_month2_12 : Which days could you NOT have paid this fee? - 12 | NA= 3062 | nu= 3 
+cash_fee_month2_13 : Which days could you NOT have paid this fee? - 13 | NA= 3062 | nu= 3 
+cash_fee_month2_14 : Which days could you NOT have paid this fee? - 14 | NA= 3062 | nu= 3 
+cash_fee_month2_15 : Which days could you NOT have paid this fee? - 15 | NA= 3062 | nu= 3 
+cash_fee_month2_16 : Which days could you NOT have paid this fee? - 16 | NA= 3062 | nu= 3 
+cash_fee_month2_17 : Which days could you NOT have paid this fee? - 17 | NA= 3062 | nu= 3 
+cash_fee_month2_18 : Which days could you NOT have paid this fee? - 18 | NA= 3062 | nu= 3 
+cash_fee_month2_19 : Which days could you NOT have paid this fee? - 19 | NA= 3062 | nu= 3 
+cash_fee_month2_20 : Which days could you NOT have paid this fee? - 20 | NA= 3062 | nu= 3 
+cash_fee_month2_21 : Which days could you NOT have paid this fee? - 21 | NA= 3062 | nu= 3 
+cash_fee_month2_22 : Which days could you NOT have paid this fee? - 22 | NA= 3062 | nu= 3 
+cash_fee_month2_23 : Which days could you NOT have paid this fee? - 23 | NA= 3062 | nu= 3 
+cash_fee_month2_24 : Which days could you NOT have paid this fee? - 24 | NA= 3062 | nu= 3 
+cash_fee_month2_25 : Which days could you NOT have paid this fee? - 25 | NA= 3062 | nu= 3 
+cash_fee_month2_26 : Which days could you NOT have paid this fee? - 26 | NA= 3062 | nu= 3 
+cash_fee_month2_27 : Which days could you NOT have paid this fee? - 27 | NA= 3062 | nu= 3 
+cash_fee_month2_28 : Which days could you NOT have paid this fee? - 28 | NA= 3062 | nu= 3 
+cash_fee_month2_29 : Which days could you NOT have paid this fee? - 29 | NA= 3062 | nu= 3 
+cash_fee_month2_30 : Which days could you NOT have paid this fee? - 30 | NA= 3062 | nu= 3 
+cash_fee_month2_31 : Which days could you NOT have paid this fee? - 31 | NA= 3062 | nu= 2 
+dup_respondent :  | NA= 1329 | nu= 2 
+dup_compound :  | NA= 1542 | nu= 3 
+income_paid : G57-G63-G63a-income_paid | NA= 5597 | nu= 3 
+patent_paid : G57-G63-G63b-patent_paid | NA= 5597 | nu= 2 
+property_paid : G57-G63-G63c-property_paid | NA= 5598 | nu= 2 
+vehicle_paid : G57-G63-G63d-vehicle_paid | NA= 5598 | nu= 2 
+fake_paid : G57-G63-G63e-fake_paid | NA= 5597 | nu= 3 
+market_paid : G57-G63-G63g-market_paid | NA= 5598 | nu= 3 
+paid_service_tax_survey_e : G57-G63-G63b-paid_service_tax_survey_e | NA= 5591 | nu= 2 
+
+endline2 rows 1753 
+a7 : G1-A7 | NA= 1 | nu= 341 
+a7b : G1-A7b | NA= 1 | nu= 341 
+a7c : G1-A7c | NA= 0 | nu= 3 
+a7_check : G1-A7_check | NA= 0 | nu= 2 
+treatment :  | NA= 18 | nu= 6 
+a7d : G1-A7d | NA= 0 | nu= 2 
+code : ECRIVEZ LE CODE DU REPONDANT | NA= 2 | nu= 1617 
+code2 : ECRIVEZ LE CODE DU REPONDANT | NA= 2 | nu= 1617 
+a7_previous : WHAT POLYGONE WERE THEY IN BEFORE? | NA= 1685 | nu= 58 
+a7_currently : WHAT POLYGONE ARE THEY IN NOW ? | NA= 1688 | nu= 56 
+chef_code :  | NA= 4 | nu= 196 
+stay_compound : How likely is it that you will keep living in this same compound for the next 10 | NA= 237 | nu= 5 
+sell_compound : How likely is it that you or a family member will sell your compound in the next | NA= 237 | nu= 5 
+transport : How much money have you spent on transport in the past seven days? | NA= 240 | nu= 91 
+access_transport_survey_e : Public Transportation | NA= 237 | nu= 3 
+satisfaction_transport_survey_e : Public Transportation | NA= 1669 | nu= 5 
+responsible_transport_survey_e : Public Transportation | NA= 294 | nu= 4 
+bribe_freq : How many bribed tax collectors this year? | NA= 456 | nu= 12 
+bribe_amt1 : If you had to guess, how much would one have to bribe a tax collector? | NA= 336 | nu= 20 
+dup_respondent :  | NA= 137 | nu= 2 

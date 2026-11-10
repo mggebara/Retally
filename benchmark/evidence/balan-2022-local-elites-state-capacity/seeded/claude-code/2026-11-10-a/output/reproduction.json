@@ -1,0 +1,20 @@
+{
+  "schema": 1,
+  "entry_id": "balan-2022-local-elites-state-capacity",
+  "mode": "seeded",
+  "run_id": "2026-11-10-a",
+  "reproducer": "claude-code",
+  "language": "r",
+  "final": {"script": "script.R", "stdout": "stdout.txt", "stderr": "stderr.txt", "exit_code": 0},
+  "attempts": [
+    {"dir": "attempt-1", "exit_code": 0, "kind": ""}
+  ],
+  "deviations": [
+    "analysis_data.dta is not shipped; it was rebuilt in R from the 01_base files following 2_Data_Construction.do, keeping only the variables the targeted tables use (fliers, stratum, randomization schedule incl. the a7 654 fix, registration, tax roll, midline, TDM payments; Stata merge semantics with master values winning on overlapping variables; carto-date imputations and today_alt as in the do-file). The pilot flier xlsx sets, chefferies and 2016 assignment merges were skipped because they only touch pilot polygons (dropped) or variables not used.",
+    "Coefficients only are reported; fixest clustered SEs (by a7) use fixest's small-sample defaults, which can differ marginally from Stata reg, cl()."
+  ],
+  "notes": "Attempt-1 was an exploratory run (column names/structure, no estimates). The single scored run reproduces Table 4 exactly (N 28,872 / 27,764 / 23,803; clusters 221 / 213; Central means 0.068 / 0.063), Table 7 cols 1-2 (N 20,636, 165 clusters) and Table 8 Panel A col 2 (N 8,135). Table 6 col 1 gives -0.0088 with N 18,152 (paper 18,162). Table 5 Panel B paid bribe (endline) gives 0.0173 with N 1,178 (paper 0.018, N 1,169); the small sample gap was not chased. No claim-driven changes were made. The host was awake, so no runs hung.",
+  "files_read_outside_mount": [],
+  "started_at": "2026-11-10T17:04:00Z",
+  "finished_at": "2026-11-10T17:09:22Z"
+}

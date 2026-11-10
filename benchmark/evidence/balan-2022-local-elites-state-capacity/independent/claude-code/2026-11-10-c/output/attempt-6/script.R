@@ -1,0 +1,61 @@
+# Exploratory run 6: universe from hh_distances, dates, period filters, payment merge diagnostics (no estimates)
+suppressPackageStartupMessages({library(haven); library(dplyr)})
+B <- "<repo>/benchmark/.cache/claude-code/balan-2022-local-elites-state-capacity/independent/2026-11-10-c/mount/balan_2022_local_elites_state_capacity/Replication Materials - Updated October 2025/Data/01_base"
+options(width = 200, warn = -1)
+f <- function(t, lab) { tt <- table(factor(t, levels = 0:4)); cat(sprintf("%-60s N=%6d | %s\n", lab, sum(tt), paste(names(tt), tt, sep="=", collapse=" "))) }
+ra <- read_dta(file.path(B, "admin_data/randomization_assignment.dta")) %>% zap_labels()
+ra$tf <- ra$treatment; ra$tf[ra$a7 == 654] <- 2
+reg <- read_dta(file.path(B, "admin_data/registration_noPII.dta")) %>% zap_labels()
+hh <- read_dta(file.path(B, "admin_data/hh_distances.dta")) %>% zap_labels()
+pay <- read_dta(file.path(B, "admin_data/tax_payments_noPII.dta")) %>% zap_labels()
+cat("TARGET: 0=797 1=14489 2=14383 3=9422 4=6071 total 45162\n")
+hh$t <- ra$tf[match(hh$a7, ra$a7)]
+f(hh$t, "hh (654->Local)")
+cat("hh compound in reg:", sum(hh$compound1 %in% reg$compound1), "of", nrow(hh), "\n")
+r <- reg %>% filter(compound1 %in% hh$compound1)
+cat("dups among reg rows in hh:", sum(duplicated(r$compound1)), "\n")
+r$t <- ra$tf[match(r$a7, ra$a7)]
+cat("hh not in reg by arm:\n"); print(table(hh$t[!hh$compound1 %in% reg$compound1]))
+cat("reg (in hh) house x arm\n"); print(table(r$house, r$t, useNA="ifany"))
+cat("hh a7 vs reg a7 mismatch:", sum(hh$a7[match(r$compound1, hh$compound1)] != r$a7, na.rm=T), "\n")
+cat("reg nonpilot not in hh by arm, house:\n"); rn <- reg %>% filter(pilot == 0, !compound1 %in% hh$compound1); rn$t <- ra$tf[match(rn$a7, ra$a7)]; print(table(rn$house, rn$t, useNA="ifany"))
+cat("  tot_complete of those:"); print(table(rn$tot_complete)); cat("  double_sensi:"); print(table(rn$double_sensi)); cat(" carto_pay:"); print(table(rn$carto_pay, useNA="ifany"))
+cat("  exempt:"); print(table(rn$exempt, useNA="ifany")); cat(" why_exempt:"); print(table(rn$why_exempt, useNA="ifany"))
+# Universe: hh rows; attach registration info (first record per compound)
+r1 <- r %>% arrange(compound1, start) %>% distinct(compound1, .keep_all = TRUE)
+u <- hh %>% select(compound1, a7h = a7) %>% left_join(r1 %>% select(compound1, a7, start, today, house, exempt, mm_rate), by = "compound1")
+u$a7u <- ifelse(is.na(u$a7h), u$a7, u$a7h)
+u$t <- ra$tf[match(u$a7u, ra$a7)]
+u$d <- as.Date(u$start); u$d2 <- as.Date(u$today)
+cat("date start vs today differ:", sum(u$d != u$d2, na.rm=T), " NA d:", sum(is.na(u$d)), "\n")
+lc <- u %>% filter(t %in% 1:2)
+f(lc$t, "L+C universe")
+cat("first/last date by arm (start):\n"); print(as.data.frame(u %>% filter(!is.na(t)) %>% group_by(t) %>% summarise(first = min(d, na.rm=T), last = max(d, na.rm=T), q01 = quantile(as.numeric(d), .001, na.rm=T, type=1), q999 = quantile(as.numeric(d), .999, na.rm=T, type=1))))
+cat("dates near start for Central (counts by day before 2018-06-26):\n"); print(table(lc$d[lc$d < as.Date("2018-06-27")], lc$t[lc$d < as.Date("2018-06-27")]))
+cat("dates near end:\n"); print(table(lc$d[lc$d > as.Date("2018-12-01")], lc$t[lc$d > as.Date("2018-12-01")]))
+cl <- u %>% filter(t %in% c(1,3))
+cat("CLI dates near end:\n"); print(table(cl$d[cl$d > as.Date("2018-11-10")], cl$t[cl$d > as.Date("2018-11-10")]))
+cat("CLI/central dates near start:\n"); print(table(cl$d[cl$d < as.Date("2018-07-20")], cl$t[cl$d < as.Date("2018-07-20")]))
+# neighborhood-level first date
+nb <- lc %>% group_by(a7u, t) %>% summarise(dmin = min(d, na.rm=T), dmax = max(d, na.rm=T), n = n(), .groups = "drop")
+cat("L+C nbhds with dmin <= 2018-06-21:\n"); print(as.data.frame(nb %>% filter(dmin <= as.Date("2018-06-22")) %>% arrange(dmin)))
+# payment diagnostics
+pay$inU <- pay$compound1 %in% u$compound1
+pay$t <- ra$tf[match(pay$a7, ra$a7)]
+cat("\npayments in universe:", sum(pay$inU), " by arm:\n"); print(table(pay$t[pay$inU], useNA="ifany"))
+cat("pay in U x error_code\n"); print(table(pay$error_code[pay$inU], useNA="ifany"))
+cat("pay in U x lateCollection\n"); print(table(pay$lateCollection[pay$inU], useNA="ifany"))
+cat("pay in U amount\n"); print(table(pay$amountCF[pay$inU], useNA="ifany"))
+cat("pay a7 vs universe a7 mismatch:", sum(pay$a7[pay$inU] != u$a7u[match(pay$compound1[pay$inU], u$compound1)], na.rm=T), "\n")
+cat("pay not in U: error_code / unmatched table\n"); print(table(pay$error_code[!pay$inU], pay$unmatched_compound[!pay$inU], useNA="ifany"))
+cat("pay date range in U:", as.character(range(as.Date(pay$date[pay$inU]), na.rm=T)), "\n")
+cat("pay dates by month:\n"); print(table(substr(pay$date[pay$inU],1,7)))
+lc$paid <- as.integer(lc$compound1 %in% pay$compound1)
+lc$amt <- pay$amountCF[match(lc$compound1, pay$compound1)]; lc$amt[is.na(lc$amt)] <- 0
+cat("mean paid by arm:\n"); print(lc %>% group_by(t) %>% summarise(paid = mean(paid), amt = mean(amt), amt_cap = mean(pmin(amt, 13200))))
+pe <- pay %>% filter(error_code == 0)
+lc$paid2 <- as.integer(lc$compound1 %in% pe$compound1)
+cat("mean paid (error_code==0) by arm:\n"); print(lc %>% group_by(t) %>% summarise(paid2 = mean(paid2)))
+cat("error_code==1 rows sample:\n"); print(head(as.data.frame(pay %>% filter(error_code == 1) %>% select(compound1, a7, amountCF, rateUSD, house, date, colcode, polygon, error_rate, lateCollection)), 15))
+cat("house high band in U (house==2):", sum(u$house == 2, na.rm=T), " mm_rate nonNA:", sum(!is.na(u$mm_rate)), "\n")
+cat("rateUSD in pay\n"); print(table(pay$rateUSD[pay$inU]))
