@@ -1,0 +1,15 @@
+suppressPackageStartupMessages({library(haven)})
+d <- read_dta("<repo>/benchmark/.cache/claude-code/altindag-2022-mental-health-costs-lockdowns/seeded/2026-11-10-b/mount/altindag_2022_mental_health_costs_lockdowns/ICPSR_183165-V1.1/konda_data_for_analysis.dta")
+print(dim(d))
+print(names(d))
+print(table(d$non_response, useNA = "ifany"))
+for (v in c("dif", "modate", "before1955", "education", "ethnicity", "female", "survey_taker_id", "outside_week", "under_curfew", "never_out", "head_ache")) {
+  cat(v, ":\n"); print(summary(as.numeric(d[[v]])))
+}
+print(head(as.data.frame(d[, grep("^di1|^dif|^modate", names(d))]), 5))
+print(table(d$education, useNA = "ifany")); print(table(d$ethnicity, useNA = "ifany"))
+print(table(d$survey_taker_id, useNA = "ifany"))
+pn <- grep("^province_n_", names(d), value = TRUE); cat("n province dummies", length(pn), "\n")
+mn <- grep("^month_", names(d), value = TRUE); print(mn)
+print(summary(rowSums(as.data.frame(d[, pn]))))
+print(summary(rowSums(as.data.frame(d[, mn]))))

@@ -1,0 +1,22 @@
+{
+  "schema": 1,
+  "entry_id": "altindag-2022-mental-health-costs-lockdowns",
+  "mode": "blind",
+  "run_id": "2026-11-10-b",
+  "reproducer": "claude-code",
+  "language": "r",
+  "final": {"script": "script.R", "stdout": "stdout.txt", "stderr": "stderr.txt", "exit_code": 0},
+  "attempts": [
+    {"dir": "attempt-1", "exit_code": 0, "kind": ""},
+    {"dir": "attempt-2", "exit_code": 0, "kind": ""}
+  ],
+  "deviations": [
+    "Anderson (2008) indices: items standardized by control-group (born Jan 1956 or later, full +/-72-month respondent sample) mean/SD, combined with inverse-covariance weights (row sums of inverse covariance of standardized items, computed on respondents answering all 20 SRQ-20 items), then the index is rescaled to control-group mean 0 / SD 1. Indices and SRQ-20 sum defined only for respondents answering all 20 items. The paper's main text describes a simple average of z-scores while Appendix B describes inverse-covariance weighting; Appendix B was followed.",
+    "Bandwidth +/-45 implemented as |dif| <= 45, where dif = months older than December 1955 (treated: dif >= 0).",
+    "Estimated with fixest::feols (month, province, surveyor FE absorbed; education and ethnicity category dummies and female as regressors; clustered by month-year of birth). fixest drops fixed-effect singletons (15-16 obs here), as reghdfe would; the reported N excludes them."
+  ],
+  "notes": "Two exploratory runs (attempt-1: variable listing; attempt-2: running-variable coding, control categories, missingness), no RESULT lines. Final run: RD with treatment z = born in/before Dec 1955, linear running variable with slope allowed to differ across the cutoff, uniform kernel, 45-month bandwidth, respondents only (non_response == 0), listwise deletion on outcome and controls. No runs hung; each sandbox run took ~1 s.",
+  "files_read_outside_mount": [],
+  "started_at": "2026-11-10T11:29:07Z",
+  "finished_at": "2026-11-10T11:31:30Z"
+}

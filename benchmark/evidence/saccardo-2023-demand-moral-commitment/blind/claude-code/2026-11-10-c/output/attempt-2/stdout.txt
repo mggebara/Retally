@@ -1,0 +1,122 @@
+, , alphaNA = FALSE
+
+                          hs
+condition                  base  x10 x100
+  ChoiceFree               2574  275  110
+  ChoiceFree_Professionals    0    0    0
+  PayAfter                 1067    0    0
+  PayBefore                1562    0    0
+
+, , alphaNA = TRUE
+
+                          hs
+condition                  base  x10 x100
+  ChoiceFree                361   20   13
+  ChoiceFree_Professionals  712    0    0
+  PayAfter                  103    0    0
+  PayBefore                 179    0    0
+
+     condition
+study ChoiceFree ChoiceFree_Professionals PayAfter PayBefore
+    1          0                      712        0         0
+    2       1447                        0        0         0
+    3          0                        0        0      1504
+    4       1255                        0        0         0
+    6        651                        0        0         0
+    7          0                        0        0       237
+    8          0                        0     1170         0
+     hs
+study base  x10 x100
+    1  712    0    0
+    2 1447    0    0
+    3 1504    0    0
+    4 1255    0    0
+    6  233  295  123
+    7  237    0    0
+    8 1170    0    0
+                        study
+wave                        1    2    3    4    6    7    8
+  AMT-1                     0 1447 1504    0    0    0    0
+  AMT-2                     0    0    0 1255    0    0    0
+  AMT-3                     0    0    0    0  651  237 1170
+  Prolific/CloudResearch  712    0    0    0    0    0    0
+                        incentiveleft
+wave                        0    1
+  AMT-1                  2951    0
+  AMT-2                   637  618
+  AMT-3                  2058    0
+  Prolific/CloudResearch  712    0
+                        probabilistic_incentive
+wave                        0    1
+  AMT-1                  2951    0
+  AMT-2                   602  653
+  AMT-3                  2058    0
+  Prolific/CloudResearch    0  712
+                        incentiveshigh
+wave                        0    1
+  AMT-1                  2951    0
+  AMT-2                   602  653
+  AMT-3                  2058    0
+  Prolific/CloudResearch  712    0
+, , incentiveshigh_incentiveleft = 0
+
+              incentiveleft
+incentiveshigh    0    1
+             0 6025  298
+             1  333    0
+
+, , incentiveshigh_incentiveleft = 1
+
+              incentiveleft
+incentiveshigh    0    1
+             0    0    0
+             1    0  320
+
+     
+study FALSE TRUE
+    1     0  712
+    2     0 1447
+    3     0 1504
+    4  1255    0
+    6     0  651
+    7     0  237
+    8     0 1170
+            incentiveleft
+flippedorder    0    1
+        0     332  319
+        1     305  299
+        <NA> 5721    0
+             
+getyourchoice FALSE TRUE
+            0  1733    0
+            1     0 5243
+          conflict
+noconflict    0    1
+         0    0 4881
+         1 2095    0
+         condition
+treatment ChoiceFree ChoiceFree_Professionals PayAfter PayBefore
+        0       3353                        0        0         0
+        1          0                      712        0         0
+        2          0                        0        0      1741
+        3          0                        0     1170         0
+alpha mean/sd all nonNA: 3.02738 1.569853 
+alpha mean/sd main AMT: 3.026139 1.570859 
+      
+          0    1 <NA>
+  0     195    0    0
+  1     810    0    0
+  2    1394    0    0
+  3    1253    0    0
+  4       0  120    0
+  5       0 1816    0
+  <NA>    0    0 1388
+     
+study FALSE TRUE
+    1   712    0
+    2  1447    0
+    3  1499    5
+    4  1251    4
+    6   651    0
+    7   236    1
+    8  1169    1

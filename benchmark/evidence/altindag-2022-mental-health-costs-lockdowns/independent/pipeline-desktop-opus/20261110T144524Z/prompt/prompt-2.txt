@@ -1,0 +1,299 @@
+You are refining R code that reproduces results from an econometrics paper.
+The code RAN SUCCESSFULLY but the reproduced values do not match the
+paper's claims within the allowed tolerance.  Identify what is causing
+the gap and adjust the code to close it.
+
+## Paper
+Title: DISCUSSION PAPER SERIES
+Methodology: - **Design / estimator:** Sharp reduced-form regression discontinuity (RD) using Turkey's age-specific COVID-19 curfew for people aged 65+ (imposed March 21, 2020). The paper estimates Eq. (1) by OLS: y_i = α + β z_i + f(x_i) + ε_i for x_i ∈ (c−h, c+h). Here z_i = 1 if the respondent was born before January 1956 (i.e., in or before December 1955), and the running variable x_i is the number of months the respondent is older than the threshold birth month. f(x_i) is a local linear function fitted separately on each side of the cutoff, with a uniform kernel; results are described as "highly similar" with a triangular kernel. Robustness checks use a quadratic control function (Appendix Table A8). The paper also gives 2SLS/Wald-type scalings in footnote 38, using self-reported curfew status (first stage ≈0.7) or days outside (≈1.1) as the endogenous variable, but the headline estimates are reduced-form.
+- **Data / sample:** A phone survey run by KONDA from May 29 to July 4, 2020 among urban residents of 26 regions, drawn from KONDA's existing respondent database. It targets people born 1950–1961 (ages 59–70, with 6 treated and 6 control birth cohorts). The response rate was 88%, and the analysis sample has at most 1,909 individuals. The cutoff (Dec 1955 vs Jan 1956) was chosen by simulating every birth year-month as a threshold and picking the largest jump in self-reported curfew exposure (85 pp; Figure A2). The estimation sample is restricted to observations within bandwidth h of the cutoff.
+- **Bandwidth:** The main bandwidth is the Imbens–Kalyanaraman (2012) optimal bandwidth of 45 months, computed for days spent outside in the previous week. Each main table also reports the Calonico–Cattaneo–Titiunik (2014) optimal bandwidth (17 months) and fixed bandwidths of 30 and 60 months.
+- **Controls / fixed effects (preferred specification):** Month-of-birth fixed effects, province fixed effects and surveyor fixed effects, plus indicators for education level, ethnicity (non-Turkish origin) and gender (female).
+- **Standard errors / inference:** Clustered by month-year of birth (Lee and Card 2008). For multiple testing, the paper reports FDR-adjusted q-values (Benjamini, Krieger and Yekutieli 2006, as applied in Anderson 2008). Adjustment is done within the outcome family of each table, or each panel (for example, all mobility outcomes in Table 3, or the labor outcomes in Table 5 Panel A).
+- **Outcomes / variable construction:**
+  - Mobility (Table 3): days outside in the previous week, a self-reported subject-to-curfew dummy, and a never-left-home dummy.
+  - Mental health (Table 4): built from the 20 yes/no items of the WHO SRQ-20. Following Anderson (2008), there are three indices (each an average of item z-scores, rescaled to mean 0 and SD 1, so coefficients are in SD units): an overall mental distress index (20 items), a somatic index (4 items) and a nonsomatic index (16 items). There is also an unstandardized count of "yes" answers (0–20). Higher values mean more distress.
+  - Channels (Table 5): labor and income dummies, limited social interaction and limited physical activity dummies (extremely or very limited versus pre-COVID), current household size, and conflict with a household member. Table 6 covers support for the curfew and satisfaction with the government.
+- **Validity checks:** A McCrary (2008) density test at h = 45 gives p = 0.8. Covariate balance is tested for predetermined covariates (high school, illiterate, female, married, widowed/separated, non-Turkish ethnicity, ever had psychological support, chronic disease, pre-COVID household size), with no significant jumps (Table A2); SUR joint-test p-values are 0.25–0.75. The paper also checks the nonresponse rate at the threshold (Figure A3). Figures show binned monthly means with local linear fits, residualized on the fixed effects and controls.
+- **Headline results (h = 45):**
+  - About −1 to −1.1 days outside (−47%).
+  - +71 pp in reporting being subject to the curfew.
+  - +30 pp in never leaving home (+149%).
+  - Mental distress index +0.21 SD, somatic +0.18 SD, nonsomatic +0.16 SD, SRQ yes-count +0.7 (+10.4%).
+  - Limited social interaction +8.8 pp (+16%), limited physical activity +24.8 pp (+54%).
+  - No robust effects on labor or income outcomes or on household conflict.
+
+
+## Current Code
+```r
+suppressPackageStartupMessages({
+  library(haven)
+  library(fixest)
+})
+set.seed(42)
+
+base_dir <- "<repo>/.cache/datasets/altindag_2022_mental_health_costs_lockdowns.script-free"
+raw <- read_dta(file.path(base_dir, "ICPSR_183165-V1.1", "konda_data_for_analysis.dta"))
+raw <- as.data.frame(raw)
+
+num <- function(v) suppressWarnings(as.numeric(zap_labels(v)))
+
+# ---- running variable ----
+yr <- num(raw$year)
+if (all(yr[!is.na(yr)] < 100)) yr <- yr + 1900
+mo <- num(raw$month)
+mob <- yr * 12 + mo                        # month-year of birth index
+cut_mid <- 1955 * 12 + 12.5                # between Dec 1955 and Jan 1956
+r <- cut_mid - mob                         # months older than threshold (+ = older)
+treat <- as.numeric(r > 0)                 # born in or before Dec 1955
+
+d <- data.frame(
+  mob = mob, r = r, treat = treat,
+  bmonth = mo,
+  surveyor = if ("survey_taker_id" %in% names(raw)) num(raw$survey_taker_id) else NA,
+  edu = if ("education" %in% names(raw)) num(raw$education) else NA,
+  female = num(raw$female),
+  stringsAsFactors = FALSE
+)
+if ("non_turk" %in% names(raw)) {
+  d$non_turk <- num(raw$non_turk)
+} else if ("ethnicity" %in% names(raw)) {
+  e <- num(raw$ethnicity)
+  tab <- sort(table(e), decreasing = TRUE)
+  d$non_turk <- ifelse(is.na(e), NA, as.numeric(e != as.numeric(names(tab)[1])))
+} else {
+  d$non_turk <- 0
+}
+
+# ---- province variable ----
+nms <- names(raw)
+prov_cands <- nms[grepl("province|^il$|^il_|_il$|city|sehir|şehir|region|bolge", tolower(nms))]
+prov_cands <- prov_cands[!grepl("survey|taker", tolower(prov_cands))]
+pref <- prov_cands[grepl("province", tolower(prov_cands))]
+if (length(pref) > 0) prov_cands <- c(pref, setdiff(prov_cands, pref))
+if (length(prov_cands) > 0) {
+  d$province <- num(raw[[prov_cands[1]]])
+  if (all(is.na(d$province))) d$province <- as.numeric(factor(as.character(raw[[prov_cands[1]]])))
+  has_prov <- TRUE
+} else {
+  has_prov <- FALSE
+}
+has_surv <- !all(is.na(d$surveyor))
+
+# ---- outcomes: mobility ----
+d$outside_week <- num(raw$outside_week)
+d$under_curfew <- num(raw$under_curfew)
+d$never_out <- num(raw$never_out)
+
+# ---- SRQ-20 items ----
+yesno <- function(v) {
+  labs <- attr(v, "labels")
+  x <- suppressWarnings(as.numeric(zap_labels(v)))
+  if (!is.null(labs) && length(labs) > 0) {
+  ln <- tolower(names(labs))
+    yc <- labs[grepl("^(yes|evet)", ln)]
+    nc <- labs[grepl("^(no|hay)", ln) & !grepl("^(no answer|no idea|not)", ln)]
+    if (length(yc) == 1 && length(nc) == 1) {
+      return(ifelse(x == as.numeric(yc), 1, ifelse(x == as.numeric(nc), 0, NA)))
+    }
+  }
+  u <- unique(x[!is.na(x)])
+  if (all(u %in% c(0, 1))) return(x)
+  if (all(c(1, 2) %in% u) || all(u %in% c(1, 2))) return(ifelse(x == 1, 1, ifelse(x == 2, 0, NA)))
+  if (0 %in% u && 1 %in% u) return(ifelse(x %in% c(0, 1), x, NA))
+  x
+}
+
+blacklist <- "index|sum|total|count|_std|srq|_z$|overall|health"
+item_pats <- list(
+  headache    = "headache|head_ache|^head",
+  shaking     = "shak|tremb",
+  indigestion = "indigest|digest",
+  stomach     = "stomach",
+  appetite    = "appetite",
+  sleep       = "sleep|insomn",
+  frighten    = "fright|scare|afraid|fear",
+  nervous     = "nervous|worri|tense",
+  thinking    = "think",
+  unhappy     = "unhappy|^sad",
+  cry         = "cry",
+  enjoy       = "enjoy|pleasure",
+  decision    = "decis",
+  work        = "suffer|daily_work|dailywork|work_suf",
+  useful      = "useful|useless|play_|role",
+  uninterest  = "uninterest|interest",
+  worthless   = "worthless",
+  suicide     = "suicid|end_life|kill",
+  tired_easy  = "tired_eas|easily_tired|eas.*tired|tired.*eas|tired_quick",
+  tired_all   = "tired|fatigu|exhaust"
+)
+cand <- nms[!grepl(blacklist, tolower(nms))]
+assigned <- character(0)
+item_map <- list()
+for (it in names(item_pats)) {
+  m <- cand[grepl(item_pats[[it]], tolower(cand)) & !(cand %in% assigned)]
+  if (length(m) > 0) {
+    # prefer variables that look binary
+    ok <- sapply(m, function(v) length(unique(na.omit(yesno(raw[[v]])))) <= 3)
+    m <- m[ok]
+  }
+  if (length(m) > 0) {
+    item_map[[it]] <- m[1]
+    assigned <- c(assigned, m[1])
+  }
+}
+somatic_names <- c("headache", "shaking", "indigestion", "stomach")
+items_all <- names(item_map)
+items_som <- intersect(items_all, somatic_names)
+items_non <- setdiff(items_all, somatic_names)
+
+for (it in items_all) d[[paste0("srq_", it)]] <- yesno(raw[[item_map[[it]]]])
+cols_all <- paste0("srq_", items_all)
+cols_som <- paste0("srq_", items_som)
+cols_non <- paste0("srq_", items_non)
+
+complete_srq <- complete.cases(d[, cols_all, drop = FALSE])
+ctrl <- d$treat == 0 & !is.na(d$treat)
+
+anderson <- function(cols) {
+  zs <- sapply(cols, function(cc) {
+    x <- d[[cc]]
+    mu <- mean(x[ctrl & complete_srq], na.rm = TRUE)
+    s <- sd(x[ctrl & complete_srq], na.rm = TRUE)
+    if (is.na(s) || s == 0) s <- 1
+    (x - mu) / s
+  })
+  zs <- as.matrix(zs)
+  idx <- rowMeans(zs)
+  idx[!complete_srq] <- NA
+  mu <- mean(idx[ctrl], na.rm = TRUE)
+  s <- sd(idx[ctrl], na.rm = TRUE)
+  (idx - mu) / s
+}
+d$mdi <- anderson(cols_all)
+d$som_idx <- if (length(cols_som) > 0) anderson(cols_som) else NA
+d$non_idx <- if (length(cols_non) > 0) anderson(cols_non) else NA
+d$srq_sum <- rowSums(d[, cols_all, drop = FALSE])
+d$srq_sum[!complete_srq] <- NA
+
+# ---- estimation ----
+h <- 45
+sub <- d[!is.na(d$r) & abs(d$r) < h, ]
+
+fe_terms <- c("bmonth", if (has_prov) "province", if (has_surv) "surveyor", "edu")
+fe_str <- paste(fe_terms, collapse = " + ")
+
+run_rd <- function(y) {
+  f <- as.formula(paste0(y, " ~ treat + r + treat:r + female + non_turk | ", fe_str))
+  m <- tryCatch(feols(f, data = sub, cluster = ~mob),
+                error = function(e) feols(as.formula(paste0(y, " ~ treat + r + treat:r + female + non_turk | bmonth + edu")),
+                                          data = sub, cluster = ~mob))
+  m
+}
+
+m_out <- run_rd("outside_week")
+m_cur <- run_rd("under_curfew")
+m_nev <- run_rd("never_out")
+m_mdi <- run_rd("mdi")
+m_som <- run_rd("som_idx")
+m_non <- run_rd("non_idx")
+m_sum <- run_rd("srq_sum")
+
+cf <- function(m) unname(coef(m)["treat"])
+
+cat(sprintf("RESULT:days_outside_last_week_table3_col3=%.6f\n", cf(m_out)))
+cat(sprintf("RESULT:under_curfew_table3_col3=%.6f\n", cf(m_cur)))
+cat(sprintf("RESULT:never_goes_out_table3_col3=%.6f\n", cf(m_nev)))
+cat(sprintf("RESULT:n_obs_days_outside_table3_col3=%d\n", as.integer(nobs(m_out))))
+cat(sprintf("RESULT:n_obs_under_curfew_table3_col3=%d\n", as.integer(nobs(m_cur))))
+cat(sprintf("RESULT:mental_distress_index_table4_col3=%.6f\n", cf(m_mdi)))
+cat(sprintf("RESULT:somatic_symptoms_index_table4_col3=%.6f\n", cf(m_som)))
+cat(sprintf("RESULT:nonsomatic_symptoms_index_table4_col3=%.6f\n", cf(m_non)))
+cat(sprintf("RESULT:sum_srq20_yes_answers_table4_col3=%.6f\n", cf(m_sum)))
+cat(sprintf("RESULT:n_obs_mental_distress_index_table4_col3=%d\n", as.integer(nobs(m_mdi))))
+```
+
+## What the code produced
+  days_outside_last_week_table3_col3 = -1.072986
+  under_curfew_table3_col3 = 0.70489
+  never_goes_out_table3_col3 = 0.289577
+  n_obs_days_outside_table3_col3 = 1181.0
+  n_obs_under_curfew_table3_col3 = 1189.0
+  mental_distress_index_table4_col3 = 0.166442
+  somatic_symptoms_index_table4_col3 = 0.104694
+  nonsomatic_symptoms_index_table4_col3 = 0.169122
+  sum_srq20_yes_answers_table4_col3 = 0.620494
+  n_obs_mental_distress_index_table4_col3 = 1071.0
+
+## Last run's stdout (excerpt: first/last 3000 characters)
+```
+RESULT:days_outside_last_week_table3_col3=-1.072986
+RESULT:under_curfew_table3_col3=0.704890
+RESULT:never_goes_out_table3_col3=0.289577
+RESULT:n_obs_days_outside_table3_col3=1181
+RESULT:n_obs_under_curfew_table3_col3=1189
+RESULT:mental_distress_index_table4_col3=0.166442
+RESULT:somatic_symptoms_index_table4_col3=0.104694
+RESULT:nonsomatic_symptoms_index_table4_col3=0.169122
+RESULT:sum_srq20_yes_answers_table4_col3=0.620494
+RESULT:n_obs_mental_distress_index_table4_col3=1071
+```
+
+## Last run's stderr (excerpt: first/last 3000 characters)
+```
+NOTES: 40 observations removed because of NA values (LHS: 11, RHS: 22, Fixed-effects: 8).
+       0/13/2/0 fixed-effect singletons were removed (15 observations).
+NOTES: 32 observations removed because of NA values (LHS: 2, RHS: 22, Fixed-effects: 8).
+       0/13/2/0 fixed-effect singletons were removed (15 observations).
+NOTES: 51 observations removed because of NA values (LHS: 21, RHS: 22, Fixed-effects: 8).
+       0/13/2/0 fixed-effect singletons were removed (15 observations).
+NOTES: 148 observations removed because of NA values (LHS: 122, RHS: 22, Fixed-effects: 8).
+       0/12/5/0 fixed-effect singletons were removed (17 observations).
+NOTES: 148 observations removed because of NA values (LHS: 122, RHS: 22, Fixed-effects: 8).
+       0/12/5/0 fixed-effect singletons were removed (17 observations).
+NOTES: 148 observations removed because of NA values (LHS: 122, RHS: 22, Fixed-effects: 8).
+       0/12/5/0 fixed-effect singletons were removed (17 observations).
+NOTES: 148 observations removed because of NA values (LHS: 122, RHS: 22, Fixed-effects: 8).
+       0/12/5/0 fixed-effect singletons were removed (17 observations).
+```
+
+## Claims still failing
+1. n_obs_mental_distress_index_table4_col3: paper claims 1133.0 respondents (count), your code produced 1071, tolerance 0.05, gap 5.47% relative
+
+## Previous attempts (oldest first)
+  Attempt 1: days_outside_last_week_table3_col3=-1.072986, under_curfew_table3_col3=0.70489, never_goes_out_table3_col3=0.289577, n_obs_days_outside_table3_col3=1181.0, n_obs_under_curfew_table3_col3=1189.0, mental_distress_index_table4_col3=0.166442, somatic_symptoms_index_table4_col3=0.104694, nonsomatic_symptoms_index_table4_col3=0.169122, sum_srq20_yes_answers_table4_col3=0.620494, n_obs_mental_distress_index_table4_col3=1071.0
+
+These attempts have already been tried.  Do not repeat a strategy
+that has already produced the same values.
+
+## Task
+Adjust the code minimally to close the gap on the failing claims.
+Prefer changes that align more closely with the paper's stated methodology:
+re-read the methodology summary above and check the model specification,
+covariate selection, fixed effects, clustering, and seed against what the
+paper actually specifies.  In econometrics papers, common gap-closers are:
+  - getting the cluster-robust SE right (vcovCL / cluster_var argument)
+  - matching the paper's exact fixed-effects structure
+  - using the same sample-restriction filters the paper applied
+  - matching the paper's weighting scheme (weights= argument)
+
+## Deviation reporting
+If you must change something the paper did NOT specify in order to close
+the gap, emit a ``DEVIATION:`` line via cat() describing the change:
+
+    cat('DEVIATION: Used HC1 robust SE because the paper does not specify but the default did not converge\n')
+
+## When to give up
+If after re-reading the methodology and the previous attempts you judge
+the gap cannot be closed without unreasonable deviation, return the SAME
+R CODE you were given, BYTE-FOR-BYTE unchanged.  The pipeline will record
+the claim as unreproducible.
+
+## Output convention (unchanged)
+Emit every metric as ``cat('RESULT:<name>=<value>\n')``.
+The dataset is a directory tree at '<repo>/.cache/datasets/altindag_2022_mental_health_costs_lockdowns.script-free' — see the file listing under Dataset Information.  Load the actual data file(s) by the exact paths listed there (readr::read_csv() for .csv, haven::read_dta() for Stata .dta, load() for .RData/.rda, which creates the objects listed for the file under exactly those names: use them, do not guess others; readRDS() for .rds).
+Installed packages (no network; nothing else can be installed): jsonlite, fixest, lfe, AER, ivreg, plm, estimatr, lme4, quantreg, car, sandwich, lmtest, clubSandwich, multiwayvcov, marginaleffects, MatchIt, optmatch, CBPS, WeightIt, cobalt, did, rdrobust, rddensity, Synth, modelsummary, stargazer, texreg, broom, tidyverse, dplyr, tidyr, readr, stringr, lubridate, data.table, haven, readxl, janitor, zoo, ggplot2, ggridges, ggrepel, gridExtra, cowplot, gtable, extrafont, sf, MASS, nnet, survival, splines, Matrix, boot, stats, utils.
+Prefer fixest for fixed effects, IV and clustered SEs; use the other installed packages where the paper's method calls for them.
+No network, no system().  set.seed(42).
+
+Output ONLY the R code — no explanation, no markdown fences.

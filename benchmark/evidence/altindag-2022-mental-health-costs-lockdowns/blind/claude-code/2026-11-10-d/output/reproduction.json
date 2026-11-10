@@ -1,0 +1,22 @@
+{
+  "schema": 1,
+  "entry_id": "altindag-2022-mental-health-costs-lockdowns",
+  "mode": "blind",
+  "run_id": "2026-11-10-d",
+  "reproducer": "claude-code",
+  "language": "r",
+  "final": {"script": "script.R", "stdout": "stdout.txt", "stderr": "stderr.txt", "exit_code": 0},
+  "attempts": [
+    {"dir": "attempt-1", "exit_code": 0, "kind": ""},
+    {"dir": "attempt-2", "exit_code": 0, "kind": ""}
+  ],
+  "deviations": [
+    "Bandwidth +/-45 implemented as |dif| <= 45 (dif = months older than December 1955; treated side dif 0..45, control side -1..-45).",
+    "Anderson (2008) indices: items standardized by control-group (born Jan 1956 or later) mean/SD over all respondents answering all 20 SRQ-20 items (not bandwidth-restricted); weights are row sums of the inverse covariance matrix of the standardized items (computed on that full complete-case sample); the weighted index is re-standardized to control-group mean 0 / SD 1.",
+    "Fixed effects and indicators entered as factor dummies in feols (birth month, province, surveyor, education category, ethnicity category, female); observations with any missing outcome/control dropped; no singleton removal."
+  ],
+  "notes": "Two exploratory runs (variable listing; check of dif/before1955 coding and control categories), then one scored run. Sample: survey respondents (non_response == 0, N=1909). Treatment before1955 (born in or before Dec 1955), running variable dif, linear on each side (dif + dif:before1955), uniform kernel, |dif|<=45, controls as in the Table 3/4 notes, SEs clustered by month-year of birth (dif). No run hung. No specification was adjusted toward any paper number.",
+  "files_read_outside_mount": [],
+  "started_at": "2026-11-10T11:31:57Z",
+  "finished_at": "2026-11-10T11:34:00Z"
+}

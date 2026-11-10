@@ -1,0 +1,146 @@
+N raw: 6976 
+Table of treatment :
+
+   0    1    2    3 
+3353  712 1741 1170 
+Table of study :
+
+   1    2    3    4    6    7    8 
+ 712 1447 1504 1255  651  237 1170 
+Table of sample :
+
+cloudresearch         mturk      prolific 
+          216          6264           496 
+Table of condition :
+
+              choicefree choicefree_professionals                 payafter 
+                    3353                      712                     1170 
+               paybefore 
+                    1741 
+Table of wave :
+
+                 amt-1                  amt-2                  amt-3 
+                  2951                   1255                   2058 
+prolific/cloudresearch 
+                   712 
+Table of highx10 :
+
+   0    1 
+6681  295 
+Table of highx100 :
+
+   0    1 
+6853  123 
+Table of getyourchoice :
+
+   0    1 
+1733 5243 
+Table of attentionpassed :
+
+   1 <NA> 
+6264  712 
+Table of qualitycostly :
+
+   0    1 
+5806 1170 
+Table of incentivecostly :
+
+   0    1 
+5235 1741 
+Table of professionals :
+
+   0    1 
+6264  712 
+Table of incentiveshigh :
+
+   0    1 
+6323  653 
+Table of probabilistic_incentive :
+
+   0    1 
+5611 1365 
+Table of incentivedesign :
+
+                0.15                 1.50 15 (to 1 out of 100) 
+                5193                  295                 1365 
+    15 (to everyone) 
+                 123 
+Table of mturkwave :
+
+   1    2    3 <NA> 
+2951 1255 2058  712 
+Preference column: choicebefore 
+selfish summary: mean 0.3464567  sd 0.4758834 
+stdalpha summary: mean -0.000224815  sd 0.9999482 
+                     attn_cons               attn_cons_nohigh 
+                          6976                           6558 
+        attn_cons_nohigh_norep attn_cons_nohigh_norep_nostake 
+                          6558                           6558 
+             attn_nohigh_norep 
+                          6558 
+Chosen sample restriction: attn_cons_nohigh 
+DEVIATION: Robustness arms identified via highx10/highx100 flags and replication/deterministic labels; restriction chosen as the candidate whose N is closest to the paper's 5908
+
+t test of coefficients:
+
+              Estimate Std. Error t value  Pr(>|t|)    
+(Intercept)  0.5675403  0.0111284 50.9993 < 2.2e-16 ***
+prof        -0.0962395  0.0329375 -2.9219 0.0034911 ** 
+inccostly   -0.1459435  0.0162498 -8.9813 < 2.2e-16 ***
+qualcostly   0.0521178  0.0180414  2.8888 0.0038801 ** 
+probab       0.0090363  0.0292876  0.3085 0.7576853    
+left         0.1136677  0.0292123  3.8911 0.0001008 ***
+prob_left   -0.0808693  0.0482902 -1.6747 0.0940501 .  
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+
+t test of coefficients:
+
+                      Estimate Std. Error t value  Pr(>|t|)    
+(Intercept)           0.556392   0.011579 48.0529 < 2.2e-16 ***
+inccostly            -0.145857   0.016984 -8.5879 < 2.2e-16 ***
+qualcostly            0.063720   0.018808  3.3880 0.0007094 ***
+selfish_z             0.081952   0.009408  8.7110 < 2.2e-16 ***
+probab               -0.022791   0.031827 -0.7161 0.4739793    
+left                  0.091524   0.032016  2.8587 0.0042703 ** 
+prob_left            -0.034127   0.052986 -0.6441 0.5195515    
+inccostly:selfish_z  -0.046001   0.015675 -2.9346 0.0033543 ** 
+qualcostly:selfish_z -0.043389   0.017442 -2.4876 0.0128935 *  
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+
+t test of coefficients:
+
+                      Estimate  Std. Error  t value  Pr(>|t|)    
+(Intercept)         0.66834156  0.01501234  44.5195 < 2.2e-16 ***
+pref                0.17281581  0.01464396  11.8012 < 2.2e-16 ***
+noconf              0.23581852  0.01778023  13.2630 < 2.2e-16 ***
+prof                0.02542409  0.02780971   0.9142   0.36064    
+inccostly           0.02612686  0.01407332   1.8565   0.06343 .  
+qualcostly         -0.01151811  0.01575004  -0.7313   0.46462    
+incB               -0.17298770  0.01065078 -16.2418 < 2.2e-16 ***
+notassigned         0.05184949  0.02057406   2.5201   0.01175 *  
+probab             -0.00197050  0.02514495  -0.0784   0.93754    
+left                0.00067025  0.02558799   0.0262   0.97910    
+prob_left           0.05796790  0.04097842   1.4146   0.15723    
+pref:noconf        -0.09514516  0.02115991  -4.4965 7.028e-06 ***
+pref:notassigned   -0.13000723  0.02453712  -5.2984 1.206e-07 ***
+noconf:notassigned  0.02120237  0.02429536   0.8727   0.38286    
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+RESULT:see_incentive_first_costly_table2_col1=-0.145944
+RESULT:assess_quality_first_costly_table2_col1=0.052118
+RESULT:choice_free_professionals_table2_col1=-0.096239
+RESULT:selfishness_table2_col2=0.059354
+RESULT:selfishness_table2_col3=0.081953
+RESULT:see_incentive_first_costly_x_selfishness_table2_col3=-0.046001
+RESULT:see_quality_first_costly_x_selfishness_table2_col3=-0.043389
+RESULT:n_obs_table2_col1=6558
+RESULT:n_obs_table2_cols2_3=5203
+RESULT:prefer_see_incentive_first_assigned_table3_col1=0.185285
+RESULT:prefer_see_incentive_first_not_assigned_table3_col2=0.007421
+RESULT:prefer_see_incentive_first_x_not_assigned_table3_col3=-0.130007
+RESULT:n_obs_table3_col1=4925

@@ -1,0 +1,178 @@
+Rows: 6976 Cols: 94 
+Table of treatment :
+
+   0    1    2    3 
+3353  712 1741 1170 
+Table of study :
+
+   1    2    3    4    6    7    8 
+ 712 1447 1504 1255  651  237 1170 
+Table of sample :
+
+CloudResearch         MTurk      Prolific 
+          216          6264           496 
+Table of condition :
+
+              ChoiceFree ChoiceFree_Professionals                 PayAfter 
+                    3353                      712                     1170 
+               PayBefore 
+                    1741 
+Table of wave :
+
+                 AMT-1                  AMT-2                  AMT-3 
+                  2951                   1255                   2058 
+Prolific/CloudResearch 
+                   712 
+Table of incentivedesign :
+
+                0.15                 1.50 15 (to 1 out of 100) 
+                5193                  295                 1365 
+    15 (to everyone) 
+                 123 
+Table of year :
+
+2019 2020 2021 
+2951 1967 2058 
+Table of Highx10 :
+
+   0    1 
+6681  295 
+Table of Highx100 :
+
+   0    1 
+6853  123 
+Table of seeincentivecostly :
+
+   0    1 
+5235 1741 
+Table of seequalitycostly :
+
+   0    1 
+5806 1170 
+Table of professionalsfree :
+
+   0    1 
+6264  712 
+Robustness-arm rows flagged: 418 
+DEVIATION: Excluded robustness arms (high-stakes x10/x100, replication, deterministic) from the main sample via Highx10/Highx100 dummies and treatment labels
+Preference variable used: choicebefore 
+Selfish summary:
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max.     NAs 
+ 0.0000  0.0000  0.0000  0.3465  1.0000  1.0000    1388 
+sd: 0.4758834 
+Main sample rows: 6558 
+Treatment counts in main (prof, SIFC, AQFC): 712 1741 1170 
+
+t test of coefficients:
+
+              Estimate Std. Error t value  Pr(>|t|)    
+(Intercept)  0.5675403  0.0111284 50.9993 < 2.2e-16 ***
+d_prof      -0.0962395  0.0329375 -2.9219 0.0034911 ** 
+d_sifc      -0.1459435  0.0162498 -8.9813 < 2.2e-16 ***
+d_aqfc       0.0521178  0.0180414  2.8888 0.0038801 ** 
+prob         0.0090363  0.0292876  0.3085 0.7576853    
+pos          0.1136677  0.0292123  3.8911 0.0001008 ***
+inter       -0.0808693  0.0482902 -1.6747 0.0940501 .  
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+
+t test of coefficients:
+
+             Estimate Std. Error t value  Pr(>|t|)    
+(Intercept)  0.512860   0.012715 40.3353 < 2.2e-16 ***
+d_sifc      -0.145382   0.017009 -8.5474 < 2.2e-16 ***
+d_aqfc       0.064422   0.018841  3.4192 0.0006329 ***
+selfish_z    0.124766   0.014105  8.8455 < 2.2e-16 ***
+prob        -0.021769   0.031829 -0.6839 0.4940481    
+pos          0.094874   0.031936  2.9708 0.0029839 ** 
+inter       -0.037111   0.052910 -0.7014 0.4830891    
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+
+t test of coefficients:
+
+                  Estimate Std. Error t value  Pr(>|t|)    
+(Intercept)       0.496794   0.013701 36.2595 < 2.2e-16 ***
+d_sifc           -0.112404   0.020469 -5.4914 4.177e-08 ***
+d_aqfc            0.095274   0.023031  4.1368 3.577e-05 ***
+selfish_z         0.172269   0.019776  8.7110 < 2.2e-16 ***
+prob             -0.022790   0.031827 -0.7161  0.473979    
+pos               0.091524   0.032016  2.8587  0.004270 ** 
+inter            -0.034127   0.052986 -0.6441  0.519551    
+d_sifc:selfish_z -0.096696   0.032950 -2.9346  0.003354 ** 
+d_aqfc:selfish_z -0.091207   0.036665 -2.4876  0.012893 *  
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+
+t test of coefficients:
+
+                Estimate Std. Error  t value  Pr(>|t|)    
+(Intercept)    0.6615788  0.0161975  40.8446 < 2.2e-16 ***
+pref_if        0.1852851  0.0154158  12.0191 < 2.2e-16 ***
+nocon          0.2543760  0.0192558  13.2103 < 2.2e-16 ***
+d_prof         0.0183679  0.0312407   0.5879   0.55659    
+d_sifc         0.0294456  0.0161925   1.8185   0.06905 .  
+d_aqfc        -0.0216115  0.0180491  -1.1974   0.23122    
+incB          -0.1668944  0.0122280 -13.6485 < 2.2e-16 ***
+prob          -0.0041070  0.0280303  -0.1465   0.88352    
+pos           -0.0070163  0.0290916  -0.2412   0.80943    
+inter          0.0651646  0.0462189   1.4099   0.15863    
+pref_if:nocon -0.1325908  0.0244021  -5.4336  5.79e-08 ***
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+
+t test of coefficients:
+
+                Estimate Std. Error t value  Pr(>|t|)    
+(Intercept)    0.7392751  0.0267919 27.5932 < 2.2e-16 ***
+pref_if        0.0074205  0.0272874  0.2719    0.7857    
+nocon          0.2014961  0.0322436  6.2492 5.262e-10 ***
+d_prof         0.0527896  0.0603671  0.8745    0.3820    
+d_sifc         0.0175320  0.0284437  0.6164    0.5377    
+d_aqfc         0.0193150  0.0321869  0.6001    0.5485    
+incB          -0.1893583  0.0216670 -8.7395 < 2.2e-16 ***
+prob          -0.0024233  0.0557437 -0.0435    0.9653    
+pos            0.0206140  0.0538059  0.3831    0.7017    
+inter          0.0443146  0.0876801  0.5054    0.6133    
+pref_if:nocon  0.0146580  0.0424082  0.3456    0.7297    
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+
+t test of coefficients:
+
+                       Estimate  Std. Error  t value  Pr(>|t|)    
+(Intercept)          0.66834156  0.01501234  44.5195 < 2.2e-16 ***
+pref_if              0.17281581  0.01464396  11.8012 < 2.2e-16 ***
+nocon                0.23581852  0.01778023  13.2630 < 2.2e-16 ***
+d_prof               0.02542409  0.02780971   0.9142   0.36064    
+d_sifc               0.02612686  0.01407332   1.8565   0.06343 .  
+d_aqfc              -0.01151811  0.01575004  -0.7313   0.46462    
+incB                -0.17298770  0.01065078 -16.2418 < 2.2e-16 ***
+prob                -0.00197050  0.02514495  -0.0784   0.93754    
+pos                  0.00067025  0.02558799   0.0262   0.97910    
+inter                0.05796790  0.04097842   1.4146   0.15723    
+notassigned          0.05184949  0.02057406   2.5201   0.01175 *  
+pref_if:nocon       -0.09514516  0.02115991  -4.4965 7.028e-06 ***
+pref_if:notassigned -0.13000723  0.02453712  -5.2984 1.206e-07 ***
+nocon:notassigned    0.02120237  0.02429536   0.8727   0.38286    
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+RESULT:see_incentive_first_costly_table2_col1=-0.145944
+RESULT:assess_quality_first_costly_table2_col1=0.052118
+RESULT:choice_free_professionals_table2_col1=-0.096239
+RESULT:selfishness_table2_col2=0.124766
+RESULT:selfishness_table2_col3=0.172269
+RESULT:see_incentive_first_costly_x_selfishness_table2_col3=-0.096696
+RESULT:see_quality_first_costly_x_selfishness_table2_col3=-0.091207
+RESULT:n_obs_table2_col1=6558
+RESULT:n_obs_table2_cols2_3=5203
+RESULT:prefer_see_incentive_first_assigned_table3_col1=0.185285
+RESULT:prefer_see_incentive_first_not_assigned_table3_col2=0.007421
+RESULT:prefer_see_incentive_first_x_not_assigned_table3_col3=-0.130007
+RESULT:n_obs_table3_col1=4925

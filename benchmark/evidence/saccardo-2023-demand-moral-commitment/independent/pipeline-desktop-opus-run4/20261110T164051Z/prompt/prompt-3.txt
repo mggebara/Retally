@@ -1,0 +1,499 @@
+You are refining R code that reproduces results from an econometrics paper.
+The code RAN SUCCESSFULLY but the reproduced values do not match the
+paper's claims within the allowed tolerance.  Identify what is causing
+the gap and adjust the code to close it.
+
+## Paper
+Title: American Economic Review 2023, 113(2): 396–429
+Methodology: - **Design / estimation approach:** Preregistered online experiments (aspredicted.org) with N = 9,323 advisors (Table 1) in an advice game. An advisor recommends product A (pays $2 with prob. 0.6) or product B (pays $2 with prob. 0.8 if high quality, 0.4 if low quality; prior 0.5) to an uninformed client. The advisor gets a $0.15 commission for one product and sees one ball drawn from B as a quality signal. The key outcome is a binary indicator for recommending the incentivized product, analysed separately by conflict of interest (commission on B with a $0 signal, or commission on A with a $2 signal) vs. no conflict. Treatment effects are estimated with regressions of this indicator on information-order indicators: assigned to "See Incentive First" vs. "Assess Quality First", interacted with the advisor's preferred order. The design-variation controls in all regressions are probabilistic vs. standard payment and left/right screen position of the incentivized product (fn. 14). A stylised dual-self attention model (Bénabou–Tirole 2002) generates Hypotheses 1–2.
+- **Experiments / treatments (Table 1):**
+  - NoChoice: See Incentive First (N = 152) vs. Assess Quality First (N = 147), exogenously assigned.
+  - Choice: advisors choose their information order, which is implemented with 75% probability (50% their choice + 50% × a 50-50 randomisation). This gives random assignment conditional on preference. Arms: Choice Free—Professionals (N = 712; self-reported finance/insurance and legal workers from Prolific + CloudResearch, pooled because p = 0.308 for choice and p = 0.820 for recommendations); Choice Free (AMT/CloudResearch, N = 2,574); Incentive First Costly (N = 1,562); Quality First Costly (N = 1,067). The cost is forgoing $0.05 (one-third of the commission) to get the costly order.
+  - Robustness arms (online appendix): High Stakes 10-fold (275) and 100-fold (110), Replication (385), Deterministic implementation (369).
+  - Choice Stakes: advisor incentive of $0.01 / $0.15 / $0.30 (N = 483 / 511 / 478), with seeing the incentive first always costly.
+  - Information Architect third-party experiment: IA-Advisor (245) vs. IA-Client (253), with a $0.15 IA payment aligned with the advisor or the client.
+- **Assignment / payoffs:** The commission is predetermined to maximise conflicts: a low-quality B is always paired with a commission on B, and a high-quality B with a commission on A. This gives about 70% of advisors a conflict of interest. Most arms pay $0.15 and match 1 in 10 advisors with a client. Professionals and a Choice Free subsample get a probabilistic scheme: 1 in 100 advisors is paid a $15 commission with product payoffs scaled to $0/$20. The base pay is $0.50 or $1 for a 5–7 minute study. Clients (N = 924) were recruited later; 84% followed the advice.
+- **Additional measures:**
+  - Posterior belief that B is low quality: an incentivised choice of one of ten 10-pp intervals ($0.15 for a correct range; $15 in the 1/100 arms), plus an exact 0–100 number.
+  - Moral costs / "selfishness": a 5-decision multiple price list recommending Y (always the incentivized product, with a $0 signal) vs. X paying $2 with prob. 1, 0.8, 0.6, 0.4 and 0. This is used as a **standardised** selfishness measure and was not collected for the Professionals sample.
+  - Blinding take-up (a stronger commitment) in wave 3 of the Choice experiment.
+- **Sample restrictions:** Following the preregistrations, the main analyses keep attentive advisors who gave consistent multiple-price-list responses, so multiple switchers are excluded. Online Appendix C shows the results are qualitatively similar with them included. Further exclusion criteria are in online Appendix B. The Choice experiment was run in three separately preregistered waves, which are pooled.
+- **Key comparisons / evaluation:**
+  - Hypothesis 1: higher incentivized-product recommendation under See Incentive First when there is a conflict.
+  - Hypothesis 2: the share choosing each order, including when costly (willingness to pay reveals strict preference). The result is about 30% pay for quality first and about 41% pay for incentive first.
+  - The correlation of preferences with selfishness and with blinding.
+  - The recommendation gap between those who prefer incentive first and those who prefer quality first, when assigned vs. not assigned their preference (about 19–20 pp when assigned, about 0 when not).
+  - Beliefs relative to the prior by conflict and assignment.
+  - The shares choosing incentive first across stakes and across IA treatments.
+- **Inference / not applicable:** Inference uses regression t-statistics and p-values (e.g., fn. 14). The provided text does not state the exact standard-error type (robust vs. clustered) or fixed effects. Since every advisor makes a single decision, heteroskedasticity-robust standard errors are presumably used, but this is not stated in the excerpt. There is no train/test split, cross-validation or hyperparameters; this is not an ML paper. The specific regression table/column for the preferred specification is not included in the provided excerpt.
+
+
+## Current Code
+```r
+suppressPackageStartupMessages({
+  library(haven)
+  library(dplyr)
+  library(fixest)
+  library(sandwich)
+})
+set.seed(42)
+
+base <- "<repo>/.cache/datasets/saccardo_2023_demand_moral_commitment.script-free"
+d <- read_dta(file.path(base, "Data/Clean Data/choice_experiments.dta"))
+cat("Rows in choice_experiments:", nrow(d), "\n")
+cat("Columns:\n"); print(names(d))
+
+nm_low <- tolower(names(d))
+fv <- function(cands) {
+  for (c in cands) {
+    i <- which(nm_low == tolower(c))
+    if (length(i) > 0) return(names(d)[i[1]])
+  }
+  NULL
+}
+num <- function(x) { x <- zap_labels(x); suppressWarnings(as.numeric(x)) }
+labtxt <- function(v) {
+  x <- d[[v]]
+  if (is.labelled(x)) tolower(as.character(as_factor(x))) else tolower(as.character(x))
+}
+show_tab <- function(v) {
+  if (!is.null(v) && v %in% names(d)) {
+    cat("\n--- table of", v, "---\n")
+    x <- d[[v]]
+    if (is.labelled(x)) print(table(as_factor(x), useNA = "ifany")) else
+      if (length(unique(x)) < 40) print(table(x, useNA = "ifany")) else print(summary(num(x)))
+  }
+}
+for (v in c("treatment", "condition", "study", "studyg", "sample", "wave", "professionals",
+            "professionalsfree", "incentiveshigh", "probabilistic_incentive", "qualitycostly",
+            "attentionpassed", "inconsistentid", "choice", "choicebefore", "getyourchoice",
+            "flippedorder", "conflict", "noconflict", "commission", "incentiveb", "incentiveleft",
+            "incentivedesign", "gender", "prolific", "cloudresearch", "professionalscloudresearch")) {
+  vv <- fv(v); if (!is.null(vv)) show_tab(vv)
+}
+
+# ---------------- Core variables ----------------
+v_pref <- fv(c("choicebefore", "choice"))
+cat("\nPreference variable:", v_pref, "\n")
+d$prefinc <- num(d[[v_pref]])
+if (!all(na.omit(d$prefinc) %in% c(0, 1))) {
+  cat("Preference variable not 0/1; recoding (labels):\n")
+  lt <- labtxt(v_pref)
+  d$prefinc <- ifelse(grepl("incent|before", lt), 1, ifelse(is.na(lt), NA, 0))
+}
+
+# professionals
+v_prof <- fv(c("professionals", "professionalsfree"))
+d$prof <- if (!is.null(v_prof)) { x <- num(d[[v_prof]]); ifelse(is.na(x), 0, x) } else 0
+d$prof <- as.numeric(d$prof > 0)
+
+# treatment labels
+labcols <- Filter(Negate(is.null), lapply(c("treatment", "condition", "study", "studyg", "sample"), fv))
+alllab <- do.call(paste, c(lapply(labcols, labtxt), sep = " | "))
+tr_lab <- if (!is.null(fv("treatment"))) labtxt(fv("treatment")) else alllab
+
+v_qc <- fv(c("qualitycostly", "costlyquality", "qualityfirstcostly", "seequalitycostly", "getaftercostly"))
+v_ic <- fv(c("incentivecostly", "costlyincentive", "incentivefirstcostly", "seeincentivecostly",
+             "getbeforecostly", "beforecostly", "costlybefore"))
+d$qcost <- if (!is.null(v_qc)) num(d[[v_qc]]) else
+  as.numeric(grepl("cost", tr_lab) & grepl("quality|after", tr_lab))
+if (!is.null(v_ic)) {
+  d$incost <- num(d[[v_ic]])
+} else {
+  d$incost <- as.numeric(grepl("cost", tr_lab) & grepl("incent|before", tr_lab) & !grepl("quality|after", tr_lab))
+  if (sum(d$incost, na.rm = TRUE) == 0) {
+    v_c <- fv(c("costly", "costlytreatment"))
+    if (!is.null(v_c)) d$incost <- as.numeric(num(d[[v_c]]) == 1 & d$qcost == 0)
+  }
+}
+d$qcost[is.na(d$qcost)] <- 0
+d$incost[is.na(d$incost)] <- 0
+cat("\nTreatment indicator counts: prof", sum(d$prof), " incost", sum(d$incost), " qcost", sum(d$qcost), "\n")
+print(table(tr_lab, incost = d$incost, useNA = "ifany"))
+print(table(tr_lab, qcost = d$qcost, useNA = "ifany"))
+
+# controls
+v_gender <- fv(c("gender", "female", "male"))
+if (!is.null(v_gender)) {
+  g <- d[[v_gender]]
+  d$gender_f <- if (is.labelled(g)) as.character(as_factor(g)) else as.character(g)
+  d$gender_f[d$gender_f %in% c("", " ")] <- NA
+} else d$gender_f <- "all"
+v_age <- fv(c("age"))
+d$age_c <- if (!is.null(v_age)) num(d[[v_age]]) else 0
+v_wave <- fv(c("wave"))
+d$wave_f <- if (!is.null(v_wave)) { w <- as.character(num(d[[v_wave]])); w[is.na(w)] <- "none"; w } else "1"
+v_prob <- fv(c("probabilistic_incentive", "incentivedesign", "incentiveshigh"))
+d$prob <- if (!is.null(v_prob)) { x <- num(d[[v_prob]]); x[is.na(x)] <- 0; x } else 0
+v_left <- fv(c("incentiveleft", "incentive_left", "leftincentive", "productleft"))
+if (is.null(v_left)) {
+  cand <- names(d)[grepl("left", nm_low) & !grepl("_", nm_low)]
+  if (length(cand) > 0) v_left <- cand[1]
+}
+cat("Position variable:", ifelse(is.null(v_left), "NONE", v_left), "\n")
+d$left <- if (!is.null(v_left)) { x <- num(d[[v_left]]); x[is.na(x)] <- 0; x } else 0
+v_hl <- fv(c("incentiveshigh_incentiveleft"))
+d$prob_left <- if (!is.null(v_hl)) { x <- num(d[[v_hl]]); x[is.na(x)] <- 0; x } else d$prob * d$left
+
+cat("\nControl variable level counts (full data):\n")
+cat("gender_f:\n"); print(table(d$gender_f, useNA = "ifany"))
+cat("wave_f:\n"); print(table(d$wave_f, useNA = "ifany"))
+
+# selfishness
+v_self <- fv(c("selfish", "selfishness"))
+d$selfraw <- if (!is.null(v_self)) num(d[[v_self]]) else NA_real_
+
+# recommendation / conflict / assignment
+d$recinc <- num(d[[fv(c("recommendincentive"))]])
+v_nc <- fv(c("noconflict"))
+d$noconf <- if (!is.null(v_nc)) num(d[[v_nc]]) else 1 - num(d[[fv(c("conflict"))]])
+v_get <- fv(c("getyourchoice"))
+d$assigned <- num(d[[v_get]])
+d$notassigned <- 1 - d$assigned
+v_ib <- fv(c("incentiveb", "incentive_b"))
+if (!is.null(v_ib)) {
+  d$incB <- num(d[[v_ib]])
+} else {
+  v_com <- fv(c("commission"))
+  x <- d[[v_com]]
+  if (is.labelled(x) || is.character(x)) {
+    lt <- labtxt(v_com)
+    d$incB <- as.numeric(grepl("\\bb\\b|product b|_b$| b$", lt))
+    if (length(unique(d$incB)) < 2) d$incB <- as.numeric(num(x) == max(num(x), na.rm = TRUE))
+  } else d$incB <- as.numeric(num(x) == max(num(x), na.rm = TRUE))
+}
+
+# ---------------- Sample selection ----------------
+v_att <- fv(c("attentionpassed", "attentive"))
+v_inc <- fv(c("inconsistentid", "inconsistent", "multipleswitcher"))
+m_att <- if (!is.null(v_att)) (num(d[[v_att]]) == 1) %in% TRUE else rep(TRUE, nrow(d))
+m_cons <- if (!is.null(v_inc)) !((num(d[[v_inc]]) == 1) %in% TRUE) else rep(TRUE, nrow(d))
+v_hi <- fv(c("incentiveshigh"))
+m_nohigh <- if (!is.null(v_hi)) !((num(d[[v_hi]]) == 1) %in% TRUE) else rep(TRUE, nrow(d))
+m_nolab <- !grepl("replic|stake|10x|100x|tenfold|hundred|determin|high", alllab)
+v_rep <- names(d)[grepl("replic|stakes", nm_low)]
+for (v in v_rep) {
+  x <- num(d[[v]]); if (all(na.omit(x) %in% c(0, 1))) m_nolab <- m_nolab & !((x == 1) %in% TRUE)
+}
+
+ctrl <- "factor(gender_f) + age_c + factor(wave_f) + prob + left + prob_left"
+f1 <- as.formula(paste("prefinc ~ prof + incost + qcost +", ctrl))
+vars1 <- c("prefinc", "prof", "incost", "qcost", "gender_f", "age_c", "wave_f", "prob", "left", "prob_left")
+
+grid <- expand.grid(att = c(TRUE, FALSE), cons = c(TRUE, FALSE), nohigh = c(FALSE, TRUE), nolab = c(FALSE, TRUE))
+grid$n <- NA
+for (i in seq_len(nrow(grid))) {
+  m <- rep(TRUE, nrow(d))
+  if (grid$att[i]) m <- m & m_att
+  if (grid$cons[i]) m <- m & m_cons
+  if (grid$nohigh[i]) m <- m & m_nohigh
+  if (grid$nolab[i]) m <- m & m_nolab
+  grid$n[i] <- sum(m & complete.cases(d[, vars1]))
+}
+cat("\nCandidate sample sizes (target 5908):\n"); print(grid)
+grid$dist <- abs(grid$n - 5908)
+best <- grid[order(grid$dist, -(grid$att + grid$cons)), ][1, ]
+cat("Chosen sample filters:\n"); print(best)
+msel <- rep(TRUE, nrow(d))
+if (best$att) msel <- msel & m_att
+if (best$cons) msel <- msel & m_cons
+if (best$nohigh) msel <- msel & m_nohigh
+if (best$nolab) msel <- msel & m_nolab
+s <- d[msel, ]
+cat("Selected rows:", nrow(s), "\n")
+
+# Drop factor() terms that have fewer than 2 levels in the estimation sample
+# (this caused the "contrasts can be applied only to factors with 2 or more levels" error)
+fix_formula <- function(f, data) {
+  tt <- terms(f)
+  tl <- attr(tt, "term.labels")
+  resp <- all.vars(f)[1]
+  vv <- intersect(all.vars(f), names(data))
+  dd <- as.data.frame(data)[, vv, drop = FALSE]
+  dd <- dd[complete.cases(dd), , drop = FALSE]
+  keep <- vapply(tl, function(t) {
+    if (grepl("^factor\\(", t)) {
+      v <- sub("^factor\\((.*)\\)$", "\\1", t)
+      length(unique(dd[[v]])) >= 2
+    } else TRUE
+  }, logical(1))
+  if (any(!keep)) cat("Dropping single-level factor terms:", paste(tl[!keep], collapse = ", "), "\n")
+  reformulate(tl[keep], response = resp)
+}
+
+hc3 <- function(f, data) {
+  f <- fix_formula(f, data)
+  out <- tryCatch({
+    m <- lm(f, data = data)
+    V <- vcovHC(m, type = "HC3")
+    list(b = coef(m), se = sqrt(diag(V))[names(coef(m))], n = nobs(m))
+  }, error = function(e) {
+    cat("lm/HC3 failed:", conditionMessage(e), "\n")
+    m <- feols(f, data = data, vcov = "hetero")
+    list(b = coef(m), se = se(m), n = nobs(m))
+  })
+  print(round(cbind(b = out$b, se = out$se[names(out$b)]), 4))
+  cat("N =", out$n, "\n")
+  out
+}
+gb <- function(r, nm) { x <- r$b[nm]; if (is.null(x) || length(x) == 0 || is.na(x)) NA else unname(x) }
+
+res <- list()
+
+# ---------------- Table 2 ----------------
+cat("\n==== Table 2 col 1 ====\n")
+t21 <- tryCatch(hc3(f1, s), error = function(e) { print(e); NULL })
+if (!is.null(t21)) {
+  res$see_incentive_first_costly_table2_col1 <- gb(t21, "incost")
+  res$assess_quality_first_costly_table2_col1 <- gb(t21, "qcost")
+  res$choice_free_professionals_table2_col1 <- gb(t21, "prof")
+  res$n_obs_table2_col1 <- t21$n
+}
+
+s2 <- s[s$prof == 0 & !is.na(s$selfraw), ]
+s2 <- s2[complete.cases(s2[, vars1]), ]
+mu <- mean(s2$selfraw); sdv <- sd(s2$selfraw)
+cat("\nSelfish raw mean/sd:", mu, sdv, "\n")
+s2$selfz <- (s2$selfraw - mu) / sdv
+f2 <- as.formula(paste("prefinc ~ incost + qcost + selfz +", ctrl))
+cat("\n==== Table 2 col 2 ====\n")
+t22 <- tryCatch(hc3(f2, s2), error = function(e) { print(e); NULL })
+if (!is.null(t22)) {
+  res$selfishness_table2_col2 <- gb(t22, "selfz")
+  res$n_obs_table2_cols2_3 <- t22$n
+}
+f3 <- as.formula(paste("prefinc ~ incost + qcost + selfz + incost:selfz + qcost:selfz +", ctrl))
+cat("\n==== Table 2 col 3 ====\n")
+t23 <- tryCatch(hc3(f3, s2), error = function(e) { print(e); NULL })
+if (!is.null(t23)) {
+  res$selfishness_table2_col3 <- gb(t23, "selfz")
+  res$see_incentive_first_costly_x_selfishness_table2_col3 <- gb(t23, "incost:selfz")
+  res$see_quality_first_costly_x_selfishness_table2_col3 <- gb(t23, "qcost:selfz")
+}
+
+# ---------------- Table 3 ----------------
+f31 <- as.formula(paste("recinc ~ prefinc + noconf + prefinc:noconf + prof + incost + qcost + incB +", ctrl))
+s3 <- s[!is.na(s$assigned), ]
+cat("\n==== Table 3 col 1 (assigned) ====\n")
+t31 <- tryCatch(hc3(f31, s3[s3$assigned == 1, ]), error = function(e) { print(e); NULL })
+if (!is.null(t31)) {
+  res$prefer_see_incentive_first_assigned_table3_col1 <- gb(t31, "prefinc")
+  res$n_obs_table3_col1 <- t31$n
+}
+cat("\n==== Table 3 col 2 (not assigned) ====\n")
+t32 <- tryCatch(hc3(f31, s3[s3$assigned == 0, ]), error = function(e) { print(e); NULL })
+if (!is.null(t32)) res$prefer_see_incentive_first_not_assigned_table3_col2 <- gb(t32, "prefinc")
+f33 <- as.formula(paste("recinc ~ prefinc + noconf + prefinc:noconf + notassigned + prefinc:notassigned + noconf:notassigned + prof + incost + qcost + incB +", ctrl))
+cat("\n==== Table 3 col 3 (both) ====\n")
+t33 <- tryCatch(hc3(f33, s3), error = function(e) { print(e); NULL })
+if (!is.null(t33)) {
+  b <- gb(t33, "prefinc:notassigned")
+  if (is.na(b)) b <- gb(t33, "notassigned:prefinc")
+  res$prefer_see_incentive_first_x_not_assigned_table3_col3 <- b
+}
+
+cat("\n")
+for (n in names(res)) {
+  v <- res[[n]]
+  if (!is.null(v) && !is.na(v)) cat(sprintf("RESULT:%s=%.6f\n", n, v))
+}
+```
+
+## What the code produced
+  see_incentive_first_costly_table2_col1 = -0.145624
+  assess_quality_first_costly_table2_col1 = 0.058095
+  n_obs_table2_col1 = 5602.0
+  selfishness_table2_col2 = 0.057261
+  n_obs_table2_cols2_3 = 5040.0
+  selfishness_table2_col3 = 0.082311
+  see_incentive_first_costly_x_selfishness_table2_col3 = -0.049411
+  see_quality_first_costly_x_selfishness_table2_col3 = -0.046517
+  prefer_see_incentive_first_assigned_table3_col1 = 0.165611
+  n_obs_table3_col1 = 4208.0
+  prefer_see_incentive_first_not_assigned_table3_col2 = -0.000947
+  prefer_see_incentive_first_x_not_assigned_table3_col3 = -0.119607
+
+## Last run's stdout (excerpt: first/last 3000 characters)
+```
+Rows in choice_experiments: 6976 
+Columns:
+ [1] "id"                               "startdate"                       
+ [3] "enddate"                          "age"                             
+ [5] "condition"                        "shortid"                         
+ [7] "attentionpassed"                  "incentiveB"                      
+ [9] "incentiveA"                       "commission"                      
+[11] "choicebefore"                     "recommendincentive"              
+[13] "beliefbin"                        "belief"                          
+[15] "signalblue"                       "conflict"                        
+[17] "getbefore"                        "incentivecostly"                 
+[19] "study"                            "choice"                          
+[21] "incentiveshigh"                   "flippedorder"                    
+[23] "incentiveleft"                    "Highx10"                         
+[25] "Highx100"                         "chooseblindness"                 
+[27] "sample"                           "alphavaluefinal"                 
+[29] "stdalpha"                         "selfish"                         
+[31] "female"                           "beliefcorrect"                   
+[33] "jobtitle"                         "industry"                        
+[35] "explanationchoice"                "qualitycostly"                   
+[37] "professionals"                    "prolific"                        
+[39] "cloudresearch"                    "professionalscloudresearch"      
+[41] "mturkwave"                        "wave1"                           
+[43] "wave2"                            "wave3"                           
+[45] "probabilistic_incentive"          "locatedus"                       
+[47] "wave"                             "incentivedesign"                 
+[49] "year"                             "treatment"                       
+[51] "selfishseeincentivecostly"        "selfishseequalitycostly"         
+[53] "committ"                          "professionalsfree"               
+[55] "seeincentivecostly"               "seequalitycostly"                
+[57] "incentiveshigh_incentiveleft"     "avoid_incentiveinfo"             
+[59] "choiceafter"                      "getyourchoice"                   
+[61] "choicebefore_getyourchoice"       "getbeforenoconflict"             
+[63] "noconflict"                       "choicebeforenoconflict"          
+[65] "choicebefore_getbefore"           "choicebefore_getbefore_nocon"    
+[67] "notgetyourchoice"                 "notgetyourchoicenoconflict"      
+[69] "choicebeforenotgetyourchoice"     "choicebeforegetbefore"           
+[71] "logsignalhigh"                    "logsignallow"                    
+[73] "logitbelief"                      "good"                            
+[75] "bad"                              "goodchoicebefore"                
+[77] "badchoicebefore"                  "goodgetyourchoice"               
+[79] "badgetyourchoice"         
+[... 4576 characters omitted ...]
+.0940 0.0315
+prob_left              NA     NA
+N = 5040 
+
+==== Table 2 col 3 ====
+Dropping single-level factor terms: factor(wave_f) 
+                        b     se
+(Intercept)        0.6561 0.0243
+incost            -0.1492 0.0163
+qcost              0.0650 0.0182
+selfz              0.0823 0.0097
+factor(gender_f)1 -0.0213 0.0139
+age_c             -0.0023 0.0006
+prob                   NA     NA
+left               0.0905 0.0316
+prob_left              NA     NA
+incost:selfz      -0.0494 0.0158
+qcost:selfz       -0.0465 0.0176
+N = 5040 
+
+==== Table 3 col 1 (assigned) ====
+Dropping single-level factor terms: factor(wave_f) 
+                        b     se
+(Intercept)        0.7566 0.0271
+prefinc            0.1656 0.0169
+noconf             0.2416 0.0208
+prof                   NA     NA
+incost             0.0100 0.0154
+qcost             -0.0371 0.0174
+incB              -0.1562 0.0132
+factor(gender_f)1  0.0012 0.0130
+age_c             -0.0019 0.0005
+prob                   NA     NA
+left              -0.0219 0.0290
+prob_left              NA     NA
+prefinc:noconf    -0.1126 0.0262
+N = 4208 
+
+==== Table 3 col 2 (not assigned) ====
+Dropping single-level factor terms: factor(wave_f) 
+                        b     se
+(Intercept)        0.8873 0.0459
+prefinc           -0.0009 0.0295
+noconf             0.2107 0.0341
+prof                   NA     NA
+incost             0.0007 0.0272
+qcost              0.0100 0.0312
+incB              -0.1835 0.0235
+factor(gender_f)1 -0.0390 0.0231
+age_c             -0.0031 0.0009
+prob                   NA     NA
+left               0.0186 0.0529
+prob_left              NA     NA
+prefinc:noconf     0.0199 0.0457
+N = 1394 
+
+==== Table 3 col 3 (both) ====
+Dropping single-level factor terms: factor(wave_f) 
+                          b     se
+(Intercept)          0.7804 0.0242
+prefinc              0.1529 0.0160
+noconf               0.2255 0.0192
+notassigned          0.0362 0.0223
+prof                     NA     NA
+incost               0.0069 0.0134
+qcost               -0.0257 0.0152
+incB                -0.1632 0.0115
+factor(gender_f)1   -0.0091 0.0113
+age_c               -0.0022 0.0005
+prob                     NA     NA
+left                -0.0112 0.0254
+prob_left                NA     NA
+prefinc:noconf      -0.0792 0.0228
+prefinc:notassigned -0.1196 0.0266
+noconf:notassigned   0.0347 0.0261
+N = 5602 
+
+RESULT:see_incentive_first_costly_table2_col1=-0.145624
+RESULT:assess_quality_first_costly_table2_col1=0.058095
+RESULT:n_obs_table2_col1=5602.000000
+RESULT:selfishness_table2_col2=0.057261
+RESULT:n_obs_table2_cols2_3=5040.000000
+RESULT:selfishness_table2_col3=0.082311
+RESULT:see_incentive_first_costly_x_selfishness_table2_col3=-0.049411
+RESULT:see_quality_first_costly_x_selfishness_table2_col3=-0.046517
+RESULT:prefer_see_incentive_first_assigned_table3_col1=0.165611
+RESULT:n_obs_table3_col1=4208.000000
+RESULT:prefer_see_incentive_first_not_assigned_table3_col2=-0.000947
+RESULT:prefer_see_incentive_first_x_not_assigned_table3_col3=-0.119607
+```
+
+## Claims still failing
+1. assess_quality_first_costly_table2_col1: paper claims 0.152 change in the probability of preferring to see the incentive first (coefficient), your code produced 0.058095, tolerance 0.1908, gap 61.78% relative
+2. choice_free_professionals_table2_col1: paper claims -0.095 change in the probability of preferring to see the incentive first (coefficient), your code produced N/A, tolerance 0.2737
+3. selfishness_table2_col2: paper claims 0.028 change in the probability of preferring to see the incentive first per standard deviation of selfishness (coefficient), your code produced 0.057261, tolerance 0.25, gap 104.50% relative
+4. selfishness_table2_col3: paper claims 0.039 change in the probability of preferring to see the incentive first per standard deviation of selfishness (coefficient), your code produced 0.082311, tolerance 0.2308, gap 111.05% relative
+5. see_incentive_first_costly_x_selfishness_table2_col3: paper claims -0.022 change in the selfishness slope of preferring to see the incentive first (coefficient), your code produced -0.049411, tolerance 0.7273, gap 124.60% relative
+6. see_quality_first_costly_x_selfishness_table2_col3: paper claims -0.021 change in the selfishness slope of preferring to see the incentive first (coefficient), your code produced -0.046517, tolerance 0.8571, gap 121.51% relative
+7. n_obs_table2_col1: paper claims 5908.0 advisors (count), your code produced 5602, tolerance 0.05, gap 5.18% relative
+8. prefer_see_incentive_first_assigned_table3_col1: paper claims 0.195 change in the probability of recommending the incentivized product (coefficient), your code produced 0.165611, tolerance 0.08205, gap 15.07% relative
+9. n_obs_table3_col1: paper claims 4448.0 advisors (count), your code produced 4208, tolerance 0.05, gap 5.40% relative
+
+## Previous attempts (oldest first)
+  Attempt 1: see_incentive_first_costly_table2_col1=-0.145624, assess_quality_first_costly_table2_col1=0.058095, n_obs_table2_col1=5602.0, selfishness_table2_col2=0.057261, n_obs_table2_cols2_3=5040.0, selfishness_table2_col3=0.082311, see_incentive_first_costly_x_selfishness_table2_col3=-0.049411, see_quality_first_costly_x_selfishness_table2_col3=-0.046517, prefer_see_incentive_first_assigned_table3_col1=0.165611, n_obs_table3_col1=4208.0, prefer_see_incentive_first_not_assigned_table3_col2=-0.000947, prefer_see_incentive_first_x_not_assigned_table3_col3=-0.119607
+
+These attempts have already been tried.  Do not repeat a strategy
+that has already produced the same values.
+
+## Task
+Adjust the code minimally to close the gap on the failing claims.
+Prefer changes that align more closely with the paper's stated methodology:
+re-read the methodology summary above and check the model specification,
+covariate selection, fixed effects, clustering, and seed against what the
+paper actually specifies.  In econometrics papers, common gap-closers are:
+  - getting the cluster-robust SE right (vcovCL / cluster_var argument)
+  - matching the paper's exact fixed-effects structure
+  - using the same sample-restriction filters the paper applied
+  - matching the paper's weighting scheme (weights= argument)
+
+## Deviation reporting
+If you must change something the paper did NOT specify in order to close
+the gap, emit a ``DEVIATION:`` line via cat() describing the change:
+
+    cat('DEVIATION: Used HC1 robust SE because the paper does not specify but the default did not converge\n')
+
+## When to give up
+If after re-reading the methodology and the previous attempts you judge
+the gap cannot be closed without unreasonable deviation, return the SAME
+R CODE you were given, BYTE-FOR-BYTE unchanged.  The pipeline will record
+the claim as unreproducible.
+
+## Output convention (unchanged)
+Emit every metric as ``cat('RESULT:<name>=<value>\n')``.
+The dataset is a directory tree at '<repo>/.cache/datasets/saccardo_2023_demand_moral_commitment.script-free' — see the file listing under Dataset Information.  Load the actual data file(s) by the exact paths listed there (readr::read_csv() for .csv, haven::read_dta() for Stata .dta, load() for .RData/.rda, which creates the objects listed for the file under exactly those names: use them, do not guess others; readRDS() for .rds).
+Installed packages (no network; nothing else can be installed): jsonlite, fixest, lfe, AER, ivreg, plm, estimatr, lme4, quantreg, car, sandwich, lmtest, clubSandwich, multiwayvcov, marginaleffects, MatchIt, optmatch, CBPS, WeightIt, cobalt, did, rdrobust, rddensity, Synth, modelsummary, stargazer, texreg, broom, tidyverse, dplyr, tidyr, readr, stringr, lubridate, data.table, haven, readxl, janitor, zoo, ggplot2, ggridges, ggrepel, gridExtra, cowplot, gtable, extrafont, sf, MASS, nnet, survival, splines, Matrix, boot, stats, utils.
+Prefer fixest for fixed effects, IV and clustered SEs; use the other installed packages where the paper's method calls for them.
+No network, no system().  set.seed(42).
+
+Output ONLY the R code — no explanation, no markdown fences.

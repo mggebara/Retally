@@ -1,0 +1,10 @@
+suppressMessages({library(haven); library(dplyr)})
+d <- read_dta("<repo>/benchmark/.cache/claude-code/altindag-2022-mental-health-costs-lockdowns/blind/2026-11-10-d/mount/altindag_2022_mental_health_costs_lockdowns/ICPSR_183165-V1.1/konda_data_for_analysis.dta")
+d <- d[d$non_response == 0, ]
+cat("respondents:", nrow(d), "\n")
+x <- d %>% group_by(year, month) %>% summarise(dif=first(dif), di1=first(di1), di1_i=first(di1_i), di2=first(di2), modate=first(modate), b=first(before1955), n=n(), .groups="drop")
+print(as.data.frame(x[c(1:3, 69:75, 142:144), ]))
+cat("all equal di1==dif:", all(d$di1 == d$dif, na.rm=TRUE), "\n")
+print(table(d$education, useNA="ifany")); print(table(d$ethnicity, useNA="ifany")); print(table(d$female, useNA="ifany"))
+print(attr(d$education, "labels")); print(attr(d$ethnicity, "labels"))
+print(table(abs(d$dif) <= 45, useNA="ifany"))

@@ -1,0 +1,21 @@
+{
+  "schema": 1,
+  "entry_id": "altindag-2022-mental-health-costs-lockdowns",
+  "mode": "independent",
+  "run_id": "2026-11-10-a",
+  "reproducer": "claude-code",
+  "language": "r",
+  "final": {"script": "script.R", "stdout": "stdout.txt", "stderr": "stderr.txt", "exit_code": 0},
+  "attempts": [
+    {"dir": "attempt-1", "exit_code": 0, "kind": ""},
+    {"dir": "attempt-2", "exit_code": 0, "kind": ""}
+  ],
+  "deviations": [
+    "fixest's default removed 15-16 fixed-effect singleton observations per regression, so reported N (1199, 1207, 1117) is below the full estimation sample (1214, 1222, 1133 identified in exploratory attempt-2 with |dif|<=45 and complete controls); coefficients are unaffected by singleton removal. Not changed after comparison with claims.",
+    "Anderson (2008) indices built on the full respondent sample (non_response==0): items standardized by control-group (born Jan 1956 or later) mean/SD, weighted by row sums of the inverse covariance matrix of standardized items, index re-standardized to control mean 0/SD 1; index defined only where all component items are observed (matches the paper's sample sizes)."
+  ],
+  "notes": "Attempt-1: variable listing. Attempt-2: checked running variable (dif = months older than Dec 1955; before1955=1 for dif>=0) and sample counts; |dif|<=45 with complete controls reproduces the paper's Ns exactly. Final: feols of outcome on before1955 + dif + dif*before1955 + female + education and ethnicity dummies | birth-month, province and surveyor FE, SEs clustered by month-year of birth (dif), uniform kernel, 45-month bandwidth. Compared RESULTs with claims once via check_attempt ('All claims within tolerance.'); script not changed afterwards, so no claim attempt recorded. Mental-health index coefficients are below the claimed values (mental distress 0.159 vs 0.205, somatic 0.113 vs 0.175, nonsomatic 0.151 vs 0.158); the SRQ-20 sum (0.734) and mobility outcomes match closely, so the gap likely comes from index construction details (e.g. sample used for standardization/weights). No hung runs.",
+  "files_read_outside_mount": [],
+  "started_at": "2026-11-10T11:29:07Z",
+  "finished_at": "2026-11-10T11:31:30Z"
+}

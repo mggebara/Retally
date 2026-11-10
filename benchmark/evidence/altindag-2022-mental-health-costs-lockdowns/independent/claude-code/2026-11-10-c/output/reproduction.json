@@ -1,0 +1,20 @@
+{
+  "schema": 1,
+  "entry_id": "altindag-2022-mental-health-costs-lockdowns",
+  "mode": "independent",
+  "run_id": "2026-11-10-c",
+  "reproducer": "claude-code",
+  "language": "r",
+  "final": {"script": "script.R", "stdout": "stdout.txt", "stderr": "stderr.txt", "exit_code": 0},
+  "attempts": [
+    {"dir": "attempt-1", "exit_code": 0, "kind": ""}
+  ],
+  "deviations": [
+    "fixest removes fixed-effect singletons (15-16 obs per regression; does not change coefficients), so reported Ns (1199, 1207, 1117) are below the paper's (1214, 1222, 1133), which presumably keep singletons as Stata reg/areg would; adding those back matches the paper's Ns exactly.",
+    "Anderson (2008) indices built on the full respondent sample: items z-scored with control-group (born 1956 or later) mean/SD, weighted by row sums of the inverse covariance matrix of the z-scores, complete cases only, then re-standardized by control mean/SD. The paper's exact weighting routine (_gweightave2) was not available; index coefficients (0.157, 0.112, 0.152) are below the paper's (0.205, 0.175, 0.158) while the SRQ-20 sum matches (0.734)."
+  ],
+  "notes": "Attempt-1 was an exploratory variable listing (no RESULT lines). Final run: RD with before1955 treatment, running variable dif (months older than Dec 1955), linear on each side (dif + dif:before1955), sample |dif|<=45 among survey respondents (non_response==0), FE for birth month, province and surveyor, indicators for education, ethnicity and female, SEs clustered by month-year of birth (modate), via fixest::feols. Table 3 coefficients reproduce to 3 decimals. After the final run I ran check_attempt once (all claims within tolerance) and made no further changes. No run hung. The ICPSR 'read me .pdf' in the mount (data documentation) was read; no script files were opened.",
+  "files_read_outside_mount": [],
+  "started_at": "2026-11-10T11:29:00Z",
+  "finished_at": "2026-11-10T11:35:00Z"
+}

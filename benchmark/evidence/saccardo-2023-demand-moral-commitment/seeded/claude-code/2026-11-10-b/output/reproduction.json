@@ -1,0 +1,15 @@
+{
+  "schema": 1,
+  "entry_id": "saccardo-2023-demand-moral-commitment",
+  "mode": "seeded",
+  "run_id": "2026-11-10-b",
+  "reproducer": "claude-code",
+  "language": "r",
+  "final": {"script": "script.R", "stdout": "stdout.txt", "stderr": "stderr.txt", "exit_code": 0},
+  "attempts": [],
+  "deviations": [],
+  "notes": "Translated the Table 2 and Table 3 regressions in Code/analysis.do to R: loaded Data/Clean Data/choice_experiments.dta, dropped non-professional advisors with missing alphavaluefinal (pre-registered), kept Highx10==0 & Highx100==0, and ran OLS with HC3 standard errors (sandwich::vcovHC) on the $covariates2 controls. Table 2 col 2 restricts to professionals==0; col 3 drops professionals through missing stdalpha. Table 3 cols 1/2 split on getyourchoice; col 3 pools with the notgetyourchoice interactions. Single run, no claim-driven changes. The script was written and run in a scratch directory using the task's sandbox command, then copied here. Ran in 1.7 s, no hangs.",
+  "files_read_outside_mount": [],
+  "started_at": "2026-11-10T07:00:00Z",
+  "finished_at": "2026-11-10T07:05:00Z"
+}

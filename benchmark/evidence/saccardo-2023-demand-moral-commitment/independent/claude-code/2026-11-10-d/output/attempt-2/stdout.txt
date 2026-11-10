@@ -1,0 +1,96 @@
+                  condition treatment                   wave
+1                ChoiceFree         0                  AMT-1
+2                ChoiceFree         0                  AMT-2
+3                ChoiceFree         0                  AMT-2
+4                ChoiceFree         0                  AMT-3
+5                ChoiceFree         0                  AMT-3
+6                ChoiceFree         0                  AMT-3
+7  ChoiceFree_Professionals         1 Prolific/CloudResearch
+8                  PayAfter         3                  AMT-3
+9                 PayBefore         2                  AMT-1
+10                PayBefore         2                  AMT-3
+        incentivedesign Highx10 Highx100 study year    n
+1                  0.15       0        0     2 2019 1447
+2                  0.15       0        0     4 2020  602
+3  15 (to 1 out of 100)       0        0     4 2020  653
+4                  0.15       0        0     6 2021  233
+5                  1.50       1        0     6 2021  295
+6      15 (to everyone)       0        1     6 2021  123
+7  15 (to 1 out of 100)       0        0     1 2020  712
+8                  0.15       0        0     8 2021 1170
+9                  0.15       0        0     3 2019 1504
+10                 0.15       0        0     7 2021  237
+                     wave is.na(selfish) is.na(stdalpha) is.na(age)
+1                   AMT-1          FALSE           FALSE      FALSE
+2                   AMT-1          FALSE           FALSE       TRUE
+3                   AMT-1           TRUE            TRUE      FALSE
+4                   AMT-1           TRUE            TRUE       TRUE
+5                   AMT-2          FALSE           FALSE      FALSE
+6                   AMT-2          FALSE           FALSE       TRUE
+7                   AMT-2           TRUE            TRUE      FALSE
+8                   AMT-2           TRUE            TRUE       TRUE
+9                   AMT-3          FALSE           FALSE      FALSE
+10                  AMT-3          FALSE           FALSE       TRUE
+11                  AMT-3           TRUE            TRUE      FALSE
+12 Prolific/CloudResearch           TRUE            TRUE      FALSE
+   attentionpassed    n
+1                1 2651
+2                1    4
+3                1  295
+4                1    1
+5                1 1052
+6                1    1
+7                1  199
+8                1    3
+9                1 1878
+10               1    2
+11               1  178
+12              NA  712
+                     wave incentiveshigh incentiveleft probabilistic_incentive
+1                   AMT-1              0             0                       0
+2                   AMT-2              0             0                       0
+3                   AMT-2              0             0                       0
+4                   AMT-2              0             1                       0
+5                   AMT-2              0             1                       0
+6                   AMT-2              1             0                       1
+7                   AMT-2              1             0                       1
+8                   AMT-2              1             1                       1
+9                   AMT-2              1             1                       1
+10                  AMT-3              0             0                       0
+11 Prolific/CloudResearch              0             0                       1
+   flippedorder    n
+1            NA 2951
+2             0  153
+3             1  151
+4             0  144
+5             1  154
+6             0  179
+7             1  154
+8             0  175
+9             1  145
+10           NA 2058
+11           NA  712
+  treatment seeincentivecostly seequalitycostly professionalsfree
+1         0                  0                0                 0
+2         1                  0                0                 1
+3         2                  1                0                 0
+4         3                  0                1                 0
+  incentivecostly qualitycostly    n
+1               0             0 3353
+2               0             0  712
+3               1             0 1741
+4               0             1 1170
+  choicebefore getbefore getyourchoice notgetyourchoice    n
+1            0         0             1                0 2420
+2            0         1             0                1  807
+3            1         0             0                1  926
+4            1         1             1                0 2823
+      
+          0    1 <NA>
+  0     195    0    0
+  1     810    0    0
+  2    1394    0    0
+  3    1253    0    0
+  4       0  120    0
+  5       0 1816    0
+  <NA>    0    0 1388

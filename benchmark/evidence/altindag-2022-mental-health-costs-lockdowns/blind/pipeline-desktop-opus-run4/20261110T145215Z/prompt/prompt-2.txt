@@ -1,0 +1,204 @@
+You are fixing R code that was generated to reproduce results from an econometrics paper.
+
+## Original Code
+```r
+suppressPackageStartupMessages({
+  library(haven)
+  library(dplyr)
+  library(fixest)
+})
+set.seed(42)
+
+path <- file.path('<repo>/.cache/datasets/altindag_2022_mental_health_costs_lockdowns.script-free',
+                  'ICPSR_183165-V1.1', 'konda_data_for_analysis.dta')
+raw <- haven::read_dta(path)
+df <- as.data.frame(lapply(raw, function(v) {
+  if (inherits(v, 'haven_labelled')) v <- haven::zap_labels(v)
+  v
+}), stringsAsFactors = FALSE)
+nms <- names(df)
+msg <- function(...) message(paste0(...))
+msg('Columns: ', paste(nms, collapse = ', '))
+
+find_col <- function(patterns, exclude = character(0)) {
+  for (p in patterns) {
+    hits <- nms[grepl(p, nms, ignore.case = TRUE)]
+    hits <- setdiff(hits, exclude)
+    if (length(hits) > 0) return(hits[1])
+  }
+  NA_character_
+}
+
+to_num <- function(v) suppressWarnings(as.numeric(v))
+to_binary <- function(v) {
+  v <- to_num(v)
+  u <- sort(unique(v[!is.na(v)]))
+  if (length(u) == 2 && all(u == c(1, 2))) v <- ifelse(v == 1, 1, 0)
+  v
+}
+
+# ---- Running variable and treatment ----
+yr <- to_num(df$year)
+if (all(yr[!is.na(yr)] < 100)) yr <- yr + 1900
+mo <- to_num(df$month)
+# months older than the threshold month (December 1955): Dec 1955 -> 0, older -> positive
+df$xrun <- (1955 * 12 + 12) - (yr * 12 + mo)
+df$z <- as.numeric(df$xrun >= 0)
+if ('before1955' %in% nms) {
+  b <- to_binary(df$before1955)
+  msg('Agreement before1955 vs computed z: ', mean(b == df$z, na.rm = TRUE))
+  df$z <- ifelse(is.na(b), df$z, b)
+}
+df$ym <- yr * 100 + mo
+df$birth_month <- mo
+
+# ---- Fixed effects and controls ----
+prov_col <- find_col(c('^province$', '^province_id$', '^prov', 'province', '^il$', '^il_', '^city', '^region'))
+surv_col <- find_col(c('^survey_taker_id$', 'survey_taker', 'surveyor', 'interviewer', 'anketor'))
+msg('Province column: ', prov_col, '; surveyor column: ', surv_col)
+df$prov_fe <- if (!is.na(prov_col)) df[[prov_col]] else 1
+df$surv_fe <- if (!is.na(surv_col)) df[[surv_col]] else 1
+df$educ_f <- factor(df$education)
+df$eth_f <- factor(df$ethnicity)
+df$fem_f <- factor(df$female)
+
+# ---- SRQ-20 items ----
+item_patterns <- list(
+  headache   = c('headache', 'head_ache', 'bas_agri'),
+  appetite   = c('mal_appetite', 'appetite'),
+  sleep      = c('sleep'),
+  frightened = c('fright', 'scare', 'fear'),
+  shaking    = c('^shaking$', 'shak', 'tremb'),
+  nervous    = c('^nervous$', 'nervous', 'tense', 'worr(y|ied)$'),
+  digestion  = c('^indigestion$', 'digest'),
+  thinking   = c('think', 'thought_clear', 'clear'),
+  unhappy    = c('^unhappy$', 'unhappy'),
+  cry        = c('cry'),
+  enjoy      = c('enjoy'),
+  decision   = c('decision', 'decide'),
+  worksuffer = c('work_suff', 'suffer', 'daily_work'),
+  useful     = c('useful', 'useless', 'play_part'),
+  interest   = c('uninte', 'interest'),
+  worthless  = c('^worthless$', 'worthless'),
+  suicide    = c('suicid'),
+  tired      = c('tired_all', 'always_tired', 'tired_time', 'feel_tired', '^tired$'),
+  tired_easy = c('tired_eas', 'easily_tired', 'tire_eas', 'fatigu'),
+  stomach    = c('stomach', 'uncomf')
+)
+used <- character(0)
+items <- list()
+for (it in names(item_patterns)) {
+  cands <- character(0)
+  for (p in item_patterns[[it]]) {
+    cands <- c(cands, nms[grepl(p, nms, ignore.case = TRUE)])
+  }
+  cands <- setdiff(unique(cands), used)
+  # keep binary-looking columns
+  ok <- cands[sapply(cands, function(cn) {
+    v <- to_binary(df[[cn]]); u <- unique(v[!is.na(v)])
+    length(u) >= 1 && all(u %in% c(0, 1))
+  })]
+  if (it == 'tired') ok <- ok[!grepl('eas', ok, ignore.case = TRUE)]
+  if (length(ok) > 0) {
+    items[[it]] <- ok[1]
+    used <- c(used, ok[1])
+  } else {
+    items[[it]] <- NA_character_
+  }
+}
+msg('SRQ item mapping: ', paste(names(items), unlist(items), sep = '=', collapse = '; '))
+item_cols <- unlist(items)
+item_cols <- item_cols[!is.na(item_cols)]
+somatic_keys <- c('headache', 'shaking', 'digestion', 'stomach')
+som_cols <- unlist(items[somatic_keys]); som_cols <- som_cols[!is.na(som_cols)]
+nonsom_cols <- setdiff(item_cols, som_cols)
+
+for (cn in item_cols) df[[cn]] <- to_binary(df[[cn]])
+ctrl <- !is.na(df$z) & df$z == 0
+
+all_items_obs <- complete.cases(df[, item_cols, drop = FALSE])
+
+anderson_index <- function(cols) {
+  zs <- sapply(cols, function(cn) {
+    v <- df[[cn]]
+    (v - mean(v[ctrl & all_items_obs], na.rm = TRUE)) / sd(v[ctrl & all_items_obs], na.rm = TRUE)
+  })
+  zs <- as.matrix(zs)
+  idx <- rowMeans(zs)
+  idx[!all_items_obs] <- NA
+  (idx - mean(idx[ctrl], na.rm = TRUE)) / sd(idx[ctrl], na.rm = TRUE)
+}
+
+df$mdi <- anderson_index(item_cols)
+df$somatic_idx <- anderson_index(som_cols)
+df$nonsomatic_idx <- anderson_index(nonsom_cols)
+df$srq_sum <- ifelse(all_items_obs, rowSums(df[, item_cols, drop = FALSE]), NA)
+
+# ---- Mobility outcomes ----
+df$days_out <- to_num(df$outside_week)
+df$under_curfew_y <- to_binary(df$under_curfew)
+nev_col <- if ('never_out' %in% nms) 'never_out' else find_col(c('never'))
+df$never_out_y <- to_binary(df[[nev_col]])
+
+# ---- RD estimation ----
+h <- 45
+rd <- function(yvar) {
+  d <- df[!is.na(df$xrun) & abs(df$xrun) <= h, ]
+  f <- as.formula(paste0(yvar, ' ~ z + xrun + z:xrun + educ_f + eth_f + fem_f | birth_month + prov_fe + surv_fe'))
+  m <- feols(f, data = d, cluster = ~ym)
+  list(b = unname(coef(m)['z']), se = unname(sqrt(diag(vcov(m)))['z']), n = nobs(m))
+}
+
+r_days <- rd('days_out')
+r_cur  <- rd('under_curfew_y')
+r_nev  <- rd('never_out_y')
+r_mdi  <- rd('mdi')
+r_som  <- rd('somatic_idx')
+r_non  <- rd('nonsomatic_idx')
+r_sum  <- rd('srq_sum')
+
+msg('SEs: days ', r_days$se, ' curfew ', r_cur$se, ' never ', r_nev$se,
+    ' mdi ', r_mdi$se, ' som ', r_som$se, ' nonsom ', r_non$se, ' sum ', r_sum$se)
+
+cat(sprintf('RESULT:days_outside_last_week_table3_col3=%.6f\n', r_days$b))
+cat(sprintf('RESULT:under_curfew_table3_col3=%.6f\n', r_cur$b))
+cat(sprintf('RESULT:never_goes_out_table3_col3=%.6f\n', r_nev$b))
+cat(sprintf('RESULT:n_obs_days_outside_table3_col3=%d\n', as.integer(r_days$n)))
+cat(sprintf('RESULT:n_obs_under_curfew_table3_col3=%d\n', as.integer(r_cur$n)))
+cat(sprintf('RESULT:mental_distress_index_table4_col3=%.6f\n', r_mdi$b))
+cat(sprintf('RESULT:somatic_symptoms_index_table4_col3=%.6f\n', r_som$b))
+cat(sprintf('RESULT:nonsomatic_symptoms_index_table4_col3=%.6f\n', r_non$b))
+cat(sprintf('RESULT:sum_srq20_yes_answers_table4_col3=%.6f\n', r_sum$b))
+cat(sprintf('RESULT:n_obs_mental_distress_index_table4_col3=%d\n', as.integer(r_mdi$n)))
+```
+
+## Error / Unexpected Output
+```
+Columns: province_n, survey_taker_id, hh_size, pre_covid_hhsize, female, marital_status, education, year, month, under_curfew, outside_month, outside_week, paid_employment, job_to_return, money_as_usual, money_distressed, head_ache, mal_appetite, sleeplessness, scared, shaking, nervous, indigestion, unfocused, unhappy, weepy, unwillingness, undecisiveness, disrupted, useless, uninterest, worthless, suicidal, usually_tired, stomach_discomfort, quickly_tired, chronic_disease, psych_support, conflict, religious, daily_pray, practice_the_book, virus_god_sent, ethnicity, total_employment, poor_overall_health, poor_physical_health, poor_mental_health, limited_physical_act, never_out, lim_social_interaction, gov_support_d, curfew_support_d, non_turk, age, dif, before1955, di1, di1_i, di2, di2_i, modate, month_1, month_2, month_3, month_4, month_5, month_6, month_7, month_8, month_9, month_10, month_11, month_12, province_n_1, province_n_2, province_n_3, province_n_4, province_n_5, province_n_6, province_n_7, province_n_8, province_n_9, province_n_10, province_n_11, province_n_12, province_n_13, province_n_14, province_n_15, province_n_16, province_n_17, province_n_18, province_n_19, province_n_20, province_n_21, province_n_22, province_n_23, province_n_24, province_n_25, province_n_26, province_n_27, province_n_28, province_n_29, province_n_30, province_n_31, province_n_32, province_n_33, province_n_34, province_n_35, province_n_36, province_n_37, province_n_38, province_n_39, province_n_40, province_n_41, province_n_42, province_n_43, province_n_44, province_n_45, province_n_46, province_n_47, province_n_48, province_n_49, province_n_50, province_n_51, province_n_52, province_n_53, province_n_54, province_n_55, province_n_56, province_n_57, province_n_58, province_n_59, province_n_60, province_n_61, province_n_62, province_n_63, province_n_64, province_n_65, province_n_66, illiterate, highschool, married, widowed_separated, suffering, non_response
+Agreement before1955 vs computed z: 1
+Province column: province_n; surveyor column: survey_taker_id
+Error in cands[sapply(cands, function(cn) { : 
+  invalid subscript type 'list'
+Execution halted
+
+```
+
+## Task
+Fix specifically the identified problem above. Do not rewrite the entire approach unless necessary.
+
+## Reminder: Output Convention
+The fixed R code MUST emit each reproduced metric on its own line using EXACTLY this format:
+    RESULT:<metric_name>=<numeric_value>
+For example:  cat('RESULT:beta=0.342\n')
+Use snake_case metric names.
+
+## Reminder: Constraints
+- The dataset is a directory tree at '<repo>/.cache/datasets/altindag_2022_mental_health_costs_lockdowns.script-free' — see the file listing under Dataset Information.  Load the actual data file(s) by the exact paths listed there (readr::read_csv() for .csv, haven::read_dta() for Stata .dta, load() for .RData/.rda, which creates the objects listed for the file under exactly those names: use them, do not guess others; readRDS() for .rds).
+- Installed packages (no network; nothing else can be installed): jsonlite, fixest, lfe, AER, ivreg, plm, estimatr, lme4, quantreg, car, sandwich, lmtest, clubSandwich, multiwayvcov, marginaleffects, MatchIt, optmatch, CBPS, WeightIt, cobalt, did, rdrobust, rddensity, Synth, modelsummary, stargazer, texreg, broom, tidyverse, dplyr, tidyr, readr, stringr, lubridate, data.table, haven, readxl, janitor, zoo, ggplot2, ggridges, ggrepel, gridExtra, cowplot, gtable, extrafont, sf, MASS, nnet, survival, splines, Matrix, boot, stats, utils.
+- Prefer fixest for fixed effects, IV and clustered SEs; use the other installed packages where the paper's method calls for them.
+- Do NOT access the internet.
+- Do NOT call system() / system2().
+- Use set.seed(42) for reproducibility.
+- Print all RESULT: lines at the end via cat().
+
+Output ONLY the corrected R code — no explanation, no markdown fences.

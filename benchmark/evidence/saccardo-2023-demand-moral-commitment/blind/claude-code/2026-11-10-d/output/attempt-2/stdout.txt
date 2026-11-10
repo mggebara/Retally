@@ -1,0 +1,98 @@
+# A tibble: 31 × 12
+   study condition  wave  Highx10 Highx100 incentiveshigh probabilistic_incent…¹
+   <dbl> <chr>      <chr>   <dbl>    <dbl>          <dbl>                  <dbl>
+ 1     1 ChoiceFre… Prol…       0        0              0                      1
+ 2     2 ChoiceFree AMT-1       0        0              0                      0
+ 3     2 ChoiceFree AMT-1       0        0              0                      0
+ 4     3 PayBefore  AMT-1       0        0              0                      0
+ 5     3 PayBefore  AMT-1       0        0              0                      0
+ 6     4 ChoiceFree AMT-2       0        0              0                      0
+ 7     4 ChoiceFree AMT-2       0        0              0                      0
+ 8     4 ChoiceFree AMT-2       0        0              0                      0
+ 9     4 ChoiceFree AMT-2       0        0              0                      0
+10     4 ChoiceFree AMT-2       0        0              0                      0
+11     4 ChoiceFree AMT-2       0        0              0                      0
+12     4 ChoiceFree AMT-2       0        0              0                      0
+13     4 ChoiceFree AMT-2       0        0              0                      0
+14     4 ChoiceFree AMT-2       0        0              1                      1
+15     4 ChoiceFree AMT-2       0        0              1                      1
+16     4 ChoiceFree AMT-2       0        0              1                      1
+17     4 ChoiceFree AMT-2       0        0              1                      1
+18     4 ChoiceFree AMT-2       0        0              1                      1
+19     4 ChoiceFree AMT-2       0        0              1                      1
+20     4 ChoiceFree AMT-2       0        0              1                      1
+21     4 ChoiceFree AMT-2       0        0              1                      1
+22     6 ChoiceFree AMT-3       0        0              0                      0
+23     6 ChoiceFree AMT-3       0        0              0                      0
+24     6 ChoiceFree AMT-3       0        1              0                      0
+25     6 ChoiceFree AMT-3       0        1              0                      0
+26     6 ChoiceFree AMT-3       1        0              0                      0
+27     6 ChoiceFree AMT-3       1        0              0                      0
+28     7 PayBefore  AMT-3       0        0              0                      0
+29     7 PayBefore  AMT-3       0        0              0                      0
+30     8 PayAfter   AMT-3       0        0              0                      0
+31     8 PayAfter   AMT-3       0        0              0                      0
+# ℹ abbreviated name: ¹​probabilistic_incentive
+# ℹ 5 more variables: incentiveleft <dbl>, flippedorder <dbl>,
+#   incentiveshigh_incentiveleft <dbl>, alphaNA <lgl>, n <int>
+# A tibble: 11 × 5
+   study incentivedesign      locatedus attentionpassed     n
+   <dbl> <chr>                    <dbl>           <dbl> <int>
+ 1     1 15 (to 1 out of 100)         0              NA   365
+ 2     1 15 (to 1 out of 100)         1              NA   347
+ 3     2 0.15                         1               1  1447
+ 4     3 0.15                         1               1  1504
+ 5     4 0.15                         1               1   602
+ 6     4 15 (to 1 out of 100)         1               1   653
+ 7     6 0.15                         1               1   233
+ 8     6 1.50                         1               1   295
+ 9     6 15 (to everyone)             1               1   123
+10     7 0.15                         1               1   237
+11     8 0.15                         1               1  1170
+            committ
+choicebefore    0    1
+           0    0 3227
+           1 3749    0
+             
+getyourchoice FALSE TRUE
+            0  1733    0
+            1     0 5243
+          conflict
+noconflict    0    1
+         0    0 4881
+         1 2095    0
+               selfish
+alphavaluefinal    0    1 <NA>
+           0     195    0    0
+           1     810    0    0
+           2    1394    0    0
+           3    1253    0    0
+           4       0  120    0
+           5       0 1816    0
+           <NA>    0    0 1388
+alpha mean sd 3.02738 1.569853 
+           0            1            2 
+-0.001015507 -0.033878871  0.121310057 
+, , incentiveB = 0
+
+                  conflict
+recommendincentive    0    1
+                 0   49  617
+                 1  654 2176
+
+, , incentiveB = 1
+
+                  conflict
+recommendincentive    0    1
+                 0  275  854
+                 1 1117 1234
+
+          incentiveB
+signalblue    0    1
+         0  703 2088
+         1 2793 1392
+[1] 11
+       study
+           1    2    3    4    6    7    8
+  FALSE  712 1447 1499 1251  651  236 1169
+  TRUE     0    0    5    4    0    1    1

@@ -1,0 +1,21 @@
+{
+  "schema": 1,
+  "entry_id": "altindag-2022-mental-health-costs-lockdowns",
+  "mode": "seeded",
+  "run_id": "2026-11-10-b",
+  "reproducer": "claude-code",
+  "language": "r",
+  "final": {"script": "script.R", "stdout": "stdout.txt", "stderr": "stderr.txt", "exit_code": 0},
+  "attempts": [
+    {"dir": "attempt-1", "exit_code": 0, "kind": ""},
+    {"dir": "attempt-2", "exit_code": 0, "kind": "claim"},
+    {"dir": "attempt-3", "exit_code": 0, "kind": "claim"}
+  ],
+  "deviations": [
+    "The authors' _gweightave2.ado (Asher & Novosad) is not in the package, so the Anderson (2008) index was re-implemented in R: items z-scored with the control-group (before1955==0) mean and SD over the non-response==0 sample, combined with weights equal to the row sums of the inverse correlation matrix of the z-scores (complete cases), then rescaled to mean 0 / SD 1 in the control group, and set to missing if any item is missing. The weighting and rescaling were chosen by comparing variants against the claimed Table 4 values (attempt-3 diagnostics); the chosen variant also matches the paper's standard errors."
+  ],
+  "notes": "Followed '1 Tables.do': keep non_response==0; OLS of outcome on before1955, di1, di1_i (separate linear slopes on each side), month_1-12 and province_n_* dummies, female, and factor ethnicity, education, survey_taker_id; sample |dif|<=45; SEs clustered by modate (fixest::feols). attempt-1: exploratory variable inspection. attempt-2: first full run; Table 3 and SRQ-20 sum matched but the indices (inverse-covariance weights, no rescaling) were too small. attempt-3: same RESULTs plus non-scored diagnostics over index weighting variants; inverse-correlation weights + control-group rescaling matched all three indices (coefficients and t-stats). Final run: all 10 claims within rounding (index coefficients 0.207/0.176/0.160 vs 0.205/0.175/0.158; SEs 0.095/0.086/0.093 vs 0.094/0.085/0.092). No hangs.",
+  "files_read_outside_mount": [],
+  "started_at": "2026-11-10T11:29:34Z",
+  "finished_at": "2026-11-10T11:33:30Z"
+}

@@ -1,0 +1,21 @@
+{
+  "schema": 1,
+  "entry_id": "altindag-2022-mental-health-costs-lockdowns",
+  "mode": "blind",
+  "run_id": "2026-11-10-c",
+  "reproducer": "claude-code",
+  "language": "r",
+  "final": {"script": "script.R", "stdout": "stdout.txt", "stderr": "stderr.txt", "exit_code": 0},
+  "attempts": [
+    {"dir": "attempt-1", "exit_code": 0, "kind": ""},
+    {"dir": "attempt-2", "exit_code": 0, "kind": ""}
+  ],
+  "deviations": [
+    "Bandwidth sample taken as |dif| <= 45 (inclusive), where dif = months between birth month-year and December 1955 (dif >= 0 is treated); the paper's equation writes an open interval, which was read as 'born within 45 months'.",
+    "Anderson (2008) indices built on respondents with all 20 SRQ-20 items answered: items standardized with the control-group (born Jan 1956 or later, full 72-month survey sample) mean and SD, weighted by row sums of the inverse covariance matrix of the standardized items (full sample), and the final index re-standardized to mean 0 / SD 1 in the control group."
+  ],
+  "notes": "attempt-1: exploratory variable listing (no RESULT lines). attempt-2: first full estimation; fixest dropped 15-16 fixed-effect singleton observations by default, which changes N but not coefficients. Final run sets fixef.rm='none' so every respondent with outcome and controls observed is counted (as Stata reg/areg with dummies would); coefficients identical, SEs and N slightly different. This change was based on the paper's sample definition, not on any reported value. Specification: feols(y ~ before1955 + dif + dif*before1955 + i(education) + i(ethnicity) + female | birth month + province + surveyor), uniform kernel, SEs clustered by month-year of birth. Non-respondents (no birth date) excluded. No runs hung.",
+  "files_read_outside_mount": [],
+  "started_at": "2026-11-10T11:31:57Z",
+  "finished_at": "2026-11-10T11:34:30Z"
+}

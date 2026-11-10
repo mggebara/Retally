@@ -1,0 +1,180 @@
+Columns:
+ [1] "id"                               "startdate"                       
+ [3] "enddate"                          "age"                             
+ [5] "condition"                        "shortid"                         
+ [7] "attentionpassed"                  "incentiveb"                      
+ [9] "incentivea"                       "commission"                      
+[11] "choicebefore"                     "recommendincentive"              
+[13] "beliefbin"                        "belief"                          
+[15] "signalblue"                       "conflict"                        
+[17] "getbefore"                        "incentivecostly"                 
+[19] "study"                            "choice"                          
+[21] "incentiveshigh"                   "flippedorder"                    
+[23] "incentiveleft"                    "highx10"                         
+[25] "highx100"                         "chooseblindness"                 
+[27] "sample"                           "alphavaluefinal"                 
+[29] "stdalpha"                         "selfish"                         
+[31] "female"                           "beliefcorrect"                   
+[33] "jobtitle"                         "industry"                        
+[35] "explanationchoice"                "qualitycostly"                   
+[37] "professionals"                    "prolific"                        
+[39] "cloudresearch"                    "professionalscloudresearch"      
+[41] "mturkwave"                        "wave1"                           
+[43] "wave2"                            "wave3"                           
+[45] "probabilistic_incentive"          "locatedus"                       
+[47] "wave"                             "incentivedesign"                 
+[49] "year"                             "treatment"                       
+[51] "selfishseeincentivecostly"        "selfishseequalitycostly"         
+[53] "committ"                          "professionalsfree"               
+[55] "seeincentivecostly"               "seequalitycostly"                
+[57] "incentiveshigh_incentiveleft"     "avoid_incentiveinfo"             
+[59] "choiceafter"                      "getyourchoice"                   
+[61] "choicebefore_getyourchoice"       "getbeforenoconflict"             
+[63] "noconflict"                       "choicebeforenoconflict"          
+[65] "choicebefore_getbefore"           "choicebefore_getbefore_nocon"    
+[67] "notgetyourchoice"                 "notgetyourchoicenoconflict"      
+[69] "choicebeforenotgetyourchoice"     "choicebeforegetbefore"           
+[71] "logsignalhigh"                    "logsignallow"                    
+[73] "logitbelief"                      "good"                            
+[75] "bad"                              "goodchoicebefore"                
+[77] "badchoicebefore"                  "goodgetyourchoice"               
+[79] "badgetyourchoice"                 "goodnotgetyourchoice"            
+[81] "badnotgetyourchoice"              "goodchoicebeforenotgetyourchoice"
+[83] "badchoicebeforenotgetyourchoice"  "bayesianposterior"               
+[85] "badsignal"                        "updatecorrect"                   
+[87] "updatedirection"                  "updatewrong"                     
+[89] "beliefdistance"                   "relbeliefdistance"               
+[91] "correctdirbin"                    "beliefinbin"                     
+[93] "belief_prior"                     "belief_prior_continuos"          
+N raw: 6976 
+Table of treatment :
+
+   0    1    2    3 
+3353  712 1741 1170 
+Table of study :
+
+   1    2    3    4    6    7    8 
+ 712 1447 1504 1255  651  237 1170 
+Table of sample :
+
+cloudresearch         mturk      prolific 
+          216          6264           496 
+Table of condition :
+
+              choicefree choicefree_professionals                 payafter 
+                    3353                      712                     1170 
+               paybefore 
+                    1741 
+Table of wave :
+
+                 amt-1                  amt-2                  amt-3 
+                  2951                   1255                   2058 
+prolific/cloudresearch 
+                   712 
+Table of professionals :
+
+   0    1 
+6264  712 
+Table of choice :
+
+       choice professionals 
+         6264           712 
+Table of getyourchoice :
+
+   0    1 
+1733 5243 
+Table of attentionpassed :
+
+   1 <NA> 
+6264  712 
+Table of qualitycostly :
+
+   0    1 
+5806 1170 
+Table of conflict :
+
+   0    1 
+2095 4881 
+Table of incentivedesign :
+
+                0.15                 1.50 15 (to 1 out of 100) 
+                5193                  295                 1365 
+    15 (to everyone) 
+                 123 
+Table of probabilistic_incentive :
+
+   0    1 
+5611 1365 
+Table of incentiveshigh :
+
+   0    1 
+6323  653 
+Preference column: choicebefore 
+Treatment indicator sums: prof 712  inccostly 1741  qualcostly 1170 
+     attn_cons attn_cons_main           attn           none           main 
+          6976           6976           6976           6976           6976 
+Chosen sample restriction: attn_cons 
+              Estimate Std. Error    t value     Pr(>|t|)
+prof       -0.03793508 0.04470062 -0.8486478 3.961065e-01
+inccostly  -0.14643474 0.01628587 -8.9915227 3.095283e-19
+qualcostly  0.11010069 0.02225133  4.9480500 7.671980e-07
+
+t test of coefficients:
+
+                        Estimate  Std. Error t value  Pr(>|t|)    
+(Intercept)           0.66749155  0.02434667 27.4161 < 2.2e-16 ***
+inccostly            -0.15229812  0.01700575 -8.9557 < 2.2e-16 ***
+qualcostly            0.10031040  0.02310615  4.3413 1.442e-05 ***
+selfish_z             0.07827051  0.00880406  8.8903 < 2.2e-16 ***
+gender_f1            -0.02135431  0.01318856 -1.6192  0.105471    
+age_c                -0.00230917  0.00053078 -4.3505 1.382e-05 ***
+age_miss             -0.17813319  0.20945537 -0.8505  0.395107    
+wave_famt-2           0.02371225  0.03266503  0.7259  0.467917    
+wave_famt-3          -0.04556149  0.01992764 -2.2863  0.022271 *  
+probab               -0.05919049  0.04223672 -1.4014  0.161151    
+left                  0.05760411  0.04224987  1.3634  0.172807    
+prob_left            -0.00251104  0.05973878 -0.0420  0.966473    
+inccostly:selfish_z  -0.04527212  0.01528528 -2.9618  0.003071 ** 
+qualcostly:selfish_z -0.04218040  0.01709312 -2.4677  0.013629 *  
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+
+t test of coefficients:
+
+                      Estimate  Std. Error  t value  Pr(>|t|)    
+(Intercept)         0.76149472  0.02285047  33.3251 < 2.2e-16 ***
+pref                0.17272311  0.01418327  12.1779 < 2.2e-16 ***
+noconf              0.23107916  0.01719885  13.4357 < 2.2e-16 ***
+prof                0.00146497  0.03913500   0.0374  0.970140    
+inccostly           0.00838424  0.01409796   0.5947  0.552055    
+qualcostly         -0.04166229  0.01883652  -2.2118  0.027014 *  
+incB               -0.16867223  0.01026992 -16.4239 < 2.2e-16 ***
+notassigned         0.05434017  0.01986261   2.7358  0.006239 ** 
+gender_f1          -0.00410687  0.01010586  -0.4064  0.684473    
+age_c              -0.00203994  0.00042601  -4.7885 1.715e-06 ***
+age_miss           -0.13868085  0.15685772  -0.8841  0.376663    
+wave_famt-2        -0.02284220  0.02744386  -0.8323  0.405254    
+wave_famt-3         0.01732029  0.01622186   1.0677  0.285687    
+probab              0.00519331  0.03443747   0.1508  0.880135    
+left                0.01158561  0.03483144   0.3326  0.739432    
+prob_left           0.04642720  0.04737952   0.9799  0.327170    
+pref:noconf        -0.09309216  0.02039225  -4.5651 5.079e-06 ***
+pref:notassigned   -0.13888010  0.02373694  -5.8508 5.114e-09 ***
+noconf:notassigned  0.02261968  0.02350652   0.9623  0.335946    
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+RESULT:see_incentive_first_costly_table2_col1=-0.146435
+RESULT:assess_quality_first_costly_table2_col1=0.110101
+RESULT:choice_free_professionals_table2_col1=-0.037935
+RESULT:selfishness_table2_col2=0.057662
+RESULT:selfishness_table2_col3=0.078271
+RESULT:see_incentive_first_costly_x_selfishness_table2_col3=-0.045272
+RESULT:see_quality_first_costly_x_selfishness_table2_col3=-0.042180
+RESULT:n_obs_table2_col1=6976
+RESULT:n_obs_table2_cols2_3=5588
+RESULT:prefer_see_incentive_first_assigned_table3_col1=0.186577
+RESULT:prefer_see_incentive_first_not_assigned_table3_col2=-0.006012
+RESULT:prefer_see_incentive_first_x_not_assigned_table3_col3=-0.138880
+RESULT:n_obs_table3_col1=5243

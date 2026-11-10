@@ -1,0 +1,15 @@
+{
+  "schema": 1,
+  "entry_id": "saccardo-2023-demand-moral-commitment",
+  "mode": "seeded",
+  "run_id": "2026-11-10-a",
+  "reproducer": "claude-code",
+  "language": "r",
+  "final": {"script": "script.R", "stdout": "stdout.txt", "stderr": "stderr.txt", "exit_code": 0},
+  "attempts": [],
+  "deviations": [],
+  "notes": "Single run, no prior attempts. Translated the Table 2 and Table 3 regressions of Code/analysis.do: loaded Data/Clean Data/choice_experiments.dta, dropped non-professional (study!=1) participants with missing alphavaluefinal, restricted to Highx10==0 & Highx100==0, and ran OLS (lm) with HC3 robust SEs (sandwich::vcovHC) on the authors' covariates2 list. Table 2 col 2 restricts to professionals==0; col 3 drops professionals implicitly via missing stdalpha (as in Stata). Table 3 cols 1/2 split on getyourchoice==1/0; col 3 pools and adds notgetyourchoice and its interactions. Collinear terms (professionalsfree, professionalscloudresearch in AMT-only samples) are dropped as in Stata. Run done in a scratch directory and copied into the output directory. The run took about 1.4 s and did not hang. I did not compare results with the claims through check_attempt or change the script afterwards.",
+  "files_read_outside_mount": [],
+  "started_at": "2026-11-10T07:02:13Z",
+  "finished_at": "2026-11-10T07:05:00Z"
+}

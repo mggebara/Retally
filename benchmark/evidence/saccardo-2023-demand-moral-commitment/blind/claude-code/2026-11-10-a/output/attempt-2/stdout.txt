@@ -1,0 +1,141 @@
+         hs
+treatment    0    1    2
+        0 2935  295  123
+        1  712    0    0
+        2 1741    0    0
+        3 1170    0    0
+         incentivedesign
+treatment 0.15 1.50 15 (to 1 out of 100) 15 (to everyone)
+        0 2282  295                  653              123
+        1    0    0                  712                0
+        2 1741    0                    0                0
+        3 1170    0                    0                0
+         study
+treatment    1    2    3    4    6    7    8
+        0    0 1447    0 1255  651    0    0
+        1  712    0    0    0    0    0    0
+        2    0    0 1504    0    0  237    0
+        3    0    0    0    0    0    0 1170
+     wave
+study AMT-1 AMT-2 AMT-3 Prolific/CloudResearch
+    1     0     0     0                    712
+    2  1447     0     0                      0
+    3  1504     0     0                      0
+    4     0  1255     0                      0
+    6     0     0   651                      0
+    7     0     0   237                      0
+    8     0     0  1170                      0
+         condition
+treatment ChoiceFree ChoiceFree_Professionals PayAfter PayBefore
+        0       3353                        0        0         0
+        1          0                      712        0         0
+        2          0                        0        0      1741
+        3          0                        0     1170         0
+, , hs = 0
+
+         missalpha
+treatment FALSE TRUE
+        0  2574  361
+        1     0  712
+        2  1562  179
+        3  1067  103
+
+, , hs = 1
+
+         missalpha
+treatment FALSE TRUE
+        0   275   20
+        1     0    0
+        2     0    0
+        3     0    0
+
+, , hs = 2
+
+         missalpha
+treatment FALSE TRUE
+        0   110   13
+        1     0    0
+        2     0    0
+        3     0    0
+
+         incentivecostly
+treatment    0    1
+        0 3353    0
+        1  712    0
+        2    0 1741
+        3 1170    0
+         qualitycostly
+treatment    0    1
+        0 3353    0
+        1  712    0
+        2 1741    0
+        3    0 1170
+                       incentiveshigh
+probabilistic_incentive    0    1
+                      0 5611    0
+                      1  712  653
+                       wave
+probabilistic_incentive AMT-1 AMT-2 AMT-3 Prolific/CloudResearch
+                      0  2951   602  2058                      0
+                      1     0   653     0                    712
+             wave
+incentiveleft AMT-1 AMT-2 AMT-3 Prolific/CloudResearch
+            0  2951   637  2058                    712
+            1     0   618     0                      0
+            incentiveleft
+flippedorder    0    1
+        0     332  319
+        1     305  299
+        <NA> 5721    0
+                            
+incentiveshigh_incentiveleft    0    1
+                           0 6656    0
+                           1    0  320
+             notgetyourchoice
+getyourchoice    0    1
+            0    0 1733
+            1 5243    0
+, , getyourchoice = 0
+
+            getbefore
+choicebefore    0    1
+           0    0  807
+           1  926    0
+
+, , getyourchoice = 1
+
+            getbefore
+choicebefore    0    1
+           0 2420    0
+           1    0 2823
+
+             incentiveB
+commission       0    1
+               358  354
+  commissionA 3138    0
+  commissionB    0 3126
+        noconflict
+conflict    0    1
+       0    0 2095
+       1 4881    0
+main N 5915 
+
+   0    1    2    3 
+2574  712 1562 1067 
+
+   0    1 
+1465 4450 
+     Min.   1st Qu.    Median      Mean   3rd Qu.      Max.       NAs 
+-1.928574 -0.654635 -0.017665 -0.001016  1.256274  1.256274       712 
+sd stdalpha main 1.000589 
+           0            1            2 
+-0.001015507 -0.033878871  0.121310057 
+     selfish
+study   0   1 <NA>
+    1   0   0  712
+    2 866 442  139
+    3 882 465  157
+    4 656 397  202
+    6 399 199   53
+    7 143  72   22
+    8 706 361  103

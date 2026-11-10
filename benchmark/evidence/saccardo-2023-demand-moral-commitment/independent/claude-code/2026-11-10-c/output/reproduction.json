@@ -1,0 +1,22 @@
+{
+  "schema": 1,
+  "entry_id": "saccardo-2023-demand-moral-commitment",
+  "mode": "independent",
+  "run_id": "2026-11-10-c",
+  "reproducer": "claude-code",
+  "language": "r",
+  "final": {"script": "script.R", "stdout": "stdout.txt", "stderr": "stderr.txt", "exit_code": 0},
+  "attempts": [
+    {"dir": "attempt-1", "exit_code": 0, "kind": ""},
+    {"dir": "attempt-2", "exit_code": 0, "kind": ""},
+    {"dir": "attempt-3", "exit_code": 0, "kind": "claim"}
+  ],
+  "deviations": [
+    "Choice Free-Professionals coefficient in Table 2 col 1 is -0.084 vs claimed -0.095; the exact coding of the probabilistic-incentive / product-position controls for professionals is not documented in the paper. Final script uses the dataset's wave-2 design indicators (incentiveshigh, incentiveleft, incentiveshigh_incentiveleft), which are zero for professionals.",
+    "Table 3 Choice Free-Professionals coefficients (not claimed) do not match the paper's column values (e.g. col 1: 0.004 vs -0.026), consistent with the same control-coding uncertainty."
+  ],
+  "notes": "Data: Data/Clean Data/choice_experiments.dta. Sample: four main Choice treatments (Choice Free, Incentive First Costly, Quality First Costly, Choice Free-Professionals): dropped High Stakes 10x/100x treatments, and for AMT advisors kept only those with a non-missing MPL selfishness measure (attentive, consistent); this matches Table 1 Ns exactly (2574/1562/1067/712); 7 AMT advisors with missing age drop out, giving N=5908 / 5196. Outcome Table 2: choicebefore (prefers to see incentive first); Selfishness = stdalpha. Controls: female, age, wave2, wave3 dummies, wave-2 probabilistic-incentive indicator, incentive-left position indicator and their interaction. Table 3: recommendincentive on choicebefore, noconflict, their interaction, treatment dummies, incentiveB and controls; col1 getyourchoice==1 (N=4448), col2 ==0 (N=1460), col3 pooled with not-assigned and its interactions. OLS with HC3 SEs (sandwich). attempt-1/2 exploratory (variable listing, cross-tabs). attempt-3 used probabilistic_incentive (=1 for all professionals) as the control, giving professionals coef -0.022; after comparing with the claim, switched to the wave-2 design indicators (incentiveshigh family), which gives -0.084. All other claims reproduced to 3 decimals on attempt-3 and unchanged in the final run.",
+  "files_read_outside_mount": [],
+  "started_at": "2026-11-10T11:24:47Z",
+  "finished_at": "2026-11-10T11:40:00Z"
+}

@@ -1,0 +1,362 @@
+You are refining R code that reproduces results from an econometrics paper.
+The code RAN SUCCESSFULLY but the reproduced values do not match the
+paper's claims within the allowed tolerance.  Identify what is causing
+the gap and adjust the code to close it.
+
+## Paper
+Title: American Economic Review 2023, 113(2): 396–429
+Methodology: - **Design / estimation approach:** Preregistered online experiments (aspredicted.org) with N = 9,323 advisors (Table 1) in an advice game. An advisor recommends product A (pays $2 with prob. 0.6) or product B (pays $2 with prob. 0.8 if high quality, 0.4 if low quality; prior 0.5) to an uninformed client. The advisor gets a $0.15 commission for one product and sees one ball drawn from B as a quality signal. The key outcome is a binary indicator for recommending the incentivized product, analysed separately by conflict of interest (commission on B with a $0 signal, or commission on A with a $2 signal) vs. no conflict. Treatment effects are estimated with regressions of this indicator on information-order indicators: assigned to "See Incentive First" vs. "Assess Quality First", interacted with the advisor's preferred order. The design-variation controls in all regressions are probabilistic vs. standard payment and left/right screen position of the incentivized product (fn. 14). A stylised dual-self attention model (Bénabou–Tirole 2002) generates Hypotheses 1–2.
+- **Experiments / treatments (Table 1):**
+  - NoChoice: See Incentive First (N = 152) vs. Assess Quality First (N = 147), exogenously assigned.
+  - Choice: advisors choose their information order, which is implemented with 75% probability (50% their choice + 50% × a 50-50 randomisation). This gives random assignment conditional on preference. Arms: Choice Free—Professionals (N = 712; self-reported finance/insurance and legal workers from Prolific + CloudResearch, pooled because p = 0.308 for choice and p = 0.820 for recommendations); Choice Free (AMT/CloudResearch, N = 2,574); Incentive First Costly (N = 1,562); Quality First Costly (N = 1,067). The cost is forgoing $0.05 (one-third of the commission) to get the costly order.
+  - Robustness arms (online appendix): High Stakes 10-fold (275) and 100-fold (110), Replication (385), Deterministic implementation (369).
+  - Choice Stakes: advisor incentive of $0.01 / $0.15 / $0.30 (N = 483 / 511 / 478), with seeing the incentive first always costly.
+  - Information Architect third-party experiment: IA-Advisor (245) vs. IA-Client (253), with a $0.15 IA payment aligned with the advisor or the client.
+- **Assignment / payoffs:** The commission is predetermined to maximise conflicts: a low-quality B is always paired with a commission on B, and a high-quality B with a commission on A. This gives about 70% of advisors a conflict of interest. Most arms pay $0.15 and match 1 in 10 advisors with a client. Professionals and a Choice Free subsample get a probabilistic scheme: 1 in 100 advisors is paid a $15 commission with product payoffs scaled to $0/$20. The base pay is $0.50 or $1 for a 5–7 minute study. Clients (N = 924) were recruited later; 84% followed the advice.
+- **Additional measures:**
+  - Posterior belief that B is low quality: an incentivised choice of one of ten 10-pp intervals ($0.15 for a correct range; $15 in the 1/100 arms), plus an exact 0–100 number.
+  - Moral costs / "selfishness": a 5-decision multiple price list recommending Y (always the incentivized product, with a $0 signal) vs. X paying $2 with prob. 1, 0.8, 0.6, 0.4 and 0. This is used as a **standardised** selfishness measure and was not collected for the Professionals sample.
+  - Blinding take-up (a stronger commitment) in wave 3 of the Choice experiment.
+- **Sample restrictions:** Following the preregistrations, the main analyses keep attentive advisors who gave consistent multiple-price-list responses, so multiple switchers are excluded. Online Appendix C shows the results are qualitatively similar with them included. Further exclusion criteria are in online Appendix B. The Choice experiment was run in three separately preregistered waves, which are pooled.
+- **Key comparisons / evaluation:**
+  - Hypothesis 1: higher incentivized-product recommendation under See Incentive First when there is a conflict.
+  - Hypothesis 2: the share choosing each order, including when costly (willingness to pay reveals strict preference). The result is about 30% pay for quality first and about 41% pay for incentive first.
+  - The correlation of preferences with selfishness and with blinding.
+  - The recommendation gap between those who prefer incentive first and those who prefer quality first, when assigned vs. not assigned their preference (about 19–20 pp when assigned, about 0 when not).
+  - Beliefs relative to the prior by conflict and assignment.
+  - The shares choosing incentive first across stakes and across IA treatments.
+- **Inference / not applicable:** Inference uses regression t-statistics and p-values (e.g., fn. 14). The provided text does not state the exact standard-error type (robust vs. clustered) or fixed effects. Since every advisor makes a single decision, heteroskedasticity-robust standard errors are presumably used, but this is not stated in the excerpt. There is no train/test split, cross-validation or hyperparameters; this is not an ML paper. The specific regression table/column for the preferred specification is not included in the provided excerpt.
+
+
+## Current Code
+```r
+suppressPackageStartupMessages({
+  library(haven)
+  library(dplyr)
+  library(sandwich)
+  library(lmtest)
+})
+set.seed(42)
+
+base <- '<repo>/.cache/datasets/saccardo_2023_demand_moral_commitment.script-free'
+d0 <- haven::read_dta(file.path(base, 'Data/Clean Data/choice_experiments.dta'))
+nm <- names(d0)
+cat("N rows:", nrow(d0), "\n")
+
+lab_of <- function(x) {
+  if (inherits(x, 'haven_labelled')) as.character(haven::as_factor(x, levels = 'labels'))
+  else as.character(x)
+}
+num_of <- function(x) {
+  if (inherits(x, 'haven_labelled')) x <- haven::zap_labels(x)
+  if (is.factor(x)) x <- as.character(x)
+  if (is.character(x)) suppressWarnings(as.numeric(x)) else as.numeric(x)
+}
+findcol <- function(cands) {
+  lo <- tolower(nm)
+  for (c in cands) {
+    i <- which(lo == tolower(c))
+    if (length(i)) return(nm[i[1]])
+  }
+  NULL
+}
+d <- d0
+N <- nrow(d)
+getnum <- function(cands, default = NA) {
+  c <- findcol(cands)
+  if (is.null(c)) return(rep(default, N))
+  num_of(d[[c]])
+}
+
+# ---- Treatment indicators ----
+prof <- getnum(c('professionals', 'professionalsfree'), 0)
+prof[is.na(prof)] <- 0
+ci <- getnum(c('seeincentivecostly', 'incentivecostly'), 0); ci[is.na(ci)] <- 0
+cq <- getnum(c('seequalitycostly', 'qualitycostly'), 0); cq[is.na(cq)] <- 0
+ci[prof == 1] <- 0; cq[prof == 1] <- 0
+cat("Arm flags: ci", sum(ci), " cq", sum(cq), " prof", sum(prof), "\n")
+
+# ---- Robustness arms (high stakes 10x / 100x) are online-appendix only ----
+h10 <- getnum(c('Highx10'), 0); h10[is.na(h10)] <- 0
+h100 <- getnum(c('Highx100'), 0); h100[is.na(h100)] <- 0
+excl_arm <- (h10 == 1 | h100 == 1)
+cat("High-stakes robustness arms excluded:", sum(excl_arm), "\n")
+
+# ---- Sample restrictions: attentive + consistent MPL (no multiple switchers) ----
+att <- getnum(c('attentionpassed', 'attentive'))
+att[is.na(att)] <- 1   # professionals: missing => kept
+selfish_raw <- getnum(c('selfish'))
+alpha_raw <- getnum(c('alphavaluefinal'))
+cat("Non-professionals with missing selfish:", sum(prof == 0 & is.na(selfish_raw)),
+    " missing alpha:", sum(prof == 0 & is.na(alpha_raw)), "\n")
+multisw <- (prof == 0) & is.na(selfish_raw)
+keep <- (att == 1) & !multisw & !excl_arm
+cat("Kept after restrictions:", sum(keep), "\n")
+
+pref <- getnum(c('choicebefore'))
+assigned <- getnum(c('getyourchoice'))
+notassigned <- 1 - assigned
+rec <- getnum(c('recommendincentive'))
+nc_col <- findcol(c('noconflict'))
+noconf <- if (!is.null(nc_col)) num_of(d[[nc_col]]) else 1 - getnum(c('conflict'))
+incB <- getnum(c('incentiveB', 'incentiveb'))
+
+# ---- Design-variation controls (fn. 14): probabilistic payment, left/right position ----
+prob <- getnum(c('incentiveshigh', 'probabilistic_incentive'))
+left <- getnum(c('incentiveleft'))
+probleft <- getnum(c('incentiveshigh_incentiveleft'))
+if (all(is.na(probleft))) probleft <- prob * left
+
+df <- data.frame(pref, rec, noconf, assigned, notassigned, prof, ci, cq, incB,
+                 prob, left, prob_left = probleft, selfish = selfish_raw,
+                 alpha = alpha_raw)
+df <- df[keep, ]
+for (v in c('prob', 'left', 'prob_left')) {
+  x <- df[[v]]; if (any(is.na(x))) { x[is.na(x)] <- 0; df[[v]] <- x }
+}
+ctrl <- c('prob', 'left', 'prob_left')
+cs <- paste(ctrl, collapse = ' + ')
+cat("Controls:", cs, "\n")
+
+fit <- function(f, data) {
+  m <- lm(as.formula(f), data = data)
+  V <- sandwich::vcovHC(m, type = 'HC1')
+  print(lmtest::coeftest(m, vcov. = V))
+  m
+}
+co <- function(m, v) unname(coef(m)[v])
+
+# ---- Table 2 ----
+t2 <- df[!is.na(df$pref), ]
+cat("Mean pref by arm: free", mean(t2$pref[t2$ci == 0 & t2$cq == 0 & t2$prof == 0]),
+    " ci", mean(t2$pref[t2$ci == 1]), " cq", mean(t2$pref[t2$cq == 1]),
+    " prof", mean(t2$pref[t2$prof == 1]), "\n")
+m1 <- fit(paste('pref ~ prof + ci + cq +', cs), t2)
+
+# Selfishness: the paper uses a standardized (continuous) MPL-based measure.
+# The 'selfish' column is a 0/1 indicator; the continuous MPL measure is
+# alphavaluefinal. Standardize it and orient it so higher = more selfish
+# (i.e. positively related to the binary selfish indicator).
+t2b <- t2[t2$prof == 0 & !is.na(t2$alpha), ]
+cat("alpha summary: mean", mean(t2b$alpha), " sd", sd(t2b$alpha), "\n")
+print(summary(t2b$alpha))
+sz <- (t2b$alpha - mean(t2b$alpha)) / sd(t2b$alpha)
+r <- suppressWarnings(cor(sz, t2b$selfish, use = 'complete.obs'))
+cat("cor(standardized alpha, binary selfish):", r, "\n")
+if (!is.na(r) && r < 0) sz <- -sz
+t2b$selfz <- sz
+cat('DEVIATION: Selfishness measured as standardized continuous MPL value (alphavaluefinal), sign-oriented to agree with the binary selfish indicator, instead of the standardized 0/1 selfish dummy\n')
+m2 <- fit(paste('pref ~ ci + cq + selfz +', cs), t2b)
+m3 <- fit(paste('pref ~ ci + cq + selfz + ci:selfz + cq:selfz +', cs), t2b)
+
+# ---- Table 3 ----
+t3 <- df[!is.na(df$rec) & !is.na(df$pref) & !is.na(df$assigned), ]
+rhs3 <- paste('pref + noconf + pref:noconf + prof + ci + cq + incB +', cs)
+m4 <- fit(paste('rec ~', rhs3), t3[t3$assigned == 1, ])
+m5 <- fit(paste('rec ~', rhs3), t3[t3$assigned == 0, ])
+m6 <- fit(paste('rec ~', rhs3, '+ notassigned + pref:notassigned + noconf:notassigned'), t3)
+
+pi <- names(coef(m6))[grepl('pref', names(coef(m6))) & grepl('notassigned', names(coef(m6)))]
+
+cat(sprintf('RESULT:see_incentive_first_costly_table2_col1=%.6f\n', co(m1, 'ci')))
+cat(sprintf('RESULT:assess_quality_first_costly_table2_col1=%.6f\n', co(m1, 'cq')))
+cat(sprintf('RESULT:choice_free_professionals_table2_col1=%.6f\n', co(m1, 'prof')))
+cat(sprintf('RESULT:selfishness_table2_col2=%.6f\n', co(m2, 'selfz')))
+cat(sprintf('RESULT:selfishness_table2_col3=%.6f\n', co(m3, 'selfz')))
+cat(sprintf('RESULT:see_incentive_first_costly_x_selfishness_table2_col3=%.6f\n', co(m3, 'ci:selfz')))
+cat(sprintf('RESULT:see_quality_first_costly_x_selfishness_table2_col3=%.6f\n', co(m3, 'cq:selfz')))
+cat(sprintf('RESULT:n_obs_table2_col1=%d\n', nobs(m1)))
+cat(sprintf('RESULT:n_obs_table2_cols2_3=%d\n', nobs(m2)))
+cat(sprintf('RESULT:prefer_see_incentive_first_assigned_table3_col1=%.6f\n', co(m4, 'pref')))
+cat(sprintf('RESULT:prefer_see_incentive_first_not_assigned_table3_col2=%.6f\n', co(m5, 'pref')))
+cat(sprintf('RESULT:prefer_see_incentive_first_x_not_assigned_table3_col3=%.6f\n', co(m6, pi[1])))
+cat(sprintf('RESULT:n_obs_table3_col1=%d\n', nobs(m4)))
+```
+
+## What the code produced
+  see_incentive_first_costly_table2_col1 = -0.144685
+  assess_quality_first_costly_table2_col1 = 0.064438
+  choice_free_professionals_table2_col1 = -0.074719
+  selfishness_table2_col2 = 0.030849
+  selfishness_table2_col3 = 0.042486
+  see_incentive_first_costly_x_selfishness_table2_col3 = -0.024365
+  see_quality_first_costly_x_selfishness_table2_col3 = -0.021499
+  n_obs_table2_col1 = 5915.0
+  n_obs_table2_cols2_3 = 5203.0
+  prefer_see_incentive_first_assigned_table3_col1 = 0.200532
+  prefer_see_incentive_first_not_assigned_table3_col2 = 0.012459
+  prefer_see_incentive_first_x_not_assigned_table3_col3 = -0.140953
+  n_obs_table3_col1 = 4450.0
+
+## Last run's stdout (excerpt: first/last 3000 characters)
+```
+N rows: 6976 
+Arm flags: ci 1741  cq 1170  prof 712 
+High-stakes robustness arms excluded: 418 
+Non-professionals with missing selfish: 676  missing alpha: 676 
+Kept after restrictions: 5915 
+Controls: prob + left + prob_left 
+Mean pref by arm: free 0.5672106  ci 0.4103713  cq 0.6194939  prof 0.4803371 
+
+t test of coefficients:
+
+             Estimate Std. Error t value  Pr(>|t|)    
+(Intercept)  0.555056   0.011786 47.0943 < 2.2e-16 ***
+prof        -0.074719   0.022134 -3.3758 0.0007408 ***
+ci          -0.144685   0.017147 -8.4382 < 2.2e-16 ***
+cq           0.064438   0.018976  3.3957 0.0006890 ***
+prob        -0.019085   0.032165 -0.5933 0.5529746    
+left         0.103674   0.032126  3.2272 0.0012571 ** 
+prob_left   -0.044948   0.053309 -0.8432 0.3991684    
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+alpha summary: mean 3.026139  sd 1.570859 
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+  0.000   2.000   3.000   3.026   5.000   5.000 
+cor(standardized alpha, binary selfish): 0.8851476 
+DEVIATION: Selfishness measured as standardized continuous MPL value (alphavaluefinal), sign-oriented to agree with the binary selfish indicator, instead of the standardized 0/1 selfish dummy
+
+t test of coefficients:
+
+              Estimate Std. Error t value  Pr(>|t|)    
+(Intercept)  0.5552716  0.0117327 47.3267 < 2.2e-16 ***
+ci          -0.1448899  0.0171075 -8.4694 < 2.2e-16 ***
+cq           0.0646252  0.0189367  3.4127 0.0006481 ***
+selfz        0.0308489  0.0067482  4.5714 4.956e-06 ***
+prob        -0.0196348  0.0320148 -0.6133 0.5397030    
+left         0.1014002  0.0321478  3.1542 0.0016186 ** 
+prob_left   -0.0431657  0.0532619 -0.8104 0.4177229    
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+
+t test of coefficients:
+
+              Estimate Std. Error t value  Pr(>|t|)    
+(Intercept)  0.5553529  0.0117249 47.3651 < 2.2e-16 ***
+ci          -0.1449754  0.0171009 -8.4777 < 2.2e-16 ***
+cq           0.0644151  0.0189277  3.4032  0.000671 ***
+selfz        0.0424863  0.0094758  4.4837 7.495e-06 ***
+prob        -0.0198422  0.0319950 -0.6202  0.535177    
+left         0.1005424  0.0322030  3.1221  0.001805 ** 
+prob_left   -0.0424933  0.0533120 -0.7971  0.425448    
+ci:selfz    -0.0243654  0.0157904 -1.5431  0.122880    
+cq:selfz    -0.0214986  0.0175769 -1.2231  0.221341    
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+
+t test of coefficients:
+
+              Estimate Std. Error  t value  Pr(>|t|)    
+(Intercept)  0.6581740  0.0168474  39.0667 < 2.2e-16 ***
+pref         0.2005318  0.0159769  12.5513 < 2.2e-16 ***
+noconf       0.2576959  0.0199180  12.9378 < 2.2e-16 ***
+prof         0.0124631  0.0210504   0.5921   0.55384    
+ci           0.0385189  0.0168972   2.2796   0.02268 *  
+cq          -0.0191751  0.0188044  -1.0197   0.30792    
+incB        -0.1713509  0.0127214 -13.4695 < 2.2e-16 ***
+prob         0.0328290  0.0286774   1.1448   0.25237    
+left        -0.0073322  0.0308262  -0.2379   0.81200    
+prob_left    0.0220421  0.0488788   0.4510   0.65204    
+pref:noconf -0.1387592  0.0252260  -5.5007 3.997e-08 ***
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+
+t test of coefficients:
+
+              Estimate Std. Error t value  Pr(>|t|)    
+(Intercept)  0.7385308  0.0279549 26.4187 < 2.2e-16 ***
+pref         0.0124592  0.0285091  0.4370    0.6622    
+noconf       0.2077327  0.0329555  6.3034 3.852e-10 ***
+prof         0.0467896  0.0365452  1.2803    0.2006    
+ci           0.0229039  0.0299451  0.7649    0.4445    
+cq           0.0261045  0.0334289  0.7809    0.4350    
+incB        -0.1860982  0.0226650 -8.2108 4.796e-16 ***
+prob         0.0660342  0.0580147  1.1382    0.2552    
+left         0.0157991  0.0593941  0.2660    0.7903    
+prob_left   -0.0080838  0.0957090 -0.0845    0.9327    
+pref:noconf  0.0036949  0.0441455  0.0837    0.9333    
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+
+t test of coefficients:
+
+                      Estimate  Std. Error  t value  Pr(>|t|)    
+(Intercept)         0.66330167  0.01562973  42.4385 < 2.2e-16 ***
+pref                0.18800453  0.01517495  12.3891 < 2.2e-16 ***
+noconf              0.23933211  0.01840138  13.0062 < 2.2e-16 ***
+prof                0.02137781  0.01825096   1.1713  0.241515    
+ci                  0.03416243  0.01471907   2.3210  0.020323 *  
+cq                 -0.00768371  0.01639081  -0.4688  0.639243    
+incB               -0.17535193  0.01109880 -15.7992 < 2.2e-16 ***
+prob                0.04260259  0.02582277   1.6498  0.099036 .  
+left               -0.00040206  0.02738758  -0.0147  0.988288    
+prob_left           0.01235106  0.04366901   0.2828  0.777314    
+notassigned         0.06056901  0.02135632   2.8361  0.004582 ** 
+pref:noconf        -0.10202079  0.02189589  -4.6594 3.242e-06 ***
+pref:notassigned   -0.14095262  0.02557433  -5.5115 3.709e-08 ***
+noconf:notassigned  0.02201834  0.02530180   0.8702  0.384211    
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+RESULT:see_incentive_first_costly_table2_col1=-0.144685
+RESULT:assess_quality_first_costly_table2_col1=0.064438
+RESULT:choice_free_professionals_table2_col1=-0.074719
+RESULT:selfishness_table2_col2=0.030849
+RESULT:selfishness_table2_col3=0.042486
+RESULT:see_incentive_first_costly_x_selfishness_table2_col3=-0.024365
+RESULT:see_quality_first_costly_x_selfishness_table2_col3=-0.021499
+RESULT:n_obs_table2_col1=5915
+RESULT:n_obs_table2_cols2_3=5203
+RESULT:prefer_see_incentive_first_assigned_table3_col1=0.200532
+RESULT:prefer_see_incentive_first_not_assigned_table3_col2=0.012459
+RESULT:prefer_see_incentive_first_x_not_assigned_table3_col3=-0.140953
+RESULT:n_obs_table3_col1=4450
+```
+
+## Claims still failing
+1. assess_quality_first_costly_table2_col1: paper claims 0.152 change in the probability of preferring to see the incentive first (coefficient), your code produced 0.064438, tolerance 0.1908, gap 57.61% relative
+
+## Previous attempts (oldest first)
+  Attempt 1: see_incentive_first_costly_table2_col1=-0.146593, assess_quality_first_costly_table2_col1=0.110218, choice_free_professionals_table2_col1=-0.037807, selfishness_table2_col2=0.057532, selfishness_table2_col3=0.078184, see_incentive_first_costly_x_selfishness_table2_col3=-0.045376, see_quality_first_costly_x_selfishness_table2_col3=-0.04239, n_obs_table2_col1=6965.0, n_obs_table2_cols2_3=5581.0, prefer_see_incentive_first_assigned_table3_col1=0.186804, prefer_see_incentive_first_not_assigned_table3_col2=-0.007785, prefer_see_incentive_first_x_not_assigned_table3_col3=-0.137848, n_obs_table3_col1=5238.0
+  Attempt 2: see_incentive_first_costly_table2_col1=-0.144685, assess_quality_first_costly_table2_col1=0.064438, choice_free_professionals_table2_col1=-0.074719, selfishness_table2_col2=0.059354, selfishness_table2_col3=0.081953, see_incentive_first_costly_x_selfishness_table2_col3=-0.046001, see_quality_first_costly_x_selfishness_table2_col3=-0.043389, n_obs_table2_col1=5915.0, n_obs_table2_cols2_3=5203.0, prefer_see_incentive_first_assigned_table3_col1=0.200532, prefer_see_incentive_first_not_assigned_table3_col2=0.012459, prefer_see_incentive_first_x_not_assigned_table3_col3=-0.140953, n_obs_table3_col1=4450.0
+  Attempt 3: see_incentive_first_costly_table2_col1=-0.144685, assess_quality_first_costly_table2_col1=0.064438, choice_free_professionals_table2_col1=-0.074719, selfishness_table2_col2=0.030849, selfishness_table2_col3=0.042486, see_incentive_first_costly_x_selfishness_table2_col3=-0.024365, see_quality_first_costly_x_selfishness_table2_col3=-0.021499, n_obs_table2_col1=5915.0, n_obs_table2_cols2_3=5203.0, prefer_see_incentive_first_assigned_table3_col1=0.200532, prefer_see_incentive_first_not_assigned_table3_col2=0.012459, prefer_see_incentive_first_x_not_assigned_table3_col3=-0.140953, n_obs_table3_col1=4450.0
+
+These attempts have already been tried.  Do not repeat a strategy
+that has already produced the same values.
+
+## Task
+Adjust the code minimally to close the gap on the failing claims.
+Prefer changes that align more closely with the paper's stated methodology:
+re-read the methodology summary above and check the model specification,
+covariate selection, fixed effects, clustering, and seed against what the
+paper actually specifies.  In econometrics papers, common gap-closers are:
+  - getting the cluster-robust SE right (vcovCL / cluster_var argument)
+  - matching the paper's exact fixed-effects structure
+  - using the same sample-restriction filters the paper applied
+  - matching the paper's weighting scheme (weights= argument)
+
+## Deviation reporting
+If you must change something the paper did NOT specify in order to close
+the gap, emit a ``DEVIATION:`` line via cat() describing the change:
+
+    cat('DEVIATION: Used HC1 robust SE because the paper does not specify but the default did not converge\n')
+
+## When to give up
+If after re-reading the methodology and the previous attempts you judge
+the gap cannot be closed without unreasonable deviation, return the SAME
+R CODE you were given, BYTE-FOR-BYTE unchanged.  The pipeline will record
+the claim as unreproducible.
+
+## Output convention (unchanged)
+Emit every metric as ``cat('RESULT:<name>=<value>\n')``.
+The dataset is a directory tree at '<repo>/.cache/datasets/saccardo_2023_demand_moral_commitment.script-free' — see the file listing under Dataset Information.  Load the actual data file(s) by the exact paths listed there (readr::read_csv() for .csv, haven::read_dta() for Stata .dta, load() for .RData/.rda, which creates the objects listed for the file under exactly those names: use them, do not guess others; readRDS() for .rds).
+Installed packages (no network; nothing else can be installed): jsonlite, fixest, lfe, AER, ivreg, plm, estimatr, lme4, quantreg, car, sandwich, lmtest, clubSandwich, multiwayvcov, marginaleffects, MatchIt, optmatch, CBPS, WeightIt, cobalt, did, rdrobust, rddensity, Synth, modelsummary, stargazer, texreg, broom, tidyverse, dplyr, tidyr, readr, stringr, lubridate, data.table, haven, readxl, janitor, zoo, ggplot2, ggridges, ggrepel, gridExtra, cowplot, gtable, extrafont, sf, MASS, nnet, survival, splines, Matrix, boot, stats, utils.
+Prefer fixest for fixed effects, IV and clustered SEs; use the other installed packages where the paper's method calls for them.
+No network, no system().  set.seed(42).
+
+Output ONLY the R code — no explanation, no markdown fences.
