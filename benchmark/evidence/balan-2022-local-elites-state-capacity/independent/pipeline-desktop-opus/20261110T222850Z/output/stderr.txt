@@ -1,0 +1,36 @@
+[rand] 356 rows x 37 cols: a7, rouge, geo_stratum, jontax, stratum_jon, commune, joncomp2016, chef_collect_types, chef_collect_ever, salongo_freq, chef_collect_proptax_ever, appoint_yr, chef_stratum, chef_collect_stratum, stratum, stratum_count, treatment, rand1, rank1, count1, numtoselect1_control, probleft2_control, rand2, probleft3_control, numtoselect1_central, probleft2_central, probleft3_central, numtoselect1_local, probleft2_local, probleft3_local, numtoselect1_centralwinfo, probleft2_centralwinfo, numtoselect1_centralxlocal, probleft2_centralxlocal, probleft3_centralwinfo, rand3, order_treatment
+[taxroll] 47930 rows x 12 cols: compound1, DateRDV, MontantIF, Bonus, DatePaye, Exempte, NbrLoc, Exempté, Bonus2, Observations, Date, a7
+[registration] 48034 rows x 105 cols: start, end, today, today_fr, a7, a7b, tmt, carto_pay, first, north_east, col_change, who, chief_asst_pres, house, correct, house_correct, breminder_mm2, other_flyers0, bother_flyers1, col_code, mm_num, mm_rate, old_code, compound1, compound2, present_sensi, present_info_owner, status, owner_found, owner_where, tenants, exempt, why_exempt, exempt_other, exempt_enum, why_exempt2, why_exempt2_other, designate, designate_why, designate_why_other, read_flyers, read_flyer2, treatment_fr, treatment_tsh, rate_assigned, read_language, read_who, read_which_chef, what_rate_periph, what_rate_periph_other, read_message_fr, read_message_tsh, who_give_flier, collect_now, collect_who, why_nocollect, why_nocollect_other, collect_success, amt_paid, appointment, apt_date, chalk_check, compound1_p, compound2_p, periph_vs_mm_p, mm_rate_pp, what_rate_periph_p, other_amt, advance, past_advance, past_advance_amt, metainstanceid, key, time, know_eachother, commune, quartier, present, other_flyers, other_flyers_other
+[payments] 3733 rows x 28 cols: compound1, house, TDM, did, rateUSD, amountCF, colcode, error_code, polygon, colcode2, error_colcode, Bonus2, a7, error_rate, Peripherie, Maison_Moyenne, Villas, paid, Bonus_paye_carto, amountUSD, endOfCollect, date, lateCollection, unmatched_compound, code, dup_receipt, mult_tax, rate_verified
+[schedule] 356 rows x 9 cols: a7, treatment, month, chef_code, agent1_code, agent2_code, agent_code, chef_group, order_for_assigning
+[timing] 4732 rows x 19 cols: TDMnumber, date, compound1, amountCF, amountUSD, colcode, collector_ID, tdm, rateUSD, date_download, downloadnum, download_userID, today, time, hours, minutes, seconds, hours_minutes_seconds, error_code
+Randomization (de jure) arm counts: 
+Candidate de facto arm counts:
+Using de facto neighborhood assignment
+Neighborhood arm counts used: 
+Property arm counts:
+Payments matched on compound1, amount column amountCF
+Payment amount quantiles:
+Payments above max statutory rate (capped): 2
+Payment rows per property:
+Properties matched to a payment: 3698
+Duplicate property IDs dropped: 0
+Rows after restrictions: 46484
+Mean compliance by arm:
+Mean revenue by arm:
+Using date column start
+Neighborhood dates available: 363
+Property registration date column: today
+Share of properties with registration month: 0.9398
+Neighborhoods by 2-month period (Local vs Central):
+Local/Central share with property registration month: 0.9313
+Neighborhoods by 2-month period (CLI vs Central):
+NOTE: 2 observations removed because of NA values (Fixed-effects: 2).
+NOTE: 2 observations removed because of NA values (Fixed-effects: 2).
+[chief_consultations] 10036 rows x 31 cols: start, end, today, a7, a7b, who_chief, col_focus, chef_info_use, key, compound1, polymult, compound, pay_ease, willingness, convinced, key2, setofr, date, date_f, type, short_label, value_label, keep, labelFrançais, dup_code, compound1_carto, _erge, carto_complete, skipped_code, _merge, tot_complete_cc
+Ease rating from chief_consultations column pay_ease matched on compound1
+NOTE: 1,417 observations removed because of NA values (RHS: 1,417, Fixed-effects: 1).
+[endline_round1] 5602 rows x 960 cols: today, compound_code, start, end, a7, a7b, a7c, a7_check, treatment, a7d, code, code2, replacement, why_replace, replace_approved, move, move_when, a7_previous, a7_currently, street_check, compound_code2, code_erased, code_found, compound_code_prev, age, sex, titling_respondent, titling_respondent_short, monitoring_redo, identity_post_tax, avail, not_avail, replacement_possible, x4, x5, x6, person_check2, chef_status, chef_code, deadchef, consent1_short, consent1_med, consent1_long, consent1_titling_short, lang, hh_head_newresp, relation_newresp, sex_newresp, age_newresp, edu_newresp, edu2_newresp, job1_newresp, job1_newresp_other, kga_born_newresp, kga_move_newresp, kga_mig1_newresp, kga_mig2_newresp, ave_born_newresp, ave_move_newresp, kga_mig3_newresp, kga_mig4_newresp, elect1, elect3, elect4, elect5, elect6, elect8, hh_size, hh_babies, hh_fam_lodgers, hh_migrant, hh_moved, renters, rand_status, title_status_c, title_status_t, secur, secur1, secur3, access_survey_e
+[midline] 45794 rows x 302 cols: a7, compound, start, end, today, key, a7b, a7c, a7_check, a7d, treatment, month, compound2, nocode, possible_compound, why_no_code, revisits_dates, date1, date2, date3, date4, date5, date6, date7, date8, date9, date10, survey1, survey1_code, survey1_resp_same, survey1_resp_diff, survey_chef, survey_chef_code, chef_resp_same, chef_resp_diff, compound_chef, compound_assis, exempt, first_attempt, present, abandoned, lang, visited, visits, flier, paid_self, taxed_dk, paid_who, why_pay, why_pay_o, pubgoods, sanctions, bribe_amt, whopay, whopay2, neighbor_know, num_500, num_1000, num_1500, num_2000, num_2500, num_3000, num_4000, num_5000, num_6000, num_6600, num_7000, num_8000, num_8800, num_9000, num_10000, num_11000, num_12000, num_13000, num_13200, num_9999, rand_neighbor, neighbor_know2, num_less, num_same
+Neighborhoods by 2-month period (Local vs Central):
+NOTE: 4,774 observations removed because of NA values (Fixed-effects: 4,774).

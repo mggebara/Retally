@@ -1,0 +1,182 @@
+
+
+========== admin_data/randomization_assignment.dta ==========
+dim: 356 37 
+a7                           nu=356    G1-A7 | num min=100 max=6104 mean=567.51 NA=0
+rouge                        nu=2       | num min=0 max=1 mean=0.036517 NA=0
+geo_stratum                  nu=12      | num min=1 max=12 mean=6.4888 NA=0
+jontax                       nu=2      (mean) jontax | num min=0 max=1 mean=0.58989 NA=0
+stratum_jon                  nu=27     (first) stratum_jon | num min=1 max=33 mean=13.539 NA=0
+commune                      nu=4      (first) commune | num min=1 max=5 mean=3.6938 NA=0
+joncomp2016                  nu=2       | num min=1 max=2 mean=1.3343 NA=0
+chef_collect_types           nu=15     (mean) chef_collect_types | num min=0 max=2 mean=0.32856 NA=0
+chef_collect_ever            nu=12     (mean) chef_collect_ever | num min=0 max=1 mean=0.28502 NA=0
+salongo_freq                 nu=47     (mean) salongo_freq | num min=0 max=7.8333 mean=3.414 NA=0
+chef_collect_proptax_ever    nu=20     (mean) chef_collect_proptax_ever | num min=0 max=1 mean=0.7482 NA=0
+appoint_yr                   nu=149    (mean) appoint_yr | num min=1982 max=2017.5 mean=2005.8 NA=0
+chef_stratum                 nu=3      (first) chef_stratum | num min=1 max=2 mean=1.4 NA=26
+chef_collect_stratum         nu=2       | num min=1 max=2 mean=1.1685 NA=0
+stratum                      nu=32     group(geo_stratum jontax chef_collect_stratum) | num min=1 max=32 mean=17.048 NA=0
+stratum_count                nu=14      | num min=5 max=19 mean=12.539 NA=0
+treatment                    nu=5      0 | num min=0 max=4 mean=2.1742 NA=0 treatment                    nu=5      1 | num min=0 max=4 mean=2.1742 NA=0 treatment                    nu=5      2 | num min=0 max=4 mean=2.1742 NA=0 treatment                    nu=5      3 | num min=0 max=4 mean=2.1742 NA=0 treatment                    nu=5      4 | num min=0 max=4 mean=2.1742 NA=0 | labels: Control=0; Central=1; Local=2; Central With Info=3; Central X Local=4
+rand1                        nu=220     | num min=0.0047433 max=0.97356 mean=0.40528 NA=0
+rank1                        nu=18     unique rank of (rand1)    by stratum | num min=1 max=19 mean=3.1966 NA=0
+count1                       nu=19      | num min=1 max=19 mean=8.4017 NA=0
+numtoselect1_control         nu=14      | num min=0.070225 max=0.26685 mean=0.17611 NA=0
+probleft2_control            nu=14      | num min=0.070225 max=0.26685 mean=0.17611 NA=0
+rand2                        nu=220     | num min=0.0047433 max=0.97356 mean=0.40528 NA=0
+probleft3_control            nu=1       | num min=Inf max=-Inf mean=NaN NA=356
+numtoselect1_central         nu=15      | num min=1.2536 max=5.9544 mean=3.9366 NA=5
+probleft2_central            nu=15      | num min=0.014245 max=0.95442 mean=0.53487 NA=5
+probleft3_central            nu=1       | num min=Inf max=-Inf mean=NaN NA=356
+numtoselect1_local           nu=13      | num min=0.91286 max=5.9336 mean=3.9602 NA=115
+probleft2_local              nu=13      | num min=0.020747 max=0.93361 mean=0.49958 NA=115
+probleft3_local              nu=1       | num min=Inf max=-Inf mean=NaN NA=356
+numtoselect1_centralwinfo    nu=9       | num min=0.61069 max=4.8855 mean=2.9416 NA=225
+probleft2_centralwinfo       nu=9       | num min=0.053435 max=0.8855 mean=0.39957 NA=225
+numtoselect1_centralxlocal   nu=9       | num min=0.38931 max=3.1145 mean=1.8752 NA=225
+probleft2_centralxlocal      nu=9       | num min=0.1145 max=0.94656 mean=0.60043 NA=225
+probleft3_centralwinfo       nu=1       | num min=Inf max=-Inf mean=NaN NA=356
+rand3                        nu=356     | num min=0.0047433 max=0.99497 mean=0.51337 NA=0
+order_treatment              nu=110    unique rank of (rand3)    by treatment | num min=1 max=110 mean=47.166 NA=0
+
+
+========== admin_data/stratum.dta ==========
+dim: 356 13 
+a7                           nu=356    G1-A7 | num min=100 max=6104 mean=567.51 NA=0
+rouge                        nu=2       | num min=0 max=1 mean=0.036517 NA=0
+geo_stratum                  nu=12      | num min=1 max=12 mean=6.4888 NA=0
+jontax                       nu=2      (mean) jontax | num min=0 max=1 mean=0.58989 NA=0
+stratum_jon                  nu=27     (first) stratum_jon | num min=1 max=33 mean=13.539 NA=0
+commune                      nu=4      (first) commune | num min=1 max=5 mean=3.6938 NA=0
+joncomp2016                  nu=2       | num min=1 max=2 mean=1.3343 NA=0
+salongo_freq                 nu=11     How many times per month do you typically organize salongo?  | num min=0 max=12 mean=3.5871 NA=0
+collect_ever                 nu=2      Have you ever collected taxes in Kananga? | num min=0 max=1 mean=0.43539 NA=0 | labels: No=0; Yes=1
+collect_what_1               nu=2      Which taxes have you collected? - Property tax | num min=0 max=1 mean=0.42135 NA=0 | labels: No=0; Yes=1; HE/SHE DOESN'T KNOW=8888
+chef_stratum                 nu=3       | num min=1 max=2 mean=1.565 NA=25
+comp_stratum                 nu=2       | num min=1 max=2 mean=1.0758 NA=0
+stratum                      nu=55     group(geo_stratum jontax comp_stratum collect_what_1) | num min=1 max=55 mean=26.896 NA=0
+
+
+========== admin_data/randomization_schedule.dta ==========
+dim: 356 9 
+a7                           nu=356    G1-A7 | num min=100 max=6104 mean=567.51 NA=0
+treatment                    nu=5      (first) treatment | num min=0 max=4 mean=2.1742 NA=0
+month                        nu=7       | num min=1 max=7 mean=3.514 NA=0
+chef_code                    nu=156     | num min=1001 max=60920000 mean=405200 NA=115
+agent1_code                  nu=31      | num min=1 max=109 mean=47.784 NA=166
+agent2_code                  nu=31      | num min=1 max=109 mean=46.084 NA=166
+agent_code                   nu=10      | num min=5 max=107 mean=48.137 NA=305
+chef_group                   nu=3       | num min=1 max=2 mean=1.486 NA=249
+order_for_assigning          nu=17      | num min=1 max=17 mean=6.9691 NA=0
+
+
+========== admin_data/tax_payments_noPII.dta ==========
+dim: 3733 28 
+compound1                    nu=3700   Number of compound | num min=1e+05 max=6104200 mean=512170 NA=34
+house                        nu=3       | num min=1 max=2 mean=1.8356 NA=3660
+TDM                          nu=45     TDM | num min=1 max=99 mean=27.272 NA=453
+did                          nu=273    did | num min=6 max=31885 mean=653.26 NA=1267
+rateUSD                      nu=17     rateUSD | num min=0.3 max=159 mean=1.8323 NA=120
+amountCF                     nu=12     amountcf | num min=50 max=1662800 mean=3575.8 NA=5
+colcode                      nu=248    colcode | num min=0 max=895 mean=214.01 NA=223
+error_code                   nu=3       | num min=0 max=1 mean=0.059501 NA=2
+polygon                      nu=338     | num min=2 max=6104 mean=520.49 NA=4
+colcode2                     nu=208     | num min=0 max=895 mean=252.27 NA=1412
+error_colcode                nu=2       | num min=1 max=1 mean=1 NA=3454
+Bonus2                       nu=3       | chr ex:  | Non | Oui empty=3682
+a7                           nu=338    From repertoire_all | num min=2 max=6104 mean=520.49 NA=4
+error_rate                   nu=3       | num min=0 max=1 mean=0.087356 NA=1123
+Peripherie                   nu=2       | num min=1 max=1 mean=1 NA=1360
+Maison_Moyenne               nu=2       | num min=1 max=1 mean=1 NA=3505
+Villas                       nu=2       | num min=1 max=1 mean=1 NA=3728
+paid                         nu=3      1 | num min=1 max=3 mean=1.1062 NA=1529 paid                         nu=3      2 | num min=1 max=3 mean=1.1062 NA=1529 paid                         nu=3      3 | num min=1 max=3 mean=1.1062 NA=1529 paid                         nu=3      4 | num min=1 max=3 mean=1.1062 NA=1529 paid                         nu=3      5 | num min=1 max=3 mean=1.1062 NA=1529 | labels: master only (1)=1; using only (2)=2; matched (3)=3; missing updated (4)=4; nonmissing conflict (5)=5
+Bonus_paye_carto             nu=2       | num min=1 max=1 mean=1 NA=3616
+amountUSD                    nu=3      amountUSD | num min=4.66 max=5.82 mean=5.24 NA=3731
+endOfCollect                 nu=22      | chr ex: 2018-10-31 | 2018-09-26 | 2018-12-21 | 2018-07-15 empty=NA
+date                         nu=222     | chr ex: 2018-10-26 | 2018-09-07 | 2018-11-30 | 2018-07-10 empty=NA
+lateCollection               nu=3       | num min=0 max=1 mean=0.13159 NA=108
+unmatched_compound           nu=3       | num min=0 max=1 mean=0.0093767 NA=107
+code                         nu=83      | num min=1 max=251 mean=85.838 NA=3628
+dup_receipt                  nu=5       | num min=0 max=3 mean=0.075472 NA=3627
+mult_tax                     nu=3       | num min=0 max=1 mean=0.056604 NA=3627
+rate_verified                nu=2       | num min=0 max=1 mean=0.01902 NA=0
+
+
+========== admin_data/tax_payments_neighborhoods.dta ==========
+dim: 356 14 
+a7                           nu=356    Neighborhood | num min=100 max=704 mean=451.31 NA=0
+paid                         nu=36     Number unique payers | num min=0 max=69 mean=5.3961 NA=0
+amount                       nu=94     Total amount paid | num min=0 max=198000 mean=14820 NA=0
+grid_nm                      nu=9      Satellite grid (for straficiation) | num min=1 max=11 mean=4.7697 NA=0
+hh_final                     nu=177    Estimated house count | num min=4 max=372 mean=135.96 NA=0
+poly_size                    nu=3      Population terciles (for stratification) | num min=1 max=3 mean=2.0506 NA=0
+stratum                      nu=27     Strata for randomization | num min=1 max=33 mean=13.357 NA=0
+program                      nu=2      Assigned to tax campaign | num min=0 max=1 mean=0.5927 NA=0
+nganza                       nu=1      Nganza commune | num min=0 max=0 mean=0 NA=0
+program_start                nu=77     Start of tax campaign | chr ex: NA | 2016-10-13 | 2016-08-15 | 2016-05-20 empty=NA
+non_residential              nu=1      Neighborhood without residential properties | num min=0 max=0 mean=0 NA=0
+num_compounds                nu=137    (count) respondent | num min=2 max=420 mean=77.087 NA=0
+compliance                   nu=153    Property tax compliance (neighborhood level) | num min=0 max=0.63158 mean=0.069303 NA=0
+revenue_per_person           nu=170    Property tax revenue per capita  (neighborhood level) | num min=0 max=9428.6 mean=222.96 NA=0
+
+
+========== admin_data/taxroll_noPII.dta ==========
+dim: 47930 12 
+compound1                    nu=47930  Write the code for the parcelle | num min=1e+05 max=6104200 mean=559490 NA=0
+DateRDV                      nu=151    DAY | chr ex:  | 27-Nov-18 | 5-Dec-18 | Aug 18, 2018 empty=47236
+MontantIF                    nu=21      | chr ex: 3000 FC | 2500 FC | 1500 FC | 2000 FC empty=132
+Bonus                        nu=7       | chr ex: 900FC | 750FC | 450FC | 600FC empty=8006
+DatePaye                     nu=73      | chr ex:  | 14 septembre 2018 | 27 juin 2018 | 28 juin 2018 empty=47682
+Exempte                      nu=9       | chr ex:  | Troisieme age | Veuve | Pensionner Etat empty=41417
+NbrLoc                       nu=7      NUMBER OF TENANTS | num min=0 max=5 mean=0.13325 NA=47082
+Exempté                     nu=9      WHY IS IT EXEMPTED? | num min=1 max=10 mean=3.7418 NA=47655 | labels: Membre de la famille=1; Troisieme Age=2; Pensionner dEtat=3; Handicappé=4; Veuve=5; Orphelin=6; Couuvent=7; Eglise=8; Ecole=9; Autre=10
+Bonus2                       nu=3       | chr ex:  | Non | Oui empty=46769
+Observations                 nu=1       | chr ex:  empty=47930
+Date                         nu=10      | chr ex:  | 12 mars 2018 | 2 avril 2018 | 3 avril 2018 empty=47916
+a7                           nu=363     | num min=100 max=6104 mean=559.41 NA=0
+
+
+========== admin_data/registration_noPII.dta ==========
+dim: 48034 105 
+ERROR character string is not in a standard unambiguous format 
+
+
+========== admin_data/tax_payment_timing_noPII.dta ==========
+dim: 4732 19 
+TDMnumber                    nu=11     TDM number | chr ex: 3 | 9 | 35 | 8 empty=4595
+date                         nu=4622   date | chr ex: 05-07-2018 00:00:00 | 07-07-2018 00:00:00 | 10-07-2018 00:00:00 | 16-07-2018 00:00:00 empty=0
+compound1                    nu=3395   compound | num min=2e+05 max=1.2604e+10 mean=3694100 NA=0
+amountCF                     nu=23     amountCF | num min=0 max=18893000 mean=8716.3 NA=3
+amountUSD                    nu=4      amountUSD | num min=4.66 max=6.99 mean=5.8233 NA=4729
+colcode                      nu=9      colcode | num min=14 max=101 mean=52.224 NA=4674
+collector_ID                 nu=45     collector_ID | num min=44 max=125 mean=93.675 NA=137
+tdm                          nu=46     prenom | chr ex: TDM 3 | TDM 9 | TDM 35 | TDM 8 empty=30
+rateUSD                      nu=35     rateUSD | num min=0 max=99911 mean=67.835 NA=137
+date_download                nu=4593   date_download | chr ex:  | 2018-06-28 14:29:02.77300 | 2018-06-28 14:29:02.78000 | 2018-06-28 14:29:02.78700 empty=137
+downloadnum                  nu=525    downloadnum | num min=10556 max=11176 mean=10876 NA=137
+download_userID              nu=2      download_userID | num min=2 max=2 mean=2 NA=137
+today                        nu=183     | chr ex: NA | 2018-06-15 | 2018-06-20 | 2018-06-26 empty=NA
+ERROR character string is not in a standard unambiguous format 
+
+
+========== survey_data/chief_consultations.dta ==========
+dim: 10036 31 
+ERROR character string is not in a standard unambiguous format 
+
+
+========== admin_data/campaign_2016_neighborhoods.dta ==========
+dim: 434 13 
+a7                           nu=434    (p 50) a7 | num min=100 max=6104 mean=539.97 NA=0
+tot_compounds                nu=190    (count) nonmissing | num min=13 max=314 mean=136.78 NA=0
+tot_s1_repeats               nu=6      (max) id_new | num min=0 max=5 mean=2.8963 NA=0
+target_surveys               nu=4       | num min=5 max=8 mean=5.5783 NA=0
+prob                         nu=273     | num min=0.0066138 max=0.46154 mean=0.052587 NA=0
+skip                         nu=16      | num min=1 max=16 mean=6.8894 NA=0
+Ordre                        nu=28     Ordre | num min=1 max=27 mean=13.958 NA=1
+today                        nu=155    today | chr ex: 2016-09-08 | 2016-10-29 | 2016-08-12 | 2016-07-29 empty=NA
+DateTerminée                nu=1      Date Terminée | num min=Inf max=-Inf mean=NaN NA=434
+Obs                          nu=1      Obs | num min=Inf max=-Inf mean=NaN NA=434
+program                      nu=3       | num min=0 max=1 mean=0.59122 NA=1
+nganza                       nu=2       | num min=0 max=1 mean=0.16359 NA=0
+num_poly                     nu=4       | num min=1 max=4 mean=1.0207 NA=0

@@ -1,0 +1,105 @@
+LC sample: 28921 props, 221 nbhds; with period: 27507 props, 213 nbhds
+Central means: compliance 0.0664  revenue 195.94 
+                               m1                 m2                 m4
+Dependent Var.:              paid               paid               paid
+                                                                       
+local           0.0243** (0.0074) 0.0385*** (0.0064) 0.0389*** (0.0064)
+Fixed-Effects:  ----------------- ------------------ ------------------
+stratum                       Yes                Yes                Yes
+period                         No                Yes                Yes
+high                           No                 No                Yes
+_______________ _________________ __________________ __________________
+S.E.: Clustered            by: a7             by: a7             by: a7
+Observations               28,921             27,507             27,507
+R2                        0.01379            0.01939            0.01973
+Within R2                 0.00198            0.00484            0.00492
+
+                                m5               r2               r4
+Dependent Var.:               paid          revenue          revenue
+                                                                    
+local           0.0469*** (0.0074) 90.07*** (22.39) 82.09*** (19.85)
+Fixed-Effects:  ------------------ ---------------- ----------------
+stratum                        Yes              Yes              Yes
+period                         Yes              Yes              Yes
+high                           Yes               No              Yes
+_______________ __________________ ________________ ________________
+S.E.: Clustered             by: a7           by: a7           by: a7
+Observations                23,556           27,507           27,507
+R2                         0.02397          0.01690          0.03025
+Within R2                  0.00625          0.00179          0.00151
+---
+Signif. codes: 0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+CC sample with period: 19598 props, 155 nbhds
+                              c1            c2
+Dependent Var.:             paid       revenue
+                                              
+cli             0.0176* (0.0076) 17.96 (18.75)
+Fixed-Effects:  ---------------- -------------
+stratum                      Yes           Yes
+period                       Yes           Yes
+high                         Yes           Yes
+_______________ ________________ _____________
+S.E.: Clustered           by: a7        by: a7
+Observations              19,598        19,598
+R2                       0.02281       0.03118
+Within R2                0.00124       0.00011
+---
+Signif. codes: 0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+Table 8 sample: 8159 props, 80 nbhds
+                                t8
+Dependent Var.:               paid
+                                  
+ease            0.0523*** (0.0065)
+Fixed-Effects:  ------------------
+high                           Yes
+stratum                        Yes
+_______________ __________________
+S.E.: Clustered             by: a7
+Observations                 8,159
+R2                         0.05910
+Within R2                  0.01688
+---
+Signif. codes: 0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+Table 6 sample: 16311 props, 213 nbhds; Central mean 0.415 
+                             v1
+Dependent Var.:   visited_after
+                               
+local           0.0296 (0.0253)
+Fixed-Effects:  ---------------
+high                        Yes
+stratum                     Yes
+period                      Yes
+_______________ _______________
+S.E.: Clustered          by: a7
+Observations             16,311
+R2                      0.02908
+Within R2               0.00078
+---
+Signif. codes: 0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+Table 5 bribe sample: 1222 respondents, 210 nbhds; Central mean 0.013 
+                              b1
+Dependent Var.:        bribe_end
+                                
+local           0.0136. (0.0074)
+Fixed-Effects:  ----------------
+stratum                      Yes
+_______________ ________________
+S.E.: Clustered           by: a7
+Observations               1,222
+R2                       0.03414
+Within R2                0.00244
+---
+Signif. codes: 0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+RESULT:compliance_local_table4_panelA_col1=0.024298
+RESULT:compliance_local_table4_panelA_col2=0.038535
+RESULT:compliance_local_house_fe_table4_panelA_col4=0.038866
+RESULT:compliance_local_exempt_excluded_table4_panelA_col5=0.046900
+RESULT:revenue_local_table4_panelB_col2=90.065933
+RESULT:revenue_local_house_fe_table4_panelB_col4=82.089943
+RESULT:n_obs_table4_col1=28921
+RESULT:n_obs_table4_col2=27507
+RESULT:paid_bribe_endline_local_table5_panelB=0.013600
+RESULT:visited_by_collector_local_table6_col1=0.029637
+RESULT:compliance_cli_table7_col1=0.017639
+RESULT:revenue_cli_table7_col2=17.964194
+RESULT:compliance_ease_of_payment_cli_table8_panelA_col2=0.052338

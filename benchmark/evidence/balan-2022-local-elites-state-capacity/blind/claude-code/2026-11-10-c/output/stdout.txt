@@ -1,0 +1,114 @@
+Randomized vs de facto treatment:
+    defacto
+rand   0   1   2   3   4
+   0   5   0   0   0   0
+   1   0 110   0   0   0
+   2   0   0 110   0   0
+   3   0   0   0  80   0
+   4   0   0   1   0  50
+Registered properties (non-villa) by de facto arm:
+
+    0     1     2     3     4 
+  800 14690 14694 10042  6280 
+Payments above the maximum liability recoded: 2 
+Window arms 1 vs 2: 2018-06-19 to 2018-12-11
+Table 4 col1 N = 29384  clusters = 221 
+Table 4 col2 N = 27310  clusters = 209 
+   
+       0    1
+  0 5480 4230
+  1 4114 4786
+  2 3022 5678
+                             t4c1               t4c2               t4c4
+Dependent Var.:              paid               paid               paid
+                                                                       
+local           0.0244** (0.0076) 0.0409*** (0.0065) 0.0416*** (0.0065)
+Fixed-Effects:  ----------------- ------------------ ------------------
+stratum                       Yes                Yes                Yes
+period                         No                Yes                Yes
+house                          No                 No                Yes
+_______________ _________________ __________________ __________________
+S.E.: Clustered            by: a7             by: a7             by: a7
+Observations               29,384             27,310             27,310
+R2                        0.01390            0.01997            0.02078
+Within R2                 0.00191            0.00527            0.00544
+
+                              t4c5             t4r2             t4r4
+Dependent Var.:               paid          revenue          revenue
+                                                                    
+local           0.0502*** (0.0074) 95.64*** (22.23) 86.45*** (20.10)
+Fixed-Effects:  ------------------ ---------------- ----------------
+stratum                        Yes              Yes              Yes
+period                         Yes              Yes              Yes
+house                          Yes               No              Yes
+_______________ __________________ ________________ ________________
+S.E.: Clustered             by: a7           by: a7           by: a7
+Observations                23,426           27,310           27,310
+R2                         0.02499          0.01715          0.02804
+Within R2                  0.00692          0.00201          0.00166
+---
+Signif. codes: 0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+Central means: col1 0.07038802  col2 0.05944832  col5 0.06812139  col5 N 23426 
+OLS estimation, Dep. Var.: pb
+Observations: 1,215
+Fixed-effects: stratum: 32
+Standard-errors: Clustered (a7) 
+      Estimate Std. Error t value Pr(>|t|)    
+local 0.013742   0.007462 1.84151 0.066965 .  
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+RMSE: 0.133924     Adj. R2: 0.008109
+                 Within R2: 0.002476
+Central mean 0.01342282 
+Window arms 1 vs 2: 2018-06-19 to 2018-12-11
+OLS estimation, Dep. Var.: post_visit
+Observations: 16,212
+Fixed-effects: house: 2,  stratum: 32,  period: 3
+Standard-errors: Clustered (a7) 
+      Estimate Std. Error t value Pr(>|t|) 
+local 0.034975   0.025107 1.39301   0.1651 
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+RMSE: 0.485747     Adj. R2: 0.027541
+                 Within R2: 0.001081
+Central mean 0.4093987 
+Window arms 1 vs 3: 2018-06-30 to 2018-11-27
+                             t7c           t7r
+Dependent Var.:             paid       revenue
+                                              
+cli             0.0201* (0.0080) 30.90 (21.84)
+Fixed-Effects:  ---------------- -------------
+house                        Yes           Yes
+stratum                      Yes           Yes
+period                       Yes           Yes
+_______________ ________________ _____________
+S.E.: Clustered           by: a7        by: a7
+Observations              20,240        20,240
+R2                       0.02141       0.03225
+Within R2                0.00153       0.00028
+---
+Signif. codes: 0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+Central mean 0.05471661 
+OLS estimation, Dep. Var.: paid
+Observations: 8,624
+Fixed-effects: house: 2,  stratum: 31
+Standard-errors: Clustered (a7) 
+         Estimate Std. Error t value   Pr(>|t|)    
+pay_ease 0.059273   0.006827 8.68191 4.0681e-13 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+RMSE: 0.261938     Adj. R2: 0.055651
+                 Within R2: 0.020334
+RESULT:compliance_local_table4_panelA_col1=0.024452
+RESULT:compliance_local_table4_panelA_col2=0.040923
+RESULT:compliance_local_house_fe_table4_panelA_col4=0.041587
+RESULT:compliance_local_exempt_excluded_table4_panelA_col5=0.050182
+RESULT:revenue_local_table4_panelB_col2=95.6379
+RESULT:revenue_local_house_fe_table4_panelB_col4=86.4457
+RESULT:n_obs_table4_col1=29384
+RESULT:n_obs_table4_col2=27310
+RESULT:paid_bribe_endline_local_table5_panelB=0.013742
+RESULT:visited_by_collector_local_table6_col1=0.034975
+RESULT:compliance_cli_table7_col1=0.020115
+RESULT:revenue_cli_table7_col2=30.8977
+RESULT:compliance_ease_of_payment_cli_table8_panelA_col2=0.059273

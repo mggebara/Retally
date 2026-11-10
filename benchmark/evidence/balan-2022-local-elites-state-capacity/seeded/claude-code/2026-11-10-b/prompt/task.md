@@ -1,0 +1,5184 @@
+# Retally reproduction task: balan-2022-local-elites-state-capacity (seeded, run 2026-11-10-b)
+
+You are reproducing quantitative results from an econometrics paper for the
+Retally benchmark.  You will write R code, run it in a network-less Docker
+sandbox, and record what you did as files.  The files are what gets scored.
+
+- Benchmark cell: entry `balan-2022-local-elites-state-capacity`, mode `seeded`, run `2026-11-10-b`
+- Paper: Local Elites as State Capacity: How City Chiefs Use Local Information to Increase Tax Compliance in the Democratic Republic of the Congo
+- Paper text (extracted from the PDF; tables may be garbled): `<repo>/benchmark/.cache/claude-code/balan-2022-local-elites-state-capacity/seeded/2026-11-10-b/paper.txt`
+- Data (the ONLY data you get): `<repo>/benchmark/.cache/claude-code/balan-2022-local-elites-state-capacity/seeded/2026-11-10-b/mount/balan_2022_local_elites_state_capacity`
+- Output directory (the ONLY place you write): `<repo>/benchmark/reproductions/balan-2022-local-elites-state-capacity/seeded/2026-11-10-b`
+
+## Mode rules
+
+These apply in every mode:
+
+- Write R only.  Run it only inside the sandbox, with the command under
+  "How to run a script"; never run R on the host.
+- No network: do not download anything, do not look the paper or its
+  replication package up online.
+- Use only the files under `<repo>/benchmark/.cache/claude-code/balan-2022-local-elites-state-capacity/seeded/2026-11-10-b/mount/balan_2022_local_elites_state_capacity` as data, and `<repo>/benchmark/.cache/claude-code/balan-2022-local-elites-state-capacity/seeded/2026-11-10-b/paper.txt` as
+  the paper.
+- Do not read anything else in this repository or on this machine: not the
+  catalog YAMLs under `benchmark/papers/`, not `.cache/datasets/`, not
+  `benchmark/results/`, not other reproductions under `benchmark/reproductions/`,
+  not other task directories.  If you nevertheless read any other file, list
+  it in `files_read_outside_mount` in `reproduction.json`, with why.
+- Seeded mode: the authors' own analysis scripts are on disk under the data
+  directory and reproduced below under "Original Replication Scripts".  You
+  may follow them:
+
+  The replication package (the dataset directory) ships the authors' own analysis scripts,
+  reproduced below.  These are the GROUND TRUTH for the exact estimating equation, variable names,
+  sample restrictions, fixed effects, and standard-error clustering — follow them over anything
+  reconstructed from the methodology summary, and prefer them over the paper's text where the two
+  disagree.  Your job is to write R code that implements the SAME SPECIFICATION: translate what the
+  scripts estimate, do not transliterate their syntax line by line (a Stata .do file's regression,
+  e.g. `reghdfe y x controls, absorb(fe) cluster(cl)`, becomes the equivalent fixest::feols() call
+  in R).  Keep only the parts that produce the specific claims being reproduced; skip figure
+  construction and unrelated robustness checks.  The scripts' data-file paths refer to the package's
+  internal layout — resolve them against the dataset directory listed under Dataset Information.
+- You may compare your `RESULT:` values with the claimed values yourself.
+  Every time you do that and then change the script, record the run you
+  compared as an attempt with `kind: "claim"`, and write the comparison you
+  made to that attempt's `feedback.txt`, one line per off-target claim in
+  the form `<name>: reproduced <v>, claimed <c>`.  Produce it with:
+
+      cd <repo> && uv run python -m benchmark.reproducers.check_attempt --run-dir <repo>/benchmark/reproductions/balan-2022-local-elites-state-capacity/seeded/2026-11-10-b --stdout <that attempt's stdout.txt>
+
+  At most 3 `kind: "claim"` attempts.
+- At most 3 `kind: "error"` repairs (a run that crashed or
+  printed no `RESULT:` line, followed by a fix).
+
+## Claims to Reproduce
+1. compliance_local_table4_panelA_col1: 0.023 (share of properties paying the property tax (0-1)) [type: coefficient]
+   Location: Table 4, Panel A (Compliance), Local, column (1)
+   Context: Table 4, Panel A, column (1). OLS of equation (1): the Local coefficient (city chiefs collected; Central, state agents, is the excluded category) in a regression of an indicator that the registered property paid the 2018 property tax (payment records matched to the property register by tax ID) on the Local indicator and randomization stratum fixed effects; no time or house type fixed effects. Sample: all registered properties in Local and Central neighborhoods. Standard errors clustered by neighborhood.
+2. compliance_local_table4_panelA_col2: 0.032 (share of properties paying the property tax (0-1)) [type: coefficient]
+   Location: Table 4, Panel A (Compliance), Local, column (2)
+   Context: Table 4, Panel A, column (2), the preferred specification: the Local coefficient with stratum fixed effects plus time fixed effects for waves of the campaign, no house type fixed effects, SEs clustered by neighborhood. Per online Appendix A2.5 the time fixed effects are two-month periods beginning at the midpoint between the first days of the two arms compared (Local, Central) and ending at the midpoint between their last days; properties whose neighborhood falls outside them drop out.
+3. compliance_local_house_fe_table4_panelA_col4: 0.033 (share of properties paying the property tax (0-1)) [type: coefficient]
+   Location: Table 4, Panel A (Compliance), Local, column (4)
+   Context: Table 4, Panel A, column (4): the column (2) regression (stratum and campaign-period time fixed effects) with house fixed effects added, i.e. dummies for the property value band (low-value versus high-value band, the two flat tax liabilities). Same sample as column (2); standard errors clustered by neighborhood. The entry is the Local coefficient.
+4. compliance_local_exempt_excluded_table4_panelA_col5: 0.04 (share of properties paying the property tax (0-1)) [type: coefficient]
+   Location: Table 4, Panel A (Compliance), Local, column (5)
+   Context: Table 4, Panel A, column (5): the column (4) specification (stratum, campaign-period time and house fixed effects) excluding properties the collectors designated as exempt from the tax. Standard errors clustered by neighborhood. The entry is the Local coefficient.
+5. revenue_local_table4_panelB_col2: 79.64 (Congolese francs per property) [type: coefficient]
+   Location: Table 4, Panel B (Revenues), Local, column (2)
+   Context: Table 4, Panel B, column (2): the column (2) specification (Local indicator, stratum fixed effects, campaign-period time fixed effects, no house fixed effects) with property tax revenue per property in Congolese francs as the outcome (the amount paid, zero for non-payers). Same sample as Panel A column (2); standard errors clustered by neighborhood. The entry is the Local coefficient.
+6. revenue_local_house_fe_table4_panelB_col4: 68.855 (Congolese francs per property) [type: coefficient]
+   Location: Table 4, Panel B (Revenues), Local, column (4)
+   Context: Table 4, Panel B, column (4): revenue per property in Congolese francs on the Local indicator with stratum, campaign-period time and house (property value band) fixed effects. Standard errors clustered by neighborhood. The entry is the Local coefficient.
+7. n_obs_table4_col1: 28872.0 (properties) [type: count]
+   Location: Table 4, Observations, column (1) (both panels)
+   Context: Number of observations in Table 4, column (1): every registered property in the Local and Central neighborhoods (no time fixed effects, so none is dropped).
+8. n_obs_table4_col2: 27764.0 (properties) [type: count]
+   Location: Table 4, Observations, column (2) (both panels; column 4 has the same count)
+   Context: Number of observations in Table 4, column (2) (and column 4): registered Local and Central properties whose neighborhood falls within the campaign periods that define the time fixed effects.
+9. paid_bribe_endline_local_table5_panelB: 0.018 (share of respondents reporting a bribe payment (0-1)) [type: coefficient]
+   Location: Table 5, Panel B (Bribes), Paid bribe (endline), beta-hat and SE
+   Context: Table 5 ("Local versus Central: Mismanagement and Views of Government, Chiefs, and Taxes"), Panel B, row "Paid bribe (endline)". OLS of equation (1) comparing Local and Central, with a self-reported indicator for having paid a bribe ("transport") to tax collectors, measured in the endline household survey (baseline respondents tracked in 2019), as the outcome, on the Local indicator and randomization stratum fixed effects; no time fixed effects and no house type fixed effects (endline outcome). Standard errors clustered by neighborhood. The entry is the Local coefficient.
+10. visited_by_collector_local_table6_col1: -0.009 (share of properties visited (0-1)) [type: coefficient]
+   Location: Table 6, Local, column (1) Visited by collector
+   Context: Table 6 ("Local versus Central: Tax Visits"), column (1). OLS of equation (1) with an indicator that the household reported (in the midline survey) any tax visit by collectors after the registration visit as the outcome, on the Local indicator with house type, randomization stratum and campaign-period time fixed effects; Local and Central properties. Standard errors clustered by neighborhood. The entry is the Local coefficient.
+11. compliance_cli_table7_col1: 0.024 (share of properties paying the property tax (0-1)) [type: coefficient]
+   Location: Table 7, CLI, column (1) Compliance
+   Context: Table 7, column (1): the CLI coefficient (state collectors who consulted the chief on each owner's ability and willingness to pay before tax visits; Central excluded) in an OLS of the property tax payment indicator with house type, stratum and time fixed effects, the time fixed effects two-month campaign periods from the midpoint of the CLI and Central first days to the midpoint of their last days. Sample: registered CLI and Central properties. SEs clustered by neighborhood.
+12. revenue_cli_table7_col2: 46.566 (Congolese francs per property) [type: coefficient]
+   Location: Table 7, CLI, column (2) Revenues
+   Context: Table 7, column (2): the column (1) specification with property tax revenue per property in Congolese francs as the outcome. CLI and Central properties; standard errors clustered by neighborhood. The entry is the CLI coefficient.
+13. compliance_ease_of_payment_cli_table8_panelA_col2: 0.056 (change in the probability of payment per point of the chief's ease-of-payment rating) [type: coefficient]
+   Location: Table 8, Panel A (Ease of payment), Ease of payment, column (2) Compliance
+   Context: Table 8 ("The Value of Chiefs' Information"), Panel A, column (2). Within the CLI arm only, OLS of the property tax payment indicator on the chief's rating of the owner's ability to pay (ease of payment, on the three-point scale recorded on the property register during the chief consultation), with house type and randomization stratum fixed effects and no further controls. Standard errors clustered by neighborhood. The entry is the Ease of payment coefficient.
+
+## Dataset Information
+Name: balan_2022_local_elites_state_capacity
+Local path: <repo>/benchmark/.cache/claude-code/balan-2022-local-elites-state-capacity/seeded/2026-11-10-b/mount/balan_2022_local_elites_state_capacity
+File format: csv
+Files in the dataset directory (paths relative to the local path above):
+- Replication Materials - Updated October 2025/Data/01_base/survey_data/endline_2016campaign_noPII.dta (55.8 MB) — 3600 rows, 1591 columns: visit, transport, paid_self, exempt, stratum, bribe, visited, visits, bribe_self, rent1, paid2017, visit_s2, visit_s2n, paid_if_s2, paid_if_s2n, tax13_s1, tax17_s1, tax19_s1, others, others2, others2_other, tax18_s1, others4, receipt8_s2, receipt8b_s2, receipt8_s2n, receipt8b_s2n, col1_paid, col1_visited, col1_visits, col2_paid, col2_visited, col2_visits, col4_paid, col4_visited, col4_visits, col5_paid, col5_visited, col5_visits, rent5, irl6, paid2017_6, rent5_rr, receipt7_s2…
+- Replication Materials - Updated October 2025/Data/01_base/survey_data/endline_round1_noPII.dta (48.4 MB) — 5602 rows, 960 columns: number, transport, visited, visits, paid_self, bribe, property_paid, salongo_punish3, salongo_oblig_tax, vis12, num_same, num_more, discount_self, same_chef_baseline, compliance_ave, compliance_kan, statecapacity1_survey_e, statecapacity2_survey_e, claim_congolese, claim_congolese_2, titling_respondent, titling_respondent_short, access_transport_survey_e, satisfaction_transport_survey_e, responsible_transport_survey_e, neighbor_know, neighbor_know2, discount_know, country, am…
+- Replication Materials - Updated October 2025/Data/01_base/survey_data/midline_noPII.dta (184.5 MB) — 45794 rows, 302 columns: month, exempt, visited, visits, paid_self, payment, bribe, first, neighbors_pay, vis12, num_same, num_more, first_attempt, discount_self, sample_select, locality, salongo_acceptability, miss_visit, exempt_not, tot_complete_control, exempt_not_enums, control, neighbor_know, rand_neighbor, neighbor_know2, amount_match, amount_new, amount_match_no, record, record_short_finished, record02, rand_discount, discount_know, name_match, name_match_no, country, revisits_dates, visits_ot…
+- Replication Materials - Updated October 2025/Data/01_base/survey_data/baseline_noPII.dta (26.5 MB) — 7828 rows, 425 columns: visit, campaign_visit, transport, number, paid2017_2, tax13, tax15, tax15_other, paid2017_6_new, survey3, campaign_yes_meeting3_time, appt_time, state_cap1, state_cap2, move_endline, move_when_endline, visit_interest, visit_next_c, visit_in…
+- Replication Materials - Updated October 2025/Data/01_base/admin_data/tax_payments_neighborhoods.dta (38.3 KB) — 356 rows, 14 columns: paid, amount, stratum, compliance, revenue_per_person, hh_final, a7, grid_nm, poly_size, program, nganza, program_start, non_residential, num_compounds
+- Replication Materials - Updated October 2025/Data/01_base/survey_data/endline_round2_noPII.dta (8.1 MB) — 1753 rows, 536 columns: number, transport, salongo_punish3, salongo_oblig_tax, dup_respondent, paid_landtax_survey_e, compliance_ave, compliance_kan, bribe_freq, bribe_amt1, paid_faketax_survey_e, statecapacity1_survey_e, statecapacity2_survey_e, access_transport_…
+- Replication Materials - Updated October 2025/Data/01_base/admin_data/registration_noPII.dta (81.4 MB) — 48034 rows, 105 columns: first, house, exempt, time, chief_asst_pres, house_correct, amt_paid, appointment, month_tmpp, month_tmp_fr, present_info_owner, owner_found, owner_where, designate, designate_why, designate_why_other, collect_now, collect_who, collect_succ…
+- Replication Materials - Updated October 2025/Data/01_base/survey_data/chief_survey_randbasis_noPII.dta (5.4 MB) — 1084 rows, 466 columns: transport, records, ave_property, month_tmp_fr, appoint_who, appoint_yr, salongo_frac_time, salongo_time, state_cap1, state_cap2, state_cap1_t, survey1, survey1_conf, survey1_ind, other_chief_survey, records_which_1, records_which_2, record…
+- Replication Materials - Updated October 2025/Data/01_base/survey_data/chief_survey_noPII.dta (3.1 MB) — 1102 rows, 329 columns: transport, records, ave_property, month_tmp_fr, state_cap1, state_cap2, salongo_frac_time, salongo_time, modal_tribe_baseline, luluwa_baseline, appoint_who, appoint_who_other, appoint_yr, survey1, survey1_conf, survey1_ind, other_chief_surv…
+- Replication Materials - Updated October 2025/Data/01_base/admin_data/randomization_assignment.dta (129.8 KB) — 356 rows, 37 columns: stratum, stratum_count, appoint_yr, count1, numtoselect1_control, probleft2_control, probleft3_control, numtoselect1_local, probleft2_local, probleft3_local, geo_stratum, stratum_jon, chef_collect_types, chef_collect_ever, chef_collect_prop…
+- Replication Materials - Updated October 2025/CHANGES.txt (382 B)
+- Replication Materials - Updated October 2025/Data/01_base/admin_data/adjacent_neighborhoods.csv (97.7 KB) — columns: objectid,src_poly_nm,nbr_poly_nm,length,node_count
+- Replication Materials - Updated October 2025/Data/01_base/admin_data/campaign_2016_neighborhoods.dta (26.2 KB)
+- Replication Materials - Updated October 2025/Data/01_base/admin_data/campaign_collector_info.dta (2.3 MB)
+- Replication Materials - Updated October 2025/Data/01_base/admin_data/chief_collector_candidates.dta (266.4 KB)
+- Replication Materials - Updated October 2025/Data/01_base/admin_data/chief_collector_candidates_campaignupdated.dta (266.4 KB)
+- Replication Materials - Updated October 2025/Data/01_base/admin_data/chief_tribe_info.dta (4.8 MB)
+- Replication Materials - Updated October 2025/Data/01_base/admin_data/concessions_chefferies.csv (4.9 KB) — columns: polygon,chefferie
+- Replication Materials - Updated October 2025/Data/01_base/admin_data/fliers_campaign.dta (37.9 MB)
+- Replication Materials - Updated October 2025/Data/01_base/admin_data/fliers_pilot_set1.xlsx (23.1 KB)
+- Replication Materials - Updated October 2025/Data/01_base/admin_data/fliers_pilot_set2.xlsx (24.3 KB)
+- Replication Materials - Updated October 2025/Data/01_base/admin_data/fliers_pilot_set3.xlsx (61.8 KB)
+- Replication Materials - Updated October 2025/Data/01_base/admin_data/hh_distances.dta (1.8 MB)
+- Replication Materials - Updated October 2025/Data/01_base/admin_data/neighborhood_centroids.dta (6.7 KB)
+- Replication Materials - Updated October 2025/Data/01_base/admin_data/neighborhood_transport_cost.dta (6.7 KB)
+- Replication Materials - Updated October 2025/Data/01_base/admin_data/property_values_MLestimates.csv (23.3 MB) — columns: v1,actual,pred_value,a7,compound1,value,training,roof2,roof,walls,walls_other,ravine,ravin,commune,geo_stratum,dist_city_center,dist_commune_buildings,dist_gas_stations,dist_health_centers,dist_hospitals,dist_markets,dist_police_stations,di…
+- Replication Materials - Updated October 2025/Data/01_base/admin_data/randomization_schedule.dta (29.5 KB)
+- Replication Materials - Updated October 2025/Data/01_base/admin_data/stratum.dta (45.0 KB)
+- Replication Materials - Updated October 2025/Data/01_base/admin_data/tax_payment_timing_noPII.dta (653.0 KB)
+- Replication Materials - Updated October 2025/Data/01_base/admin_data/tax_payments_noPII.dta (522.0 KB)
+- Replication Materials - Updated October 2025/Data/01_base/admin_data/taxroll_noPII.dta (4.4 MB)
+- Replication Materials - Updated October 2025/Data/01_base/survey_data/chief_consultations.dta (5.6 MB)
+- Replication Materials - Updated October 2025/Data/01_base/survey_data/chief_info.dta (214.8 KB)
+- Replication Materials - Updated October 2025/Data/01_base/survey_data/chief_knowledge.dta (330.6 KB)
+- Replication Materials - Updated October 2025/Data/01_base/survey_data/chief_knowledge_neighborhoods.dta (21.0 KB)
+- Replication Materials - Updated October 2025/Data/01_base/survey_data/collector_baseline_noPII.dta (566.4 KB)
+- Replication Materials - Updated October 2025/Data/01_base/survey_data/collector_chars.dta (123.9 KB)
+- Replication Materials - Updated October 2025/Data/01_base/survey_data/collector_endline_noPII.dta (731.4 KB)
+- Replication Materials - Updated October 2025/Data/01_base/survey_data/collector_knowledge_clean.dta (422.9 KB)
+- Replication Materials - Updated October 2025/Data/01_base/survey_data/resident_info_quiz.csv (55.0 KB) — columns: a7,num_respondents,photo1,photo2,photo3,photo4,photo5,photo6,photo7,photo8,photo9,photo10,photo11,photo12,photo13,photo14,photo15
+- Replication Materials - Updated October 2025/Documents/central_v_local_paper_20210810.bbl (28.4 KB)
+- Replication Materials - Updated October 2025/Documents/flier3000control.png (404.0 KB)
+- Replication Materials - Updated October 2025/Documents/polygons.png (888.4 KB)
+- Replication Materials - Updated October 2025/Documents/property_registration_path.pdf (4.6 MB)
+- Replication Materials - Updated October 2025/Documents/strata.png (3.0 MB)
+- Replication Materials - Updated October 2025/Dofiles/0_Master.do (1.0 KB)
+- Replication Materials - Updated October 2025/Dofiles/1_Package_Setup.do (1.4 KB)
+- Replication Materials - Updated October 2025/Dofiles/2_Data_Construction.do (44.3 KB)
+- Replication Materials - Updated October 2025/Dofiles/3_Main_Tables_Figures.do (537 B)
+- Replication Materials - Updated October 2025/Dofiles/4_Appendix_Tables_Figures.do (899 B)
+- Replication Materials - Updated October 2025/Dofiles/Tables_Figures/FigureA12.do (24.3 KB)
+- Replication Materials - Updated October 2025/Dofiles/Tables_Figures/FigureA13.do (17.4 KB)
+- Replication Materials - Updated October 2025/Dofiles/Tables_Figures/FigureA15.do (3.9 KB)
+- Replication Materials - Updated October 2025/Dofiles/Tables_Figures/FigureA18_TableA38.do (4.7 KB)
+- Replication Materials - Updated October 2025/Dofiles/Tables_Figures/FigureA19.do (5.9 KB)
+- Replication Materials - Updated October 2025/Dofiles/Tables_Figures/FigureA20.do (4.4 KB)
+- Replication Materials - Updated October 2025/Dofiles/Tables_Figures/FigureA4.do (8.4 KB)
+- Replication Materials - Updated October 2025/Dofiles/Tables_Figures/FigureA5.do (2.1 KB)
+- Replication Materials - Updated October 2025/Dofiles/Tables_Figures/FigureA7_TableA23.do (8.4 KB)
+- Replication Materials - Updated October 2025/Dofiles/Tables_Figures/Figures1_A9_A10_A11_A14.do (53.0 KB)
+- Replication Materials - Updated October 2025/Dofiles/Tables_Figures/FiguresA21_A22.do (3.3 KB)
+- Replication Materials - Updated October 2025/Dofiles/Tables_Figures/Table1.do (1.9 KB)
+- Replication Materials - Updated October 2025/Dofiles/Tables_Figures/Table2.do (566 B)
+- Replication Materials - Updated October 2025/Dofiles/Tables_Figures/Table3.do (24.8 KB)
+- Replication Materials - Updated October 2025/Dofiles/Tables_Figures/Table4.do (4.8 KB)
+- Replication Materials - Updated October 2025/Dofiles/Tables_Figures/Table5.do (15.3 KB)
+- Replication Materials - Updated October 2025/Dofiles/Tables_Figures/Table6.do (3.0 KB)
+- Replication Materials - Updated October 2025/Dofiles/Tables_Figures/Table7.do (3.4 KB)
+- Replication Materials - Updated October 2025/Dofiles/Tables_Figures/Table8.do (18.3 KB)
+- Replication Materials - Updated October 2025/Dofiles/Tables_Figures/Table9.do (14.4 KB)
+- Replication Materials - Updated October 2025/Dofiles/Tables_Figures/TableA1.do (6.3 KB)
+- Replication Materials - Updated October 2025/Dofiles/Tables_Figures/TableA10.do (5.9 KB)
+- Replication Materials - Updated October 2025/Dofiles/Tables_Figures/TableA11.do (5.8 KB)
+- Replication Materials - Updated October 2025/Dofiles/Tables_Figures/TableA12.do (12.0 KB)
+- Replication Materials - Updated October 2025/Dofiles/Tables_Figures/TableA13.do (1.3 KB)
+- Replication Materials - Updated October 2025/Dofiles/Tables_Figures/TableA16.do (14.9 KB)
+- Replication Materials - Updated October 2025/Dofiles/Tables_Figures/TableA17.do (3.0 KB)
+- Replication Materials - Updated October 2025/Dofiles/Tables_Figures/TableA19.do (6.9 KB)
+- Replication Materials - Updated October 2025/Dofiles/Tables_Figures/TableA2.do (17.0 KB)
+- Replication Materials - Updated October 2025/Dofiles/Tables_Figures/TableA20.do (4.5 KB)
+- … and 26 more files (listing truncated)
+
+## Required Output Convention
+Emit each reproduced metric on its own line to stdout using EXACTLY this format:
+    RESULT:<metric_name>=<numeric_value>
+For example:  cat('RESULT:beta=0.342\n')
+Use snake_case metric names matching the claim descriptions.
+
+## Code Requirements
+Write a complete, self-contained R script that runs under Rscript.
+The dataset is a directory tree at '<repo>/benchmark/.cache/claude-code/balan-2022-local-elites-state-capacity/seeded/2026-11-10-b/mount/balan_2022_local_elites_state_capacity' — see the file listing under Dataset Information.  Load the actual data file(s) by the exact paths listed there (readr::read_csv() for .csv, haven::read_dta() for Stata .dta, load() for .RData/.rda, which creates the objects listed for the file under exactly those names: use them, do not guess others; readRDS() for .rds).
+Installed packages (no network; nothing else can be installed): jsonlite, fixest, lfe, AER, ivreg, plm, estimatr, lme4, quantreg, car, sandwich, lmtest, clubSandwich, multiwayvcov, marginaleffects, MatchIt, optmatch, CBPS, WeightIt, cobalt, did, rdrobust, rddensity, Synth, modelsummary, stargazer, texreg, broom, tidyverse, dplyr, tidyr, readr, stringr, lubridate, data.table, haven, readxl, janitor, zoo, ggplot2, ggridges, ggrepel, gridExtra, cowplot, gtable, extrafont, sf, MASS, nnet, survival, splines, Matrix, boot, stats, utils.
+Prefer fixest for fixed effects, IV and clustered SEs; use the other installed packages where the paper's method calls for them.
+Set a deterministic seed with ``set.seed(42)`` for any randomness.
+Do NOT access the internet; the container runs with --network none.
+Do NOT shell out via system() / system2().
+Emit RESULT:<name>=<value> lines to stdout at the end via cat().
+
+## Original Replication Scripts
+The replication package (the dataset directory) ships the authors' own analysis scripts, reproduced below.  These are the GROUND TRUTH for the exact estimating equation, variable names, sample restrictions, fixed effects, and standard-error clustering — follow them over anything reconstructed from the methodology summary, and prefer them over the paper's text where the two disagree.  Your job is to write R code that implements the SAME SPECIFICATION: translate what the scripts estimate, do not transliterate their syntax line by line (a Stata .do file's regression, e.g. `reghdfe y x controls, absorb(fe) cluster(cl)`, becomes the equivalent fixest::feols() call in R).  Keep only the parts that produce the specific claims being reproduced; skip figure construction and unrelated robustness checks.  The scripts' data-file paths refer to the package's internal layout — resolve them against the dataset directory listed under Dataset Information.
+
+Stata-to-fixest sample matching: feols() drops fixed-effect singletons by default, but Stata's `reg y x i.fe` / `xi:` dummies keep them.  Pass `fixef.rm = "none"` to every feols() call that has fixed effects, otherwise the observation count and the robust SEs drift from the paper's.  Stata's `, r` / `vce(robust)` is `vcov = "hetero"`.
+
+### `Replication Materials - Updated October 2025/Dofiles/0_Master.do`
+```stata
+********************************************************************************
+* Program: 0_Master.do
+* Author: Gabriel Tourek
+* Created: 6 Aug 2021
+* Modified: 		
+* Purpose: Replication of "Local Elites as State Capacity: How City Chiefs Use 
+*          Local Information to Increase Tax Compliance in the D.R. Congo" by
+*		   Balan et al. (2021).
+********************************************************************************
+
+	clear all
+	set more off
+	
+
+	
+	set timeout1 32000
+	set timeout2 32000
+	set maxvar 30000
+
+	
+* 1. Set up your user specific root directory to Replication Materials folder
+
+		gl stem "Your Directory/Replication Materials - Updated October 2024"
+	
+* 3. Route file paths
+
+		global repldir "${stem}"
+		
+		// Dofiles
+		global repldodir "${stem}/Dofiles"
+		
+		// Output
+		global reploutdir "${stem}/Output"
+
+* 4. Run replication files
+
+	do "$repldodir/1_Package_Setup.do"
+	do "$repldodir/2_Data_Construction.do"
+	do "$repldodir/3_Main_Tables_Figures.do"
+	do "$repldodir/4_Appendix_Tables_Figures.do"
+	
+
+	
+	
+cap log close main
+cap log off main
+	
+
+```
+
+### `Replication Materials - Updated October 2025/Dofiles/Tables_Figures/Table1.do`
+```stata
+***********
+* Table 1 *
+***********
+
+mat define T1 = J(5,2,.)
+
+* Tax campaign activity counts (registration and visits)
+use "${repldir}/Data/03_clean_combined/analysis_data.dta", clear
+count if tmt!=.
+mat T1[1,1] = `r(N)'
+mat T1[2,1] = `r(N)' // same N for registration and visits
+
+bys a7: egen temp_rank = rank(compound1),unique // number of neighborhoods
+count if temp_rank==1 & tmt!=.
+mat T1[1,2] = `r(N)'
+mat T1[2,2] = `r(N)'
+drop temp_rank
+
+keep if tmt!=.
+collapse (mean) tmt,by(a7)
+tempfile treatment
+sa `treatment'
+
+* Evaluation activity counts
+
+	* Baseline
+	u "${repldir}/Data/01_base/survey_data/baseline_noPII.dta",clear
+	keep if tot_complete==1
+
+	merge m:1 a7 using `treatment'
+	drop if _merge==2 | _merge==1
+	drop _merge
+
+	count
+	mat T1[3,1] = `r(N)'
+
+	bys a7: egen temp_rank = rank(code),unique // number of neighborhoods
+	count if temp_rank==1
+	mat T1[3,2] = `r(N)'
+	drop temp_rank
+	
+	* Midline
+	u "${repldir}/Data/01_base/survey_data/midline_noPII.dta",clear
+	keep if tot_complete==1
+	cap drop tmt
+
+	merge m:1 a7 using `treatment'
+	drop if _merge==2 | _merge==1
+	drop _merge
+
+	count
+	mat T1[4,1] = `r(N)'
+
+	bys a7: egen temp_rank = rank(compound),unique // number of neighborhoods
+	count if temp_rank==1
+	mat T1[4,2] = `r(N)'
+	drop temp_rank
+	
+	* Endline
+	u "${repldir}/Data/01_base/survey_data/endline_round1_noPII.dta",clear
+	keep if tot_complete==1
+	cap drop tmt
+
+	merge m:1 a7 using `treatment'
+	drop if _merge==2 | _merge==1
+	drop _merge
+
+	count
+	mat T1[5,1] = `r(N)'
+
+	bys a7: egen temp_rank = rank(code),unique // number of neighborhoods
+	count if temp_rank==1
+	mat T1[5,2] = `r(N)'
+	drop temp_rank
+	
+* Output
+
+	cap ssc install outtable
+	mat rownames T1 = registration visits baseline midline endline
+	mat colnames T1 = N J
+	outtable using "${reploutdir}/campaign_components.tex",mat(T1) replace
+
+
+
+
+
+
+	
+
+	
+
+
+```
+
+### `Replication Materials - Updated October 2025/Dofiles/Tables_Figures/Table2.do`
+```stata
+***********
+* Table 2 *
+***********
+
+mat define T2 = J(2,5,.)
+
+* Treatment counts
+use "${repldir}/Data/03_clean_combined/analysis_data.dta", clear
+bys a7: egen temp_rank = rank(compound1),unique // number of neighborhoods
+replace tmt = 5 if tmt==0 // control
+forval i = 1(1)5{
+
+count if temp_rank==1 & tmt==`i'
+mat T2[1,`i'] = `r(N)'
+count if tmt==`i'
+mat T2[2,`i'] = `r(N)'
+}
+	
+* Output
+
+	mat colnames T2 = central local cli cxl control
+	mat rownames T2 = neigborhoods properties
+	outtable using "${reploutdir}/treatment_allocation.tex",mat(T2) replace
+
+
+
+
+
+
+	
+
+	
+
+
+```
+
+### `Replication Materials - Updated October 2025/Dofiles/Tables_Figures/Table3.do`
+```stata
+
+***********
+* Table 3 *
+***********
+
+********************
+* Prepare datasets *
+********************
+
+*****************
+* Baseline Data *
+*****************
+
+	* use clean baseline data 
+	u "${repldir}/Data/01_base/survey_data/baseline_noPII.dta", clear
+	keep if tot_complete==1 
+	drop possessions
+
+	* Education variables
+	g edu_yrs = .
+	replace edu_yrs = 0 if edu==0
+	replace edu_yrs = 1 if edu==1
+	replace edu_yrs = 6 if edu==2
+	replace edu_yrs = 1+edu2 if edu2!=. & edu==2 & edu2<7 // not counting repeating grade
+	replace edu_yrs = 13 if edu==3
+	replace edu_yrs = 7+edu2 if edu2!=. & edu==3 & edu2<5 // not counting repeating grade
+	replace edu_yrs = 17 if edu==4
+	replace edu_yrs = 13+edu2 if edu2!=. & edu==4 // allow for higher values for masters/PhD
+		
+	* Normalized possessions
+	global possessions = "possessions_1 possessions_2 possessions_3 possessions_4 possessions_5 possessions_6"
+	foreach index in possessions{
+	foreach var in $`index'{
+	cap replace `var' = `var'_orig
+	cap gen `var'_orig = `var'
+	sum `var'
+	replace `var' = (`var'-`r(mean)')/(`r(sd)') //standardize
+	}
+	egen `index' = rowtotal($`index'), missing
+	sum `index'
+	replace `index' = (`index' -`r(mean)')/(`r(sd)')  //standardize index
+	}
+
+	foreach var in possessions{
+	sum `var', d
+	g `var'_norm = (`var'-`r(min)')/(`r(max)'-`r(min)') //normalize variables
+	}
+	
+	* Gender dummy
+	g male = sex
+	replace male = 0 if male==2
+	
+	* log of income
+	g lg_inc_mo = log(inc_mo+1)
+	
+	* log of transport
+	g lg_transport = log(transport+1)
+	
+	* trust variables
+	revrs trust8 trust4 trust5 trust6
+	rename revtrust8 trust_chief
+	rename revtrust4 trust_nat_gov
+	rename revtrust5 trust_prov_gov
+	rename revtrust6 trust_tax_min
+				
+	keep code a7 edu_yrs age male elect1 possessions possessions_norm lg_inc_mo inc_mo lg_transport transport fence trust_chief trust_nat_gov trust_prov_gov trust_tax_min tax1 tax11 tax12 tax13 tax14 tax15 tax17
+		
+	* tempfile 
+	tempfile bl
+	save `bl'
+
+****************
+* Endline Data *
+****************
+
+	* Use clean endline data 
+	u "${repldir}/Data/01_base/survey_data/endline_round1_noPII.dta", clear
+	keep if tot_complete==1 
+	replace compound_code=compound_code_prev if (compound_code_prev!=. & compound_code_prev!=3)
+	keep compound_code code a7 bribe bribe_amt o_pay2 paid_vehicletax_survey_e paid_mktvendorfee_survey_e paid_businessfee_survey_e paid_incometax_survey_e paid_faketax_survey_e corr14_end tax42 trust3_survey_e trust2_survey_e trust6_survey_e steal_gov_2018 steal_col_2018 fair_tax fair_rates fair_collectors liquidity_bind liquidity_bind_date* cash_fee cash_fee_month cash_fee_month2* message1 message2 message3 message4 message5 message6 message7 message8 message9 inc_mo transport
+	rename inc_mo inc_mo_el
+	rename transport transport_el
+
+	drop if compound_code==999999 | compound_code==9999999
+	
+	ren bribe bribe_endline
+	ren bribe_amt bribe_amt_endline
+	ren o_pay2 informal_pay_endline
+
+	tempfile el
+	save `el'
+	
+**********************************
+* Machine Learning and distances * 
+**********************************
+
+	* Use final Machine Learning data
+	insheet using "${repldir}/Data/01_base/admin_data/property_values_MLestimates.csv", clear
+	keep compound1 pred_value dist_*
+	drop if compound1==.
+	rename compound1 compound_code
+	tempfile machine_learning
+	save `machine_learning'
+	
+*****************
+* Combined Data *
+*****************
+	
+	* Use clean combined data
+	use "${repldir}/Data/03_clean_combined/analysis_data.dta", clear
+	rename compound1 compound_code
+	
+	// House quality
+		* roof
+		gen roof_final=roof
+		replace roof_final=5 if roof==7 & roof2==3
+		replace roof_final=6 if roof==7 & roof2==2
+		replace roof_final=7 if roof==7 & roof2==1
+		replace roof_final=8 if roof==5 | roof==6
+	
+		g walls_final = walls
+		revrs ravine
+		
+		g walls_new = 0 if inlist(walls_final,0,1)
+		replace walls_new = 1 if inlist(walls_final,2,3,4)
+				
+		g walls_modern = 1 if inlist(walls_final,3,4)
+		replace walls_modern = 0 if inlist(walls_final,0,1,2)
+
+		g roof_new = 0 if inlist(roof_final,1,2,3,4)
+		replace roof_new = 1 if inlist(roof_final,7,8)
+
+		global house_quality = "walls_final roof_final"
+		global house_quality_new = "walls_new"
+
+		global house_quality = "walls_final roof_final"
+
+		foreach index in house_quality house_quality_new{ 
+		foreach var in $`index'{
+		cap replace `var' = `var'_orig
+		cap gen `var'_orig = `var'
+		sum `var'
+		replace `var' = (`var'-`r(mean)')/(`r(sd)') //standardize
+		}
+		egen `index' = rowtotal($`index'), missing
+		sum `index'
+		replace `index' = (`index' -`r(mean)')/(`r(sd)')  //standardize index
+		}
+	
+	keep compound_code today_alt exempt stratum a7 tmt house r_* pct_* rate taxes_paid pilot house_quality_new roof walls ravine sex_prop age_prop move_ave main_tribe employed salaried work_gov job_gov neighbor_know neighbor_know2 discount_know discount_self tmt_2016  bribe_combined bribe_combined_amt paid_self salongo salongo_hours flier_all today_carto taxes_paid_*d
+	tempfile ml
+	save `ml'
+
+**************
+* Merge Data *
+**************
+	
+* merge baseline and endline 
+use `bl', clear
+merge 1:1 code using `el', nogen
+drop if compound_code==. 
+tempfile bl_el
+save `bl_el'
+
+* merge full data, machine learning, baseline and endline
+use `ml', clear
+merge 1:1 compound_code using `machine_learning', nogen keep(match)
+merge 1:m compound_code using `bl_el' 
+drop if _merge==2 // 5 compound codes reported at endline don't exist in the complete data (104191,204030,504107,542145,6outpu86022)
+drop _merge
+
+**********************
+* Polygon-Level Data *
+**********************
+
+preserve
+		
+		// Data from randomization
+			use "${repldir}/Data/01_base/survey_data/endline_2016campaign_noPII.dta",clear
+			keep a7 program commune stratum paid_receipt_union paid_amt_admin
+			ren program jontax
+			ren stratum stratum_jon
+			ren paid_receipt_union paid_2016
+			g paid_counter = paid_2016!=.
+			collapse (mean) jontax paid_2016 (sum) count_prop_2016 = paid_counter rev_2016 = paid_amt_admin (first) stratum commune, by(a7)
+			
+				replace rev_2016 = rev_2016/count_prop_2016
+			
+				// One commune fix
+				replace commune = 1 if commune==. & a7==574
+			
+				// Fix polygon for spilts
+				expand 3 if a7==609,g(exp)
+				sort exp,stable
+				by exp: g tmp_id = _n
+				replace tmp_id = . if exp==0
+				replace a7 = 6091 if tmp_id==1
+				replace a7 = 6092 if tmp_id==2
+				replace a7 = 6093 if tmp_id==. & a7==609
+				drop exp tmp_id
+				
+				expand 4 if a7==610,g(exp)
+				sort exp,stable
+				by exp: g tmp_id = _n
+				replace tmp_id = . if exp==0
+				replace a7 = 6101 if tmp_id==. & exp==0 & a7==610
+				replace a7 = 6102 if tmp_id==1 & exp==1 & a7==610
+				replace a7 = 6103 if tmp_id==2 & exp==1 & a7==610
+				replace a7 = 6104 if tmp_id==3 & exp==1 & a7==610
+				drop exp tmp_id
+				
+				drop if a7>400 & a7<500 // Nganza
+				drop if inlist(a7,200,201,202,203,207,208,210) // Pilot polygons
+				
+				g joncomp2016 = 1 if jontax==1 & paid_2016==0
+				replace joncomp2016 = 2 if jontax==1 & paid_2016>0 & paid_2016<.
+				replace joncomp2016 = 1 if jontax==0
+				
+			tempfile impots1
+			sa `impots1'
+		
+		restore
+		
+	// Jon's JMP taxation outcomes by polygon
+	merge m:1 a7 using `impots1',keepusing(paid_2016 rev_2016)
+	assert _merge==3
+	drop _merge
+	
+	// Chef survey outcomes
+	preserve
+	
+		* Start with Pablo data to get chef "domains" by polygon (don't necessarily align with chef polygon-code)
+		u "${repldir}/Data/01_base/admin_data/chief_collector_candidates.dta",clear
+		keep if rankpop<=5 // Keep top 5 ranked chefs
+		cap drop _merge
+		
+		merge m:1 code using "${repldir}/Data/01_base/survey_data/chief_survey_randbasis_noPII.dta",gen(_mergechef) ///
+			keepusing(edu inc_mo state_cap1 collect_ever)
+		drop if _mergechef!=3 // 8 observations
+		drop _merge*
+		
+		* Drop pilot polygons
+		drop if inlist(a7,200,201,202,203,207,208,210)
+
+		* Create dataset at the polygon-level
+		collapse (mean) chef_edu = edu chef_inc_mo = inc_mo chef_statecap = state_cap1 (count) chefs_poly = code,by(a7)
+		
+		tempfile chefsurvey1
+		sa `chefsurvey1'
+	
+	restore
+	
+	merge m:1 a7 using `chefsurvey1'
+	drop if _merge==2 // 9 non-matching observations - these are "excluded" polygons
+	assert _merge==3
+	drop _merge
+	
+	// Other compliance measure
+	preserve
+		u "${repldir}/Data/01_base/admin_data/tax_payments_neighborhoods.dta",clear
+		
+		// Fix polygon for spilts
+				expand 3 if a7==609,g(exp)
+				sort exp,stable
+				by exp: g tmp_id = _n
+				replace tmp_id = . if exp==0
+				replace a7 = 6091 if tmp_id==1
+				replace a7 = 6092 if tmp_id==2
+				replace a7 = 6093 if tmp_id==. & a7==609
+				drop exp tmp_id
+				
+				expand 4 if a7==610,g(exp)
+				sort exp,stable
+				by exp: g tmp_id = _n
+				replace tmp_id = . if exp==0
+				replace a7 = 6101 if tmp_id==. & exp==0 & a7==610
+				replace a7 = 6102 if tmp_id==1 & exp==1 & a7==610
+				replace a7 = 6103 if tmp_id==2 & exp==1 & a7==610
+				replace a7 = 6104 if tmp_id==3 & exp==1 & a7==610
+				drop exp tmp_id
+				
+				drop if a7>400 & a7<500 // Nganza
+				drop if inlist(a7,200,201,202,203,207,208,210) // Pilot polygons
+				
+			ren paid paid_2016_alternate
+			replace paid_2016_alternate = paid_2016_alternate/hh_final
+			
+			g rev_2016_alternate = amount/hh_final
+			
+			tempfile paid_alternate
+			sa `paid_alternate'
+		
+	restore
+	
+	merge m:1 a7 using `paid_alternate'
+	assert _merge!=2
+	replace rev_2016_alternate = rev_2016 if _merge==1
+	drop _merge
+	
+	// Rouge (conflict-affectedness)
+
+	merge m:1 a7 using "${repldir}/Data/01_base/admin_data/randomization_assignment.dta",keepusing(rouge)
+
+	// Time FE
+	egen time_FE_tdm_2mo_CvL = cut(today_alt),at(21355 21415 21475 21532) icodes
+
+**************
+* Coding *
+**************
+
+* drop villas 
+drop if house==3
+
+* drop if rate is missing (to investigate: 1,000+ maison moyennes missing rate info)
+drop if rate==.
+
+* drop pilot
+drop if pilot==1
+
+sort a7 compound_code,stable
+by a7: g counter = _n
+foreach var in paid_2016 chefs_poly rouge rev_2016_alternate{
+replace `var' = . if counter!=1 // polygon-level outcomes
+}
+
+egen dist_health=rowmin(dist_health_centers dist_hospitals)
+egen dist_edu=rowmean(dist_private_schools dist_public_schools dist_universities)
+egen dist_stateandmkt=rowmean(dist_state_buildings dist_police_stations dist_city_center dist_markets dist_gas_stations)
+
+* Globals for Table
+global balancevars_bl "rev_2016_alternate rouge edu_yrs elect1 lg_inc_mo trust_chief trust_nat_gov trust_prov_gov trust_tax_min"
+global balancevars_ml "dist_stateandmkt dist_health dist_edu dist_roads dist_ravin house_quality_new sex_prop age_prop main_tribe employed salaried work_gov job_gov"
+
+global balancevars_ml_dist "dist_stateandmkt dist_health dist_edu dist_roads dist_ravin"
+global balancevars_ml_owner "house_quality_new sex_prop age_prop main_tribe employed salaried work_gov job_gov"
+
+tempfile full
+sa `full'
+
+label var rouge "Affected by conflict in 2017"
+label var paid_2016 "Per capita property tax revenues in 2016"
+label var job_gov "Relative works for government"
+
+**********************************
+* Balance for Baseline Variables *
+**********************************
+
+* Below we calculate the mean of the LHS variable within the control group and then run a regression of the LHS var on treatment dummies
+* I write all of the output to a csv because it is difficult to get the formatting we want using Stata programs like esttab
+
+* Open temp file to write table output to. This will be converted to the actual output
+tempfile temp
+capture file close outfile
+file open outfile using `temp', write replace
+file write outfile ",Obs,ControlMean,ExpCoef_L,ExpCoef_CLI,ExpCoef_CXL" _n
+
+* Define an output format for estimates
+global fmt "%9.4f"
+
+* Keep track of total number of coefficients estimated and number of significant coefficients for text notes
+local coef_count = 0
+local p10_count = 0
+local p05_count = 0
+local p01_count = 0
+
+* Generate tmts
+g central = tmt==1
+g local = tmt==2
+g centralwinfo = tmt==3
+g centralxlocal = tmt==4
+
+* Generate control 
+gen control=1
+replace control=0 if central==1 
+replace control=0 if local==1
+replace control=0 if centralwinfo==1
+replace control=0 if centralxlocal==1
+ 
+local i=1
+foreach v of global balancevars_bl {
+	
+	* Calculate mean of each variable within control group
+	su `v' if central==1
+	local cont = `r(mean)'	
+	
+	* Test for statistically significant deviations from control mean in experimental and section 8 groups
+	areg `v' local centralwinfo centralxlocal if inlist(tmt,1,2,3,4), vce(cl a7)  abs(stratum)
+	local observations = e(N)	
+	local coef_count = `coef_count'+2
+	
+	* Store coefficients and significance stars to be printed below
+	local b_exp_l  = _b[local]
+	local se_b_exp_l = _se[local]
+	local star_exp_l = ""
+	if abs(`b_exp_l'/`se_b_exp_l')>invnormal(.95) & abs(`b_exp_l'/`se_b_exp_l')<=invnormal(.975) { 
+		local star_exp_l = "*"
+		local p10_count = `p10_count'+1
+	}
+	if abs(`b_exp_l'/`se_b_exp_l')>invnormal(.975) & abs(`b_exp_l'/`se_b_exp_l')<=invnormal(.995) { 
+		local star_exp_l = "**"
+		local p05_count = `p05_count'+1
+	}
+	if abs(`b_exp_l'/`se_b_exp_l')>invnormal(.995) & abs(`b_exp_l'/`se_b_exp_l')<. {
+		local star_exp_l = "***"
+		local p01_count = `p01_count'+1
+	}
+	
+	
+	local b_exp_cli  = _b[centralwinfo]
+	local se_b_exp_cli = _se[centralwinfo]
+	local star_exp_cli = ""
+	if abs(`b_exp_cli'/`se_b_exp_cli')>invnormal(.95) & abs(`b_exp_cli'/`se_b_exp_cli')<=invnormal(.975) { 
+		local star_exp_cli = "*"
+		local p10_count = `p10_count'+1
+	}
+	if abs(`b_exp_cli'/`se_b_exp_cli')>invnormal(.975) & abs(`b_exp_cli'/`se_b_exp_cli')<=invnormal(.995) { 
+		local star_exp_cli = "**"
+		local p05_count = `p05_count'+1
+	}
+	if abs(`b_exp_cli'/`se_b_exp_cli')>invnormal(.995) & abs(`b_exp_cli'/`se_b_exp_cli')<. {
+		local star_exp_cli = "***"
+		local p01_count = `p01_count'+1
+	}
+	
+		local b_exp_cxl  = _b[centralxlocal]
+	local se_b_exp_cxl = _se[centralxlocal]
+	local star_exp_cxl = ""
+	if abs(`b_exp_cxl'/`se_b_exp_cxl')>invnormal(.95) & abs(`b_exp_cxl'/`se_b_exp_cxl')<=invnormal(.975) { 
+		local star_exp_cxl = "*"
+		local p10_count = `p10_count'+1
+	}
+	if abs(`b_exp_cli'/`se_b_exp_cxl')>invnormal(.975) & abs(`b_exp_cxl'/`se_b_exp_cxl')<=invnormal(.995) { 
+		local star_exp_cxl = "**"
+		local p05_count = `p05_count'+1
+	}
+	if abs(`b_exp_cxl'/`se_b_exp_cxl')>invnormal(.995) & abs(`b_exp_cxl'/`se_b_exp_cxl')<. {
+		local star_exp_cxl = "***"
+		local p01_count = `p01_count'+1
+	}
+	
+	* Use value of 99999 as flag for missing coefficient to be parsed and dropped below
+	if _b[local]==0 & _se[local]==0{
+		local b_exp_l = 99999
+		local se_b_exp_l = 99999
+		local star_exp_l = ""
+	}
+		if _b[centralwinfo]==0 & _se[centralwinfo]==0{
+		local b_exp_cli = 99999
+		local se_b_exp_cli = 99999
+		local star_exp_cli = ""
+	}
+		if _b[centralxlocal]==0 & _se[centralxlocal]==0{
+		local b_exp_cxl = 99999
+		local se_b_exp_cxl = 99999
+		local star_exp_cxl = ""
+	}
+	
+
+	* Print means, coefficients, standard errors, and significance stars to output csv file
+	local rowname : word `i' of rev_2016_alternate rouge edu_yrs elect1 lg_inc_mo trust_chief trust_nat_gov trust_prov_gov trust_tax_min
+	file write outfile `"`rowname',=""' ${fmt} (`observations') `"", =""' ${fmt} (`cont') `"", =""' ${fmt} (`b_exp_l') `"`star_exp_l'", =""' ${fmt} (`b_exp_cli') `"`star_exp_cli'",  =""' ${fmt} (`b_exp_cxl') `"`star_exp_cxl'""' _n
+	file write outfile `" , , ,="("'${fmt} (`se_b_exp_l') `")",="("'${fmt} (`se_b_exp_cli') `")",="("'${fmt} (`se_b_exp_cxl') `")""' _n
+
+	local i=`i'+1
+}
+
+local ++i
+
+cap file close infile
+file open infile using `temp', read
+
+* Open csv file to write table
+file close outfile
+file open outfile using "${reploutdir}/main_balance_baseline.csv", write replace
+
+* Write each line from the temporary table file to the final output table. Replace 99999 placeholders for missing coefficients with blanks
+file read infile line
+while r(eof)==0{
+	local out = subinstr(trim(itrim(`"`line'"'))," ","",.)
+	local out = subinstr(`"`out'"', "(99999.0)", "", .)
+	local out = subinstr(`"`out'"', "99999.0", "", .)
+	file write outfile `"`out'"' _n
+	file read infile line
+}
+file close infile 
+file close outfile
+
+*********************************
+* Balance for Midline Variables *
+*********************************
+
+* Below we calculate the mean of the LHS variable within the control group and then run a regression of the LHS var on treatment dummies
+* I write all of the output to a csv because it is difficult to get the formatting we want using Stata programs like esttab
+
+* Open temp file to write table output to. This will be converted to the actual output
+tempfile temp_ml
+capture file close outfile
+file open outfile using `temp_ml', write replace
+file write outfile ",Obs,ControlMean,ExpCoef_L,ExpCoef_CLI,ExpCoef_CXL" _n
+
+* Define an output format for estimates
+global fmt "%9.4f"
+
+* Keep track of total number of coefficients estimated and number of significant coefficients for text notes
+local coef_count = 0
+local p10_count = 0
+local p05_count = 0
+local p01_count = 0
+ 
+local i=1
+foreach v of global balancevars_ml {
+	
+	* Calculate mean of each variable within control group
+	su `v' if central==1
+	local cont = `r(mean)'	
+	
+	* Test for statistically significant deviations from control mean in experimental and section 8 groups
+	areg `v' local centralwinfo centralxlocal if inlist(tmt,1,2,3,4), vce(cl a7)  abs(stratum)
+	local observations = e(N)	
+	local coef_count = `coef_count'+2
+	
+	* Store coefficients and significance stars to be printed below	
+	local b_exp_l  = _b[local]
+	local se_b_exp_l = _se[local]
+	local star_exp_l = ""
+	if abs(`b_exp_l'/`se_b_exp_l')>invnormal(.95) & abs(`b_exp_l'/`se_b_exp_l')<=invnormal(.975) { 
+		local star_exp_l = "*"
+		local p10_count = `p10_count'+1
+	}
+	if abs(`b_exp_l'/`se_b_exp_l')>invnormal(.975) & abs(`b_exp_l'/`se_b_exp_l')<=invnormal(.995) { 
+		local star_exp_l = "**"
+		local p05_count = `p05_count'+1
+	}
+	if abs(`b_exp_l'/`se_b_exp_l')>invnormal(.995) & abs(`b_exp_l'/`se_b_exp_l')<. {
+		local star_exp_l = "***"
+		local p01_count = `p01_count'+1
+	}
+	
+	
+	local b_exp_cli  = _b[centralwinfo]
+	local se_b_exp_cli = _se[centralwinfo]
+	local star_exp_cli = ""
+	if abs(`b_exp_cli'/`se_b_exp_cli')>invnormal(.95) & abs(`b_exp_cli'/`se_b_exp_cli')<=invnormal(.975) { 
+		local star_exp_cli = "*"
+		local p10_count = `p10_count'+1
+	}
+	if abs(`b_exp_cli'/`se_b_exp_cli')>invnormal(.975) & abs(`b_exp_cli'/`se_b_exp_cli')<=invnormal(.995) { 
+		local star_exp_cli = "**"
+		local p05_count = `p05_count'+1
+	}
+	if abs(`b_exp_cli'/`se_b_exp_cli')>invnormal(.995) & abs(`b_exp_cli'/`se_b_exp_cli')<. {
+		local star_exp_cli = "***"
+		local p01_count = `p01_count'+1
+	}
+	
+		local b_exp_cxl  = _b[centralxlocal]
+	local se_b_exp_cxl = _se[centralxlocal]
+	local star_exp_cxl = ""
+	if abs(`b_exp_cxl'/`se_b_exp_cxl')>invnormal(.95) & abs(`b_exp_cxl'/`se_b_exp_cxl')<=invnormal(.975) { 
+		local star_exp_cxl = "*"
+		local p10_count = `p10_count'+1
+	}
+	if abs(`b_exp_cli'/`se_b_exp_cxl')>invnormal(.975) & abs(`b_exp_cxl'/`se_b_exp_cxl')<=invnormal(.995) { 
+		local star_exp_cxl = "**"
+		local p05_count = `p05_count'+1
+	}
+	if abs(`b_exp_cxl'/`se_b_exp_cxl')>invnormal(.995) & abs(`b_exp_cxl'/`se_b_exp_cxl')<. {
+		local star_exp_cxl = "***"
+		local p01_count = `p01_count'+1
+	}
+	
+	* Use value of 99999 as flag for missing coefficient to be parsed and dropped below
+	if _b[local]==0 & _se[local]==0{
+		local b_exp_l = 99999
+		local se_b_exp_l = 99999
+		local star_exp_l = ""
+	}
+		if _b[centralwinfo]==0 & _se[centralwinfo]==0{
+		local b_exp_cli = 99999
+		local se_b_exp_cli = 99999
+		local star_exp_cli = ""
+	}
+		if _b[centralxlocal]==0 & _se[centralxlocal]==0{
+		local b_exp_cxl = 99999
+		local se_b_exp_cxl = 99999
+		local star_exp_cxl = ""
+	}
+	
+
+	* Print means, coefficients, standard errors, and significance stars to output csv file
+	local rowname : word `i' of dist_stateandmkt dist_health dist_edu dist_roads dist_ravin house_quality_new sex_prop age_prop main_tribe employed salaried work_gov job_gov
+	file write outfile `"`rowname',=""' ${fmt} (`observations') `"", =""' ${fmt} (`cont') `"", =""' ${fmt} (`b_exp_l') `"`star_exp_l'", =""' ${fmt} (`b_exp_cli') `"`star_exp_cli'",  =""' ${fmt} (`b_exp_cxl') `"`star_exp_cxl'""' _n
+	file write outfile `" , , ,="("'${fmt} (`se_b_exp_l') `")",="("'${fmt} (`se_b_exp_cli') `")",="("'${fmt} (`se_b_exp_cxl') `")""' _n
+
+	local i=`i'+1
+}
+
+local ++i
+
+cap file close infile
+file open infile using `temp_ml', read
+
+* Open csv file to write table
+file close outfile
+file open outfile using "${reploutdir}/main_balance_midline.csv", write replace
+
+* Write each line from the temporary table file to the final output table. Replace 99999 placeholders for missing coefficients with blanks
+file read infile line
+while r(eof)==0{
+	local out = subinstr(trim(itrim(`"`line'"'))," ","",.)
+	local out = subinstr(`"`out'"', "(99999.0)", "", .)
+	local out = subinstr(`"`out'"', "99999.0", "", .)
+	file write outfile `"`out'"' _n
+	file read infile line
+}
+file close infile 
+file close outfile
+
+*************
+* Attrition *
+*************
+
+
+	* use clean baseline data 
+	u "${repldir}/Data/01_base/survey_data/baseline_noPII.dta", clear
+	keep if tot_complete==1 
+				
+	keep code a7
+
+	****************
+	* Endline Data *
+	****************
+
+		preserve
+		* Use clean endline data 
+		u "${repldir}/Data/01_base/survey_data/endline_round1_noPII.dta", clear
+		keep if tot_complete==1 
+		
+		keep code a7 replacement
+
+		tempfile el
+		save `el'
+		restore
+		
+		merge 1:1 code using `el'
+		
+		assert _merge!=2
+		g attrited = _merge==1
+		drop _merge
+		
+	*****************
+	* Combined Data *
+	*****************
+		
+		preserve
+		* Use clean combined data
+		use "${repldir}/Data/03_clean_combined/analysis_data.dta", clear
+		
+		collapse (max) tmt stratum,by(a7)
+		
+		tempfile tmt
+		sa `tmt'
+		
+		restore
+		
+		merge m:1 a7 using `tmt'
+		drop if inlist(a7,200,201,202,203,207,208,210) // pilot
+		assert  _merge==3
+		drop _merge
+		
+	**********************
+	* Regressions *
+	**********************
+
+	* Generate tmts
+	g central = tmt==1
+	g local = tmt==2
+	g centralwinfo = tmt==3
+	g centralxlocal = tmt==4
+
+	* Generate control 
+	gen control=1
+	replace control=0 if central==1 
+	replace control=0 if local==1
+	replace control=0 if centralwinfo==1
+	replace control=0 if centralxlocal==1
+
+	// Baseline
+	
+		* No Control group, Strata FE
+		eststo clear
+		eststo: areg attrited local centralwinfo centralxlocal if inlist(tmt,1,2,3,4), vce(cl a7)  abs(stratum)
+		sum attrited if central==1
+		estadd local Mean=abs(round(`r(mean)',.001))
+		estadd scalar Observations = `e(N)'
+		estadd scalar Clusters = `e(N_clust)'
+		
+		* No Control group, Strata FE
+		eststo: areg replacement local centralwinfo centralxlocal if inlist(tmt,1,2,3,4), vce(cl a7)  abs(stratum)
+		sum replacement if central==1
+		estadd local Mean=abs(round(`r(mean)',.001))
+		estadd scalar Observations = `e(N)'
+		estadd scalar Clusters = `e(N_clust)'
+	
+	// Midline
+	
+		use "${repldir}/Data/03_clean_combined/analysis_data.dta", clear
+		keep if tmt!=.
+
+		cap drop visit_post_carto
+		gen visit_post_carto=0 if visited==0 | (visits!=0 & visits!=.)
+		replace visit_post_carto=1 if visits!=. & visits>1
+		
+		cap drop nb_visit_post_carto
+		gen nb_visit_post_carto=0 if visits!=. | visited==0
+		replace nb_visit_post_carto=visits-1 if visits!=. & visits>1
+		replace nb_visit_post_carto=. if nb_visit_post_carto==99998
+		replace nb_visit_post_carto = . if visit_post_carto==.
+		
+		gen visits_other_dummy=visits_other1a
+		replace visits_other_dummy=visits_other2a if visits_other1a==. & visits_other2a!=. 
+		label var visits_other_dummy "Talked to collectors about Property Tax"
+		gen visits_other_nb=visits_other1b
+		replace visits_other_nb= visits_other2b if visits_other_nb==.
+		replace visits_other_nb=0 if visits_other_dummy==0
+		label var visits_other_nb "Talked to collectors about Property Tax  Nb of times"
+		
+		replace salongo_hours = 0 if salongo==0
+		replace salongo_hours = . if salongo_hours==99999
+		
+		egen time_FE_tdm_2mo_CvL = cut(today_alt),at(21355 21415 21475 21532) icodes
+		egen time_FE_tdm_2mo_CvCLI = cut(today_alt),at(21365.5 21425.5 21485.5 21519) icodes
+		egen time_FE_tdm_2mo_LvCLI = cut(today_alt),at(21370.5 21430.5 21490.5 21522) icodes
+		egen time_FE_tdm_2mo_CvLvCLI = cut(today_alt),at(21363.6 21423.6 21483.6 21524.3) icodes
+		
+		* Midline attrition measures
+
+		g attrited_monitoring = 1 if _merge_flier_carto_rep_monit==1
+		replace attrited_monitoring = 0 if _merge_flier_carto_rep_monit==3
+
+		* Generate tmts
+		g central = tmt==1
+		g local = tmt==2
+		g centralwinfo = tmt==3
+		g centralxlocal = tmt==4
+
+		* Generate control
+		cap gen control=1
+		replace control=0 if central==1
+		replace control=0 if local==1
+		replace control=0 if centralwinfo==1
+		replace control=0 if centralxlocal==1
+
+		* No Control group, Strata FE
+		eststo: areg attrited_monitoring local centralwinfo centralxlocal if inlist(tmt,1,2,3,4), vce(cl a7)  abs(stratum)
+		sum attrited_monitoring if tmt==1
+		estadd local Mean=abs(round(`r(mean)',.001))
+		estadd scalar Observations = `e(N)'
+		estadd scalar Clusters = `e(N_clust)'
+	
+	esttab using "${reploutdir}/main_attrition.tex", ///
+	replace label b(%9.3f) se(%9.3f) ///
+	keep (local centralwinfo centralxlocal) ///
+	order(local centralwinfo centralxlocal) ///
+	scalar(Clusters Mean) sfmt(0 3) ///
+	nomtitles ///
+	mgroups("Baseline to Endline Attrition" "Baseline Replacement" "Midline Attrition", pattern(1 1 1) prefix(\multicolumn{@span}{c}{) suffix(}) span) ///
+	star(* 0.10 ** 0.05 *** 0.001) ///
+	nogaps nonotes compress
+
+```
+
+### `Replication Materials - Updated October 2025/Dofiles/Tables_Figures/Table4.do`
+```stata
+***********
+* Table 4 *
+***********
+
+use "${repldir}/Data/03_clean_combined/analysis_data.dta", clear
+
+	keep if tmt==1 | tmt==2 | tmt==3
+	
+	* Define FE
+	sum today_alt
+	local tdm_min = `r(min)'
+	local tdm_max = `r(max)'+1
+	
+	egen time_FE_tdm_2mo_CvL = cut(today_alt),at(21355 21415 21475 21532) icodes
+	
+**************
+* Compliance *
+**************
+
+	eststo clear
+	label var t_l "Local"
+
+	* Normal - Compliance - No house FE
+	eststo: reg taxes_paid t_l i.stratum if inlist(tmt,1,2), cl(a7)
+	su taxes_paid if t_c==1
+	estadd local Mean=abs(round(`r(mean)',.001))
+	estadd scalar Observations = `e(N)'
+	estadd scalar Clusters = `e(N_clust)'
+	
+	* Month FE - Compliance - No house FE
+	eststo: reg taxes_paid t_l i.stratum i.time_FE_tdm_2mo_CvL if inlist(tmt,1,2), cl(a7)
+	su taxes_paid if t_c==1 & time_FE_tdm_2mo_CvL!=.
+	estadd local Mean=abs(round(`r(mean)',.001))
+	estadd scalar Observations = `e(N)'
+	estadd scalar Clusters = `e(N_clust)'
+	
+	* Month FE - Compliance - No house FE - Polygon Mean
+	preserve
+		drop if time_FE_tdm_2mo_CvL==.
+		collapse (mean) taxes_paid (min) time_FE_tdm_2mo_CvL (max) t_l t_c stratum,by(a7 tmt)
+		eststo: reg taxes_paid t_l i.stratum i.time_FE_tdm_2mo_CvL if inlist(tmt,1,2), robust
+		su taxes_paid if t_c==1 & time_FE_tdm_2mo_CvL!=.
+		estadd local Mean=abs(round(`r(mean)',.001))
+		estadd scalar Observations = `e(N)'
+		*estadd scalar Clusters = `e(N_clust)'
+	restore
+	
+	* Month FE - Compliance - House FE
+	eststo: reg taxes_paid t_l i.stratum i.house i.time_FE_tdm_2mo_CvL if inlist(tmt,1,2), cl(a7)
+	su taxes_paid if t_c==1 & time_FE_tdm_2mo_CvL!=.
+	estadd local Mean=abs(round(`r(mean)',.001))
+	estadd scalar Observations = `e(N)'
+	estadd scalar Clusters = `e(N_clust)'
+	
+	* Month FE - Compliance - House FE - Condition Exempt
+	eststo: reg taxes_paid t_l i.stratum i.house i.time_FE_tdm_2mo_CvL if inlist(tmt,1,2) & exempt!=1, cl(a7)
+	su taxes_paid if t_c==1 & time_FE_tdm_2mo_CvL!=. & exempt!=1
+	estadd local Mean=abs(round(`r(mean)',.001))
+	estadd scalar Observations = `e(N)'
+	estadd scalar Clusters = `e(N_clust)'
+	
+	esttab using "${reploutdir}/main_compliance_results.tex", ///
+	replace label b(%9.3f) se(%9.3f) ///
+	keep (t_l) ///
+	order(t_l) ///
+	scalar(Clusters Mean) sfmt(0 3 3) ///
+	nomtitles ///
+	mgroups("Tax Compliance" "Tax Compliance" "Tax Compliance" "Tax Compliance" "Tax Compliance", pattern(1 1 1 1 1) prefix(\multicolumn{@span}{c}{) suffix(}) span) ///
+	indicate("Month FE = *2mo*""House FE = *house*""Stratum FE = *stratum*") ///
+	star(* 0.10 ** 0.05 *** 0.001) ///
+	nogaps nonotes compress
+	
+************
+* Revenues *
+************
+	
+	eststo clear
+	label var t_l "Local"
+	
+	* Normal - Revenues - No house FE
+	eststo: reg taxes_paid_amt t_l i.stratum if inlist(tmt,1,2), cl(a7)
+	su taxes_paid_amt if t_c==1
+	estadd local Mean=abs(round(`r(mean)',.001))
+	estadd scalar Observations = `e(N)'
+	estadd scalar Clusters = `e(N_clust)'
+	
+	* Month FE - Revenues - No house FE
+	eststo: reg taxes_paid_amt t_l i.stratum i.time_FE_tdm_2mo_CvL if inlist(tmt,1,2), cl(a7)
+	su taxes_paid_amt if t_c==1 & time_FE_tdm_2mo_CvL!=.
+	estadd local Mean=abs(round(`r(mean)',.001))
+	estadd scalar Observations = `e(N)'
+	estadd scalar Clusters = `e(N_clust)'
+	
+	* Month FE - Revenues - No house FE - Polygon Mean
+	preserve
+		drop if time_FE_tdm_2mo_CvL==.
+		collapse (mean) taxes_paid_amt (min) time_FE_tdm_2mo_CvL (max) t_l t_c stratum,by(a7 tmt)
+		eststo: reg taxes_paid_amt t_l i.stratum i.time_FE_tdm_2mo_CvL if inlist(tmt,1,2), robust
+		su taxes_paid_amt if t_c==1 & time_FE_tdm_2mo_CvL!=.
+		estadd local Mean=abs(round(`r(mean)',.001))
+		estadd scalar Observations = `e(N)'
+		*estadd scalar Clusters = `e(N_clust)'
+	restore
+	
+	* Month FE - Revenues - House FE
+	eststo: reg taxes_paid_amt t_l i.stratum i.house i.time_FE_tdm_2mo_CvL if inlist(tmt,1,2), cl(a7)
+	su taxes_paid_amt if t_c==1 & time_FE_tdm_2mo_CvL!=.
+	estadd local Mean=abs(round(`r(mean)',.001))
+	estadd scalar Observations = `e(N)'
+	estadd scalar Clusters = `e(N_clust)'
+	
+	* Month FE - Revenues - House FE - Condition Exempt
+	eststo: reg taxes_paid_amt t_l i.stratum i.house i.time_FE_tdm_2mo_CvL if inlist(tmt,1,2) & exempt!=1, cl(a7)
+	su taxes_paid_amt if t_c==1 & time_FE_tdm_2mo_CvL!=. & exempt!=1
+	estadd local Mean=abs(round(`r(mean)',.001))
+	estadd scalar Observations = `e(N)'
+	estadd scalar Clusters = `e(N_clust)'
+	
+	esttab using "${reploutdir}/main_revenues_results.tex", ///
+	replace label b(%9.3f) se(%9.3f) ///
+	keep (t_l) ///
+	order(t_l) ///
+	scalar(Clusters Mean) sfmt(0 3 3) ///
+	nomtitles ///
+	mgroups("Revenues" "Revenues" "Revenues" "Revenues" "Revenues", pattern(1 1 1 1 1) prefix(\multicolumn{@span}{c}{) suffix(}) span) ///
+	indicate("Month FE = *2mo*""House FE = *house*""Stratum FE = *stratum*") ///
+	star(* 0.10 ** 0.05 *** 0.001) ///
+	nogaps nonotes compress
+
+```
+
+### `Replication Materials - Updated October 2025/Dofiles/Tables_Figures/Table5.do`
+```stata
+***********
+* Table 5 *
+***********
+
+******************
+* Panels A and B *
+******************
+
+	use "${repldir}/Data/03_clean_combined/analysis_data.dta", clear
+	keep if tmt==1 | tmt==2 | tmt==3
+
+	* Outcomes
+	gen enum_disagrees_exempt=0 if exempt_enum!=. & exempt!=.
+	replace enum_disagrees_exempt=1 if exempt!=exempt_enum & exempt_enum!=. & exempt!=.
+
+	g house_type = 0 if house==1
+	replace house_type = 1 if house==2
+	revrs correct
+	replace revcorrect = revcorrect-1
+	ren revcorrect enum_disagrees_house
+	
+	cap drop visit_post_carto
+	gen visit_post_carto=0 if visited==0 | (visits!=0 & visits!=.)
+	replace visit_post_carto=1 if visits!=. & visits>1
+	
+	cap drop nb_visit_post_carto
+	gen nb_visit_post_carto=0 if visits!=. | visited==0
+	replace nb_visit_post_carto=visits-1 if visits!=. & visits>1
+	replace nb_visit_post_carto=. if nb_visit_post_carto==99998
+	replace nb_visit_post_carto = . if visit_post_carto==.
+	
+	gen visits_other_dummy=visits_other1a
+	replace visits_other_dummy=visits_other2a if visits_other1a==. & visits_other2a!=. 
+	label var visits_other_dummy "Talked to collectors about Property Tax"
+	gen visits_other_nb=visits_other1b
+	replace visits_other_nb= visits_other2b if visits_other_nb==.
+	replace visits_other_nb=0 if visits_other_dummy==0
+	label var visits_other_nb "Talked to collectors about Property Tax  Nb of times"
+	
+	replace bribe_combined_amt=0 if bribe_combined==0
+	
+	g gap_midline = 0 if taxes_paid==0 & paid_self==0
+	replace gap_midline = 1 if taxes_paid==0 & paid_self==1
+	
+	replace salongo_hours = 0 if salongo==0
+	replace salongo_hours = . if salongo_hours==99999
+	
+	egen time_FE_tdm_2mo_CvL = cut(today_alt),at(21355 21415 21475 21532) icodes
+	egen time_FE_tdm_2mo_CvCLI = cut(today_alt),at(21365.5 21425.5 21485.5 21519) icodes
+	egen time_FE_tdm_2mo_LvCLI = cut(today_alt),at(21370.5 21430.5 21490.5 21522) icodes
+	egen time_FE_tdm_2mo_CvLvCLI = cut(today_alt),at(21363.6 21423.6 21483.6 21524.3) icodes
+	
+	cap drop treatment
+	ren tmt treatment
+	
+	eststo clear
+	label var t_l "Local"
+	
+	tempfile midline
+	sa `midline'
+		
+	* Merge endline not on compound code
+		use "${repldir}/Data/01_base/survey_data/endline_round1_noPII.dta", clear
+		keep if tot_complete==1 
+		replace compound_code=compound_code_prev if (compound_code_prev!=. & compound_code_prev!=3)
+		rename compound_code compound1
+			
+		* Bribe variables
+			replace bribe = bribe2a if bribe==.
+			replace bribe = bribe2b if bribe==.
+			replace bribe = bribe3 if bribe==.
+			replace bribe_amt = bribe2a_amt if bribe_amt==.
+			replace bribe_amt = bribe2b_amt if bribe_amt==.
+			replace bribe_amt = bribe3_amt if bribe_amt==.
+			
+			replace bribe_amt = 0 if bribe==0
+			
+			ren bribe bribe_endline
+			ren bribe_amt bribe_amt_endline
+			
+			ren o_pay2 informal_pay_endline
+			ren pay_tot2 informal_pay_amt_endline
+				replace informal_pay_amt_endline = . if informal_pay_amt_endline==8885 // looks like enum coding error
+			
+			ren paid_self paid_self_endline
+			
+			* Salongo variables
+			g salongo_endline = 0 if salongo==0
+			replace salongo_endline = 1 if salongo>0 & salongo<.
+			
+			g salongo_hours_endline = salongo_hours
+			replace salongo_hours_endline = . if salongo_hours==16000 | salongo_hours==60000 // obvious outliers
+			replace salongo_hours_endline = 0 if salongo_endline==0
+			
+			keep code a7 *_endline paid_*
+			
+			cap drop _merge
+			cap drop tmt
+			cap drop treatment
+			
+			preserve
+				use "${repldir}/Data/03_clean_combined/analysis_data.dta", clear
+				collapse (max) tmt stratum,by(a7)
+				ren tmt treatment
+				tempfile tmt
+				sa `tmt'
+			restore
+			
+			merge m:1 a7 using `tmt', nogen keep(3)
+			
+					g t_l = treatment==2
+					g t_c = treatment==1
+		
+			tempfile endline
+			save `endline'
+
+* Export table
+
+#delimit ;
+global dependent_variables =  "exempt enum_disagrees_exempt house_type enum_disagrees_house
+							   bribe_combined gap_midline bribe_endline informal_pay_endline";
+#delimit cr
+
+local counter = 0
+eststo clear
+foreach depvar in $dependent_variables  {
+local counter = `counter' + 1
+cap confirm variable `depvar'
+	if `counter'<=2 | (`counter'==5) | (`counter'==6){
+	u `midline',clear
+	reg `depvar' t_l i.house i.stratum i.time_FE_tdm_2mo_CvL if inlist(treatment,1,2), cluster(a7)
+	}
+	if `counter'==3 | `counter'==4{
+	u `midline',clear
+	reg `depvar' t_l i.stratum i.time_FE_tdm_2mo_CvL if inlist(treatment,1,2), cluster(a7)
+	}
+	if `counter'==7 | (`counter'==8){
+	u `endline',clear
+	reg `depvar' t_l i.stratum if inlist(treatment,1,2), cluster(a7)
+	}
+local beta = round(_b[t_l],.001)
+di "Beta: `beta'"
+local se = round(_se[t_l],.001)
+di "SE: `se'"
+local p = round(2*ttail(e(df_r), abs(_b[t_l]/_se[t_l])),.001)
+di "p-value: `p'"
+local obs = round(`e(N)',1)
+di "N:`obs'"
+local clust = round(`e(N_clust)',1)
+di "Clusters:`clust'"
+local r2 = `e(r2)' 
+di "R2:`r2'"
+if `counter'<=2 | (`counter'==4) | (`counter'==5) | (`counter'==6) | (`counter'==3){
+sum `depvar' if t_c==1 & time_FE_tdm_2mo_CvL!=.
+}
+else{
+sum `depvar' if t_c==1
+}
+local centralmean = round(`r(mean)',.001)
+di "Central mean:`centralmean'"
+
+	if `counter' == 1 { 
+		mat input reg = (`beta', `se',`r2',`obs',`centralmean') 
+		mat rownames reg = `depvar' 
+		mat colnames reg = beta SE r2 N centralmean	 
+	}
+	
+	if `counter' > 1 { 
+		mat input reg`counter' = (`beta', `se',`r2',`obs',`centralmean') 
+		mat rownames reg`counter' = `depvar' 
+		mat colnames reg`counter' = beta SE r2 N centralmean	 
+		mat reg = (reg \ reg`counter' )
+	}
+}
+	mata reg = st_matrix("reg") 
+	mat list reg 	
+	
+	cd "$reploutdir"
+	mmat2tex reg using "assessment_bribes.tex", replace  ///
+	colnames(beta SE r2 N centralmean) ///
+	rownames("Assigned Exemption" "Incorrect Exemption" "Assigned High Band" "Incorrect Assignment" ///
+	"Paid Bribe (Midline)" "Gap Self v. Admin (Midline)" "Paid Bribe (Endline)" "Other Payments (Endline)") ///
+	preheader("{\def\sym#1{\ifmmode^{#1}\else\(^{#1}\)\fi} \begin{tabular}{l*{5}{c}} \hline\hline") ///
+	bottom("\hline\hline \end{tabular} }") ///
+	fmt(%9.3f)
+	
+**********************
+* Panels C, D, and E *
+**********************
+
+	* merge endline and baseline surveys
+	use "${repldir}/Data/01_base/survey_data/endline_round1_noPII.dta", clear
+	keep if tot_complete==1 
+	replace compound_code=compound_code_prev if (compound_code_prev!=. & compound_code_prev!=3)
+	rename compound_code compound1
+		
+	global reverse_variables = "corr14_end punish"
+	
+	revrs $reverse_variables , replace 
+	
+	foreach var in trust1_survey_e trust2_survey_e trust3_survey_e trust4_survey_e trust5_survey_e  trust6_survey_e {
+	center `var' , inplace st
+	}
+	
+	rename trust1_survey_e trust_chef
+	rename trust5_survey_e trust_ngos
+	rename trust6_survey_e trust_dgrkoc
+	
+	egen trust_gov = rowtotal(trust2_survey_e trust3_survey_e), missing
+	center trust_gov , inplace st 
+
+	foreach var in provide1 provide2 provide3 provide4 provide5 provide6 provide7 {
+	g `var'_pg=`var'==2
+	replace `var'_pg = . if `var'==.
+	}
+	
+	egen pg_provide = rowtotal(*_pg), missing
+	center pg_provide , inplace st 
+
+	center conflict3 , gen(conflict_chief) st
+	center conflict5 , gen(conflict_formal) st
+	
+	center demand2, gen(demand_chief) st
+	egen demand_gov = rowtotal(demand5 demand4), missing
+	center demand_gov, inplace st
+	
+	* Fill in chief vars if empty
+	foreach var in chef4 chef_imp chef8 chef9 chef11 chef12 steal_chef_2018{
+	replace `var' = `var'_2 if `var'==.
+	} 
+	
+	* Code indices and center variables
+	center chef4, gen(responsiveness_chief) st
+	center gov_resp, gen(responsiveness_gov) st
+	center corr14_end, gen(performance_gov) st
+	center chef_eval, gen(performance_chief) st
+	center tax42, gen(performance_dgrkoc) st
+	
+	foreach var in chef8 chef9 chef11 chef12{
+	center `var', inplace st
+	}
+	egen help_from_chief = rowtotal(chef8 chef9 chef11 chef12), missing
+	center help_from_chief, inplace st
+	
+	g spend_chef_2018 = 1000-steal_chef_2018
+	g spend_gov_2018 = 1000-steal_gov_2018
+
+	center deposit_col_2018, gen(integrity_dgrkoc) st
+	center spend_gov_2018, gen(integrity_gov) st
+	center spend_chef_2018, gen(integrity_chief) st
+	
+	center morale, gen(tax_morale) st
+	center punish, gen(punish_probability) st
+
+	*Other outcomes we lack at baseline
+	center taxnoncompliance3_survey_e, gen(punish_probability_all) st
+	center tax_punish_severity, gen(punish_severity_all) st
+	
+	center chef_imp, gen(importance_chief) st
+	center exempt_tribe, gen(coethnic_bias_chief) st
+
+	center compliance_ave, gen(perceived_compliance_ave) st
+	center compliance_kan, gen(perceived_compliance_kan) st
+	
+	center pubgoods_fromtax, inplace st
+	center tax_imp, gen(importance_property_tax) s
+	center tax_oblig, inplace s
+	center taxmorale_survey_e, inplace s
+	egen obligation_property_tax = rowtotal(tax_oblig taxmorale_survey_e), missing
+	center obligation_property_tax, inplace s
+	
+	foreach var in fair_tax fair_rates fair_collectors{
+	center `var', inplace s
+	}
+	egen fair_tax_all = rowtotal(fair_tax fair_rates fair_collectors), missing
+	center fair_tax_all, inplace s
+	
+	egen tax_morale_all = rowtotal(tax_morale importance_property_tax pubgoods_fromtax tax_oblig taxmorale_survey_e)
+	center tax_morale_all, inplace s
+	
+	egen gov_index = rowtotal(trust_gov responsiveness_gov performance_gov integrity_gov), missing
+	center gov_index, inplace st
+	
+	egen chief_index = rowtotal(trust_chef responsiveness_chief performance_chief integrity_chief), missing
+	center chief_index, inplace st
+	
+	global el_outcomes = "gov_index chief_index trust_chef trust_ngos trust_dgrkoc trust_gov pg_provide conflict_chief conflict_formal demand_chief demand_gov responsiveness_chief performance_chief responsiveness_gov performance_gov help_from_chief integrity_chief integrity_gov importance_chief tax_morale punish_probability punish_probability_all punish_severity_all coethnic_bias_chief perceived_compliance_ave perceived_compliance_kan importance_property_tax obligation_property_tax pubgoods_fromtax tax_morale_all fair_tax fair_rates fair_collectors fair_tax_all "
+	
+	foreach var in $el_outcomes {
+	rename `var' `var'_el
+	}
+
+	
+	tempfile endline
+	save `endline'
+
+	* Get baseline variables
+
+	use "${repldir}/Data/01_base/survey_data/baseline_noPII.dta", clear
+	keep if tot_complete==1 
+	cap drop _merge
+	
+	global reverse_variables = "trust2 trust4 trust5 trust6 trust8 corr14_end punish"
+	
+	revrs $reverse_variables , replace 
+	
+	foreach var in trust2 trust4 trust5 trust6 trust8 {
+	center `var' , inplace st
+	}
+	
+	rename trust8 trust_chef
+	rename trust6 trust_dgrkoc
+	rename trust2 trust_ngos
+	
+	egen trust_gov = rowtotal(trust4 trust5), missing
+	center trust_gov , inplace st 
+		
+	foreach var in provide1 provide4 provide5 provide2 provide3 provide6 provide7 { 
+	g `var'_pg=`var'==2
+	replace `var'_pg = . if `var'==.
+	}
+	
+	egen pg_provide = rowtotal(*_pg), missing
+	center pg_provide , inplace st 
+
+	center conflict3 , gen(conflict_chief) st
+	center conflict5 , gen(conflict_formal) st
+	
+	center demand2, gen(demand_chief) st
+	egen demand_gov = rowtotal(demand4 demand5), missing
+	center demand_gov, inplace st
+	
+	center chef4, gen(responsiveness_chief) st
+	center gov_resp, gen(responsiveness_gov) st
+	center corr14_end, gen(performance_gov) st
+	center chef_eval, gen(performance_chief) st
+	center tax42, gen(performance_dgrkoc) st
+	
+	foreach var in chef8 chef9 chef11 chef12{
+	center `var', inplace st
+	}
+	egen help_from_chief = rowtotal(chef8 chef9 chef11 chef12), missing
+	center help_from_chief, inplace st
+	
+	center gov1_end, gen(integrity_gov) st
+	center chef_corr1, gen(integrity_chief) st
+	
+	center morale, gen(tax_morale) st
+	center punish, gen(punish_probability) st
+	
+	egen gov_index = rowtotal(trust_gov responsiveness_gov performance_gov integrity_gov), missing
+	center gov_index, inplace st
+	
+	egen chief_index = rowtotal(trust_chef responsiveness_chief performance_chief integrity_chief), missing
+	center chief_index, inplace st
+	
+	global bl_outcomes = "gov_index chief_index trust_chef trust_ngos trust_dgrkoc trust_gov pg_provide conflict_chief conflict_formal demand_chief demand_gov responsiveness_chief performance_chief responsiveness_gov performance_gov help_from_chief integrity_chief integrity_gov tax_morale punish_probability"
+	
+	foreach var in $bl_outcomes {
+	rename `var' `var'_bl
+	}
+
+	keep code a7 $bl_outcomes
+	
+	tempfile baseline
+	save `baseline'
+	
+	* Merge in endline and randomization info
+	
+	use `endline', clear
+	merge 1:1 code using `baseline'
+	
+	cap drop _merge
+	cap drop treatment
+	
+	preserve
+		use "${repldir}/Data/03_clean_combined/analysis_data.dta", clear
+		collapse (max) tmt stratum,by(a7)
+		ren tmt treatment
+		tempfile tmt
+		sa `tmt'
+	restore
+	
+	merge m:1 a7 using `tmt', nogen keep(3)
+	
+	g t_l = treatment==2
+	g t_c = treatment==1
+	
+	g female = sex=="Female"
+	g age2 = age*age
+	
+* Export condensed treatment effect table
+
+global covariates = "age age2 female"
+
+global outcomes_with_bl =  "trust_chef trust_ngos trust_dgrkoc trust_gov pg_provide conflict_chief conflict_formal demand_chief demand_gov responsiveness_chief responsiveness_gov performance_gov help_from_chief integrity_chief integrity_gov tax_morale punish_probability"
+
+foreach depvar in $outcomes_with_bl {
+	reg `depvar'_el t_l i.stratum if inlist(treatment,1,2), cluster(a7)
+	reg `depvar'_el t_l `depvar'_bl i.stratum if inlist(treatment,1,2), cluster(a7)
+}
+
+
+* Version with no baseline controls 
+
+
+global outcomes_no_bl = "importance_chief punish_probability_all punish_severity_all coethnic_bias_chief perceived_compliance_ave perceived_compliance_kan importance_property_tax obligation_property_tax pubgoods_fromtax tax_morale_all fair_tax fair_rates fair_collectors fair_tax_all"
+
+
+foreach depvar in $outcomes_no_bl {
+	reg `depvar'_el t_l i.stratum if inlist(treatment,1,2), cluster(a7)
+	reg `depvar'_el t_l i.stratum $covariates if inlist(treatment,1,2), cluster(a7)
+}
+
+* Export table
+
+global dependent_variables =  "gov_index trust_gov responsiveness_gov performance_gov integrity_gov perceived_compliance_ave trust_dgrkoc tax_morale fair_tax_all punish_probability"
+
+local counter = 0
+eststo clear
+foreach depvar in $dependent_variables  {
+local counter = `counter' + 1
+cap confirm variable `depvar'_bl
+	if !_rc {
+	reg `depvar'_el t_l `depvar'_bl i.stratum if inlist(treatment,1,2), cluster(a7)
+	}
+	else {
+	reg `depvar'_el t_l i.stratum if inlist(treatment,1,2), cluster(a7)
+	}
+local beta = round(_b[t_l],.001)
+di "Beta: `beta'"
+local se = round(_se[t_l],.001)
+di "SE: `se'"
+local p = round(2*ttail(e(df_r), abs(_b[t_l]/_se[t_l])),.001)
+di "p-value: `p'"
+local obs = round(`e(N)',1)
+di "N:`obs'"
+local clust = round(`e(N_clust)',1)
+di "Clusters:`clust'"
+local r2 = `e(r2)' 
+di "R2:`r2'"
+sum `depvar'_el if t_c==1
+local centralmean = round(`r(mean)',.001)
+di "Central mean:`centralmean'"
+
+	if `counter' == 1 { 
+		mat input reg = (`beta', `se',`r2',`obs',`centralmean') 
+		mat rownames reg = `depvar' 
+		mat colnames reg = beta SE r2 N centralmean	 
+	}
+	
+	if `counter' > 1 { 
+		mat input reg`counter' = (`beta', `se',`r2',`obs',`centralmean') 
+		mat rownames reg`counter' = `depvar' 
+		mat colnames reg`counter' = beta SE r2 N centralmean	 
+		mat reg = (reg \ reg`counter' )
+	}
+}
+	mata reg = st_matrix("reg") 
+	mat list reg 	
+	
+	cd "$reploutdir"
+	mmat2tex reg using "attitudes.tex", replace  ///
+	colnames(beta SE r2 N centralmean) ///
+	rownames("View of government (index)" "Trust in government" "Responsiveness of government" "Performance of government" "Integrity of government" "Perceived tax compliance on avenue" "Trust in tax ministry" "Property tax morale" "Fairness of property taxation" "Perception of enforcement") ///
+	preheader("{\def\sym#1{\ifmmode^{#1}\else\(^{#1}\)\fi} \begin{tabular}{l*{5}{c}} \hline\hline") ///
+	bottom("\hline\hline \end{tabular} }") ///
+	fmt(%9.3f)
+
+```
+
+### `Replication Materials - Updated October 2025/Dofiles/Tables_Figures/Table6.do`
+```stata
+***********
+* Table 6 *
+***********
+
+	* Load data and define variables
+	use "${repldir}/Data/03_clean_combined/analysis_data.dta", clear
+	keep if tmt==1 | tmt==2 | tmt==3
+
+	cap drop visit_post_carto
+	gen visit_post_carto=0 if visited==0 | (visits!=0 & visits!=.)
+	replace visit_post_carto=1 if visits!=. & visits>1
+	
+	cap drop nb_visit_post_carto
+	gen nb_visit_post_carto=0 if visits!=. | visited==0
+	replace nb_visit_post_carto=visits-1 if visits!=. & visits>1
+	replace nb_visit_post_carto=. if nb_visit_post_carto==99998
+	replace nb_visit_post_carto = . if visit_post_carto==.
+	
+	gen visits_other_dummy=visits_other1a
+	replace visits_other_dummy=visits_other2a if visits_other1a==. & visits_other2a!=. 
+	label var visits_other_dummy "Talked to collectors about Property Tax"
+	gen visits_other_nb=visits_other1b
+	replace visits_other_nb= visits_other2b if visits_other_nb==.
+	replace visits_other_nb=0 if visits_other_dummy==0
+	label var visits_other_nb "Talked to collectors about Property Tax  Nb of times"
+	
+	egen time_FE_tdm_2mo_CvL = cut(today_alt),at(21355 21415 21475 21529) icodes
+	egen time_FE_tdm_2mo_CvCLI = cut(today_alt),at(21365.5 21425.5 21485.5 21515.5) icodes
+	
+	eststo clear
+	label var t_l "Local"
+	
+	* Visits - Extensive CvL
+	eststo: reg visit_post_carto t_l i.house i.stratum i.time_FE_tdm_2mo_CvL if inlist(tmt,1,2), cl(a7)
+	su visit_post_carto if t_c==1 & time_FE_tdm_2mo_CvL!=.
+	estadd local Mean=abs(round(`r(mean)',.001))
+	estadd scalar Observations = `e(N)'
+	estadd scalar Clusters = `e(N_clust)'
+	
+	* Visits - Intensive CvL
+	eststo: reg nb_visit_post_carto t_l i.house i.stratum i.time_FE_tdm_2mo_CvL if inlist(tmt,1,2), cl(a7)
+	su nb_visit_post_carto if t_c==1 & time_FE_tdm_2mo_CvL!=.
+	estadd local Mean=abs(round(`r(mean)',.001))
+	estadd scalar Observations = `e(N)'
+	estadd scalar Clusters = `e(N_clust)'
+	
+	* Visits Other Contact - Extensive CvL
+	eststo: reg visits_other_dummy t_l i.house i.stratum i.time_FE_tdm_2mo_CvL if inlist(tmt,1,2), cl(a7)
+	su visits_other_dummy if t_c==1 & time_FE_tdm_2mo_CvL!=.
+	estadd local Mean=abs(round(`r(mean)',.001))
+	estadd scalar Observations = `e(N)'
+	estadd scalar Clusters = `e(N_clust)'
+	
+	* Visits Other Contact - Intensive CvL
+	eststo: reg visits_other_nb t_l i.house i.stratum i.time_FE_tdm_2mo_CvL if inlist(tmt,1,2), cl(a7)
+	su visits_other_nb if t_c==1 & time_FE_tdm_2mo_CvL!=.
+	estadd local Mean=abs(round(`r(mean)',.001))
+	estadd scalar Observations = `e(N)'
+	estadd scalar Clusters = `e(N_clust)'
+	
+	esttab using "${reploutdir}/main_visits_results.tex", ///
+	replace label b(%9.3f) se(%9.3f) ///
+	keep (t_l) ///
+	order(t_l) ///
+	scalar(Clusters Mean) sfmt(0 3 3) ///
+	nomtitles ///
+	mgroups("Visited Post Carto" "Visits Post Carto" "Visited Other Contact"  "Visits Other Contact", pattern(1 1 1 1) prefix(\multicolumn{@span}{c}{) suffix(}) span) ///
+	indicate("Month FE = *2mo*""House FE = *house*""Stratum FE = *stratum*") ///
+	star(* 0.10 ** 0.05 *** 0.001) ///
+	nogaps nonotes compress
+
+
+	
+
+```
+
+### `Replication Materials - Updated October 2025/Dofiles/Tables_Figures/Table7.do`
+```stata
+***********
+* Table 7 *
+***********
+	
+	// CvCLI Compliance and revenues
+
+	use "${repldir}/Data/03_clean_combined/analysis_data.dta", clear
+	
+	keep if tmt==1 | tmt==2 | tmt==3
+	
+	cap drop visit_post_carto
+	gen visit_post_carto=0 if visited==0 | (visits!=0 & visits!=.)
+	replace visit_post_carto=1 if visits!=. & visits>1
+	
+	cap drop nb_visit_post_carto
+	gen nb_visit_post_carto=0 if visits!=. | visited==0
+	replace nb_visit_post_carto=visits-1 if visits!=. & visits>1
+	replace nb_visit_post_carto=. if nb_visit_post_carto==99998
+	replace nb_visit_post_carto = . if visit_post_carto==.
+
+	egen time_FE_tdm_2mo_CvCLI = cut(today_alt),at(21365.5 21425.5 21485.5 21519) icodes
+	egen time_FE_tdm_2mo_LvCLI = cut(today_alt),at(21370.5 21430.5 21490.5 21522) icodes
+	egen time_FE_tdm_2mo_CvLvCLI = cut(today_alt),at(21363.6 21423.6 21483.6 21524.3) icodes
+	
+	eststo clear
+	label var t_cli "Central Plus Local Info"
+	
+	* Month FE - Compliance
+	eststo: reg taxes_paid t_cli i.house i.stratum i.time_FE_tdm_2mo_CvCLI if inlist(tmt,1,3), cl(a7)
+	su taxes_paid if t_c==1 & time_FE_tdm_2mo_CvCLI!=.
+	estadd local Mean=abs(round(`r(mean)',.001))
+	estadd scalar Observations = `e(N)'
+	estadd scalar Clusters = `e(N_clust)'
+	
+	* Month FE - Revenues
+	eststo: reg taxes_paid_amt t_cli i.house i.stratum i.time_FE_tdm_2mo_CvCLI if inlist(tmt,1,3), cl(a7)
+	su taxes_paid_amt if t_c==1 & time_FE_tdm_2mo_CvCLI!=.
+	estadd local Mean=abs(round(`r(mean)',.001))
+	estadd scalar Observations = `e(N)'
+	estadd scalar Clusters = `e(N_clust)'
+	
+	* Month FE - Visited
+	eststo: reg visit_post_carto t_cli i.house i.stratum i.time_FE_tdm_2mo_CvCLI if inlist(tmt,1,3), cl(a7)
+	su visit_post_carto if t_c==1 & time_FE_tdm_2mo_CvCLI!=.
+	estadd local Mean=abs(round(`r(mean)',.001))
+	estadd scalar Observations = `e(N)'
+	estadd scalar Clusters = `e(N_clust)'
+	
+	* Month FE - Visits
+	eststo: reg nb_visit_post_carto t_cli i.house i.stratum i.time_FE_tdm_2mo_CvCLI if inlist(tmt,1,3), cl(a7)
+	su nb_visit_post_carto if t_c==1 & time_FE_tdm_2mo_CvCLI!=.
+	estadd local Mean=abs(round(`r(mean)',.001))
+	estadd scalar Observations = `e(N)'
+	estadd scalar Clusters = `e(N_clust)'
+	
+	* Month FE - Compliance Conditional on Visited
+	eststo: reg taxes_paid t_cli i.house i.stratum i.time_FE_tdm_2mo_CvCLI if inlist(tmt,1,3) & visit_post_carto==1, cl(a7)
+	su taxes_paid if t_c==1 & time_FE_tdm_2mo_CvCLI!=. & visit_post_carto==1
+	estadd local Mean=abs(round(`r(mean)',.001))
+	estadd scalar Observations = `e(N)'
+	estadd scalar Clusters = `e(N_clust)'
+	
+	* Month FE - Compliance CvLvCLI
+	eststo: reg taxes_paid t_cli t_l i.house i.stratum i.time_FE_tdm_2mo_CvLvCLI if inlist(tmt,1,2,3), cl(a7)
+	test t_cli = t_l
+	local p_CLIvC = `r(p)'
+	su taxes_paid if t_c==1 & time_FE_tdm_2mo_CvLvCLI!=.
+	estadd local Mean=abs(round(`r(mean)',.001))
+	estadd scalar Observations = `e(N)'
+	estadd scalar Clusters = `e(N_clust)'
+	estadd local CLIvC_p = `p_CLIvC'
+	
+	esttab using "${reploutdir}/main_centralwinfo_results.tex", ///
+	replace label b(%9.3f) se(%9.3f) ///
+	keep (t_cli t_l) ///
+	order(t_cli t_l) ///
+	scalar(Clusters Mean CLIvC_p) sfmt(0 3 3 3 3) ///
+	nomtitles ///
+	mgroups("Tax Compliance" "Tax Amount" "Visited" "Visits" "Compliance" "Compliance", pattern(1 1) prefix(\multicolumn{@span}{c}{) suffix(}) span) ///
+	indicate("Time FE = *2mo*""House FE = *house*""Stratum FE = *stratum*") ///
+	star(* 0.10 ** 0.05 *** 0.001) ///
+	nogaps nonotes compress
+	
+	
+	
+
+
+```
+
+### `Replication Materials - Updated October 2025/Dofiles/Tables_Figures/Table8.do`
+```stata
+***********
+* Table 8 *
+***********
+
+	// Load data and define variables
+	use "${repldir}/Data/03_clean_combined/analysis_data.dta", clear
+	
+	keep if tmt==1 | tmt==2 | tmt==3
+	
+	cap drop visit_post_carto
+	gen visit_post_carto=0 if visited==0 | (visits!=0 & visits!=.)
+	replace visit_post_carto=1 if visits!=. & visits>1
+	
+	cap drop nb_visit_post_carto
+	gen nb_visit_post_carto=0 if visits!=. | visited==0
+	replace nb_visit_post_carto=visits-1 if visits!=. & visits>1
+	replace nb_visit_post_carto=. if nb_visit_post_carto==99998
+	replace nb_visit_post_carto = . if visit_post_carto==.
+
+	egen time_FE_tdm_2mo_CvL = cut(today_alt),at(21355 21415 21475 21532) icodes
+	egen time_FE_tdm_2mo_CvCLI = cut(today_alt),at(21365.5 21425.5 21485.5 21519) icodes
+	egen time_FE_tdm_2mo_LvCLI = cut(today_alt),at(21370.5 21430.5 21490.5 21522) icodes
+	egen time_FE_tdm_2mo_CvLvCLI = cut(today_alt),at(21363.6 21423.6 21483.6 21524.3) icodes
+	
+	// House quality
+		* roof
+		gen roof_final=roof
+		replace roof_final=5 if roof==7 & roof2==3
+		replace roof_final=6 if roof==7 & roof2==2
+		replace roof_final=7 if roof==7 & roof2==1
+		replace roof_final=8 if roof==5 | roof==6
+
+		* walls
+		g walls_final = walls
+		revrs ravine 
+
+		global house_quality = "walls_final roof_final"
+
+		foreach index in house_quality{ 
+		foreach var in $`index'{
+		cap replace `var' = `var'_orig
+		cap gen `var'_orig = `var'
+		sum `var'
+		replace `var' = (`var'-`r(mean)')/(`r(sd)') //standardize
+		}
+		egen `index' = rowtotal($`index'), missing
+		sum `index'
+		replace `index' = (`index' -`r(mean)')/(`r(sd)')  //standardize index
+		}
+
+		foreach var in house_quality{
+		sum `var', d
+		g `var'_norm = (`var'-`r(min)')/(`r(max)'-`r(min)') //normalize variables
+		}
+	
+	// Income
+	
+		preserve
+			* Baseline data
+			u "${repldir}/Data/01_base/survey_data/baseline_noPII.dta",clear
+			keep if tot_complete==1
+			ren code survey1_code
+			
+			g move_conflict = 0 if move1!=.
+			replace move_conflict = 1 if move1>0 & move1<. & move2==1
+			replace move_conflict = 0 if move1>0 & move1<. & move2==0
+			replace move_conflict = 1 if move1==0 & move2==0
+			
+			keep survey1_code inc_mo possessions elect1 renters_b work_gov3 transport church hh_size civic7 ///
+				bus1 wed_fun social1 social2 trust8 trust4 trust5 trust6 tax13 move_conflict kga_born ave_born ///
+				access1 access2 access3 access4 access5 access6 access7 access8 access9 access10
+			rename inc_mo inc_mo_bl
+			ren possessions possessions_bl
+			ren elect1 elect1_bl
+			ren renters_b renters_bl
+			ren work_gov3 work_gov3_bl
+			ren  transport  transport_bl
+				replace transport_bl = transport_bl/10000
+			ren church church_bl
+				replace church_bl = church_bl/10000
+			ren hh_size hh_size_bl
+			ren civic7 civic7_bl
+			ren bus1 bus1_bl
+			ren wed_fun wed_fun_bl
+			ren social1 social1_bl
+			ren social2 social2_bl
+			ren tax13 tax13_bl
+
+			* Normalize
+				global transport "transport_bl"
+				global church "church_bl"
+				global wed_fun "wed_fun_bl"
+				global social "social1_bl social2_bl"
+				global hh_size "hh_size_bl"
+				global trust "trust8 trust4 trust5 trust6"
+				global access "access1 access2 access3 access4 access5 access6 access7 access8 access9 access10"
+				foreach index in social transport church wed_fun hh_size trust access{ 
+				foreach var in $`index'{
+				cap replace `var' = `var'_orig
+				cap gen `var'_orig = `var'
+				sum `var'
+				replace `var' = (`var'-`r(mean)')/(`r(sd)') //standardize
+				}
+				egen `index' = rowtotal($`index'), missing
+				sum `index'
+				replace `index' = (`index' -`r(mean)')/(`r(sd)')  //standardize index
+				}
+
+				foreach var in social transport church wed_fun hh_size trust access{
+				sum `var', d
+				g `var'_norm = (`var'-`r(min)')/(`r(max)'-`r(min)') //normalize variables
+				}
+			
+			cap drop _merge
+			tempfile bl
+			sa `bl'
+			
+			* Endline data
+			u "${repldir}/Data/01_base/survey_data/endline_round1_noPII.dta",clear
+			keep if tot_complete==1
+			cap drop _merge
+			
+			keep code compound_code compound_code_prev visits move inc_mo cash_fee_month2_1-cash_fee_month2_31 liquidity_bind_date_1-liquidity_bind_date_31
+			rename inc_mo inc_mo_el
+			ren code survey1_code
+			merge 1:1 survey1_code using `bl'
+			cap drop _merge
+			
+			*  Visits
+			g visited_endline = 1 if visits>2  &  visits<.
+
+			* Replace compound code with previous compound code
+			replace compound_code=compound_code_prev if (move==1 | move==2)
+
+			* Clean compound code 
+			replace compound_code=999999 if compound_code==99999 | compound_code==9999999
+
+			* Drop missing compound code
+			drop if compound_code==999999	
+			
+			drop if compound_code==. 
+			
+			* Average Income per month (over baseline and endline)
+			egen inc_mo_avg=rowmean(inc_mo_bl inc_mo_el)
+			
+			* Liquidity and cash fee
+			egen cash_fee_days_tot = rowtotal(cash_fee_month2_1-cash_fee_month2_31)
+			egen liquidity_bind_days_tot = rowtotal(liquidity_bind_date_1-liquidity_bind_date_31)
+			
+			* Normalize
+				global income_avg "inc_mo_avg"
+				global liquid_avg "cash_fee_days_tot liquidity_bind_days_tot"
+				foreach index in income_avg liquid_avg { 
+				foreach var in $`index'{
+				cap replace `var' = `var'_orig
+				cap gen `var'_orig = `var'
+				sum `var'
+				replace `var' = (`var'-`r(mean)')/(`r(sd)') //standardize
+				}
+				egen `index' = rowtotal($`index'), missing
+				sum `index'
+				replace `index' = (`index' -`r(mean)')/(`r(sd)')  //standardize index
+				}
+
+				foreach var in income_avg liquid_avg{
+				sum `var', d
+				g `var'_norm = (`var'-`r(min)')/(`r(max)'-`r(min)') //normalize variables
+				}
+				
+				tempfile el
+				sa `el'
+			restore
+			
+		cap drop _merge
+		ren compound1 compound_code
+		merge 1:m compound_code using `el'
+
+	// Merge in consult data
+	preserve
+		u "${repldir}/Data/01_base/survey_data/chief_consultations.dta",clear
+		keep compound1 pay_ease willingness
+		ren compound1 compound_code
+		tempfile consult
+		sa `consult'
+	restore
+	
+	cap drop _merge
+	merge m:1 compound_code using `consult'
+	
+	g pay_ease_dum = 0 if pay_ease!=.
+	replace pay_ease_dum = 1 if pay_ease==2
+	
+	g willingness_dum = 0 if willingness!=.
+	replace willingness_dum = 1 if willingness==3
+	
+	lab var pay_ease "Ease of payment"
+	lab var willingness "Willingness"
+	
+	lab var age_prop "Age"
+	lab var sex_prop "Male"
+	lab var employed "Employed"
+	lab var salaried "Salaried"
+	lab var work_gov "Work Govt"
+	lab var main_tribe "Main Tribe"
+	lab var house_quality "House quality index"
+	
+	// For prediction and appendix table (also show alternate definition with different dummies)
+	
+	cap drop p_*
+	
+	eststo clear
+	
+	eststo: reg pay_ease age_prop sex_prop employed salaried work_gov main_tribe  i.stratum if t_cli==1,cluster(a7)
+		estadd scalar Clusters = `e(N_clust)'
+		predict p_pay_ease if inlist(tmt,1,2,3)
+		sum pay_ease_dum if age_prop!=. & sex_prop!=. & employed!=. & salaried!=. & work_gov!=. & main_tribe!=. & t_cli==1
+		estadd local Mean=abs(round(`r(mean)',.001))
+		estadd scalar Observations = `e(N)'
+	eststo: reg pay_ease age_prop sex_prop employed salaried work_gov main_tribe i.stratum i.time_FE_tdm_2mo_CvCLI if t_cli==1,cluster(a7)
+		estadd scalar Clusters = `e(N_clust)'
+		predict p_pay_ease_timeFE if inlist(tmt,1,2,3)
+		sum pay_ease_dum if age_prop!=. & sex_prop!=. & employed!=. & salaried!=. & work_gov!=. & main_tribe!=. &  t_cli==1 & time_FE_tdm_2mo_CvCLI!=.
+		estadd local Mean=abs(round(`r(mean)',.001))
+		estadd scalar Observations = `e(N)'
+	eststo: reg willingness age_prop sex_prop employed salaried work_gov main_tribe  i.stratum if t_cli==1,cluster(a7)
+		estadd scalar Clusters = `e(N_clust)'
+		predict p_willingness if inlist(tmt,1,2,3)
+		sum willingness_dum if age_prop!=. & sex_prop!=. & employed!=. & salaried!=. & work_gov!=. & main_tribe!=. & t_cli==1
+		estadd local Mean=abs(round(`r(mean)',.001))
+		estadd scalar Observations = `e(N)'
+	eststo: reg willingness age_prop sex_prop employed salaried work_gov main_tribe  i.stratum i.time_FE_tdm_2mo_CvCLI if t_cli==1,cluster(a7)
+		estadd scalar Clusters = `e(N_clust)'
+		predict p_willingness_timeFE if inlist(tmt,1,2,3)
+		sum willingness_dum if age_prop!=. & sex_prop!=. & employed!=. & salaried!=. & work_gov!=. & main_tribe!=.  & t_cli==1 & time_FE_tdm_2mo_CvCLI!=.
+		estadd local Mean=abs(round(`r(mean)',.001))
+		estadd scalar Observations = `e(N)'
+		local Mean=abs(round(`r(mean)',.001))
+		estadd scalar Mean2 = `Mean'
+	
+	// Alternate first stage with more variables
+	
+	g age_prop2 = age_prop^2
+	replace salongo_hours = 0 if salongo ==0
+	g salongo_hours2 = salongo_hours* salongo_hours
+
+	// Ravine recode
+	
+		sum ravine
+		cap g ravine_final = (ravine-`r(mean)')/(`r(sd)') //standardize
+		
+		lab var ravine_final "Erosion threat"
+	
+	label var age_prop2 "Age Squared"
+	label var pubgoods "Public Goods Belief"
+	label var sanctions "Enforcement Belief"
+	label var salongo "Any Salongo"
+	label var salongo_hours "Hours of Salongo"
+	label var move_ave "Years on Avenue"
+
+	global covs_basic = "age_prop sex_prop employed salaried work_gov"
+	global covs_addition = "pubgoods sanctions salongo salongo_hours"
+	global house_chars = "walls_final roof_final ravine_final"
+	
+	drop p_pay_ease* p_willingness*
+	eststo clear
+	foreach depvar in pay_ease willingness{
+	eststo: xi: reg `depvar' $covs_basic i.tribe i.house i.stratum i.time_FE_tdm_2mo_CvCLI if t_cli==1,cluster(a7)
+		estadd scalar Clusters = `e(N_clust)'
+		predict p_`depvar' if inlist(tmt,1,2,3)
+		sum `depvar' if t_cli==1
+		estadd local Mean=abs(round(`r(mean)',.001))
+		estadd scalar Observations = `e(N)'
+	eststo: xi: reg `depvar' $covs_basic $covs_addition i.tribe i.house  i.stratum i.time_FE_tdm_2mo_CvCLI if t_cli==1,cluster(a7)
+		estadd scalar Clusters = `e(N_clust)'
+		predict p_`depvar'2 if inlist(tmt,1,2,3)
+		sum `depvar' if t_cli==1
+		estadd local Mean=abs(round(`r(mean)',.001))
+		estadd scalar Observations = `e(N)'
+	eststo: xi: reg `depvar' $covs_basic $covs_addition $house_chars i.tribe i.house  i.stratum i.time_FE_tdm_2mo_CvCLI if t_cli==1,cluster(a7)
+		estadd scalar Clusters = `e(N_clust)'
+		predict p_`depvar'3 if inlist(tmt,1,2,3)
+		sum `depvar' if t_cli==1
+		estadd local Mean=abs(round(`r(mean)',.001))
+		estadd scalar Observations = `e(N)'
+
+	}
+	
+***********
+* Panel A *
+***********
+	
+	// Adjust predicted WTP variables to be categorical
+		ren p_pay_ease p_pay_ease_orig
+		g p_pay_ease = 0 if p_pay_ease_orig<=(2/3)
+		replace p_pay_ease = 1 if p_pay_ease_orig>(2/3) & p_pay_ease_orig<=(4/3)
+		replace p_pay_ease = 2 if p_pay_ease_orig>(4/3) & p_pay_ease_orig<.
+		
+		ren p_willingness p_willingness_orig
+		g p_willingness = 0 if p_willingness_orig<=(1+2/3)
+		replace p_willingness = 1 if p_willingness_orig>(1+2/3) & p_willingness_orig<=(1+4/3)
+		replace p_willingness = 2 if p_willingness_orig>(1+4/3) & p_willingness_orig<.
+	
+	lab var p_pay_ease "Predicted Ease of payment"
+	lab var p_willingness "Predicted Willingness to pay"
+	lab var walls_final "Wall quality"
+	lab var roof_final "Roof quality"
+	
+		// Panel  A - Pay Ease
+		
+		eststo clear
+			
+		// Actual pay ease predicting visits and compliance in CLI
+		eststo: reg visit_post_carto pay_ease i.house i.stratum if t_cli==1,cluster(a7)
+			estadd scalar Clusters = `e(N_clust)'
+			sum visit_post_carto if t_cli==1 & pay_ease!=.
+			estadd local Mean=abs(round(`r(mean)',.001))
+			estadd scalar Observations = `e(N)'
+		eststo: reg taxes_paid pay_ease i.house i.stratum if t_cli==1,cluster(a7)
+			estadd scalar Clusters = `e(N_clust)'
+			sum taxes_paid if t_cli==1 & pay_ease!=.
+			estadd local Mean=abs(round(`r(mean)',.001))
+			estadd scalar Observations = `e(N)'
+			
+		// Actual pay ease predicting visits and compliance in CLI - controlling for observables
+		
+		eststo: reg visit_post_carto pay_ease walls_final roof_final ravine_final i.house i.stratum if t_cli==1,cluster(a7)
+			estadd scalar Clusters = `e(N_clust)'
+			sum visit_post_carto if t_cli==1 & pay_ease!=. & walls_final!=. & roof_final!=. & ravine_final!=.
+			estadd local Mean=abs(round(`r(mean)',.001))
+			estadd scalar Observations = `e(N)'
+		eststo: reg taxes_paid pay_ease walls_final roof_final ravine_final i.house i.stratum if t_cli==1,cluster(a7)
+			estadd scalar Clusters = `e(N_clust)'
+			sum taxes_paid if t_cli==1 & pay_ease!=. & walls_final!=. & roof_final!=. & ravine_final!=.
+			estadd local Mean=abs(round(`r(mean)',.001))
+			estadd scalar Observations = `e(N)'
+			
+		// Predicted pay ease function predicting visits/payment in C and L
+		eststo: reg visit_post_carto p_pay_ease walls_final roof_final ravine_final i.house i.stratum if t_l==1,cluster(a7)
+			estimates store L_visit_pay_ease
+			estadd scalar Clusters = `e(N_clust)'
+			sum visit_post_carto if t_l==1 & p_pay_ease!=. & walls_final!=. & roof_final!=. & ravine_final!=.
+			estadd local Mean=abs(round(`r(mean)',.001))
+			estadd scalar Observations = `e(N)'
+		eststo: reg taxes_paid p_pay_ease walls_final roof_final ravine_final i.house i.stratum if t_l==1,cluster(a7)
+			estimates store L_compl_pay_ease
+			estadd scalar Clusters = `e(N_clust)'
+			sum taxes_paid if t_l==1 & p_pay_ease!=. & walls_final!=. & roof_final!=. & ravine_final!=.
+			estadd local Mean=abs(round(`r(mean)',.001))
+			estadd scalar Observations = `e(N)'
+		eststo: reg visit_post_carto p_pay_ease walls_final roof_final ravine_final i.house i.stratum if t_c==1,cluster(a7)
+			estimates store C_visit_pay_ease
+			estadd scalar Clusters = `e(N_clust)'
+			sum visit_post_carto if t_c==1 & p_pay_ease!=. & walls_final!=. & roof_final!=. & ravine_final!=.
+			estadd local Mean=abs(round(`r(mean)',.001))
+			estadd scalar Observations = `e(N)'
+		eststo: reg taxes_paid p_pay_ease walls_final roof_final ravine_final i.house i.stratum if t_c==1,cluster(a7)
+			estimates store C_compl_pay_ease
+			estadd scalar Clusters = `e(N_clust)'
+			sum taxes_paid if t_c==1 & p_pay_ease!=. & walls_final!=. & roof_final!=. & ravine_final!=.
+			estadd local Mean=abs(round(`r(mean)',.001))
+			estadd scalar Observations = `e(N)'
+			
+		esttab using "${reploutdir}/chiefs_info_payease.tex", ///
+		replace label b(%9.3f) se(%9.3f) ///
+		keep (pay_ease p_pay_ease walls_final roof_final ravine_final) ///
+		order(pay_ease p_pay_ease walls_final roof_final ravine_final) ///
+		scalar(Clusters Mean) sfmt(0 0 3) ///
+		nomtitles ///
+		mgroups("Visited Post Carto" "Compliance" "Visited Post Carto" "Compliance" "Visited Post Carto" "Compliance" "Visited Post Carto"  "Compliance", pattern(1 1 1 1 1 1  1 1) prefix(\multicolumn{@span}{c}{) suffix(}) span) ///
+		indicate("House FE = *house*""Stratum FE = *stratum*") ///
+		star(* 0.10 ** 0.05 *** 0.001) ///
+		nogaps nonotes compress
+
+		* Magnitudes
+		bysort p_pay_ease: su taxes_paid if t_c==1 & time_FE_tdm_2mo_CvL !=.
+		su taxes_paid if t_c==1 & visit_post_carto==1 & p_pay_ease==0
+		local compliance_low = `r(mean)'
+		su taxes_paid if t_c==1 & visit_post_carto==1 & p_pay_ease==1|p_pay_ease==2
+		local compliance_high = `r(mean)'		
+		local diff = `compliance_high'-`compliance_low'
+		
+		di in red "Difference in compliance: `diff'"
+		
+***********
+* Panel B *
+***********
+		
+		eststo clear
+			
+		// Actual willingness predicting visits and compliance in CLI
+		eststo: reg visit_post_carto willingness i.house i.stratum if t_cli==1,cluster(a7)
+			estadd scalar Clusters = `e(N_clust)'
+			sum visit_post_carto if t_cli==1 & willingness!=.
+			estadd local Mean=abs(round(`r(mean)',.001))
+			estadd scalar Observations = `e(N)'
+		eststo: reg taxes_paid willingness i.house i.stratum if t_cli==1,cluster(a7)
+			estadd scalar Clusters = `e(N_clust)'
+			sum taxes_paid if t_cli==1 & willingness!=.
+			estadd local Mean=abs(round(`r(mean)',.001))
+			estadd scalar Observations = `e(N)'
+			
+		// Actual willingness predicting visits and compliance in CLI - controlling for observables
+		
+		sum ravine
+		cap g ravine_final = (ravine-`r(mean)')/(`r(sd)') //standardize
+		
+		eststo: reg visit_post_carto willingness walls_final roof_final ravine_final i.house i.stratum if t_cli==1,cluster(a7)
+			estadd scalar Clusters = `e(N_clust)'
+			sum visit_post_carto if t_cli==1 & willingness!=. & walls_final!=. & roof_final!=. & ravine_final!=.
+			estadd local Mean=abs(round(`r(mean)',.001))
+			estadd scalar Observations = `e(N)'
+		eststo: reg taxes_paid willingness walls_final roof_final ravine_final i.house i.stratum if t_cli==1,cluster(a7)
+			estadd scalar Clusters = `e(N_clust)'
+			sum taxes_paid if t_cli==1 & willingness!=. & walls_final!=. & roof_final!=. & ravine_final!=.
+			estadd local Mean=abs(round(`r(mean)',.001))
+			estadd scalar Observations = `e(N)'
+			
+		// Predicted willingness function predicting visits/payment in C and L
+		eststo: reg visit_post_carto p_willingness walls_final roof_final ravine_final i.house i.stratum if t_l==1,cluster(a7)
+			estimates store L_visit_wtp
+			estadd scalar Clusters2 = `e(N_clust)'
+			sum visit_post_carto if t_l==1 & p_willingness!=. & walls_final!=. & roof_final!=. & ravine_final!=.
+			estadd local Mean2=abs(round(`r(mean)',.001))
+			estadd scalar Observations = `e(N)'
+		eststo: reg taxes_paid p_willingness walls_final roof_final ravine_final i.house i.stratum if t_l==1,cluster(a7)
+			estimates store L_compl_wtp
+			estadd scalar Clusters2 = `e(N_clust)'
+			sum taxes_paid if t_l==1 & p_willingness!=. & walls_final!=. & roof_final!=. & ravine_final!=.
+			estadd local Mean2=abs(round(`r(mean)',.001))
+			estadd scalar Observations = `e(N)'
+		eststo: reg visit_post_carto p_willingness walls_final roof_final ravine_final i.house i.stratum if t_c==1,cluster(a7)
+			estimates store C_visit_wtp
+			estadd scalar Clusters2 = `e(N_clust)'
+			sum visit_post_carto if t_c==1 & p_willingness!=. & walls_final!=. & roof_final!=. & ravine_final!=.
+			estadd local Mean2=abs(round(`r(mean)',.001))
+			estadd scalar Observations = `e(N)'
+		eststo: reg taxes_paid p_willingness walls_final roof_final ravine_final i.house i.stratum if t_c==1,cluster(a7)
+			estimates store C_compl_wtp
+			estadd scalar Clusters2 = `e(N_clust)'
+			sum taxes_paid if t_c==1 & p_willingness!=. & walls_final!=. & roof_final!=. & ravine_final!=.
+			estadd local Mean2=abs(round(`r(mean)',.001))
+			estadd scalar Observations = `e(N)'
+			
+		esttab using "${reploutdir}/chiefs_info_wtp.tex", ///
+		replace label b(%9.3f) se(%9.3f) ///
+		keep (willingness p_willingness walls_final roof_final ravine_final) ///
+		order(willingness p_willingness walls_final roof_final ravine_final) ///
+		scalar(Clusters Mean  Clusters2 Mean2) sfmt(0 0 3 0 3) ///
+		nomtitles ///
+		mgroups("Visited Post Carto" "Compliance" "Visited Post Carto" "Compliance" "Visited Post Carto"  "Compliance" "Visited Post Carto" "Compliance", pattern(1 1 1 1 1 1 1 1) prefix(\multicolumn{@span}{c}{) suffix(}) span) ///
+		indicate("House FE = *house*""Stratum FE = *stratum*") ///
+		star(* 0.10 ** 0.05 *** 0.001) ///
+		nogaps nonotes compress
+
+```
+
+### `Replication Materials - Updated October 2025/Dofiles/Tables_Figures/Table9.do`
+```stata
+***********
+* Table 9 *
+***********
+
+	// Load data and define variables
+	use "${repldir}/Data/03_clean_combined/analysis_data.dta", clear
+	
+	cap drop visit_post_carto
+	gen visit_post_carto=0 if visited==0 | (visits!=0 & visits!=.)
+	replace visit_post_carto=1 if visits!=. & visits>1
+	
+	cap drop nb_visit_post_carto
+	gen nb_visit_post_carto=0 if visits!=. | visited==0
+	replace nb_visit_post_carto=visits-1 if visits!=. & visits>1
+	replace nb_visit_post_carto=. if nb_visit_post_carto==99998
+	replace nb_visit_post_carto = . if visit_post_carto==.
+	
+	* Outcomes
+	
+	// House quality
+		* roof
+		gen roof_final=roof
+		replace roof_final=5 if roof==7 & roof2==3
+		replace roof_final=6 if roof==7 & roof2==2
+		replace roof_final=7 if roof==7 & roof2==1
+		replace roof_final=8 if roof==5 | roof==6
+
+		* walls
+		g walls_final = walls
+		revrs ravine
+		
+		g walls_new = 0 if inlist(walls_final,0,1)
+		replace walls_new = 1 if inlist(walls_final,2,3,4)
+				
+		g walls_modern = 1 if inlist(walls_final,3,4)
+		replace walls_modern = 0 if inlist(walls_final,0,1,2)
+
+		g roof_new = 0 if inlist(roof_final,1,2,3,4)
+		replace roof_new = 1 if inlist(roof_final,7,8)
+
+		global house_quality = "walls_final roof_final"
+		global house_quality_new = "walls_new"
+
+		global house_quality = "walls_final roof_final"
+
+		foreach index in house_quality house_quality_new{ 
+		foreach var in $`index'{
+		cap replace `var' = `var'_orig
+		cap gen `var'_orig = `var'
+		sum `var'
+		replace `var' = (`var'-`r(mean)')/(`r(sd)') //standardize
+		}
+		egen `index' = rowtotal($`index'), missing
+		sum `index'
+		replace `index' = (`index' -`r(mean)')/(`r(sd)')  //standardize index
+		}
+
+		foreach var in house_quality{
+		sum `var', d
+		g `var'_norm = (`var'-`r(min)')/(`r(max)'-`r(min)') //normalize variables
+		}
+		
+	// ML Pred USD
+	
+		rename compound1 compound_code
+
+		preserve
+
+			* Simulations
+			insheet using "${repldir}/Data/01_base/admin_data/property_values_MLestimates.csv", clear
+			rename pred_value prediction
+
+			* Keep relevant variables
+			keep compound1 a7 value prediction
+			rename prediction ml_pred_usd
+			rename compound1 compound_code
+			drop if compound_code==.
+			duplicates drop compound_code,force
+
+			* Tempfile
+			tempfile machinelearning
+			save `machinelearning'
+
+		restore
+		
+			merge 1:1 compound_code using `machinelearning', force
+			drop if _merge==2 
+			drop _merge
+	
+	// Income
+	
+		preserve
+			* Baseline data
+			u "${repldir}/Data/01_base/survey_data/baseline_noPII.dta",clear
+			keep if tot_complete==1
+			ren code survey1_code
+			keep survey1_code inc_mo 
+			rename inc_mo inc_mo_bl
+			cap drop _merge
+			tempfile bl
+			sa `bl'
+			
+			* Endline data
+			u "${repldir}/Data/01_base/survey_data/endline_round1_noPII.dta",clear
+			keep if tot_complete==1
+			cap drop _merge
+			
+			keep code compound_code compound_code_prev move inc_mo cash_fee_month2_1-cash_fee_month2_31 liquidity_bind_date_1-liquidity_bind_date_31
+			rename inc_mo inc_mo_el
+			ren code survey1_code
+			merge 1:1 survey1_code using `bl'
+			cap drop _merge
+
+			* Replace compound code with previous compound code
+			replace compound_code=compound_code_prev if (move==1 | move==2)
+
+			* Clean compound code 
+			replace compound_code=999999 if compound_code==99999 | compound_code==9999999
+
+			* Drop missing compound code
+			drop if compound_code==999999	
+			
+			drop if compound_code==. 
+			
+			* Average Income per month (over baseline and endline)
+			egen inc_mo_avg=rowmean(inc_mo_bl inc_mo_el)
+			
+			* Liquidity and cash fee
+			egen cash_fee_days_tot = rowtotal(cash_fee_month2_1-cash_fee_month2_31)
+			egen liquidity_bind_days_tot = rowtotal(liquidity_bind_date_1-liquidity_bind_date_31)
+			
+			* Normalize
+				global income_avg "inc_mo_avg"
+				global liquid_avg "cash_fee_days_tot liquidity_bind_days_tot"
+				foreach index in income_avg liquid_avg { 
+				foreach var in $`index'{
+				cap replace `var' = `var'_orig
+				cap gen `var'_orig = `var'
+				sum `var'
+				replace `var' = (`var'-`r(mean)')/(`r(sd)') //standardize
+				}
+				egen `index' = rowtotal($`index'), missing
+				sum `index'
+				replace `index' = (`index' -`r(mean)')/(`r(sd)')  //standardize index
+				}
+
+				foreach var in income_avg liquid_avg{
+				sum `var', d
+				g `var'_norm = (`var'-`r(min)')/(`r(max)'-`r(min)') //normalize variables
+				}
+				
+				duplicates drop compound_code,force
+				tempfile el
+				sa `el'
+			restore
+			
+		cap drop _merge
+		merge 1:m compound_code using `el'
+		drop if _merge==2
+		
+	keep if tmt==1 | tmt==2 | tmt==3
+	
+	// Income
+	
+		preserve
+			* Baseline data
+			u "${repldir}/Data/01_base/survey_data/baseline_noPII.dta",clear
+			keep if tot_complete==1
+			ren code survey1_code
+			
+			g move_conflict = 0 if move1!=.
+			replace move_conflict = 1 if move1>0 & move1<. & move2==1
+			replace move_conflict = 0 if move1>0 & move1<. & move2==0
+			replace move_conflict = 1 if move1==0 & move2==0
+			
+			keep survey1_code inc_mo possessions possessions_* elect1 renters_b work_gov3 transport church hh_size civic7 ///
+				bus1 wed_fun social1 social2 trust8 trust4 trust5 trust6 tax13 move_conflict kga_born ave_born ///
+				access1 access2 access3 access4 access5 access6 access7 access8 access9 access10 ///
+				chef0 chef1 chef2 chef3 chef4 chef5 ///
+				chef_eval chef_corr1 chef11 chef12 ///
+				edu edu2 status tax17 tax28 tax32 ///
+				pay_gov1_2  pay_gov1_3 pay_gov1_5 pay_gov1_14 pay_gov1_7 pay_gov1_15 pay_gov1_10 pay_gov1_1  pay_gov1_17 pay_gov1_6  ///
+				pay_gov2_4 pay_gov2_8 pay_gov2_11 pay_gov2_12 pay_gov2_13 pay_gov2_16 pay_tot ///
+				trust4 trust5 trust6 corr14_end gov1_end job1 return
+			rename inc_mo inc_mo_bl
+			ren possessions possessions_bl
+			ren elect1 elect1_bl
+			ren renters_b renters_bl
+			ren work_gov3 work_gov3_bl
+			ren  transport  transport_bl
+				replace transport_bl = transport_bl/10000
+			ren church church_bl
+				replace church_bl = church_bl/10000
+			ren hh_size hh_size_bl
+			ren civic7 civic7_bl
+			ren bus1 bus1_bl
+			ren wed_fun wed_fun_bl
+			ren social1 social1_bl
+			ren social2 social2_bl
+			ren return return_bl
+			ren tax17 tax17_bl
+			ren tax28 tax28_bl
+			ren tax32 tax32_bl
+			ren tax13 tax13_bl
+				replace tax13_bl = 0 if (tax17_bl==2|tax17_bl==3) & return==0
+			ren possessions_1 moto_bl
+			ren possessions_2 car_bl
+			ren possessions_3 radio_bl
+			ren possessions_4 tv_bl 
+			ren possessions_5 egen_bl
+			ren possessions_6 sewmach_bl
+			forval i = 0/5{
+				ren chef`i' chef`i'_bl
+			}
+			ren edu edu_bl
+			ren edu2 edu2_bl
+			ren status status_bl
+			ren job1 job1_bl
+				g employed_prop_bl = 0 if job1_bl==0 & status_bl==1
+				replace employed_prop_bl = 1 if job1_bl>0 & job1_bl<. & status_bl==1
+			foreach var in ///
+				pay_gov1_2  pay_gov1_3 pay_gov1_5 pay_gov1_14 pay_gov1_7 pay_gov1_15 pay_gov1_10 pay_gov1_1  pay_gov1_17 pay_gov1_6  ///
+				pay_gov2_4 pay_gov2_8 pay_gov2_11 pay_gov2_12 pay_gov2_13 pay_gov2_16 pay_tot ///
+				chef_eval chef_corr1 chef11 chef12  ///
+				corr14_end gov1_end{
+					ren `var' `var'_bl
+				}
+				foreach var in trust4 trust5 trust6 trust8 {
+					g `var'_bl = `var'
+				}
+
+			* Normalize
+				global transport "transport_bl"
+				global church "church_bl"
+				global wed_fun "wed_fun_bl"
+				global social "social1_bl social2_bl"
+				global hh_size "hh_size_bl"
+				global trust "trust8 trust4 trust5 trust6"
+				global access "access1 access2 access3 access4 access5 access6 access7 access8 access9 access10"
+				global access_obs "access3 access4 access5 access6 access7"
+				global obs_poss "moto_bl car_bl"
+				global unobs_poss  "radio_bl tv_bl egen_bl sewmach_bl"
+				global all_poss "moto_bl car_bl radio_bl tv_bl egen_bl sewmach_bl"
+				foreach index in social transport church wed_fun hh_size trust access obs_poss unobs_poss access_obs all_poss{ 
+				foreach var in $`index'{
+				cap replace `var' = `var'_orig
+				cap gen `var'_orig = `var'
+				sum `var'
+				replace `var' = (`var'-`r(mean)')/(`r(sd)') //standardize
+				}
+				egen `index' = rowtotal($`index'), missing
+				sum `index'
+				replace `index' = (`index' -`r(mean)')/(`r(sd)')  //standardize index
+				}
+			
+			cap drop _merge
+			tempfile bl
+			sa `bl'
+			
+			* Endline data
+			u "${repldir}/Data/01_base/survey_data/endline_round1_noPII.dta",clear
+			keep if tot_complete==1
+			cap drop _merge
+			
+			keep code compound_code compound_code_prev visits move inc_mo transport cash_fee_month2_1-cash_fee_month2_31 liquidity_bind_date_1-liquidity_bind_date_31
+			rename inc_mo inc_mo_el
+			rename transport transport_el
+			ren code survey1_code
+			merge 1:1 survey1_code using `bl'
+			cap drop _merge
+			
+			*  Visits
+			g visited_endline = 1 if visits>2  &  visits<.
+
+			* Replace compound code with previous compound code
+			replace compound_code=compound_code_prev if (move==1 | move==2)
+
+			* Clean compound code 
+			replace compound_code=999999 if compound_code==99999 | compound_code==9999999
+
+			* Drop missing compound code
+			drop if compound_code==999999	
+			
+			drop if compound_code==. 
+			
+			* Average Income per month (over baseline and endline)
+			egen inc_mo_avg=rowmean(inc_mo_bl inc_mo_el)
+			egen trans_mo_avg=rowmean(transport_bl transport_el)
+			g inc_trans_avg = inc_mo_avg+trans_mo_avg
+			
+			* Liquidity and cash fee
+			egen cash_fee_days_tot = rowtotal(cash_fee_month2_1-cash_fee_month2_31)
+			egen liquidity_bind_days_tot = rowtotal(liquidity_bind_date_1-liquidity_bind_date_31)
+			
+			* Normalize
+				global income_avg "inc_mo_avg"
+				global income_transport_avg "inc_trans_avg"
+				global liquid_avg "cash_fee_days_tot liquidity_bind_days_tot"
+				foreach index in income_avg liquid_avg income_transport_avg { 
+				foreach var in $`index'{
+				cap replace `var' = `var'_orig
+				cap gen `var'_orig = `var'
+				sum `var'
+				replace `var' = (`var'-`r(mean)')/(`r(sd)') //standardize
+				}
+				egen `index' = rowtotal($`index'), missing
+				sum `index'
+				replace `index' = (`index' -`r(mean)')/(`r(sd)')  //standardize index
+				}
+				
+				duplicates drop compound_code,force
+				
+				tempfile el
+				sa `el'
+			restore
+			
+		cap drop _merge
+		merge 1:m compound_code using `el'
+	
+			// Reverse liquidity
+			cap drop revliq*
+			revrs liquid_avg
+			
+			// Trust
+			revrs trust4_bl
+			revrs trust5_bl
+			revrs trust6_bl
+			revrs corr14_end_bl
+			
+	* Standardize
+
+				foreach var in walls_final roof_final ravine sex_prop employed salaried job_gov main_tribe elect1_bl ///
+				civic7_bl bus1_bl trust{
+				cap replace `var' = `var'_orig
+				cap gen `var'_orig = `var'
+				sum `var'
+				replace `var' = (`var'-`r(mean)')/(`r(sd)') //standardize
+				}
+				
+	* Indices
+
+	global econ_ind "moto_bl car_bl radio_bl tv_bl egen_bl sewmach_bl employed_prop_bl income_avg transport revliquid_avg elect1_bl"
+
+				foreach index in econ_ind {
+				foreach var in $`index'{
+				cap replace `var' = `var'_orig
+				cap gen `var'_orig = `var'
+				sum `var'
+				replace `var' = (`var'-`r(mean)')/(`r(sd)') //standardize
+				}
+				}
+
+				foreach index in econ_ind { 
+				foreach var in $`index'{
+				cap replace `var' = `var'_orig
+				cap gen `var'_orig = `var'
+				sum `var'
+				replace `var' = (`var'-`r(mean)')/(`r(sd)') //standardize
+				}
+				egen `index' = rowtotal($`index'), missing
+				sum `index'
+				replace `index' = (`index' -`r(mean)')/(`r(sd)')  //standardize index
+				}
+				
+				foreach index in econ_ind {
+				g `index'_repl = `index'
+				foreach var in $`index'{
+				replace `index'_repl = . if `var'==.
+				}
+				}
+
+	
+	* Leave-one-out mean
+	foreach var in house_quality_new inc_mo_avg econ_ind{
+		g a7_`var' = .
+		g tmp_`var' = `var'!=.
+		bys a7: egen N_`var' = sum(tmp_`var')
+		bys a7: egen sum_`var' = sum(`var')
+		replace a7_`var' = (sum_`var'-`var')/(N_`var'-1)
+		replace a7_`var' = . if `var'==.
+	}
+	
+	* Define FE
+	sum today_alt
+	local tdm_min = `r(min)'
+	local tdm_max = `r(max)'+1
+	
+	egen time_FE_tdm_2mo_CvL = cut(today_alt),at(21355 21415 21475 21532) icodes
+	egen time_FE_tdm_2mo_CvCLI = cut(today_alt),at(21365.5 21425.5 21485.5 21519) icodes
+	egen time_FE_tdm_2mo_LvCLI = cut(today_alt),at(21370.5 21430.5 21490.5 21522) icodes
+	egen time_FE_tdm_2mo_CvLvCLI = cut(today_alt),at(21363.6 21423.6 21483.6 21524.3) icodes
+	
+	eststo clear
+	label var t_l "Local"
+	
+	* Compliance - Periphery
+	eststo: reg taxes_paid t_l i.stratum i.time_FE_tdm_2mo_CvL if inlist(tmt,1,2) & house==1, cl(a7)
+	su taxes_paid if t_c==1 & time_FE_tdm_2mo_CvL!=. & house==1
+	estadd local Mean=abs(round(`r(mean)',.001))
+	estadd scalar Observations = `e(N)'
+	estadd scalar Clusters = `e(N_clust)'
+	
+	* Compliance - MM
+	eststo: reg taxes_paid t_l i.stratum i.time_FE_tdm_2mo_CvL if inlist(tmt,1,2) & house==2, cl(a7)
+	su taxes_paid if t_c==1 & time_FE_tdm_2mo_CvL!=. & house==2
+	estadd local Mean=abs(round(`r(mean)',.001))
+	estadd scalar Observations = `e(N)'
+	estadd scalar Clusters = `e(N_clust)'
+	
+	* House Quality - Compliance
+	g hq_y = house_quality_new
+	g a7_hq_y = a7_house_quality_new 
+	eststo: reg hq_y t_l i.house i.stratum i.time_FE_tdm_2mo_CvL a7_hq_y if inlist(tmt,1,2) & taxes_paid==1, cl(a7)
+	su hq_y if t_c==1 & time_FE_tdm_2mo_CvL!=. & taxes_paid==1
+	estadd local Mean=abs(round(`r(mean)',.001))
+	estadd scalar Observations = `e(N)'
+	estadd scalar Clusters = `e(N_clust)'
+	
+	* Income - Compliance
+
+	eststo: reg inc_mo_avg t_l i.house i.stratum i.time_FE_tdm_2mo_CvL a7_inc_mo_avg if inlist(tmt,1,2) & taxes_paid==1, cl(a7)
+	su inc_mo_avg if t_c==1 & time_FE_tdm_2mo_CvL!=. & taxes_paid==1
+	estadd local Mean=abs(round(`r(mean)',.001))
+	estadd scalar Observations = `e(N)'
+	estadd scalar Clusters = `e(N_clust)'
+	
+	* Liquidity - Compliance
+	eststo: reg econ_ind t_l i.house i.stratum i.time_FE_tdm_2mo_CvL a7_econ_ind if inlist(tmt,1,2) & taxes_paid==1, cl(a7)
+	su econ_ind if t_c==1 & time_FE_tdm_2mo_CvL!=. & taxes_paid==1
+	estadd local Mean=abs(round(`r(mean)',.001))
+	estadd scalar Observations = `e(N)'
+	estadd scalar Clusters = `e(N_clust)'
+
+	esttab using "${reploutdir}/main_incidence_results.tex", ///
+	replace label b(%9.3f) se(%9.3f) ///
+	keep (t_l a7_hq_y a7_inc_mo_avg a7_econ_ind) ///
+	order(t_l) ///
+	scalar(Clusters Mean) sfmt(0 3) ///
+	nomtitles ///
+	mgroups("Paid - Periph" "Paid - MM" "HQ - Visited" "HQ - Paid" "Income - Visited" "Income - Paid", pattern(1 1 1 1 1 1) prefix(\multicolumn{@span}{c}{) suffix(}) span) ///
+	indicate("Month FE = *2mo*""House FE = *house*""Stratum FE = *stratum*") ///
+	star(* 0.10 ** 0.05 *** 0.001) ///
+	nogaps nonotes compress
+
+```
+
+### `Replication Materials - Updated October 2025/Dofiles/Tables_Figures/TableA1.do`
+```stata
+
+************************************************
+* Appendix Table A1: Collector Characteristics *
+************************************************
+
+	* Use clean final data
+	u "${repldir}/Data/03_clean_combined/analysis_data.dta",clear
+	
+	* merge collector information from polygon level dataset
+	merge m:1 a7 using  "${repldir}/Data/01_base/admin_data/campaign_collector_info.dta", keep(match)
+
+	* DGRKOC collector code
+	levelsof col1_colcode, local(col1)
+	levelsof col2_colcode if tmt!=4, local(col2)
+	local col: list col1| col2
+
+	* chief collector code
+	levelsof col1_chef_code, local(chef1)
+	levelsof col2_chef_code, local(chef2)
+	local chef: list chef1| chef2
+	
+	* Keep all central collectors
+	foreach c of local col{
+	use "${repldir}/Data/01_base/survey_data/collector_baseline_noPII.dta", clear
+	keep if tot_complete == 1
+	keep if col_type==1 & colcode==`c'
+	tempfile col_`c'
+	save `col_`c''
+	}
+	
+	* Keep all chiefs collectors
+	foreach c of local chef{
+	use "${repldir}/Data/01_base/survey_data/collector_baseline_noPII.dta", clear
+	keep if tot_complete == 1
+	keep if col_type==2 & chef_code==`c'
+	tempfile chef_`c'
+	save `chef_`c''
+	}	
+	
+	* Append 
+	use `chef_3196 '
+	foreach c of local chef{
+	append using `chef_`c''
+	}
+	duplicates drop
+	drop code 
+	rename chef_code code
+	* merge missing info from chief collector survey 
+	* educ, inc, possessions, trsut4, trust5, trust6, state_cap1, gov_resp, revcorr14_end
+	merge 1:1 code using "${repldir}/Data/01_base/survey_data/chief_survey_noPII.dta", ///
+	keepusing(edu edu2 inc_mo possessions_1 possessions_2 possessions_3 possessions_4 possessions_5 possessions_6 possessions_0 trust4 trust5 trust6 state_cap1 gov_resp corr14_end sex age kga_born tax_who1 tax_who2 tax_who3 tax_who4 tax_who5 tax_who6 tax_who7 other_job other_job2) update replace 
+	keep if _merge>2
+	foreach c of local col{
+	append using `col_`c''
+	} 
+	* tempfile 
+	tempfile collectors
+	save `collectors'
+	
+	* Cleaning of collector Characteristics
+	
+		* Reverse variable scale: 
+		revrs red_if red_poor // higher value: pro poor / pro redistribution
+		revrs tax_who1 tax_who2 tax_who3 tax_who4 tax_who5 tax_who6 tax_who7 // higher value: more important to tax  
+		revrs trust4 trust5 trust6 corr14_end // higher value: more trust
+		revrs b1 // higher value: higher tax morale
+		revrs b2 // higher value: DGRKOC's work more important
+
+		* Poor were unlucky 
+		gen poor_unlucky=0 if red_poor!=.
+		replace poor_unlucky=1 if red_poor==1 | red_poor==2
+
+		* Income per week in USD
+		replace inc_wk=inc_wk/1650
+		gen ln_inc_wk=ln(inc_wk)
+
+		* Income per month in USD
+		replace inc_mo=inc_mo/1650
+		gen ln_inc_mo=ln(inc_mo)
+
+		* Education variables
+		gen educ_lvl=y9 
+		replace educ_lvl=edu if educ_lvl==. & edu!=.
+		
+		gen educ_yrs=3+y10 if educ_lvl==2
+		replace educ_yrs=3+6+y10 if educ_lvl==3 
+		replace educ_yrs=3+12+y10 if educ_lvl==4
+		
+		replace educ_yrs=3+edu2 if educ_lvl==2 & educ_yrs==. & edu2!=.
+		replace educ_yrs=3+6+edu2 if educ_lvl==3 & educ_yrs==. & edu2!=.
+		replace educ_yrs=3+12+edu2 if educ_lvl==4 & educ_yrs==. & edu2!=.
+		
+		* other job before tax campaign
+		gen occupation_str=occupation
+		tostring occupation_str,replace
+		destring occupation, force replace
+		gen other_job_combined=. 
+		replace other_job_combined=1 if occupation!=. | occupation_str=="other"
+		replace other_job_combined=0 if occupation_str=="other" & occupation_other=="DGRKOC"
+		replace other_job_combined=0 if occupation_str=="other" & occupation_other=="Il travaillait à la dgrkoc"
+		replace other_job_combined=0 if occupation_str=="other" & occupation_other=="Je travaillais à la Dgrkoc"
+		replace other_job_combined=0 if occupation_str=="other" & occupation_other=="Percepteur de taxe au marché  central"
+		replace other_job_combined=0 if occupation_str=="other" & occupation_other=="Il était toujours à la Dgrkoc"
+		replace other_job_combined=0 if occupation_str=="other" & occupation_other=="Stagiaire à la DGRKOC"
+		replace other_job_combined=0 if (occupation==27 | occupation==29) //student
+		replace other_job_combined=0 if (occupation==0) //unemployed
+		replace other_job_combined=other_job if col_type==2 // info for chiefs
+		
+		* Number of possessions (moto, voiture, radio, TV, generator, sewing machine)
+		egen possessions_nb =rowtotal(possessions_1 possessions_2 possessions_3 possessions_4 possessions_5 possessions_6)
+
+		* use of gov funds
+		replace gov1_end=. if gov1_end==0 & gov2_end==0
+		replace gov2_end=. if gov1_end==0 & gov2_end==0
+
+		* age 
+		replace age=y7 if age==.
+
+		* gender
+		gen female=0 if y3==1
+		replace female=0 if sex==1
+		replace female=1 if y3==2
+		replace female=1 if sex==2
+
+		* Born in Kananga
+		replace born_kga =kga_born if born_kga==.
+		
+		* Means
+		egen math_mean = rowmean(c11 c12 c13 c14)
+		egen read_mean = rowmean(read3 read4 read6 read7)
+		egen trust_mean = rowmean(revtrust4 revtrust5 revtrust6)
+		egen prov_mean = rowmean(state_cap1 gov_resp revcorr14_end gov1_end)
+		egen poor_mean = rowmean(red_ngo red_state poor_unlucky)
+		egen prog_mean = rowmean(revred_if red_prog tax_who2 revtax_who1 revtax_who6)
+					
+		* Chief / DGRKOC dummy
+		gen chief_dummy=0 if col_type==1
+		replace chief_dummy=1 if col_type==2
+		keep if chief_dummy!=.
+
+* Globals
+global demographics "age female born_kga ln_inc_mo possessions_nb educ_yrs other_job_combined"
+global math "math_mean"
+global read "read_mean"
+global trust "trust_mean"
+global gov "prov_mean"
+global rev "revb2 revb1"
+global redistribution "poor_mean"
+global redistribtion2 "prog_mean"
+
+* Outcomes
+label var age "Age" 
+label var female "\% Female" 
+label var educ_lvl "Education level"
+label var educ_yrs "Education years" 
+label var ln_inc_mo "Log Monthly Income" 
+label var other_job_combined "Works Other Job" 
+label var possessions_nb "Number of Possessions"
+label var born_kga "Born in Kananga"
+label var math_mean "Test Maths (Mean)"
+label var read_mean "Reading Ability (Mean)"
+label var trust_mean "Trust in Gov. (Mean)"
+label var prov_mean "Prov. Gov. Capacity (Mean)"
+label var revb2 "Tax Min. Important"
+label var revb1 "Taxes Important"
+label var poor_mean "Poor Priority (Mean)"
+label var prog_mean "Progressiveness (Mean)"
+
+* Summary stat table
+balancetable chief_dummy ${demographics} ${math} ${read} ${trust} ${gov} ${redistribution} ${redistribtion2} using "$reploutdir/collector_summary.tex", replace  varlabels ctitles("Central collectors" "Local Collectors" "Difference")
+
+```
+
+### `Replication Materials - Updated October 2025/Dofiles/Tables_Figures/TableA10.do`
+```stata
+
+*************
+* Table A10 *
+*************
+
+********************
+* Prepare datasets *
+********************
+
+use "${repldir}/Data/03_clean_combined/analysis_data.dta", clear
+	
+	preserve
+		collapse (max) tmt (min) today_alt,by(a7)
+		ren a7 nbr_poly_nm
+		ren today_alt nbr_tmt_timing
+		tempfile tmt
+		sa `tmt'
+		ren tmt tmt_own
+		ren nbr_poly_nm src_poly_nm
+		ren nbr_tmt_timing tmt_timing
+		tempfile tmt_own
+		sa `tmt_own'
+	restore
+	
+	preserve
+		insheet using "${repldir}/Data/01_base/admin_data/adjacent_neighborhoods.csv",clear names
+		destring nbr_poly_nm src_poly_nm length,replace ignore(",")
+		replace length = length/1000
+		merge m:1 nbr_poly_nm using `tmt' // 1 non-matching (non-adjacent?): 574
+		drop if _merge==2
+		drop _merge
+		ren tmt nbr_tmt
+		merge m:1 src_poly_nm using `tmt_own'
+		drop if _merge==1 // still non-matching: 574
+		ren src a7
+		
+		bys a7: egen nbr_count = count(nbr_poly_nm)
+		bys a7: egen border_tot = sum(length)
+		
+		// Other treatments
+		g other_tmt_strict = 0 if inlist(tmt_own,1,2)
+		replace other_tmt_strict = 1 if tmt_own==1 & nbr_tmt==2 & ((tmt_timing+30)>nbr_tmt_timing)
+		replace other_tmt_strict = 1 if tmt_own==2 & nbr_tmt==1 & ((tmt_timing+30)>nbr_tmt_timing)
+		
+		g other_tmt_strict_border = other_tmt_strict*length
+		
+		g other_tmt_broad = 0 if inlist(tmt_own,1,2)
+		replace other_tmt_broad = 1 if tmt_own==1 & (nbr_tmt==2|nbr_tmt==4) & ((tmt_timing+30)>nbr_tmt_timing)
+		replace other_tmt_broad = 1 if tmt_own==2 & (nbr_tmt==1|nbr_tmt==3|nbr_tmt==4) & ((tmt_timing+30)>nbr_tmt_timing)
+		
+		g other_tmt_broad_border = other_tmt_broad*length
+
+		collapse (sum) n_other_tmt_strict = other_tmt_strict n_other_tmt_broad = other_tmt_broad ///
+					   other_tmt_strict_border other_tmt_broad_border ///
+				 (max) nbr_count border_tot, ///
+					   by(a7)
+		
+		tempfile nbr
+		sa `nbr'
+
+	restore
+	
+	merge m:1 a7 using `nbr'
+	assert _merge==3
+	
+	* Define interactions
+	g t_lXn_other_tmt_strict = t_l*n_other_tmt_strict
+	g t_lXn_other_tmt_broad = t_l*n_other_tmt_broad
+	g t_lXother_tmt_strict_border = t_l*other_tmt_strict_border
+	g t_lXother_tmt_broad_border = t_l*other_tmt_broad_border
+	
+	* Define FE
+	sum today_alt
+	local tdm_min = `r(min)'
+	local tdm_max = `r(max)'+1
+	
+	egen time_FE_tdm_2mo_CvL = cut(today_alt),at(21355 21415 21475 21532) icodes
+	
+	eststo clear
+	label var t_l "Local"
+	
+	* Normal - Compliance - Strict N Other Tmt
+	eststo: reg taxes_paid t_l n_other_tmt_strict i.house i.time_FE_tdm_2mo_CvL i.stratum nbr_count if inlist(tmt,1,2), cl(a7)
+	su taxes_paid if t_c==1
+	estadd local Mean=abs(round(`r(mean)',.001))
+	estadd scalar Observations = `e(N)'
+	estadd scalar Clusters = `e(N_clust)'
+	
+	* Normal - Compliance - Strict N Other Tmt
+	eststo: reg taxes_paid t_l t_lXn_other_tmt_strict n_other_tmt_strict i.house i.time_FE_tdm_2mo_CvL i.stratum nbr_count if inlist(tmt,1,2), cl(a7)
+	su taxes_paid if t_c==1
+	estadd local Mean=abs(round(`r(mean)',.001))
+	estadd scalar Observations = `e(N)'
+	estadd scalar Clusters = `e(N_clust)'
+	
+	* Normal - Compliance - Broad N Other Tmt
+	eststo: reg taxes_paid t_l n_other_tmt_broad i.house i.time_FE_tdm_2mo_CvL i.stratum nbr_count if inlist(tmt,1,2), cl(a7)
+	su taxes_paid if t_c==1
+	estadd local Mean=abs(round(`r(mean)',.001))
+	estadd scalar Observations = `e(N)'
+	estadd scalar Clusters = `e(N_clust)'
+	
+	* Normal - Compliance - Broad N Other Tmt
+	eststo: reg taxes_paid t_l t_lXn_other_tmt_broad n_other_tmt_broad i.house i.time_FE_tdm_2mo_CvL i.stratum nbr_count if inlist(tmt,1,2), cl(a7)
+	su taxes_paid if t_c==1
+	estadd local Mean=abs(round(`r(mean)',.001))
+	estadd scalar Observations = `e(N)'
+	estadd scalar Clusters = `e(N_clust)'
+	
+	* Normal - Compliance - Strict Border Tmt
+	eststo: reg taxes_paid t_l other_tmt_strict_border i.house i.time_FE_tdm_2mo_CvL i.stratum border_tot if inlist(tmt,1,2), cl(a7)
+	su taxes_paid if t_c==1
+	estadd local Mean=abs(round(`r(mean)',.001))
+	estadd scalar Observations = `e(N)'
+	estadd scalar Clusters = `e(N_clust)'
+	
+	* Normal - Compliance - Strict Border Tmt
+	eststo: reg taxes_paid t_l t_lXother_tmt_strict_border other_tmt_strict_border i.house i.time_FE_tdm_2mo_CvL i.stratum border_tot if inlist(tmt,1,2), cl(a7)
+	su taxes_paid if t_c==1
+	estadd local Mean=abs(round(`r(mean)',.001))
+	estadd scalar Observations = `e(N)'
+	estadd scalar Clusters = `e(N_clust)'
+	
+	* Normal - Compliance - Broad Broad Tmt
+	eststo: reg taxes_paid t_l t_lXother_tmt_broad_border other_tmt_broad_border i.house i.time_FE_tdm_2mo_CvL i.stratum border_tot if inlist(tmt,1,2), cl(a7)
+	su taxes_paid if t_c==1
+	estadd local Mean=abs(round(`r(mean)',.001))
+	estadd scalar Observations = `e(N)'
+	estadd scalar Clusters = `e(N_clust)'
+	
+	* Normal - Compliance - Broad Broad Tmt
+	eststo: reg taxes_paid t_l t_lXother_tmt_broad_border other_tmt_broad_border i.house i.time_FE_tdm_2mo_CvL i.stratum border_tot if inlist(tmt,1,2), cl(a7)
+	su taxes_paid if t_c==1
+	estadd local Mean=abs(round(`r(mean)',.001))
+	estadd scalar Observations = `e(N)'
+	estadd scalar Clusters = `e(N_clust)'
+	
+	esttab using "${reploutdir}/awareness_other_tmts.tex", ///
+	replace label b(%9.3f) se(%9.3f) ///
+	keep (t_l t_lXn_other_tmt_strict n_other_tmt_strict t_lXn_other_tmt_broad n_other_tmt_broad t_lXother_tmt_strict_border other_tmt_strict_border t_lXother_tmt_broad_border other_tmt_broad_border nbr_count border_tot) ///
+	order(t_l t_lXn_other_tmt_strict n_other_tmt_strict t_lXn_other_tmt_broad n_other_tmt_broad t_lXother_tmt_strict_border other_tmt_strict_border t_lXother_tmt_broad_border other_tmt_broad_border nbr_count border_tot) ///
+	scalar(Clusters Mean) sfmt(0 3 3) ///
+	nomtitles ///
+	mgroups("Tax Compliance" "Tax Compliance" "Tax Compliance"  "Tax Compliance", pattern(1 1 1 1) prefix(\multicolumn{@span}{c}{) suffix(}) span) ///
+	indicate("Time FE = *2mo*""House FE = *house*""Stratum FE = *stratum*") ///
+	star(* 0.10 ** 0.05 *** 0.001) ///
+	nogaps nonotes compress
+
+```
+
+### `Replication Materials - Updated October 2025/Dofiles/Tables_Figures/TableA11.do`
+```stata
+
+*************
+* Table A11 *
+*************
+
+********************
+* Prepare datasets *
+********************
+
+	use "${repldir}/Data/03_clean_combined/analysis_data.dta", clear
+	keep if tmt==1 | tmt==2 | tmt==3
+
+	* Outcomes
+	
+	gen enum_disagrees_exempt=0 if exempt_enum!=. & exempt!=.
+	replace enum_disagrees_exempt=1 if exempt!=exempt_enum & exempt_enum!=. & exempt!=.
+
+	g house_type = 0 if house==1
+	replace house_type = 1 if house==2
+	revrs correct
+	replace revcorrect = revcorrect-1
+	ren revcorrect enum_disagrees_house
+	
+	cap drop visit_post_carto
+	gen visit_post_carto=0 if visited==0 | (visits!=0 & visits!=.)
+	replace visit_post_carto=1 if visits!=. & visits>1
+	
+	cap drop nb_visit_post_carto
+	gen nb_visit_post_carto=0 if visits!=. | visited==0
+	replace nb_visit_post_carto=visits-1 if visits!=. & visits>1
+	replace nb_visit_post_carto=. if nb_visit_post_carto==99998
+	replace nb_visit_post_carto = . if visit_post_carto==.
+	
+	gen visits_other_dummy=visits_other1a
+	replace visits_other_dummy=visits_other2a if visits_other1a==. & visits_other2a!=. 
+	label var visits_other_dummy "Talked to collectors about Property Tax"
+	gen visits_other_nb=visits_other1b
+	replace visits_other_nb= visits_other2b if visits_other_nb==.
+	replace visits_other_nb=0 if visits_other_dummy==0
+	label var visits_other_nb "Talked to collectors about Property Tax  Nb of times"
+	
+	replace bribe_combined_amt=0 if bribe_combined==0
+	
+	g gap_midline = 0 if taxes_paid==0 & paid_self==0
+	replace gap_midline = 1 if taxes_paid==0 & paid_self==1
+	
+	replace salongo_hours = 0 if salongo==0
+	replace salongo_hours = . if salongo_hours==99999
+	
+	egen time_FE_tdm_2mo_CvL = cut(today_alt),at(21355 21415 21475 21532) icodes
+	egen time_FE_tdm_2mo_CvCLI = cut(today_alt),at(21365.5 21425.5 21485.5 21519) icodes
+	egen time_FE_tdm_2mo_LvCLI = cut(today_alt),at(21370.5 21430.5 21490.5 21522) icodes
+	egen time_FE_tdm_2mo_CvLvCLI = cut(today_alt),at(21363.6 21423.6 21483.6 21524.3) icodes
+	
+	cap drop treatment
+	ren tmt treatment
+	
+	eststo clear
+	label var t_l "Local"
+	
+	tempfile midline
+	sa `midline'
+		
+	* Merge endline not on compound code
+		u "${repldir}/Data/01_base/survey_data/endline_round1_noPII.dta",clear
+		keep if tot_complete==1 
+		replace compound_code=compound_code_prev if (compound_code_prev!=. & compound_code_prev!=3)
+		rename compound_code compound1
+			
+		* Bribe variables
+			replace bribe = bribe2a if bribe==.
+			replace bribe = bribe2b if bribe==.
+			replace bribe = bribe3 if bribe==.
+			replace bribe_amt = bribe2a_amt if bribe_amt==.
+			replace bribe_amt = bribe2b_amt if bribe_amt==.
+			replace bribe_amt = bribe3_amt if bribe_amt==.
+			
+			replace bribe_amt = 0 if bribe==0
+			
+			ren bribe bribe_endline
+			ren bribe_amt bribe_amt_endline
+			
+			ren o_pay2 informal_pay_endline
+			ren pay_tot2 informal_pay_amt_endline
+				replace informal_pay_amt_endline = . if informal_pay_amt_endline==8885 // looks like enum coding error
+			
+			ren paid_self paid_self_endline
+			
+			* Salongo variables
+			g salongo_endline = 0 if salongo==0
+			replace salongo_endline = 1 if salongo>0 & salongo<.
+			
+			g salongo_hours_endline = salongo_hours
+			replace salongo_hours_endline = . if salongo_hours==16000 | salongo_hours==60000 // obvious outliers
+			replace salongo_hours_endline = 0 if salongo_endline==0
+			
+			keep code a7 *_endline paid_*
+			
+			cap drop _merge
+			cap drop tmt
+			cap drop treatment
+			
+			preserve
+				use "${repldir}/Data/03_clean_combined/analysis_data.dta", clear
+				collapse (max) tmt stratum,by(a7)
+				ren tmt treatment
+				tempfile tmt
+				sa `tmt'
+			restore
+			
+			merge m:1 a7 using `tmt', nogen keep(3)
+			
+					g t_l = treatment==2
+					g t_c = treatment==1
+		
+			tempfile endline
+			save `endline'
+
+***********************************************
+*** Export condensed treatment effect table ***
+***********************************************
+
+#delimit ;
+global dependent_variables =  "salongo salongo_hours salongo_endline salongo_hours_endline
+							   paid_vehicletax_survey_e paid_mktvendorfee_survey_e
+							   paid_businessfee_survey_e paid_incometax_survey_e
+							   paid_faketax_survey_e";
+#delimit cr
+
+local counter = 0
+eststo clear
+foreach depvar in $dependent_variables  {
+local counter = `counter' + 1
+cap confirm variable `depvar'
+	if `counter'<=2{
+	u `midline',clear
+	reg `depvar' t_l i.house i.stratum i.time_FE_tdm_2mo_CvL if inlist(treatment,1,2), cluster(a7)
+	}
+	if `counter'>=3 {
+	u `endline',clear
+	reg `depvar' t_l i.stratum if inlist(treatment,1,2), cluster(a7)
+	}
+local beta = round(_b[t_l],.001)
+di "Beta: `beta'"
+local se = round(_se[t_l],.001)
+di "SE: `se'"
+local p = round(2*ttail(e(df_r), abs(_b[t_l]/_se[t_l])),.001)
+di "p-value: `p'"
+local obs = round(`e(N)',1)
+di "N:`obs'"
+local clust = round(`e(N_clust)',1)
+di "Clusters:`clust'"
+local r2 = `e(r2)' 
+di "R2:`r2'"
+if `counter'<=2{
+sum `depvar' if t_c==1 & time_FE_tdm_2mo_CvL!=.
+}
+else{
+sum `depvar' if t_c==1
+}
+local centralmean = round(`r(mean)',.001)
+di "Central mean:`centralmean'"
+
+	if `counter' == 1 { 
+		mat input reg = (`beta', `se',`r2',`obs',`centralmean') 
+		mat rownames reg = `depvar' 
+		mat colnames reg = beta SE r2 N centralmean	 
+	}
+	
+	if `counter' > 1 { 
+		mat input reg`counter' = (`beta', `se',`r2',`obs',`centralmean') 
+		mat rownames reg`counter' = `depvar' 
+		mat colnames reg`counter' = beta SE r2 N centralmean	 
+		mat reg = (reg \ reg`counter' )
+	}
+}
+	mata reg = st_matrix("reg") 
+	mat list reg 	
+	
+	cd "$reploutdir"
+	mmat2tex reg using "fiscal_externalities.tex", replace  ///
+	colnames(beta SE r2 N centralmean) ///
+	rownames("Salongo (Midline)" "Salongo Hours (Midline)" "Salongo (Endline)" "Salongo Hours (Endline)" ///
+	"Vehicle Tax" "Market Vendor Fee" "Business Tax" "Income Tax" "Fake Tax") ///
+	preheader("{\def\sym#1{\ifmmode^{#1}\else\(^{#1}\)\fi} \begin{tabular}{l*{5}{c}} \hline\hline") ///
+	bottom("\hline\hline \end{tabular} }") ///
+	fmt(%9.3f)
+
+```
+
+### `Replication Materials - Updated October 2025/Dofiles/Tables_Figures/TableA12.do`
+```stata
+
+*************
+* Table A12 *
+*************
+
+***********
+* Panel A *
+***********
+
+	use "${repldir}/Data/03_clean_combined/analysis_data.dta", clear
+	keep if tmt==1 | tmt==2 | tmt==3
+
+	cap drop visit_post_carto
+	gen visit_post_carto=0 if visited==0 | (visits!=0 & visits!=.)
+	replace visit_post_carto=1 if visits!=. & visits>1
+	
+	cap drop nb_visit_post_carto
+	gen nb_visit_post_carto=0 if visits!=. | visited==0
+	replace nb_visit_post_carto=visits-1 if visits!=. & visits>1
+	replace nb_visit_post_carto=. if nb_visit_post_carto==99998
+	replace nb_visit_post_carto = . if visit_post_carto==.
+	
+	gen visits_other_dummy=visits_other1a
+	replace visits_other_dummy=visits_other2a if visits_other1a==. & visits_other2a!=. 
+	label var visits_other_dummy "Talked to collectors about Property Tax"
+	gen visits_other_nb=visits_other1b
+	replace visits_other_nb= visits_other2b if visits_other_nb==.
+	replace visits_other_nb=0 if visits_other_dummy==0
+	label var visits_other_nb "Talked to collectors about Property Tax  Nb of times"
+	
+	replace salongo_hours = 0 if salongo==0
+	replace salongo_hours = . if salongo_hours==99999
+	
+		preserve
+			* Endline data
+			u "${repldir}/Data/01_base/survey_data/endline_round1_noPII.dta",clear
+			keep if tot_complete==1
+			cap drop _merge
+
+			* Replace compound code with previous compound code
+			replace compound_code=compound_code_prev if (move==1 | move==2)
+
+			* Clean compound code 
+			replace compound_code=999999 if compound_code==99999 | compound_code==9999999
+
+			* Drop missing compound code
+			drop if compound_code==999999	
+			
+			drop if compound_code==. 
+			
+			* Salongo variables
+			g salongo_endline = 0 if salongo==0
+			replace salongo_endline = 1 if salongo>0 & salongo<.
+			
+			g salongo_hours_endline = salongo_hours
+			replace salongo_hours_endline = . if salongo_hours==16000 | salongo_hours==60000 // obvious outliers
+			replace salongo_hours_endline = 0 if salongo_endline==0
+			
+			keep compound_code *_endline
+				
+				tempfile el
+				sa `el'
+			restore
+			
+		cap drop _merge
+		ren compound1 compound_code
+		merge 1:m compound_code using `el'
+		
+	* Interaction
+	g t_lXtaxes_paid = t_l*taxes_paid
+	
+	egen time_FE_tdm_2mo_CvL = cut(today_alt),at(21355 21415 21475 21532) icodes
+	egen time_FE_tdm_2mo_CvCLI = cut(today_alt),at(21365.5 21425.5 21485.5 21519) icodes
+	egen time_FE_tdm_2mo_LvCLI = cut(today_alt),at(21370.5 21430.5 21490.5 21522) icodes
+	egen time_FE_tdm_2mo_CvLvCLI = cut(today_alt),at(21363.6 21423.6 21483.6 21524.3) icodes
+	
+	eststo clear
+	label var t_l "Local"
+	
+	* Salongo - Extensive CvL (Midline) - Interaction
+	eststo: reg salongo t_l t_lXtaxes_paid taxes_paid i.house i.stratum i.time_FE_tdm_2mo_CvL if inlist(tmt,1,2), cl(a7)
+	su salongo if t_c==1 & taxes_paid==0 & time_FE_tdm_2mo_CvL!=.
+	estadd local Mean=abs(round(`r(mean)',.001))
+	estadd scalar Observations = `e(N)'
+	estadd scalar Clusters = `e(N_clust)'
+	
+	* Salongo - Extensive CvL (Midline) - Interaction
+	eststo: reg salongo_hours t_l t_lXtaxes_paid taxes_paid i.house i.stratum i.time_FE_tdm_2mo_CvL if inlist(tmt,1,2), cl(a7)
+	su salongo_hours if t_c==1 & taxes_paid==0 & time_FE_tdm_2mo_CvL!=.
+	estadd local Mean=abs(round(`r(mean)',.001))
+	estadd scalar Observations = `e(N)'
+	estadd scalar Clusters = `e(N_clust)'
+	
+	* Salongo - Extensive CvL (Endline) - Interaction
+	eststo: reg salongo_endline t_l t_lXtaxes_paid taxes_paid i.house i.stratum if inlist(tmt,1,2), cl(a7)
+	su salongo_endline if t_c==1 & taxes_paid==0 //& time_FE_tdm_2mo_CvL!=.
+	estadd local Mean=abs(round(`r(mean)',.001))
+	estadd scalar Observations = `e(N)'
+	estadd scalar Clusters = `e(N_clust)'
+	
+	* Salongo - Extensive CvL (Endline) - Interaction
+	eststo: reg salongo_hours_endline t_l t_lXtaxes_paid taxes_paid i.house i.stratum if inlist(tmt,1,2), cl(a7)
+	su salongo_hours_endline if t_c==1 & taxes_paid==0
+	estadd local Mean=abs(round(`r(mean)',.001))
+	estadd scalar Observations = `e(N)'
+	estadd scalar Clusters = `e(N_clust)'
+	
+	esttab using "${reploutdir}/salongo_tax_actual.tex", ///
+	replace label b(%9.3f) se(%9.3f) ///
+	keep (t_l t_lXtaxes_paid taxes_paid) ///
+	order(t_l t_lXtaxes_paid taxes_paid) ///
+	scalar(Clusters Mean) sfmt(0 3 3 3 3 3) ///
+	nomtitles ///
+	mgroups( "Salongo (Midline)" "Salongo Amt (Midline)" "Salongo (Endline)" "Salongo Amt (Endline)", pattern(1 1 1 1) prefix(\multicolumn{@span}{c}{) suffix(}) span) ///
+	indicate("Time FE = *2mo*""House FE = *house*""Stratum FE = *stratum*") ///
+	star(* 0.10 ** 0.05 *** 0.001) ///
+	nogaps nonotes compress
+
+***********
+* Panel B *
+***********
+
+	use "${repldir}/Data/03_clean_combined/analysis_data.dta", clear
+	keep if tmt==1 | tmt==2 | tmt==3
+
+	cap drop visit_post_carto
+	gen visit_post_carto=0 if visited==0 | (visits!=0 & visits!=.)
+	replace visit_post_carto=1 if visits!=. & visits>1
+	
+	cap drop nb_visit_post_carto
+	gen nb_visit_post_carto=0 if visits!=. | visited==0
+	replace nb_visit_post_carto=visits-1 if visits!=. & visits>1
+	replace nb_visit_post_carto=. if nb_visit_post_carto==99998
+	replace nb_visit_post_carto = . if visit_post_carto==.
+	
+	gen visits_other_dummy=visits_other1a
+	replace visits_other_dummy=visits_other2a if visits_other1a==. & visits_other2a!=. 
+	label var visits_other_dummy "Talked to collectors about Property Tax"
+	gen visits_other_nb=visits_other1b
+	replace visits_other_nb= visits_other2b if visits_other_nb==.
+	replace visits_other_nb=0 if visits_other_dummy==0
+	label var visits_other_nb "Talked to collectors about Property Tax  Nb of times"
+	
+	replace salongo_hours = 0 if salongo==0
+	replace salongo_hours = . if salongo_hours==99999
+	
+		preserve
+			* Endline data
+			u "${repldir}/Data/01_base/survey_data/endline_round1_noPII.dta",clear
+			keep if tot_complete==1
+			cap drop _merge
+
+			* Replace compound code with previous compound code
+			replace compound_code=compound_code_prev if (move==1 | move==2)
+
+			* Clean compound code 
+			replace compound_code=999999 if compound_code==99999 | compound_code==9999999
+
+			* Drop missing compound code
+			drop if compound_code==999999	
+			
+			drop if compound_code==. 
+			
+			* Salongo variables
+			g salongo_endline = 0 if salongo==0
+			replace salongo_endline = 1 if salongo>0 & salongo<.
+			
+			g salongo_hours_endline = salongo_hours
+			replace salongo_hours_endline = . if salongo_hours==16000 | salongo_hours==60000 // obvious outliers
+			replace salongo_hours_endline = 0 if salongo_endline==0
+			
+			keep compound_code *_endline
+				
+				tempfile el
+				sa `el'
+			restore
+			
+		cap drop _merge
+		ren compound1 compound_code
+		merge 1:m compound_code using `el'
+		
+	* Interaction
+	g t_lXtaxes_paid = t_l*taxes_paid
+	
+	egen time_FE_tdm_2mo_CvL = cut(today_alt),at(21355 21415 21475 21532) icodes
+	egen time_FE_tdm_2mo_CvCLI = cut(today_alt),at(21365.5 21425.5 21485.5 21519) icodes
+	egen time_FE_tdm_2mo_LvCLI = cut(today_alt),at(21370.5 21430.5 21490.5 21522) icodes
+	egen time_FE_tdm_2mo_CvLvCLI = cut(today_alt),at(21363.6 21423.6 21483.6 21524.3) icodes
+	
+	eststo clear
+	label var t_l "Local"
+	
+* Predicted WTP
+
+	// Merge in consult data
+	preserve
+		u "${repldir}/Data/01_base/survey_data/chief_consultations.dta",clear
+		keep compound1 pay_ease willingness
+		ren compound1 compound_code
+		tempfile consult
+		sa `consult'
+	restore
+	
+	cap drop _merge
+	merge m:1 compound_code using `consult'
+	
+	lab var pay_ease "Ease of payment"
+	lab var willingness "Willingness"
+	
+* Control Means
+	
+	cap drop p_*
+	
+	eststo clear
+	
+	eststo: reg pay_ease age_prop sex_prop employed salaried work_gov main_tribe i.stratum  if t_cli==1,cluster(a7)
+		predict p_pay_ease if inlist(tmt,1,2,3)
+	eststo: reg pay_ease age_prop sex_prop employed salaried work_gov main_tribe i.stratum  i.time_FE_tdm_2mo_CvCLI if t_cli==1,cluster(a7)
+		predict p_pay_ease_timeFE if inlist(tmt,1,2,3)
+	eststo: reg willingness age_prop sex_prop employed salaried work_gov main_tribe i.stratum  if t_cli==1,cluster(a7)
+		predict p_willingness if inlist(tmt,1,2,3)
+	eststo: reg willingness age_prop sex_prop employed salaried work_gov main_tribe i.stratum  i.time_FE_tdm_2mo_CvCLI if t_cli==1,cluster(a7)
+		predict p_willingness_timeFE if inlist(tmt,1,2,3)
+		
+	// Adjust predicted WTP variables to be categorical
+		ren p_pay_ease_timeFE p_pay_ease_orig
+		cap drop p_pay_ease
+		g p_pay_ease = 0 if p_pay_ease_orig<=(2/3)
+		replace p_pay_ease = 1 if p_pay_ease_orig>(2/3) & p_pay_ease_orig<=(4/3)
+		replace p_pay_ease = 2 if p_pay_ease_orig>(4/3) & p_pay_ease_orig<.
+		
+		* Leave-one-out mean
+		foreach var in house_quality_new p_pay_ease{
+			cap g a7_`var' = .
+			cap g tmp_`var' = `var'!=.
+			cap bys a7: egen N_`var' = sum(tmp_`var')
+			cap bys a7: egen sum_`var' = sum(`var')
+			cap replace a7_`var' = (sum_`var'-`var')/(N_`var'-1)
+			cap replace a7_`var' = . if `var'==.
+		}
+		
+		
+		ren p_willingness p_willingness_orig
+		g p_willingness = 0 if p_willingness_orig<=(1+2/3)
+		replace p_willingness = 1 if p_willingness_orig>(1+2/3) & p_willingness_orig<=(1+4/3)
+		replace p_willingness = 2 if p_willingness_orig>(1+4/3) & p_willingness_orig<.
+		
+		g p_predict = 0 if p_willingness==0 & p_pay_ease==0
+		replace p_predict = 1 if (p_willingness==1 & p_pay_ease==0)|(p_willingness==0 & p_pay_ease==1)
+		replace p_predict = 2 if (p_willingness==1 & p_pay_ease==1)|(p_willingness==1 & p_pay_ease==1)|(p_willingness==2 & p_pay_ease==0)|(p_willingness==0 & p_pay_ease==2)
+		replace p_predict = 3 if (p_willingness==2 & p_pay_ease==1)|(p_willingness==1 & p_pay_ease==2)
+		replace p_predict = 4 if (p_willingness==2 & p_pay_ease==2)
+		
+	* Generate predicted compliers dummy
+	
+	egen pred_compliance = rowmean(p_pay_ease_orig p_willingness_orig)
+	g pred_compl_dum = .
+	forval i = 1/2{
+		sum pred_compliance if tmt==`i',d
+		replace pred_compl_dum = 0 if pred_compliance<=`r(p25)' & tmt==`i'
+		replace pred_compl_dum = 1 if pred_compliance>`r(p25)' & pred_compliance<. & tmt==`i'
+	}
+	
+	g t_lXpred_compl_dum = t_l*pred_compl_dum
+	
+	eststo clear
+	
+	* Salongo - Extensive CvL (Midline) - Interaction
+	eststo: reg salongo t_l t_lXpred_compl_dum pred_compl_dum i.house i.stratum i.time_FE_tdm_2mo_CvL if inlist(tmt,1,2), cl(a7)
+	su salongo if t_c==1 & pred_compl_dum==0 & time_FE_tdm_2mo_CvL!=.
+	estadd local Mean=abs(round(`r(mean)',.001))
+	estadd scalar Observations = `e(N)'
+	estadd scalar Clusters = `e(N_clust)'
+	
+	* Salongo - Extensive CvL (Midline) - Interaction
+	eststo: reg salongo_hours t_l t_lXpred_compl_dum pred_compl_dum i.house i.stratum i.time_FE_tdm_2mo_CvL if inlist(tmt,1,2), cl(a7)
+	su salongo_hours if t_c==1 & pred_compl_dum==0 & time_FE_tdm_2mo_CvL!=.
+	estadd local Mean=abs(round(`r(mean)',.001))
+	estadd scalar Observations = `e(N)'
+	estadd scalar Clusters = `e(N_clust)'
+	
+	* Salongo - Extensive CvL (Endline) - Interaction
+	eststo: reg salongo_endline t_l t_lXpred_compl_dum pred_compl_dum i.house i.stratum if inlist(tmt,1,2), cl(a7)
+	su salongo_endline if t_c==1 & pred_compl_dum==0 //& time_FE_tdm_2mo_CvL!=.
+	estadd local Mean=abs(round(`r(mean)',.001))
+	estadd scalar Observations = `e(N)'
+	estadd scalar Clusters = `e(N_clust)'
+	
+	* Salongo - Extensive CvL (Endline) - Interaction
+	eststo: reg salongo_hours_endline t_l t_lXpred_compl_dum pred_compl_dum i.house i.stratum if inlist(tmt,1,2), cl(a7)
+	su salongo_hours_endline if t_c==1 & pred_compl_dum==0 //& time_FE_tdm_2mo_CvL!=.
+	estadd local Mean=abs(round(`r(mean)',.001))
+	estadd scalar Observations = `e(N)'
+	estadd scalar Clusters = `e(N_clust)'
+	
+	esttab using "${reploutdir}/salongo_tax_predicted.tex", ///
+	replace label b(%9.3f) se(%9.3f) ///
+	keep (t_l t_lXpred_compl_dum pred_compl_dum) ///
+	order(t_l t_lXpred_compl_dum pred_compl_dum) ///
+	scalar(Clusters Mean) sfmt(0 3 3 3 3 3) ///
+	nomtitles ///
+	mgroups(/*"Salongo (Midline)" "Salongo Amt (Midline)"*/ "Salongo (Midline)" "Salongo Amt (Midline)" /*"Salongo (Endline)" "Salongo Amt (Endline)"*/ "Salongo (Endline)" "Salongo Amt (Endline)", pattern(1 1 1 1) prefix(\multicolumn{@span}{c}{) suffix(}) span) ///
+	indicate("Time FE = *2mo*""House FE = *house*""Stratum FE = *stratum*") ///
+	star(* 0.10 ** 0.05 *** 0.001) ///
+	nogaps nonotes compress
+
+
+	
+
+	
+
+```
+
+### `Replication Materials - Updated October 2025/Dofiles/Tables_Figures/TableA13.do`
+```stata
+*Total tax burden
+use "${repldir}/Data/03_clean_combined/analysis_data.dta", clear
+
+egen time_FE_tdm_2mo_CvL = cut(today_alt),at(21355 21415 21475 21532) icodes
+
+g tax_or_bribe = taxes_paid
+replace tax_or_bribe =1 if bribe ==1
+
+g tax_and_bribe = taxes_paid
+replace tax_and_bribe = taxes_paid + bribe if bribe!=.
+
+g total_burden = taxes_paid
+replace tax_or_bribe =1 if bribe ==1
+replace tax_or_bribe =1 if salongo ==1
+
+g total_burden_intensive = taxes_paid 
+replace total_burden_intensive = taxes_paid + bribe if bribe!=.
+replace total_burden_intensive = taxes_paid + bribe + salongo if (bribe!=. & salongo!=.)
+
+center tax_and_bribe total_burden_intensive, standardize inplace
+
+eststo clear
+	
+	foreach depvar in tax_or_bribe tax_and_bribe total_burden total_burden_intensive{
+	eststo: reg `depvar' t_l i.stratum i.time_FE_tdm_2mo_CvL i.house if inlist(tmt,1,2),cl(a7)
+	su `depvar' if t_c==1 & time_FE_tdm_2mo_CvL!=.
+	estadd local Mean=abs(round(`r(mean)',.001))
+	estadd scalar Observations = `e(N)'
+	estadd scalar Clusters = `e(N_clust)'
+	}
+	esttab using "$reploutdir/cvl_total_tax_burden.tex", ///		
+	replace label b(%9.3f) se(%9.3f) ///
+	scalar(Clusters Observations Mean) ///
+	nomtitles ///
+	indicate("Time FE = *2mo*""House FE = *house*""Stratum FE = *stratum*") ///
+	star(* 0.10 ** 0.05 *** 0.001) ///
+	nogaps nonotes compress nocons
+
+
+```
+
+### `Replication Materials - Updated October 2025/Dofiles/Tables_Figures/TableA16.do`
+```stata
+
+*************
+* Table A16 *
+*************
+
+********************
+* Prepare datasets *
+********************
+
+	use "${repldir}/Data/03_clean_combined/analysis_data.dta", clear
+	
+	keep if tmt==1 | tmt==2 | tmt==3
+	
+	cap g taxes_paid_carto = 0 if taxes_paid!=.
+	replace taxes_paid_carto = 1 if collect_success==1
+	
+	cap drop visit_post_carto
+	gen visit_post_carto=0 if visited==0 | (visits!=0 & visits!=.)
+	replace visit_post_carto=1 if visits!=. & visits>1
+	
+	cap drop nb_visit_post_carto
+	gen nb_visit_post_carto=0 if visits!=. | visited==0
+	replace nb_visit_post_carto=visits-1 if visits!=. & visits>1
+	replace nb_visit_post_carto=. if nb_visit_post_carto==99998
+	replace nb_visit_post_carto = . if visit_post_carto==.
+
+	egen time_FE_tdm_2mo_CvL = cut(today_alt),at(21355 21415 21475 21532) icodes
+	egen time_FE_tdm_2mo_CvCLI = cut(today_alt),at(21365.5 21425.5 21485.5 21519) icodes
+	egen time_FE_tdm_2mo_LvCLI = cut(today_alt),at(21370.5 21430.5 21490.5 21522) icodes
+	egen time_FE_tdm_2mo_CvLvCLI = cut(today_alt),at(21363.6 21423.6 21483.6 21524.3) icodes
+	
+	// House quality
+		* roof
+		gen roof_final=roof
+		replace roof_final=5 if roof==7 & roof2==3
+		replace roof_final=6 if roof==7 & roof2==2
+		replace roof_final=7 if roof==7 & roof2==1
+		replace roof_final=8 if roof==5 | roof==6
+
+		*walls 
+
+		g walls_final = walls
+		revrs ravine
+		
+		g walls_new = 0 if inlist(walls_final,0,1)
+		replace walls_new = 1 if inlist(walls_final,2,3,4)
+				
+		g walls_modern = 1 if inlist(walls_final,3,4)
+		replace walls_modern = 0 if inlist(walls_final,0,1,2)
+
+		g roof_new = 0 if inlist(roof_final,1,2,3,4)
+		replace roof_new = 1 if inlist(roof_final,7,8)
+
+		global house_quality = "walls_final roof_final"
+		global house_quality_new = "walls_new"
+		global age_adj = "age_prop"
+
+		foreach index in house_quality house_quality_new age_adj{ 
+		foreach var in $`index'{
+		cap replace `var' = `var'_orig
+		cap gen `var'_orig = `var'
+		sum `var'
+		replace `var' = (`var'-`r(mean)')/(`r(sd)') //standardize
+		}
+		egen `index' = rowtotal($`index'), missing
+		sum `index'
+		replace `index' = (`index' -`r(mean)')/(`r(sd)')  //standardize index
+		}
+		
+		ren edu edu_ml
+		ren edu2 edu2_ml
+		
+				preserve
+					use "${repldir}/Data/03_clean_combined/analysis_data.dta", clear
+					collapse (max) tmt stratum,by(a7)
+					g treatment = tmt
+					tempfile tmt
+					sa `tmt'
+				restore
+	
+	// Income
+	
+		preserve
+			* Baseline data
+			u "${repldir}/Data/01_base/survey_data/baseline_noPII.dta",clear
+			keep if tot_complete==1
+			ren code survey1_code
+			
+			g move_conflict = 0 if move1!=.
+			replace move_conflict = 1 if move1>0 & move1<. & move2==1
+			replace move_conflict = 0 if move1>0 & move1<. & move2==0
+			replace move_conflict = 1 if move1==0 & move2==0
+			
+			keep survey1_code inc_mo possessions possessions_* elect1 renters_b work_gov3 transport church hh_size civic7 ///
+				bus1 wed_fun social1 social2 trust8 trust4 trust5 trust6 tax13 move_conflict kga_born ave_born ///
+				access1 access2 access3 access4 access5 access6 access7 access8 access9 access10 ///
+				chef0 chef1 chef2 chef3 chef4 chef5 ///
+				chef_eval chef_corr1 chef11 chef12 ///
+				edu edu2 status tax17 tax28 tax32 ///
+				pay_gov1_2  pay_gov1_3 pay_gov1_5 pay_gov1_14 pay_gov1_7 pay_gov1_15 pay_gov1_10 pay_gov1_1  pay_gov1_17 pay_gov1_6  ///
+				pay_gov2_4 pay_gov2_8 pay_gov2_11 pay_gov2_12 pay_gov2_13 pay_gov2_16 pay_tot ///
+				trust4 trust5 trust6 corr14_end gov1_end job1 return ///
+				age sex work_gov3
+			ren age age_bl
+			ren sex sex_bl
+			rename inc_mo inc_mo_bl
+			ren possessions possessions_bl
+			ren elect1 elect1_bl
+			ren renters_b renters_bl
+			ren work_gov3 work_gov3_bl
+			ren  transport  transport_bl
+				replace transport_bl = transport_bl/10000
+			ren church church_bl
+				replace church_bl = church_bl/10000
+			ren hh_size hh_size_bl
+			ren civic7 civic7_bl
+			ren bus1 bus1_bl
+			ren wed_fun wed_fun_bl
+			ren social1 social1_bl
+			ren social2 social2_bl
+			ren return return_bl
+			ren tax17 tax17_bl
+			ren tax28 tax28_bl
+			ren tax32 tax32_bl
+			ren tax13 tax13_bl
+				replace tax13_bl = 0 if (tax17_bl==2|tax17_bl==3) & return==0
+			ren possessions_1 moto_bl
+			ren possessions_2 car_bl
+			ren possessions_3 radio_bl
+			ren possessions_4 tv_bl 
+			ren possessions_5 egen_bl
+			ren possessions_6 sewmach_bl
+			forval i = 0/5{
+				ren chef`i' chef`i'_bl
+			}
+			ren edu edu_bl
+			ren edu2 edu2_bl
+			ren status status_bl
+			ren job1 job1_bl
+				g employed_prop_bl = 0 if job1_bl==0 & status_bl==1
+				replace employed_prop_bl = 1 if job1_bl>0 & job1_bl<. & status_bl==1
+			foreach var in ///
+				pay_gov1_2  pay_gov1_3 pay_gov1_5 pay_gov1_14 pay_gov1_7 pay_gov1_15 pay_gov1_10 pay_gov1_1  pay_gov1_17 pay_gov1_6  ///
+				pay_gov2_4 pay_gov2_8 pay_gov2_11 pay_gov2_12 pay_gov2_13 pay_gov2_16 pay_tot ///
+				chef_eval chef_corr1 chef11 chef12  ///
+				corr14_end gov1_end{
+					ren `var' `var'_bl
+				}
+				foreach var in trust4 trust5 trust6 trust8 {
+					g `var'_bl = `var'
+				}
+
+			* Normalize
+				global transport "transport_bl"
+				global church "church_bl"
+				global wed_fun "wed_fun_bl"
+				global social "social1_bl social2_bl"
+				global hh_size "hh_size_bl"
+				global trust "trust8 trust4 trust5 trust6"
+				global access "access1 access2 access3 access4 access5 access6 access7 access8 access9 access10"
+				global access_obs "access3 access4 access5 access6 access7"
+				global obs_poss "moto_bl car_bl"
+				global unobs_poss  "radio_bl tv_bl egen_bl sewmach_bl"
+				global all_poss "moto_bl car_bl radio_bl tv_bl egen_bl sewmach_bl"
+				foreach index in social transport church wed_fun hh_size trust access obs_poss unobs_poss access_obs all_poss{ 
+				foreach var in $`index'{
+				cap replace `var' = `var'_orig
+				cap gen `var'_orig = `var'
+				sum `var'
+				replace `var' = (`var'-`r(mean)')/(`r(sd)') //standardize
+				}
+				egen `index' = rowtotal($`index'), missing
+				sum `index'
+				replace `index' = (`index' -`r(mean)')/(`r(sd)')  //standardize index
+				}
+			
+			cap drop _merge
+			tempfile bl
+			sa `bl'
+			
+			* Endline data
+			u "${repldir}/Data/01_base/survey_data/endline_round1_noPII.dta",clear
+			keep if tot_complete==1
+			cap drop _merge
+			
+			keep code a7 compound_code compound_code_prev o_pay2 salongo salongo_hours visits move inc_mo transport cash_fee_month2_1-cash_fee_month2_31 bribe* liquidity_bind_date_1-liquidity_bind_date_31
+			rename inc_mo inc_mo_el
+			rename transport transport_el
+			ren code survey1_code
+			merge 1:1 survey1_code using `bl'
+			cap drop _merge
+			
+			*  Visits
+			g visited_endline = 1 if visits>2  &  visits<.
+
+			* Replace compound code with previous compound code
+			replace compound_code=compound_code_prev if (move==1 | move==2)
+
+			* Clean compound code 
+			replace compound_code=999999 if compound_code==99999 | compound_code==9999999
+
+			* Drop missing compound code
+			drop if compound_code==999999	
+			
+			drop if compound_code==.
+			
+			* Informal payment
+			ren o_pay2 informal_pay_endline
+			
+			* Salongo variables
+			g salongo_endline = 0 if salongo==0
+			replace salongo_endline = 1 if salongo>0 & salongo<.
+			
+			g salongo_hours_endline = salongo_hours
+			replace salongo_hours_endline = . if salongo_hours==16000 | salongo_hours==60000 // obvious outliers
+			replace salongo_hours_endline = 0 if salongo_endline==0
+			
+			* Average Income per month (over baseline and endline)
+			egen inc_mo_avg=rowmean(inc_mo_bl inc_mo_el)
+			egen trans_mo_avg=rowmean(transport_bl transport_el)
+			g inc_trans_avg = inc_mo_avg+trans_mo_avg
+			
+			* Liquidity and cash fee
+			egen cash_fee_days_tot = rowtotal(cash_fee_month2_1-cash_fee_month2_31)
+			egen liquidity_bind_days_tot = rowtotal(liquidity_bind_date_1-liquidity_bind_date_31)
+			
+			* Bribe variables
+			replace bribe = bribe2a if bribe==.
+			replace bribe = bribe2b if bribe==.
+			replace bribe = bribe3 if bribe==.
+			replace bribe_amt = bribe2a_amt if bribe_amt==.
+			replace bribe_amt = bribe2b_amt if bribe_amt==.
+			replace bribe_amt = bribe3_amt if bribe_amt==.
+			
+			replace bribe_amt = 0 if bribe==0
+			
+			ren bribe bribe_endline
+			ren bribe_amt bribe_amt_endline
+			
+			* Normalize
+				global income_avg "inc_mo_avg"
+				global income_transport_avg "inc_trans_avg"
+				global liquid_avg "cash_fee_days_tot liquidity_bind_days_tot"
+				foreach index in income_avg liquid_avg income_transport_avg { 
+				foreach var in $`index'{
+				cap replace `var' = `var'_orig
+				cap gen `var'_orig = `var'
+				sum `var'
+				replace `var' = (`var'-`r(mean)')/(`r(sd)') //standardize
+				}
+				egen `index' = rowtotal($`index'), missing
+				sum `index'
+				replace `index' = (`index' -`r(mean)')/(`r(sd)')  //standardize index
+				}
+				
+				merge m:1 a7 using `tmt', nogen keep(3)
+				
+				g educ_lvl_prop = .
+				foreach typ in bl{
+					replace educ_lvl_prop=edu_`typ' if edu_`typ'!=. & educ_lvl_prop==. & status_`typ'==1
+				}
+				g educ_yrs_prop =  .
+				foreach typ in bl{
+					replace educ_yrs_prop=0 if educ_lvl_prop==0 & educ_yrs_prop==. & status_`typ'==1
+					replace educ_yrs_prop=edu2_`typ' if educ_lvl_prop==1 & educ_yrs_prop==. & edu2_`typ'<=3 & status_`typ'==1
+						replace educ_yrs_prop=3 if educ_lvl_prop==1 & educ_yrs_prop==. & edu2_`typ'>3 & edu2_`typ'<. & status_`typ'==1
+					replace educ_yrs_prop=3+edu2_`typ' if educ_lvl_prop==2 & edu2_`typ'!=. & educ_yrs_prop==. & status_`typ'==1
+					replace educ_yrs_prop=3+6+edu2_`typ' if educ_lvl_prop==3 & edu2_`typ'!=. & educ_yrs_prop==. & status_`typ'==1
+					replace educ_yrs_prop=3+12+edu2_`typ' if educ_lvl_prop==4 & edu2_`typ'!=. & educ_yrs_prop==. & status_`typ'==1
+				}
+				
+				//  Chief vars
+				replace chef1_bl = . if chef1_bl==4
+				replace chef2_bl = . if chef2_bl==4
+				revrs chef1_bl
+				revrs chef2_bl
+				revrs chef_eval_bl
+				
+				// Reverse liquidity
+				cap drop revliq*
+				revrs liquid_avg
+				
+				// Trust
+				revrs trust4_bl
+				revrs trust5_bl
+				revrs trust6_bl
+				revrs corr14_end_bl
+				
+				sum bribe_endline age_bl sex_bl educ_yrs_prop employed_prop_bl work_gov3_bl ///
+				moto_bl car_bl radio_bl tv_bl egen_bl sewmach_bl income_avg transport revliquid_avg elect1_bl ///
+				revtrust4_bl revtrust5_bl revtrust6_bl revcorr14_end_bl gov1_end_bl chef4_bl revchef_eval_bl chef_corr1_bl /*revtrust_chef*/ ///
+				tax13_bl chef0_bl revchef1_bl revchef2_bl chef3_bl chef11_bl if treatment==2
+				
+				reg bribe_endline age_bl sex_bl educ_yrs_prop employed_prop_bl work_gov3_bl ///
+				moto_bl car_bl radio_bl tv_bl egen_bl sewmach_bl income_avg transport revliquid_avg elect1_bl ///
+				revtrust4_bl revtrust5_bl revtrust6_bl revcorr14_end_bl gov1_end_bl chef4_bl revchef_eval_bl chef_corr1_bl /*revtrust_chef*/ ///
+				tax13_bl chef0_bl revchef1_bl revchef2_bl chef3_bl chef11_bl if treatment==2,cl(a7)
+				
+				* Pick significant coefficients (N is small, so allow at 10% significance level)
+				
+				merge m:1 a7 using `tmt'
+				assert _merge==3
+				drop _merge
+				
+				* Predict for Central and save
+				global sigvars "age_bl work_gov3_bl radio_bl revtrust5_bl revchef1_bl revchef2_bl chef3_bl"
+				
+				reg bribe_endline ${sigvars} if tmt==2,cl(a7)
+				predict pred_bribe_pay if tmt==1|tmt==2|tmt==3
+				
+				* Generate dummy for above
+				sum pred_bribe_pay if treatment==1,d
+				g pred_bribe_pay_dum75 = 0 if pred_bribe_pay!=. & (tmt==1)
+				replace pred_bribe_pay_dum75 = 1 if pred_bribe_pay>`r(p75)' & pred_bribe_pay!=. & (tmt==1)
+				
+				sum pred_bribe_pay if treatment==1,d
+				g pred_bribe_pay_dum90 = 0 if pred_bribe_pay!=. & (tmt==1)
+				replace pred_bribe_pay_dum90 = 1 if pred_bribe_pay>`r(p90)' & pred_bribe_pay!=. & (tmt==1)
+				
+				replace pred_bribe_pay_dum90=. if pred_bribe_pay_dum75==.
+				replace pred_bribe_pay_dum75=. if pred_bribe_pay_dum90==.
+				
+				* Generate dummy for above with CLI included
+				sum pred_bribe_pay if treatment==1|tmt==3,d
+				g pred_bribe_pay_dum75_wcli = 0 if pred_bribe_pay!=. & (tmt==1|tmt==3)
+				replace pred_bribe_pay_dum75_wcli = 1 if pred_bribe_pay>`r(p75)' & pred_bribe_pay!=. & (tmt==1|tmt==3)
+				
+				sum pred_bribe_pay if treatment==1,d
+				g pred_bribe_pay_dum90_wcli = 0 if pred_bribe_pay!=. & (tmt==1|tmt==3)
+				replace pred_bribe_pay_dum90_wcli = 1 if pred_bribe_pay>`r(p90)' & pred_bribe_pay!=. & (tmt==1|tmt==3)
+				
+				replace pred_bribe_pay_dum90_wcli=. if pred_bribe_pay_dum75_wcli==.
+				replace pred_bribe_pay_dum75_wcli=. if pred_bribe_pay_dum90_wcli==.
+				
+				tempfile el
+				sa `el'
+			restore
+			
+		cap drop _merge
+		ren compound1 compound_code
+		merge 1:m compound_code using `el'
+		
+	eststo clear
+	label var t_l "Local"
+	
+	* Taxes
+	eststo: reg taxes_paid pred_bribe_pay_dum75 i.stratum if inlist(tmt,1), cl(a7)
+	su taxes_paid if pred_bribe_pay_dum75==0
+	estadd local Mean=abs(round(`r(mean)',.001))
+	estadd scalar Observations = `e(N)'
+	estadd scalar Clusters = `e(N_clust)'
+	
+	* Taxes - Visited
+	eststo: reg taxes_paid pred_bribe_pay_dum75 i.stratum if inlist(tmt,1) & visit_post_carto==1, cl(a7)
+	su taxes_paid if pred_bribe_pay_dum75==0
+	estadd local Mean=abs(round(`r(mean)',.001))
+	estadd scalar Observations = `e(N)'
+	estadd scalar Clusters = `e(N_clust)'
+	
+	* Bribe - Extensive C (Endline)
+	eststo: reg bribe_endline pred_bribe_pay_dum75 i.stratum if inlist(tmt,1), cl(a7)
+	su bribe_endline if pred_bribe_pay_dum75==0
+	estadd local Mean=abs(round(`r(mean)',.001))
+	estadd scalar Observations = `e(N)'
+	estadd scalar Clusters = `e(N_clust)'
+	
+	label var pred_bribe_pay_dum75 "Predicted Bribe Payer"
+	
+	esttab using "${reploutdir}/predicted_bribe_p75.tex", ///
+	replace label b(%9.3f) se(%9.3f) ///
+	keep (pred_bribe_pay_dum75) ///
+	order(pred_bribe_pay_dum75) ///
+	scalar(Clusters Mean) sfmt(0 3 3) ///
+	nomtitles ///
+	mgroups("Compliance" "Compliance" "Bribes (Endline)" "Informal Payments" , pattern(1 1 1 1) prefix(\multicolumn{@span}{c}{) suffix(}) span) ///
+	indicate("Stratum FE = *stratum*") ///
+	star(* 0.10 ** 0.05 *** 0.001) ///
+	nogaps nonotes compress
+	
+	eststo clear
+	label var t_l "Local"
+	
+	* Taxes
+	eststo: reg taxes_paid pred_bribe_pay_dum90 i.stratum if inlist(tmt,1), cl(a7)
+	su taxes_paid if pred_bribe_pay_dum90==0
+	estadd local Mean=abs(round(`r(mean)',.001))
+	estadd scalar Observations = `e(N)'
+	estadd scalar Clusters = `e(N_clust)'
+	
+	* Taxes - Visited
+	eststo: reg taxes_paid pred_bribe_pay_dum90 i.stratum if inlist(tmt,1) & visit_post_carto==1, cl(a7)
+	su taxes_paid if pred_bribe_pay_dum90==0
+	estadd local Mean=abs(round(`r(mean)',.001))
+	estadd scalar Observations = `e(N)'
+	estadd scalar Clusters = `e(N_clust)'
+	
+	* Bribe - Extensive C (Endline)
+	eststo: reg bribe_endline pred_bribe_pay_dum90 i.stratum if inlist(tmt,1), cl(a7)
+	su bribe_endline if pred_bribe_pay_dum90==0
+	estadd local Mean=abs(round(`r(mean)',.001))
+	estadd scalar Observations = `e(N)'
+	estadd scalar Clusters = `e(N_clust)'
+	
+	label var pred_bribe_pay_dum90 "Predicted Bribe Payer"
+	
+	
+	esttab using "${reploutdir}/predicted_bribe_p90.tex", ///
+	replace label b(%9.3f) se(%9.3f) ///
+	keep (pred_bribe_pay_dum90) ///
+	order(pred_bribe_pay_dum90) ///
+	scalar(Clusters Mean) sfmt(0 3 3) ///
+	nomtitles ///
+	mgroups("Compliance" "Compliance" "Bribes (Endline)" "Informal Payments" , pattern(1 1 1 1) prefix(\multicolumn{@span}{c}{) suffix(}) span) ///
+	indicate("Stratum FE = *stratum*") ///
+	star(* 0.10 ** 0.05 *** 0.001) ///
+	nogaps nonotes compress
+
+```
+
+### `Replication Materials - Updated October 2025/Dofiles/Tables_Figures/TableA17.do`
+```stata
+
+*************
+* Table A17 *
+*************
+
+********************
+* Prepare datasets *
+********************
+
+	use "${repldir}/Data/03_clean_combined/analysis_data.dta", clear
+	keep if tmt==1 | tmt==2 | tmt==3
+
+	cap drop visit_post_carto
+	gen visit_post_carto=0 if visited==0 | (visits!=0 & visits!=.)
+	replace visit_post_carto=1 if visits!=. & visits>1
+	
+	cap drop nb_visit_post_carto
+	gen nb_visit_post_carto=0 if visits!=. | visited==0
+	replace nb_visit_post_carto=visits-1 if visits!=. & visits>1
+	replace nb_visit_post_carto=. if nb_visit_post_carto==99998
+	replace nb_visit_post_carto = . if visit_post_carto==.
+	
+	gen visits_other_dummy=visits_other1a
+	replace visits_other_dummy=visits_other2a if visits_other1a==. & visits_other2a!=. 
+	label var visits_other_dummy "Talked to collectors about Property Tax"
+	gen visits_other_nb=visits_other1b
+	replace visits_other_nb= visits_other2b if visits_other_nb==.
+	replace visits_other_nb=0 if visits_other_dummy==0
+	label var visits_other_nb "Talked to collectors about Property Tax  Nb of times"
+	
+	egen time_FE_tdm_2mo_CvL = cut(today_alt),at(21355 21415 21475 21529) icodes
+	egen time_FE_tdm_2mo_CvCLI = cut(today_alt),at(21365.5 21425.5 21485.5 21515.5) icodes
+	
+	eststo clear
+	label var t_l "Local"
+	
+	* Visits - Extensive CvL
+	eststo: reg visit_post_carto t_l i.stratum i.time_FE_tdm_2mo_CvL if inlist(tmt,1,2), cl(a7)
+	su visit_post_carto if t_c==1 & time_FE_tdm_2mo_CvL!=.
+	estadd local Mean=abs(round(`r(mean)',.001))
+	estadd scalar Observations = `e(N)'
+	estadd scalar Clusters = `e(N_clust)'
+	
+	* Visits - Intensive CvL
+	eststo: reg nb_visit_post_carto t_l i.stratum i.time_FE_tdm_2mo_CvL if inlist(tmt,1,2), cl(a7)
+	su nb_visit_post_carto if t_c==1 & time_FE_tdm_2mo_CvL!=.
+	estadd local Mean=abs(round(`r(mean)',.001))
+	estadd scalar Observations = `e(N)'
+	estadd scalar Clusters = `e(N_clust)'
+	
+	* Visits Other Contact - Extensive CvL
+	eststo: reg visits_other_dummy t_l i.stratum i.time_FE_tdm_2mo_CvL if inlist(tmt,1,2), cl(a7)
+	su visits_other_dummy if t_c==1 & time_FE_tdm_2mo_CvL!=.
+	estadd local Mean=abs(round(`r(mean)',.001))
+	estadd scalar Observations = `e(N)'
+	estadd scalar Clusters = `e(N_clust)'
+	
+	* Visits Other Contact - Intensive CvL
+	eststo: reg visits_other_nb t_l i.stratum i.time_FE_tdm_2mo_CvL if inlist(tmt,1,2), cl(a7)
+	su visits_other_nb if t_c==1 & time_FE_tdm_2mo_CvL!=.
+	estadd local Mean=abs(round(`r(mean)',.001))
+	estadd scalar Observations = `e(N)'
+	estadd scalar Clusters = `e(N_clust)'
+	
+	esttab using "${reploutdir}/visits_results_nohouseFE.tex", ///
+	replace label b(%9.3f) se(%9.3f) ///
+	keep (t_l) ///
+	order(t_l) ///
+	scalar(Clusters Mean) sfmt(0 3 3) ///
+	nomtitles ///
+	mgroups("Visited Post Carto" "Visits Post Carto" "Visited Other Contact"  "Visits Other Contact", pattern(1 1 1 1) prefix(\multicolumn{@span}{c}{) suffix(}) span) ///
+	indicate("Month FE = *2mo*""Stratum FE = *stratum*") ///
+	star(* 0.10 ** 0.05 *** 0.001) ///
+	nogaps nonotes compress
+
+
+	
+
+```
+
+### `Replication Materials - Updated October 2025/Dofiles/Tables_Figures/TableA19.do`
+```stata
+
+*************
+* Table A19 *
+*************
+
+********************
+* Prepare datasets *
+********************
+
+	use "${repldir}/Data/03_clean_combined/analysis_data.dta", clear
+	
+	keep if tmt==1 | tmt==2 | tmt==3
+	
+	cap drop visit_post_carto
+	gen visit_post_carto=0 if visited==0 | (visits!=0 & visits!=.)
+	replace visit_post_carto=1 if visits!=. & visits>1
+	
+	cap drop nb_visit_post_carto
+	gen nb_visit_post_carto=0 if visits!=. | visited==0
+	replace nb_visit_post_carto=visits-1 if visits!=. & visits>1
+	replace nb_visit_post_carto=. if nb_visit_post_carto==99998
+	replace nb_visit_post_carto = . if visit_post_carto==.
+
+	egen time_FE_tdm_2mo_CvCLI = cut(today_alt),at(21365.5 21425.5 21485.5 21519) icodes
+	egen time_FE_tdm_2mo_LvCLI = cut(today_alt),at(21370.5 21430.5 21490.5 21522) icodes
+	egen time_FE_tdm_2mo_CvLvCLI = cut(today_alt),at(21363.6 21423.6 21483.6 21524.3) icodes
+
+	**********************************
+	* Machine Learning and distances * 
+	**********************************
+
+	* Use final Machine Learning data
+	preserve
+	insheet using "${repldir}/Data/01_base/admin_data/property_values_MLestimates.csv", clear
+	keep compound1 pred_value dist_*
+	drop if compound1==.
+	//rename compound1 compound_code
+	tempfile machine_learning
+	save `machine_learning'
+	restore
+	
+	cap drop _merge
+	merge 1:1 compound1 using `machine_learning', nogen keep(match)
+	
+	egen dist_stateandmkt=rowmean(dist_state_buildings dist_police_stations dist_city_center dist_markets dist_gas_stations)
+	
+	global controls "sex_prop salaried dist_stateandmkt"
+	
+***********
+* Panel A *
+***********
+
+	eststo clear
+	label var t_cli "Central Plus Local Info"
+	
+	* Month FE - Compliance
+	eststo: reg taxes_paid t_cli i.house i.stratum i.time_FE_tdm_2mo_CvCLI ${controls} if inlist(tmt,1,3), cl(a7)
+	su taxes_paid if t_c==1 & time_FE_tdm_2mo_CvCLI!=. & sex_prop!=. & salaried!=. & dist_stateandmkt!=.
+	estadd local Mean=abs(round(`r(mean)',.001))
+	estadd scalar Observations = `e(N)'
+	estadd scalar Clusters = `e(N_clust)'
+	
+	* Month FE - Revenues
+	eststo: reg taxes_paid_amt t_cli i.house i.stratum i.time_FE_tdm_2mo_CvCLI ${controls} if inlist(tmt,1,3), cl(a7)
+	su taxes_paid_amt if t_c==1 & time_FE_tdm_2mo_CvCLI!=. & sex_prop!=. & salaried!=. & dist_stateandmkt!=.
+	estadd local Mean=abs(round(`r(mean)',.001))
+	estadd scalar Observations = `e(N)'
+	estadd scalar Clusters = `e(N_clust)'
+	
+	* Month FE - Visited
+	eststo: reg visit_post_carto t_cli i.house i.stratum i.time_FE_tdm_2mo_CvCLI ${controls} if inlist(tmt,1,3), cl(a7)
+	su visit_post_carto if t_c==1 & time_FE_tdm_2mo_CvCLI!=. & sex_prop!=. & salaried!=. & dist_stateandmkt!=.
+	estadd local Mean=abs(round(`r(mean)',.001))
+	estadd scalar Observations = `e(N)'
+	estadd scalar Clusters = `e(N_clust)'
+	
+	* Month FE - Visits
+	eststo: reg nb_visit_post_carto t_cli i.house i.stratum i.time_FE_tdm_2mo_CvCLI ${controls} if inlist(tmt,1,3), cl(a7)
+	su nb_visit_post_carto if t_c==1 & time_FE_tdm_2mo_CvCLI!=. & sex_prop!=. & salaried!=. & dist_stateandmkt!=.
+	estadd local Mean=abs(round(`r(mean)',.001))
+	estadd scalar Observations = `e(N)'
+	estadd scalar Clusters = `e(N_clust)'
+	
+	* Month FE - Compliance Conditional on Visited
+	eststo: reg taxes_paid t_cli i.house i.stratum i.time_FE_tdm_2mo_CvCLI ${controls} if inlist(tmt,1,3) & visit_post_carto==1, cl(a7)
+	su taxes_paid if t_c==1 & time_FE_tdm_2mo_CvCLI!=. & visit_post_carto==1 & sex_prop!=. & salaried!=. & dist_stateandmkt!=.
+	estadd local Mean=abs(round(`r(mean)',.001))
+	estadd scalar Observations = `e(N)'
+	estadd scalar Clusters = `e(N_clust)'
+	
+	* Month FE - Compliance CvLvCLI
+	eststo: reg taxes_paid t_cli t_l i.house i.stratum i.time_FE_tdm_2mo_CvLvCLI ${controls} if inlist(tmt,1,2,3), cl(a7)
+	test t_cli = t_l
+	local p_CLIvC = `r(p)'
+	su taxes_paid if t_c==1 & time_FE_tdm_2mo_CvLvCLI!=. & sex_prop!=. & salaried!=. & dist_stateandmkt!=.
+	estadd local Mean=abs(round(`r(mean)',.001))
+	estadd scalar Observations = `e(N)'
+	estadd scalar Clusters = `e(N_clust)'
+	estadd local CLIvC_p = `p_CLIvC'
+	
+	esttab using "${reploutdir}/centralwinfo_controls.tex", ///
+	replace label b(%9.3f) se(%9.3f) ///
+	keep (t_cli t_l) ///
+	order(t_cli t_l) ///
+	scalar(Clusters Mean CLIvC_p) sfmt(0 3 3 3 3) ///
+	nomtitles ///
+	mgroups("Tax Compliance" "Tax Amount", pattern(1 1) prefix(\multicolumn{@span}{c}{) suffix(}) span) ///
+	indicate("Time FE = *2mo*""House FE = *house*""Stratum FE = *stratum*") ///
+	star(* 0.10 ** 0.05 *** 0.001) ///
+	nogaps nonotes compress
+	
+***********
+* Panel B *
+***********
+
+eststo clear
+	label var t_cli "Central Plus Local Info"
+	
+	* Month FE - Compliance
+	eststo: reg taxes_paid t_cli  i.stratum i.time_FE_tdm_2mo_CvCLI if inlist(tmt,1,3), cl(a7)
+	su taxes_paid if t_c==1 & time_FE_tdm_2mo_CvCLI!=.
+	estadd local Mean=abs(round(`r(mean)',.001))
+	estadd scalar Observations = `e(N)'
+	estadd scalar Clusters = `e(N_clust)'
+	
+	* Month FE - Revenues
+	eststo: reg taxes_paid_amt t_cli  i.stratum i.time_FE_tdm_2mo_CvCLI if inlist(tmt,1,3), cl(a7)
+	su taxes_paid_amt if t_c==1 & time_FE_tdm_2mo_CvCLI!=.
+	estadd local Mean=abs(round(`r(mean)',.001))
+	estadd scalar Observations = `e(N)'
+	estadd scalar Clusters = `e(N_clust)'
+	
+	* Month FE - Visited
+	eststo: reg visit_post_carto t_cli  i.stratum i.time_FE_tdm_2mo_CvCLI if inlist(tmt,1,3), cl(a7)
+	su visit_post_carto if t_c==1 & time_FE_tdm_2mo_CvCLI!=.
+	estadd local Mean=abs(round(`r(mean)',.001))
+	estadd scalar Observations = `e(N)'
+	estadd scalar Clusters = `e(N_clust)'
+	
+	* Month FE - Visits
+	eststo: reg nb_visit_post_carto t_cli  i.stratum i.time_FE_tdm_2mo_CvCLI if inlist(tmt,1,3), cl(a7)
+	su nb_visit_post_carto if t_c==1 & time_FE_tdm_2mo_CvCLI!=.
+	estadd local Mean=abs(round(`r(mean)',.001))
+	estadd scalar Observations = `e(N)'
+	estadd scalar Clusters = `e(N_clust)'
+	
+	* Month FE - Compliance Conditional on Visited
+	eststo: reg taxes_paid t_cli  i.stratum i.time_FE_tdm_2mo_CvCLI if inlist(tmt,1,3) & visit_post_carto==1, cl(a7)
+	su taxes_paid if t_c==1 & time_FE_tdm_2mo_CvCLI!=. & visit_post_carto==1
+	estadd local Mean=abs(round(`r(mean)',.001))
+	estadd scalar Observations = `e(N)'
+	estadd scalar Clusters = `e(N_clust)'
+	
+	* Month FE - Compliance CvLvCLI
+	eststo: reg taxes_paid t_cli t_l  i.stratum i.time_FE_tdm_2mo_CvLvCLI if inlist(tmt,1,2,3), cl(a7)
+	test t_cli = t_l
+	local p_CLIvC = `r(p)'
+	su taxes_paid if t_c==1 & time_FE_tdm_2mo_CvLvCLI!=.
+	estadd local Mean=abs(round(`r(mean)',.001))
+	estadd scalar Observations = `e(N)'
+	estadd scalar Clusters = `e(N_clust)'
+	estadd local CLIvC_p = `p_CLIvC'
+	
+	esttab using "${reploutdir}/centralwinfo_nohouseFE.tex", ///
+	replace label b(%9.3f) se(%9.3f) ///
+	keep (t_cli t_l) ///
+	order(t_cli t_l) ///
+	scalar(Clusters Mean CLIvC_p) sfmt(0 3 3 3 3) ///
+	nomtitles ///
+	mgroups("Tax Compliance" "Tax Amount", pattern(1 1) prefix(\multicolumn{@span}{c}{) suffix(}) span) ///
+	indicate("Month FE = *2mo*""Stratum FE = *stratum*") ///
+	star(* 0.10 ** 0.05 *** 0.001) ///
+	nogaps nonotes compress
+	
+
+
+```
+
+### `Replication Materials - Updated October 2025/Dofiles/Tables_Figures/TableA2.do`
+```stata
+************
+* Table A2 *
+************
+
+********************
+* Prepare datasets *
+********************
+
+*****************
+* Baseline Data *
+*****************
+
+	* use clean baseline data 
+	use "${repldir}/Data/01_base/survey_data/baseline_noPII.dta", clear
+	keep if tot_complete==1 
+	drop possessions
+
+	* Education variables
+	g edu_yrs = .
+	replace edu_yrs = 0 if edu==0
+	replace edu_yrs = 1 if edu==1
+	replace edu_yrs = 6 if edu==2
+	replace edu_yrs = 1+edu2 if edu2!=. & edu==2 & edu2<7 // not counting repeating grade
+	replace edu_yrs = 13 if edu==3
+	replace edu_yrs = 7+edu2 if edu2!=. & edu==3 & edu2<5 // not counting repeating grade
+	replace edu_yrs = 17 if edu==4
+	replace edu_yrs = 13+edu2 if edu2!=. & edu==4 // allow for higher values for masters/PhD
+		
+	* Normalized possessions
+	global possessions = "possessions_1 possessions_2 possessions_3 possessions_4 possessions_5 possessions_6"
+	foreach index in possessions{
+	foreach var in $`index'{
+	cap replace `var' = `var'_orig
+	cap gen `var'_orig = `var'
+	sum `var'
+	replace `var' = (`var'-`r(mean)')/(`r(sd)') //standardize
+	}
+	egen `index' = rowtotal($`index'), missing
+	sum `index'
+	replace `index' = (`index' -`r(mean)')/(`r(sd)')  //standardize index
+	}
+
+	foreach var in possessions{
+	sum `var', d
+	g `var'_norm = (`var'-`r(min)')/(`r(max)'-`r(min)') //normalize variables
+	}
+	
+	* Gender dummy
+	g male = sex
+	replace male = 0 if male==2
+	
+	* log of income
+	g lg_inc_mo = log(inc_mo+1)
+	
+	* log of transport
+	g lg_transport = log(transport+1)
+	
+	* trust variables
+	revrs trust8 trust4 trust5 trust6
+	rename revtrust8 trust_chief
+	rename revtrust4 trust_nat_gov
+	rename revtrust5 trust_prov_gov
+	rename revtrust6 trust_tax_min
+				
+	keep code a7 edu_yrs age male elect1 possessions possessions_norm lg_inc_mo inc_mo lg_transport transport fence trust_chief trust_nat_gov trust_prov_gov trust_tax_min tax1 tax11 tax12 tax13 tax14 tax15 tax17
+		
+	* tempfile 
+	tempfile bl
+	save `bl'
+
+****************
+* Endline Data *
+****************
+
+	* Use clean endline data 
+	use "${repldir}/Data/01_base/survey_data/endline_round1_noPII.dta", clear
+	keep if tot_complete==1 
+	replace compound_code=compound_code_prev if (compound_code_prev!=. & compound_code_prev!=3)
+	keep compound_code code a7 bribe bribe_amt o_pay2 paid_vehicletax_survey_e paid_mktvendorfee_survey_e paid_businessfee_survey_e paid_incometax_survey_e paid_faketax_survey_e corr14_end tax42 trust3_survey_e trust2_survey_e trust6_survey_e steal_gov_2018 steal_col_2018 fair_tax fair_rates fair_collectors liquidity_bind liquidity_bind_date* cash_fee cash_fee_month cash_fee_month2* message1 message2 message3 message4 message5 message6 message7 message8 message9 inc_mo transport
+	rename inc_mo inc_mo_el
+	rename transport transport_el
+
+	drop if compound_code==999999 | compound_code==9999999
+	
+	ren bribe bribe_endline
+	ren bribe_amt bribe_amt_endline
+	ren o_pay2 informal_pay_endline
+
+	tempfile el
+	save `el'
+	
+**********************************
+* Machine Learning and distances * 
+**********************************
+
+	* Use final Machine Learning data
+	insheet using "${repldir}/Data/01_base/admin_data/property_values_MLestimates.csv", clear
+	keep compound1 pred_value dist_*
+	drop if compound1==.
+	rename compound1 compound_code
+	tempfile machine_learning
+	save `machine_learning'
+	
+*****************
+* Combined Data *
+*****************
+	
+	* Use clean combined data
+	use "${repldir}/Data/03_clean_combined/analysis_data.dta", clear
+	rename compound1 compound_code
+	
+	// House quality
+		* roof
+		gen roof_final=roof
+		replace roof_final=5 if roof==7 & roof2==3
+		replace roof_final=6 if roof==7 & roof2==2
+		replace roof_final=7 if roof==7 & roof2==1
+		replace roof_final=8 if roof==5 | roof==6
+	
+		g walls_final = walls
+		revrs ravine
+		
+		g walls_new = 0 if inlist(walls_final,0,1)
+		replace walls_new = 1 if inlist(walls_final,2,3,4)
+				
+		g walls_modern = 1 if inlist(walls_final,3,4)
+		replace walls_modern = 0 if inlist(walls_final,0,1,2)
+
+		g roof_new = 0 if inlist(roof_final,1,2,3,4)
+		replace roof_new = 1 if inlist(roof_final,7,8)
+
+		global house_quality = "walls_final roof_final"
+		global house_quality_new = "walls_new"
+
+		global house_quality = "walls_final roof_final"
+
+		foreach index in house_quality house_quality_new{ 
+		foreach var in $`index'{
+		cap replace `var' = `var'_orig
+		cap gen `var'_orig = `var'
+		sum `var'
+		replace `var' = (`var'-`r(mean)')/(`r(sd)') //standardize
+		}
+		egen `index' = rowtotal($`index'), missing
+		sum `index'
+		replace `index' = (`index' -`r(mean)')/(`r(sd)')  //standardize index
+		}
+	
+	keep compound_code today_alt exempt stratum a7 tmt house r_* pct_* rate taxes_paid pilot house_quality_new roof walls ravine sex_prop age_prop move_ave main_tribe employed salaried work_gov job_gov neighbor_know neighbor_know2 discount_know discount_self tmt_2016  bribe_combined bribe_combined_amt paid_self salongo salongo_hours flier_all today_carto taxes_paid_*d
+	tempfile ml
+	save `ml'
+
+**************
+* Merge Data *
+**************
+	
+* merge baseline and endline 
+use `bl', clear
+merge 1:1 code using `el', nogen
+drop if compound_code==. 
+tempfile bl_el
+save `bl_el'
+
+* merge full data, machine learning, baseline and endline
+use `ml', clear
+merge 1:1 compound_code using `machine_learning', nogen keep(match)
+merge 1:m compound_code using `bl_el' 
+drop if _merge==2 // 5 compound codes reported at endline don't exist in the complete data (104191,204030,504107,542145,6outpu86022)
+drop _merge
+
+**********************
+* Polygon-Level Data *
+**********************
+
+preserve
+		
+		// Data from randomization
+			use "${repldir}/Data/01_base/survey_data/endline_2016campaign_noPII.dta",clear
+			keep a7 program commune stratum paid_receipt_union paid_amt_admin
+			ren program jontax
+			ren stratum stratum_jon
+			ren paid_receipt_union paid_2016
+			g paid_counter = paid_2016!=.
+			collapse (mean) jontax paid_2016 (sum) count_prop_2016 = paid_counter rev_2016 = paid_amt_admin (first) stratum commune, by(a7)
+			
+				replace rev_2016 = rev_2016/count_prop_2016
+			
+				// One commune fix
+				replace commune = 1 if commune==. & a7==574
+			
+				// Fix polygon for spilts
+				expand 3 if a7==609,g(exp)
+				sort exp,stable
+				by exp: g tmp_id = _n
+				replace tmp_id = . if exp==0
+				replace a7 = 6091 if tmp_id==1
+				replace a7 = 6092 if tmp_id==2
+				replace a7 = 6093 if tmp_id==. & a7==609
+				drop exp tmp_id
+				
+				expand 4 if a7==610,g(exp)
+				sort exp,stable
+				by exp: g tmp_id = _n
+				replace tmp_id = . if exp==0
+				replace a7 = 6101 if tmp_id==. & exp==0 & a7==610
+				replace a7 = 6102 if tmp_id==1 & exp==1 & a7==610
+				replace a7 = 6103 if tmp_id==2 & exp==1 & a7==610
+				replace a7 = 6104 if tmp_id==3 & exp==1 & a7==610
+				drop exp tmp_id
+				
+				drop if a7>400 & a7<500 // Nganza
+				drop if inlist(a7,200,201,202,203,207,208,210) // Pilot polygons
+				
+				g joncomp2016 = 1 if jontax==1 & paid_2016==0
+				replace joncomp2016 = 2 if jontax==1 & paid_2016>0 & paid_2016<.
+				replace joncomp2016 = 1 if jontax==0
+				
+			tempfile impots1
+			sa `impots1'
+		
+		restore
+		
+	// Jon's JMP taxation outcomes by polygon
+	merge m:1 a7 using `impots1',keepusing(paid_2016 rev_2016)
+	assert _merge==3
+	drop _merge
+	
+	// Chef survey outcomes
+	preserve
+	
+		* Start with Pablo data to get chef "domains" by polygon (don't necessarily align with chef polygon-code)
+		u "${repldir}/Data/01_base/admin_data/chief_collector_candidates.dta",clear
+		keep if rankpop<=5 // Keep top 5 ranked chefs
+		cap drop _merge
+		
+		merge m:1 code using "${repldir}/Data/01_base/survey_data/chief_survey_randbasis_noPII.dta",gen(_mergechef) ///
+			keepusing(edu inc_mo state_cap1 collect_ever)
+		drop if _mergechef!=3 // 8 observations
+		drop _merge*
+		
+		* Drop pilot polygons
+		drop if inlist(a7,200,201,202,203,207,208,210)
+
+		* Create dataset at the polygon-level
+		collapse (mean) chef_edu = edu chef_inc_mo = inc_mo chef_statecap = state_cap1 (count) chefs_poly = code,by(a7)
+		
+		tempfile chefsurvey1
+		sa `chefsurvey1'
+	
+	restore
+	
+	merge m:1 a7 using `chefsurvey1'
+	drop if _merge==2 // 9 non-matching observations - these are "excluded" polygons
+	assert _merge==3
+	drop _merge
+	
+	// Other compliance measure
+	preserve
+		u "${repldir}/Data/01_base/admin_data/tax_payments_neighborhoods.dta",clear
+		
+		// Fix polygon for spilts
+				expand 3 if a7==609,g(exp)
+				sort exp,stable
+				by exp: g tmp_id = _n
+				replace tmp_id = . if exp==0
+				replace a7 = 6091 if tmp_id==1
+				replace a7 = 6092 if tmp_id==2
+				replace a7 = 6093 if tmp_id==. & a7==609
+				drop exp tmp_id
+				
+				expand 4 if a7==610,g(exp)
+				sort exp,stable
+				by exp: g tmp_id = _n
+				replace tmp_id = . if exp==0
+				replace a7 = 6101 if tmp_id==. & exp==0 & a7==610
+				replace a7 = 6102 if tmp_id==1 & exp==1 & a7==610
+				replace a7 = 6103 if tmp_id==2 & exp==1 & a7==610
+				replace a7 = 6104 if tmp_id==3 & exp==1 & a7==610
+				drop exp tmp_id
+				
+				drop if a7>400 & a7<500 // Nganza
+				drop if inlist(a7,200,201,202,203,207,208,210) // Pilot polygons
+				
+			ren paid paid_2016_alternate
+			replace paid_2016_alternate = paid_2016_alternate/hh_final
+			
+			g rev_2016_alternate = amount/hh_final
+			
+			tempfile paid_alternate
+			sa `paid_alternate'
+		
+	restore
+	
+	merge m:1 a7 using `paid_alternate'
+	assert _merge!=2
+	replace rev_2016_alternate = rev_2016 if _merge==1
+	drop _merge
+	
+	// Rouge (conflict-affectedness)
+
+	merge m:1 a7 using "${repldir}/Data/01_base/admin_data/randomization_assignment.dta",keepusing(rouge)
+
+	// Time FE
+	egen time_FE_tdm_2mo_CvL = cut(today_alt),at(21355 21415 21475 21532) icodes
+
+**************
+* Coding *
+**************
+
+* drop villas 
+drop if house==3
+
+* drop if rate is missing (to investigate: 1,000+ maison moyennes missing rate info)
+drop if rate==.
+
+* drop pilot
+drop if pilot==1
+
+sort a7 compound_code,stable
+by a7: g counter = _n
+foreach var in paid_2016 chefs_poly rouge{
+replace `var' = . if counter!=1 // polygon-level outcomes
+}
+
+egen dist_health=rowmin(dist_health_centers dist_hospitals)
+egen dist_edu=rowmean(dist_private_schools dist_public_schools dist_universities)
+egen dist_stateandmkt=rowmean(dist_state_buildings dist_police_stations dist_city_center dist_markets dist_gas_stations)
+
+* Globals for Table
+global balancevars_bl "rev_2016_alternate rouge edu_yrs elect1 lg_inc_mo trust_chief trust_nat_gov trust_prov_gov trust_tax_min"
+global balancevars_ml "dist_stateandmkt dist_health dist_edu dist_roads dist_ravin house_quality_new sex_prop age_prop main_tribe employed salaried work_gov job_gov"
+
+global balancevars_ml_dist "dist_stateandmkt dist_health dist_edu dist_roads dist_ravin"
+global balancevars_ml_owner "house_quality_new sex_prop age_prop main_tribe employed salaried work_gov job_gov"
+
+tempfile full
+sa `full'
+
+**************************
+* F-Tests *
+**************************
+
+global balancevars_bl_poly "rev_2016_alternate rouge"
+global balancevars_bl "edu_yrs elect1 lg_inc_mo trust_chief trust_nat_gov trust_prov_gov trust_tax_min"
+global balancevars_ml "sex_prop age_prop main_tribe employed salaried work_gov job_gov house_quality_new dist_stateandmkt dist_health dist_edu dist_roads dist_ravin"
+
+g t_l = tmt==2
+g t_c = tmt==1
+g t_cli = tmt==3
+g t_cxl = tmt==4
+
+// Polygon vars
+
+	eststo clear
+
+	eststo: reg t_l ${balancevars_bl_poly} i.stratum if inlist(tmt,1,2), cl(a7)
+		estadd scalar Observations = `e(N)'
+		estadd scalar Clusters = `e(N_clust)'
+		testparm ${balancevars_bl_poly}
+		estadd scalar pvalue=`r(p)'
+		estadd scalar Fstat=`r(F)'
+		
+		* Omnibus Test -  LvC
+		preserve
+		keep if t_l==1 | t_c==1
+		reg t_l ${balancevars_bl_poly} i.stratum, cl(a7)
+		testparm ${balancevars_bl_poly}
+		local pvalue=r(p)
+		local Fstat=r(F)
+		di in red "LvC (BL_poly) F=`Fstat', P=`pvalue'"
+		restore
+
+	eststo: reg t_cli ${balancevars_bl_poly} i.stratum if inlist(tmt,1,3), cl(a7)
+		estadd scalar Observations = `e(N)'
+		estadd scalar Clusters = `e(N_clust)'
+		testparm ${balancevars_bl_poly}
+		estadd scalar pvalue=`r(p)'
+		estadd scalar Fstat=`r(F)'
+		
+		* Omnibus Test -  CLIvC
+		preserve
+		keep if t_cli==1 | t_c==1
+		reg t_cli ${balancevars_bl_poly} i.stratum, cl(a7)
+		testparm ${balancevars_bl_poly}
+		local pvalue=r(p)
+		local Fstat=r(F)
+		di in red "LvC (BL_poly) F=`Fstat', P=`pvalue'"
+		restore
+		
+	eststo: reg t_cxl ${balancevars_bl_poly} i.stratum if inlist(tmt,1,4), cl(a7)
+		estadd scalar Observations = `e(N)'
+		estadd scalar Clusters = `e(N_clust)'
+		testparm ${balancevars_bl_poly}
+		estadd scalar pvalue=`r(p)'
+		estadd scalar Fstat=`r(F)'
+		
+		* Omnibus Test -  CXLvC
+		preserve
+		keep if t_cxl==1 | t_c==1
+		reg t_cxl ${balancevars_bl_poly} i.stratum, cl(a7)
+		testparm ${balancevars_bl_poly}
+		local pvalue=r(p)
+		local Fstat=r(F)
+		di in red "LvC (BL_poly) F=`Fstat', P=`pvalue'"
+		restore
+		
+	esttab using "${reploutdir}/balance_Ftest_nbhdvars.tex", ///
+	replace label b(%9.3f) se(%9.3f) ///
+	keep (${balancevars_bl_poly}) ///
+	order(${balancevars_bl_poly}) ///
+	scalar(Clusters Mean F_stat p_val) sfmt(0 3 3 3 3) ///
+	nomtitles ///
+	mgroups("Percentage Paid in 2016" "Affected by Conflict in 2016", pattern(1 1) prefix(\multicolumn{@span}{c}{) suffix(}) span) ///
+	indicate("Stratum FE = *stratum*") ///
+	star(* 0.10 ** 0.05 *** 0.001) ///
+	nogaps nonotes compress
+	
+// Baseline vars
+
+	eststo clear
+
+	eststo: reg t_l ${balancevars_bl} i.stratum if inlist(tmt,1,2), cl(a7)
+		estadd scalar Observations = `e(N)'
+		estadd scalar Clusters = `e(N_clust)'
+		testparm ${balancevars_bl}
+		estadd scalar pvalue=`r(p)'
+		estadd scalar Fstat=`r(F)'
+		
+		* Omnibus Test -  LvC
+		preserve
+		keep if t_l==1 | t_c==1
+		reg t_l ${balancevars_bl} i.stratum, cl(a7)
+		testparm ${balancevars_bl}
+		local pvalue=r(p)
+		local Fstat=r(F)
+		di in red "LvC (BL) F=`Fstat', P=`pvalue'"
+		restore
+
+	eststo: reg t_cli ${balancevars_bl} i.stratum if inlist(tmt,1,3), cl(a7)
+		estadd scalar Observations = `e(N)'
+		estadd scalar Clusters = `e(N_clust)'
+		testparm ${balancevars_bl}
+		estadd scalar pvalue=`r(p)'
+		estadd scalar Fstat=`r(F)'
+		
+		* Omnibus Test -  CLIvC
+		preserve
+		keep if t_cli==1 | t_c==1
+		reg t_cli ${balancevars_bl} i.stratum, cl(a7)
+		testparm ${balancevars_bl}
+		local pvalue=r(p)
+		local Fstat=r(F)
+		di in red "LvC (BL) F=`Fstat', P=`pvalue'"
+		restore
+		
+	eststo: reg t_cxl ${balancevars_bl} i.stratum if inlist(tmt,1,4), cl(a7)
+		estadd scalar Observations = `e(N)'
+		estadd scalar Clusters = `e(N_clust)'
+		testparm ${balancevars_bl}
+		estadd scalar pvalue=`r(p)'
+		estadd scalar Fstat=`r(F)'
+		
+		* Omnibus Test -  CXLvC
+		preserve
+		keep if t_cxl==1 | t_c==1
+		reg t_cxl ${balancevars_bl} i.stratum, cl(a7)
+		testparm ${balancevars_bl}
+		local pvalue=r(p)
+		local Fstat=r(F)
+		di in red "LvC (BL) F=`Fstat', P=`pvalue'"
+		restore
+		
+	esttab using "${reploutdir}/balance_Ftest_baselinevars.tex", ///
+	replace label b(%9.3f) se(%9.3f) ///
+	keep (${balancevars_bl}) ///
+	order(${balancevars_bl}) ///
+	scalar(Clusters Mean F_stat p_val) sfmt(0 3 3 3 3) ///
+	nomtitles ///
+	mgroups("Years of Education" "Electricity" "Log HH Monthly Income" "Trust of Chief" "Trust of National Government" "Trust of Provincial Government" "Trust of Tax Ministry", pattern(1 1 1 1 1 1 1) prefix(\multicolumn{@span}{c}{) suffix(}) span) ///
+	indicate("Stratum FE = *stratum*") ///
+	star(* 0.10 ** 0.05 *** 0.001) ///
+	nogaps nonotes compress
+	
+// Midline vars
+
+	eststo clear
+
+	eststo: reg t_l ${balancevars_ml} i.stratum if inlist(tmt,1,2), cl(a7)
+		estadd scalar Observations = `e(N)'
+		estadd scalar Clusters = `e(N_clust)'
+		testparm ${balancevars_ml}
+		estadd scalar pvalue=`r(p)'
+		estadd scalar Fstat=`r(F)'
+		
+		* Omnibus Test -  LvC
+		preserve
+		keep if t_l==1 | t_c==1
+		reg t_l ${balancevars_ml} i.stratum, cl(a7)
+		testparm ${balancevars_ml}
+		local pvalue=r(p)
+		local Fstat=r(F)
+		di in red "LvC (ML) F=`Fstat', P=`pvalue'"
+		restore
+
+	eststo: reg t_cli ${balancevars_ml} i.stratum if inlist(tmt,1,3), cl(a7)
+		estadd scalar Observations = `e(N)'
+		estadd scalar Clusters = `e(N_clust)'
+		testparm ${balancevars_ml}
+		estadd scalar pvalue=`r(p)'
+		estadd scalar Fstat=`r(F)'
+		
+		* Omnibus Test -  CLIvC
+		preserve
+		keep if t_cli==1 | t_c==1
+		reg t_cli ${balancevars_ml} i.stratum, cl(a7)
+		testparm ${balancevars_ml}
+		local pvalue=r(p)
+		local Fstat=r(F)
+		di in red "LvC (ML) F=`Fstat', P=`pvalue'"
+		restore
+		
+	eststo: reg t_cxl ${balancevars_ml} i.stratum if inlist(tmt,1,4), cl(a7)
+		estadd scalar Observations = `e(N)'
+		estadd scalar Clusters = `e(N_clust)'
+		testparm ${balancevars_ml}
+		estadd scalar pvalue=`r(p)'
+		estadd scalar Fstat=`r(F)'
+		
+		* Omnibus Test -  CXLvC
+		preserve
+		keep if t_cxl==1 | t_c==1
+		reg t_cxl ${balancevars_ml} i.stratum, cl(a7)
+		testparm ${balancevars_ml}
+		local pvalue=r(p)
+		local Fstat=r(F)
+		di in red "LvC (ML) F=`Fstat', P=`pvalue'"
+		restore
+		
+	esttab using "${reploutdir}/balance_Ftest_midlinevars.tex", ///
+	replace label b(%9.4f) se(%9.4f) ///
+	keep (${balancevars_ml}) ///
+	order(${balancevars_ml}) ///
+	scalar(Clusters F_stat p_val) sfmt(0 3 3 3 3) ///
+	nomtitles ///
+	mgroups("Sex" "Age" "Majority Tribe" "Employed" "Salaried" "Works for Government" "Relative Works for Government" "House Quality" "Distance to State Buildings and City Center" "Distance to Health Institutions" "Distance to Education Institutions" "Distance to Roads" "Distance to Eroded Areas", pattern(1 1 1 1 1 1 1 1 1 1 1 1 1) prefix(\multicolumn{@span}{c}{) suffix(}) span) ///
+	indicate("Stratum FE = *stratum*") ///
+	star(* 0.10 ** 0.05 *** 0.001) ///
+	nogaps nonotes compress
+
+```
+
+### `Replication Materials - Updated October 2025/Dofiles/Tables_Figures/TableA20.do`
+```stata
+
+*************
+* Table A20 *
+*************
+
+********************
+* Prepare datasets *
+********************
+
+	use "${repldir}/Data/03_clean_combined/analysis_data.dta", clear
+	keep if tmt==1 | tmt==2 | tmt==3
+
+	cap drop visit_post_carto
+	gen visit_post_carto=0 if visited==0 | (visits!=0 & visits!=.)
+	replace visit_post_carto=1 if visits!=. & visits>1
+	
+	cap drop nb_visit_post_carto
+	gen nb_visit_post_carto=0 if visits!=. | visited==0
+	replace nb_visit_post_carto=visits-1 if visits!=. & visits>1
+	replace nb_visit_post_carto=. if nb_visit_post_carto==99998
+	replace nb_visit_post_carto = . if visit_post_carto==.
+	
+	gen visits_other_dummy=visits_other1a
+	replace visits_other_dummy=visits_other2a if visits_other1a==. & visits_other2a!=. 
+	label var visits_other_dummy "Talked to collectors about Property Tax"
+	gen visits_other_nb=visits_other1b
+	replace visits_other_nb= visits_other2b if visits_other_nb==.
+	replace visits_other_nb=0 if visits_other_dummy==0
+	label var visits_other_nb "Talked to collectors about Property Tax  Nb of times"
+	
+	replace salongo_hours = 0 if salongo==0
+	replace salongo_hours = . if salongo_hours==99999
+	
+		preserve
+			* Endline data
+			u "${repldir}/Data/01_base/survey_data/endline_round1_noPII.dta",clear
+			keep if tot_complete==1
+			cap drop _merge
+
+			* Replace compound code with previous compound code
+			replace compound_code=compound_code_prev if (move==1 | move==2)
+
+			* Clean compound code 
+			replace compound_code=999999 if compound_code==99999 | compound_code==9999999
+
+			* Drop missing compound code
+			drop if compound_code==999999	
+			
+			drop if compound_code==. 
+			
+			* Salongo variables
+			g salongo_endline = 0 if salongo==0
+			replace salongo_endline = 1 if salongo>0 & salongo<.
+			
+			g salongo_hours_endline = salongo_hours
+			replace salongo_hours_endline = . if salongo_hours==16000 | salongo_hours==60000 // obvious outliers
+			replace salongo_hours_endline = 0 if salongo_endline==0
+			
+			keep compound_code *_endline
+				
+				tempfile el
+				sa `el'
+			restore
+			
+		cap drop _merge
+		ren compound1 compound_code
+		merge 1:m compound_code using `el'
+		
+	* Interaction
+	g t_lXtaxes_paid = t_l*taxes_paid
+	
+	egen time_FE_tdm_2mo_CvL = cut(today_alt),at(21355 21415 21475 21532) icodes
+	egen time_FE_tdm_2mo_CvCLI = cut(today_alt),at(21365.5 21425.5 21485.5 21519) icodes
+	egen time_FE_tdm_2mo_LvCLI = cut(today_alt),at(21370.5 21430.5 21490.5 21522) icodes
+	egen time_FE_tdm_2mo_CvLvCLI = cut(today_alt),at(21363.6 21423.6 21483.6 21524.3) icodes
+	
+	eststo clear
+	label var t_l "Local"
+	
+	g t_lXpresent_sensi = t_l*present_sensi
+	
+	eststo clear
+	
+	* Taxes Paid only Stratum FE
+	eststo: reg taxes_paid t_l t_lXpresent_sensi present_sensi i.stratum if inlist(tmt,1,2), cl(a7)
+	su taxes_paid if t_c==1 & present_sensi==0
+	estadd local Mean=abs(round(`r(mean)',.001))
+	estadd scalar Observations = `e(N)'
+	estadd scalar Clusters = `e(N_clust)'
+	
+	* Taxes Paid only Stratum FE and Time FE
+	eststo: reg taxes_paid t_l t_lXpresent_sensi present_sensi i.stratum i.time_FE_tdm_2mo_CvL if inlist(tmt,1,2), cl(a7)
+	su taxes_paid if t_c==1 & present_sensi==0 & time_FE_tdm_2mo_CvL!=.
+	estadd local Mean=abs(round(`r(mean)',.001))
+	estadd scalar Observations = `e(N)'
+	estadd scalar Clusters = `e(N_clust)'
+	
+	* Taxes Paid only Stratum FE and Time FE and House FE
+	eststo: reg taxes_paid t_l t_lXpresent_sensi present_sensi i.house i.stratum i.time_FE_tdm_2mo_CvL if inlist(tmt,1,2), cl(a7)
+	su taxes_paid if t_c==1 & present_sensi==0 & time_FE_tdm_2mo_CvL!=.
+	estadd local Mean=abs(round(`r(mean)',.001))
+	estadd scalar Observations = `e(N)'
+	estadd scalar Clusters = `e(N_clust)'
+	
+	* Taxes Paid only Stratum FE and Time FE and House FE + exclude exempted
+	eststo: reg taxes_paid t_l t_lXpresent_sensi present_sensi i.house i.stratum i.time_FE_tdm_2mo_CvL if inlist(tmt,1,2) & exempt!=1, cl(a7)
+	su taxes_paid if t_c==1 & present_sensi==0 & time_FE_tdm_2mo_CvL!=. & exempt!=1
+	estadd local Mean=abs(round(`r(mean)',.001))
+	estadd scalar Observations = `e(N)'
+	estadd scalar Clusters = `e(N_clust)'
+	
+	esttab using "${reploutdir}/owner_present_reg.tex", ///
+	replace label b(%9.3f) se(%9.3f) ///
+	keep (t_l t_lXpresent_sensi present_sensi) ///
+	order(t_l t_lXpresent_sensi present_sensi) ///
+	scalar(Clusters Mean) sfmt(0 3 3 3 3 3) ///
+	nomtitles ///
+	mgroups("Taxes Paid" "Taxes Paid" "Taxes Paid" "Taxes Paid", pattern(1 1 1 1) prefix(\multicolumn{@span}{c}{) suffix(}) span) ///
+	indicate("Time FE = *2mo*""House FE = *house*""Stratum FE = *stratum*") ///
+	star(* 0.10 ** 0.05 *** 0.001) ///
+	nogaps nonotes compress
+
+```
+
+## How to run a script
+
+Write each script to a file under the output directory, then run it with
+exactly this command (the data directory is mounted read-only at its own
+path; nothing else from the host is visible; `$SCRIPT` is the absolute path of
+the script you wrote):
+
+    SCRIPT=<repo>/benchmark/reproductions/balan-2022-local-elites-state-capacity/seeded/2026-11-10-b/script.R   # or <repo>/benchmark/reproductions/balan-2022-local-elites-state-capacity/seeded/2026-11-10-b/attempt-<n>/script.R
+    uv run --directory <repo> python -m benchmark.reproducers.run_sandbox --timeout 300 --label retally.run=claude-code-balan-2022-local-elites-state-capacity-seeded-2026-11-10-b --run-dir "$(dirname "$SCRIPT")" -- docker run --rm --label retally.run=claude-code-balan-2022-local-elites-state-capacity-seeded-2026-11-10-b --network none --memory 4g --cpus 1.0 --read-only --tmpfs /tmp:size=256m --cap-drop ALL --security-opt no-new-privileges -v "$SCRIPT":/workspace/script.R:ro -v <repo>/benchmark/.cache/claude-code/balan-2022-local-elites-state-capacity/seeded/2026-11-10-b/mount/balan_2022_local_elites_state_capacity:<repo>/benchmark/.cache/claude-code/balan-2022-local-elites-state-capacity/seeded/2026-11-10-b/mount/balan_2022_local_elites_state_capacity:ro --workdir /workspace retally-sandbox-r:latest Rscript /workspace/script.R; echo "exit code: $?"
+
+The sandbox time limit is 300 seconds (memory 4g, 1.0 CPU).  The
+command enforces it: `run_sandbox` runs the `docker run` after `--`, writes
+its output to `stdout.txt` and `stderr.txt` next to the script, and writes
+`timing.json` there too (wall-clock seconds, and whether the limit was
+hit).  If the limit is hit it kills the container, appends a line saying
+so to `stderr.txt` and exits with code 124: treat the run as a crash.  Do
+not add your own timeout, do not redirect its output yourself, and do not
+delete `timing.json`; keep it with the run's other files.
+
+If a `docker run` produces no output for more than ten minutes (no
+container output, no error, the command does not return), the Docker
+daemon is probably wedged.  Stop: kill the command, and do not restart
+Docker Desktop or the Docker daemon yourself.  The hung attempt is not
+counted: do not save it as an `attempt-<n>` directory or as the final run,
+and say in `notes` that it hung.  Report it in your final message (which
+step hung, and for how long) instead of retrying.
+
+## Output contract
+
+The output directory `<repo>/benchmark/reproductions/balan-2022-local-elites-state-capacity/seeded/2026-11-10-b` already holds `render.json`; leave it
+there.  Add:
+
+```
+<repo>/benchmark/reproductions/balan-2022-local-elites-state-capacity/seeded/2026-11-10-b/
+  script.R  stdout.txt  stderr.txt  timing.json   # the FINAL run: its RESULT: lines are what is scored
+  attempt-1/  attempt-2/  ...           # every execution BEFORE the final one, in order
+    script.R  stdout.txt  stderr.txt  timing.json  feedback.txt   # feedback.txt when kind is not ""
+  reproduction.json                     # written LAST
+```
+
+- `attempt-<n>` directories are every execution before the final one, in
+  the order they ran; the final files at the top are the run whose
+  `RESULT:` lines are scored.  If you go back to an earlier attempt, copy
+  that attempt's files to the top level as the final run.
+- `feedback.txt` holds what you acted on before the next attempt: the error
+  you fixed (`kind: "error"`) or the `check_attempt` comparison
+  (`kind: "claim"`).
+- Exploratory runs (inspecting variables, counting rows, checking a filter;
+  no estimate of a listed quantity) are attempts with `kind: ""` and need no
+  `feedback.txt`.  They must NOT print any `RESULT:` line, not even a
+  placeholder: the first run that prints one is scored as your first scored
+  attempt.  Print `RESULT:` lines only from a script that estimates the
+  listed quantities, and `kind: "error"` only for a run that crashed or
+  that was meant to print them and did not.
+- Write `reproduction.json` last, in this schema:
+
+```
+reproduction.json (schema 1), written last by the agent into its run directory
+benchmark/reproductions/<entry_id>/<mode>/<run_id>/:
+
+{
+  "schema": 1,
+  "entry_id": "montero-2022-cooperative-property-rights",
+  "mode": "independent",
+  "run_id": "2026-10-22-a",
+  "reproducer": "claude-code",
+  "language": "r",
+  "final": {"script": "script.R", "stdout": "stdout.txt", "stderr": "stderr.txt", "exit_code": 0},
+  "attempts": [
+    {"dir": "attempt-1", "exit_code": 1, "kind": "error"},
+    {"dir": "attempt-2", "exit_code": 0, "kind": "claim"}
+  ],
+  "deviations": [],
+  "notes": "free text: what the agent did, what it could not do",
+  "files_read_outside_mount": [],
+  "started_at": "2026-10-22T10:00:00Z",
+  "finished_at": "2026-10-22T10:40:00Z"
+}
+
+* entry_id, mode and run_id must match the directory the file sits in.
+* final: the run that is scored -- script.R, stdout.txt, stderr.txt at the
+  run-dir root, and its exit code.  If the agent reverts to an earlier
+  attempt it copies that attempt's files there.
+* attempts: every execution before the final one, oldest first.  Each
+  attempt-<n>/ holds script.R, stdout.txt, stderr.txt, and feedback.txt
+  when kind is not "".  kind is the refinement that followed it:
+  "error" (it crashed or printed no RESULT: line; the agent repaired it),
+  "claim" (the agent compared its RESULT: values with the claimed values
+  and changed the script; never allowed in blind mode), or "" (neither).
+* All paths are relative to the run directory; absolute paths and ".."
+  are rejected.
+* deviations: free-text methodology changes, in addition to any
+  DEVIATION: lines in the final stdout.
+* The numbers scored are the RESULT: lines of the files, never anything
+  written in this JSON.
+```
+
+End your final message with the final run's `RESULT:` lines and a short
+note.  Nothing needed for scoring may live only in the message: the files
+are the record.
+
+Do not edit any file in the repository; your only writes are under `<repo>/benchmark/reproductions/balan-2022-local-elites-state-capacity/seeded/2026-11-10-b`.

@@ -1,0 +1,213 @@
+[cols] tax_payments_neighborhoods (356 rows, 14 cols): a7, paid, amount, grid_nm, hh_final, poly_size, stratum, program, nganza, program_start, non_residential, num_compounds, compliance, revenue_per_person
+[cols] randomization_assignment (356 rows, 37 cols): a7, rouge, geo_stratum, jontax, stratum_jon, commune, joncomp2016, chef_collect_types, chef_collect_ever, salongo_freq, chef_collect_proptax_ever, appoint_yr, chef_stratum, chef_collect_stratum, stratum, stratum_count, treatment, rand1, rank1, count1, numtoselect1_control, probleft2_control, rand2, probleft3_control, numtoselect1_central, probleft2_central, probleft3_central, numtoselect1_local, probleft2_local, probleft3_local, numtoselect1_centralwinfo, probleft2_centralwinfo, numtoselect1_centralxlocal, probleft2_centralxlocal, probleft3_centralwinfo, rand3, order_treatment
+[arms nb]
+
+Central     CLI Control     CXL   Local    <NA> 
+    108      78       5      49     107       9 
+[start_day] summary:
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max.     NAs 
+  16909   16962   17021   17016   17072   17117     145 
+[cols] taxroll (47930 rows, 12 cols): compound1, DateRDV, MontantIF, Bonus, DatePaye, Exempte, NbrLoc, Exempté, Bonus2, Observations, Date, a7
+[cols] registration (48034 rows, 105 cols): start, end, today, today_fr, a7, a7b, tmt, carto_pay, first, north_east, col_change, who, chief_asst_pres, house, correct, house_correct, breminder_mm2, other_flyers0, bother_flyers1, col_code, mm_num, mm_rate, old_code, compound1, compound2, present_sensi, present_info_owner, status, owner_found, owner_where, tenants, exempt, why_exempt, exempt_other, exempt_enum, why_exempt2, why_exempt2_other, designate, designate_why, designate_why_other, read_flyers, read_flyer2, treatment_fr, treatment_tsh, rate_assigned, read_language, read_who, read_which_chef, what_rate_periph, what_rate_periph_other, read_message_fr, read_message_tsh, who_give_flier, collect_now, collect_who, why_nocollect, why_nocollect_other, collect_success, amt_paid, appointment, apt_date, chalk_check, compound1_p, compound2_p, periph_vs_mm_p, mm_rate_pp, what_rate_periph_p, other_amt, advance, past_advance, past_advance_amt, metainstanceid, key, time, know_eachother, commune, quartier, present, other_flyers, other_flyers_other, other_flyers_2, other_flyers_2_other, reminder_mm, rate, what_rate, what_rate_other, other_flyers1, reminder_mm1, reminder_mm2, reminder_mm3, a7_compound, date, date_f, month_tmpp, day_tmpp, month_tmp_fr, type, short_label, value_label, keep, labelEnglish, tot_complete, double_sensi, dup_poly, pilot
+[cols] tax_payments (3733 rows, 28 cols): compound1, house, TDM, did, rateUSD, amountCF, colcode, error_code, polygon, colcode2, error_colcode, Bonus2, a7, error_rate, Peripherie, Maison_Moyenne, Villas, paid, Bonus_paye_carto, amountUSD, endOfCollect, date, lateCollection, unmatched_compound, code, dup_receipt, mult_tax, rate_verified
+[start src] pay_TDM: overlap 187, cor -0.038, sd ratio 0.280, covers missing 126
+[start src] pay_date: overlap 192, cor 0.037, sd ratio 0.907, covers missing 127
+[start src] pay_endOfCollect: overlap 186, cor 0.025, sd ratio 0.725, covers missing 128
+[start src] reg_today: overlap 193, cor -0.015, sd ratio 0.791, covers missing 137
+[start src] reg_start: overlap 204, cor 0.009, sd ratio 0.828, covers missing 143
+[start src] reg_end: overlap 204, cor 0.010, sd ratio 0.828, covers missing 143
+[start src] reg_date_f: overlap 204, cor NA, sd ratio NA, covers missing 143
+[start fill] no date source tracks program_start; leaving missing start dates unfilled
+[base] using taxroll
+[key] compound1 comb=FALSE overlap=0.999
+[key] compound1 comb=FALSE overlap=0.991
+[base] duplicated payment keys in base: 0
+[pay filter scores vs nb$paid] (diagnostic only)
+    all   nodup  nolate  nomult matched 
+   3395    3392    3224    3393    3388 
+[pay] record filter: all (3733 of 3733 records)
+[amt option] amountCF max: total ratio ours/nb 1.590
+[amt option] amountUSD max: total ratio ours/nb 0.000
+[amount scores vs nb$amount]
+ amountCF max amountUSD max 
+     1.041405      9.798183 
+[pay] amount column: amountCF (max per property)
+     0%      1%     10%     25%     50%     75%     90%     99%   99.9%    100% 
+     50    1500    1500    1500    2000    2500    6600   13200   13200 1662800 
+[revenue] per-payer amount median 2000.0, mean 3586.7, p99 13200.0, max 1662800.0; capped 2
+DEVIATION: Per-property payment amounts winsorized at the 99th percentile of payers (13200 CF; 2 properties) to remove implausible receipt amounts that inflated revenue far above the statutory rates
+[house]
+hl
+  maison moyenne       périphérie villa/apartement             <NA> 
+            6001            40479              285             1165 
+[base arms]
+
+Central     CLI Control     CXL   Local    <NA> 
+  14536    9743     801    6093   14137    1161 
+[base] paid mean by arm:
+    Central         CLI     Control         CXL       Local 
+0.070445790 0.076157241 0.001248439 0.068110947 0.095494094 
+ Central      CLI  Control      CXL    Local 
+206.1502 201.9193   8.2397 186.0496 261.8979 
+[base] mean payment among payers by arm:
+ Central      CLI  Control      CXL    Local 
+2926.367 2651.348 6600.000 2731.566 2742.556 
+OLS estimation, Dep. Var.: paid
+Observations: 28,673
+Fixed-effects: stratum: 27
+Standard-errors: Clustered (a7) 
+      Estimate Std. Error t value Pr(>|t|)    
+local 0.021735   0.009111 2.38563 0.017922 *  
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+RMSE: 0.274232     Adj. R2: 0.008773
+                 Within R2: 0.001374
+[period Local/Central] window 16909.0-17117.0, nbhds kept 215 (without start date 88)
+DEVIATION: 88 Local/Central neighborhoods with no recoverable campaign start date kept with their own campaign-wave FE level instead of being dropped
+         
+          Central Local
+  0            18    19
+  1            18    15
+  2            19    18
+  3             9    11
+  nostart      44    44
+OLS estimation, Dep. Var.: paid
+Observations: 28,673
+Fixed-effects: stratum: 27,  period: 5
+Standard-errors: Clustered (a7) 
+      Estimate Std. Error t value Pr(>|t|)    
+local 0.022455   0.008989 2.49814 0.013237 *  
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+RMSE: 0.274164     Adj. R2: 0.009128
+                 Within R2: 0.001452
+OLS estimation, Dep. Var.: paid
+Observations: 28,671
+Fixed-effects: stratum: 27,  period: 5,  house_f: 2
+Standard-errors: Clustered (a7) 
+      Estimate Std. Error t value Pr(>|t|)    
+local 0.022656   0.009004 2.51617 0.012598 *  
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+RMSE: 0.274097     Adj. R2: 0.00964 
+                 Within R2: 0.001479
+OLS estimation, Dep. Var.: paid
+Observations: 24,581
+Fixed-effects: stratum: 27,  period: 5,  house_f: 2
+Standard-errors: Clustered (a7) 
+      Estimate Std. Error t value  Pr(>|t|)    
+local 0.028386    0.01021 2.78013 0.0059178 ** 
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+RMSE: 0.292157     Adj. R2: 0.011891
+                 Within R2: 0.002038
+OLS estimation, Dep. Var.: revenue
+Observations: 28,673
+Fixed-effects: stratum: 27,  period: 5
+Standard-errors: Clustered (a7) 
+      Estimate Std. Error t value Pr(>|t|)    
+local  52.2938     26.405 1.98045 0.048934 *  
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+RMSE: 1,030.1     Adj. R2: 0.006675
+                Within R2: 5.586e-4
+OLS estimation, Dep. Var.: revenue
+Observations: 28,671
+Fixed-effects: stratum: 27,  period: 5,  house_f: 2
+Standard-errors: Clustered (a7) 
+      Estimate Std. Error t value Pr(>|t|)    
+local  48.3959    24.8141 1.95034 0.052441 .  
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+RMSE: 1,022.4     Adj. R2: 0.02135 
+                Within R2: 4.855e-4
+[period CLI/Central] window 16909.0-17115.0, nbhds kept 185 (without start date 77)
+DEVIATION: 77 CLI/Central neighborhoods with no recoverable campaign start date kept with their own campaign-wave FE level instead of being dropped
+         
+          Central CLI
+  0            18  13
+  1            18  13
+  2            19  11
+  3             8   8
+  nostart      44  33
+OLS estimation, Dep. Var.: paid
+Observations: 24,190
+Fixed-effects: stratum: 27,  period: 5,  house_f: 2
+Standard-errors: Clustered (a7) 
+     Estimate Std. Error   t value Pr(>|t|) 
+cli -0.000287   0.009715 -0.029502   0.9765 
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+RMSE: 0.256655     Adj. R2: 0.016119
+                 Within R2: 2.638e-7
+OLS estimation, Dep. Var.: revenue
+Observations: 24,190
+Fixed-effects: stratum: 27,  period: 5,  house_f: 2
+Standard-errors: Clustered (a7) 
+    Estimate Std. Error   t value Pr(>|t|) 
+cli -10.7073    26.1425 -0.409574  0.68259 
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+RMSE: 947.2     Adj. R2: 0.028133
+              Within R2: 2.704e-5
+[cols] chief_consultations (10036 rows, 31 cols): start, end, today, a7, a7b, who_chief, col_focus, chef_info_use, key, compound1, polymult, compound, pay_ease, willingness, convinced, key2, setofr, date, date_f, type, short_label, value_label, keep, labelFrançais, dup_code, compound1_carto, _erge, carto_complete, skipped_code, _merge, tot_complete_cc
+[ease candidates] pay_ease 
+[ease labels]
+    Diffilement      Facilement Très facilement  Je ne sais pas 
+              0               1               2            8888 
+[key] compound1 comb=FALSE overlap=0.957
+[table8] CLI props 10904, with ease 8349
+OLS estimation, Dep. Var.: paid
+Observations: 8,349
+Fixed-effects: house_f: 2,  stratum: 26
+Standard-errors: Clustered (a7) 
+     Estimate Std. Error t value   Pr(>|t|)    
+ease 0.056023   0.007854  7.1334 4.6422e-10 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+RMSE: 0.265232     Adj. R2: 0.048984
+                 Within R2: 0.017329
+[cols] midline (45794 rows, 302 cols): a7, compound, start, end, today, key, a7b, a7c, a7_check, a7d, treatment, month, compound2, nocode, possible_compound, why_no_code, revisits_dates, date1, date2, date3, date4, date5, date6, date7, date8, date9, date10, survey1, survey1_code, survey1_resp_same, survey1_resp_diff, survey_chef, survey_chef_code, chef_resp_same, chef_resp_diff, compound_chef, compound_assis, exempt, first_attempt, present, abandoned, lang, visited, visits, flier, paid_self, taxed_dk, paid_who, why_pay, why_pay_o, pubgoods, sanctions, bribe_amt, whopay, whopay2, neighbor_know, num_500, num_1000, num_1500, num_2000, num_2500, num_3000, num_4000, num_5000, num_6000, num_6600, num_7000, num_8000, num_8800, num_9000, num_10000, num_11000, num_12000, num_13000, num_13200, num_9999, rand_neighbor, neighbor_know2, num_less, num_same, num_more, rand_discount, discount_know, discount_self, salongo, salongo_hours, sex_prop, age_prop, age_prop_guess, whopay3, whopay3c, exempt_not, tot_complete_short, sample_select, long_select, nocode_rand, nocode_select, paid_rand, paid_select, status, crieur, col_type_fr, col_type_tsh, chef_type, visits_other1a, visits_other1b, visits_other2a, visits_other2b, know_col, know_how, vis12, paid_amt, paid_nb, receipt, no_receipt, receipt_type, receipt_later, receipt_show, receipt_noshow, code_same, code_diff, col_code, receipt_photo_ok, receipt_photo_no, receipt_photo_no_other, receipt_photo, amount_match, amount_new, amount_match_no, tax_obs, tot_complete_control, consent7, hh_head, hh_relation, hh_relation_other, born_kga, move_kga, sex, age, edu, edu2, dgrkoc_submit, dgrkoc_steal, chef_submit, chef_steal, gov_use, gov_steal, neighbors_pay, tax_oblig, dgrkoc_perform, gov_perform, chef_perform, salongo2, salongo_who, conflict, trust_gov, trust_dgrkoc, trust_chef, payment, tot_complete_long, photo, hh_photo, walls, walls_other, roof, roof2, ravine, metainstanceid, a3, a4, tmt, commune, quartier, locality, survey_chec_code, attempt, attempt2, attempt3, job, job_other, job_gov, tribe, move_ave, ave_vis2, ave_vis2_other, exempt_not_enums, bribe, whopay3d, whopay3d_other, whopaprenom, appt, whoreceipt, consent1b, consent2, consent3, consent3b, consent4, consent6, record, rumor1 ...
+[key] none found
+OLS estimation, Dep. Var.: visited01
+Observations: 21,943
+Fixed-effects: house_f: 1,  stratum: 27,  period: 5
+Standard-errors: Clustered (a7) 
+       Estimate Std. Error   t value Pr(>|t|) 
+local -0.002676    0.01629 -0.164282  0.86966 
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+RMSE: 0.294792     Adj. R2: 0.027414
+                 Within R2: 1.793e-5
+[endline survey_data/endline_round1_noPII.dta] rows 5602; a7-like: a7,a7b,a7c,a7_check,a7d,a7_previous,a7_currently,neighbor_know,neighbor_know2,parquet_neighbor; bribe-like: transport,access_transport_survey_e,satisfaction_transport_survey_e,responsible_transport_survey_e,bribe,bribe_amt,bribe2a,bribe2a_amt,bribe2b,bribe2b_amt,bribe3,bribe3_amt,bribe_freq,bribe_amt1
+[endline survey_data/endline_round1_noPII.dta] bribe source: bribe, mean 0.0304, n 1348
+[endline survey_data/endline_round2_noPII.dta] rows 1753; a7-like: a7,a7b,a7c,a7_check,a7d,a7_previous,a7_currently; bribe-like: transport,access_transport_survey_e,satisfaction_transport_survey_e,responsible_transport_survey_e,bribe_freq,bribe_amt1
+[bribe] bribe_freq indicator mean 0.1989
+[bribe] bribe_amt1 indicator mean 0.6768
+[bribe] from bribe_freq,bribe_amt1; coverage 0.935
+[endline survey_data/endline_round2_noPII.dta] bribe source: bribe_freq,bribe_amt1, mean 0.6895, n 1417
+DEVIATION: Endline file survey_data/endline_round2_noPII.dta dropped from the bribe outcome: its only bribe items (bribe_freq,bribe_amt1) give an implausible bribe-payment rate of 0.69, so they do not measure whether a bribe was paid
+[endline] n=778, bribe mean=0.0283
+OLS estimation, Dep. Var.: bribe
+Observations: 778
+Fixed-effects: stratum: 27
+Standard-errors: Clustered (a7) 
+      Estimate Std. Error t value Pr(>|t|) 
+local 0.010905   0.013412 0.81306  0.41721 
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+RMSE: 0.16418     Adj. R2: -0.016287
+                Within R2:  8.933e-4
+RESULT:compliance_local_table4_panelA_col1=0.02173466236
+RESULT:n_obs_table4_col1=28673
+RESULT:compliance_local_table4_panelA_col2=0.02245468548
+RESULT:n_obs_table4_col2=28673
+RESULT:compliance_local_house_fe_table4_panelA_col4=0.02265604955
+RESULT:compliance_local_exempt_excluded_table4_panelA_col5=0.02838621741
+RESULT:revenue_local_table4_panelB_col2=52.29375678
+RESULT:revenue_local_house_fe_table4_panelB_col4=48.39589952
+RESULT:compliance_cli_table7_col1=-0.0002866114822
+RESULT:revenue_cli_table7_col2=-10.70729678
+RESULT:compliance_ease_of_payment_cli_table8_panelA_col2=0.0560225947
+RESULT:visited_by_collector_local_table6_col1=-0.002676204452
+RESULT:paid_bribe_endline_local_table5_panelB=0.01090477602

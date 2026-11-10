@@ -1,0 +1,518 @@
+You are refining R code that reproduces results from an econometrics paper.
+The code RAN SUCCESSFULLY but the reproduced values do not match the
+paper's claims within the allowed tolerance.  Identify what is causing
+the gap and adjust the code to close it.
+
+## Paper
+Title: American Economic Review 2022, 112(3): 1–36
+Methodology: - **Design / estimation method:** Cluster-randomized policy experiment embedded in Kasaï-Central's 2018 property tax campaign in Kananga (DRC). 356 neighborhoods (45,162 registered properties) were assigned to Central (state collectors; 110 neighborhoods / 14,489 properties), Local (city chiefs; 111 / 14,383), Central + Local Information (CLI; 80 / 9,422), Central X Local (CXL; 50 / 6,071) and pure Control (declarative system; 5 / 797). Block randomization was stratified on (i) geographic location, (ii) treatment status in the 2016 campaign and (iii) the chief's past tax-collection experience. The randomization was run 100 times and the run with the minimum t-statistics on balance checks across eight neighborhood-level variables was kept (Banerjee et al. 2017). The main estimator is OLS comparing Local to Central. Analyses use de facto assignment: one CXL neighborhood received Local by mistake.
+- **Estimating equation (eq. 1):** y_ijkt = β0 + β·Local_jkt + X_ijk Γ + α_k + θ_t + ε_ijkt, with i = household/property, j = neighborhood, k = randomization stratum, t = campaign wave. The key regressor is the Local treatment dummy, with Central as the omitted category; other arms enter as separate treatment indicators where relevant. This is a linear probability / levels specification with no logs and no standardization. The headline β is in percentage points of compliance, or Congolese francs (CF) of revenue per property.
+- **Outcomes and units:** The main outcomes come from administrative data: handheld receipt-printer payment records matched by tax ID to the property register for the universe of registered properties. They are (a) tax compliance, a 0/1 indicator for paying the 2018 property tax, and (b) revenue per property in CF. Headline result (Table 4, col. 2): compliance was 9.5% in Local vs 6.3% in Central, a +3.2 pp effect, worth +79.6 CF per property (+44% revenue). Secondary outcomes include bribes, assessment accuracy, exemptions, visits, tax morale and trust. These come from the midline survey (36,130 complete; every property, 2–4 weeks after collection) and the endline survey (3,893 baseline respondents re-tracked Mar–Sep 2019; baseline 4,246 households, about 12 per neighborhood).
+- **Fixed effects and controls (preferred spec):** Randomization stratum fixed effects α_k, plus time fixed effects θ_t for campaign waves. These net out 2018 compliance trends and time imbalance from the staggered rollout. The covariates X_ijk are only dummies for house type (low- vs high-value property band). The preferred specification for tax outcomes is Table 4, column 2 (with wave FE); column 1 omits the time FE. Endline-survey outcomes exclude the time FE and the house-type dummies, because merging with the register would shrink the sample.
+- **Standard errors:** Clustered at the neighborhood level (356 clusters). Balance tests (Table 3) use the same stratum FE and neighborhood clustering, with Central omitted and pure Control excluded. Joint F-tests for bilateral comparisons are in Appendix Table A2.
+- **Sample restrictions:** Of 364 neighborhoods, 8 used in a logistics pilot were excluded, leaving 356; the commune of Nganza is excluded because of the 2017 conflict. The 285 very-high-value villas are outside the campaign and excluded. The main Local-vs-Central comparison excludes pure Control neighborhoods. The default tax-outcome sample includes exempt properties. Midline data are missing for 21% of registered properties (no adult present, or exempt property types not surveyed); this attrition is balanced across arms. Baseline-to-endline attrition was 8.3%, with 12% of endline respondents replaced by another household member.
+- **Robustness (Table 4 and appendix):**
+  - Data collapsed to the neighborhood level (col. 3).
+  - Property-value-band fixed effects added (col. 4).
+  - Exempt properties excluded (col. 5; the effect rises to 4.0 pp).
+  - Alternative time-imbalance adjustments (App. Table A5).
+  - Controls for, and interactions with, household-level cross-randomized collector wage (30% piece rate vs flat 750 CF) and tax-rate abatements (App. Table A6).
+  - Alternative covariate vectors from the pre-analysis plan, including years of education (the one imbalanced baseline variable); also dropping the misassigned neighborhood (App. Table A7).
+  - Controlling for collector characteristics (App. Table A8).
+- **Mechanism tests and evaluation:** CLI vs Central tests whether local information explains the effect: chiefs rated each household's ability and willingness to pay on 3-point scales before state collectors made follow-up visits (CLI raised compliance by +2.2 pp). Further tests compare collection during the linear registration stage (when targeting is neutralized) with collection afterwards, examine visit counts and the characteristics of visited households, and check heterogeneity by chief knowledge (quiz), trust and power. Cost-effectiveness and a bribe-weighting welfare calculation follow. This is causal-inference evaluation, with no train/test split or cross-validation.
+
+
+## Current Code
+```r
+suppressPackageStartupMessages({
+  library(haven)
+  library(dplyr)
+  library(fixest)
+})
+set.seed(42)
+
+root <- "<repo>/.cache/datasets/balan_2022_local_elites_state_capacity.script-free"
+base <- file.path(root, "Replication Materials - Updated October 2025", "Data", "01_base")
+
+rd <- function(rel) {
+  p <- file.path(base, rel)
+  if (!file.exists(p)) { message("Missing file: ", p); return(NULL) }
+  tryCatch(haven::read_dta(p), error = function(e) { message("Read error ", rel, ": ", conditionMessage(e)); NULL })
+}
+
+fc <- function(df, cands) {
+  if (is.null(df)) return(NA_character_)
+  n <- names(df); lo <- tolower(n)
+  for (c in cands) { i <- which(lo == tolower(c)); if (length(i)) return(n[i[1]]) }
+  NA_character_
+}
+
+num <- function(x) {
+  x <- haven::zap_labels(x)
+  if (is.factor(x)) x <- as.character(x)
+  suppressWarnings(as.numeric(x))
+}
+
+binarize <- function(x) {
+  x <- num(x)
+  x[!is.na(x) & x < 0] <- NA
+  u <- sort(unique(x[!is.na(x)]))
+  if (length(u) == 0) return(x)
+  if (all(u %in% c(0, 1))) return(x)
+  if (all(u %in% c(1, 2))) return(ifelse(x == 1, 1, 0))  # 1 = yes, 2 = no
+  as.numeric(x > 0)
+}
+
+emit <- function(name, val) {
+  if (length(val) == 1 && !is.na(val) && is.finite(val)) cat(sprintf("RESULT:%s=%.6f\n", name, val))
+  else message("Could not compute ", name)
+}
+
+desc <- function(nm, df) {
+  if (is.null(df)) return(invisible())
+  message(sprintf("[%s] %d rows x %d cols: %s", nm, nrow(df), ncol(df),
+                  paste(head(names(df), 80), collapse = ", ")))
+}
+
+# ---------------------------------------------------------------------------
+# Treatment mapping
+# ---------------------------------------------------------------------------
+map_arm_labels <- function(x) {
+  lab <- if (haven::is.labelled(x)) as.character(haven::as_factor(x, levels = "labels")) else as.character(x)
+  l <- tolower(trimws(lab))
+  out <- rep(NA_character_, length(l))
+  out[grepl("cxl|x local|central_x|centralx|central x|cxl", l)] <- "CXL"
+  out[is.na(out) & grepl("^cli$|cli|info", l)] <- "CLI"
+  out[is.na(out) & grepl("local|chief|chef", l)] <- "Local"
+  out[is.na(out) & grepl("central|state", l)] <- "Central"
+  out[is.na(out) & grepl("control|declar|pure", l)] <- "Control"
+  out
+}
+
+map_arm_numeric_by_counts <- function(code, nbid) {
+  # assign by neighborhood counts: ~5 Control, ~50 CXL, ~80 CLI, two ~110 Central/Local (lower code = Central)
+  d <- unique(data.frame(code = code, id = nbid))
+  d <- d[!is.na(d$code), ]
+  cnt <- sort(table(d$code))
+  codes <- as.numeric(names(cnt))
+  out_map <- list()
+  if (length(codes) == 5) {
+    out_map[[as.character(codes[1])]] <- "Control"
+    out_map[[as.character(codes[2])]] <- "CXL"
+    out_map[[as.character(codes[3])]] <- "CLI"
+    big <- sort(codes[4:5])
+    out_map[[as.character(big[1])]] <- "Central"
+    out_map[[as.character(big[2])]] <- "Local"
+  } else {
+    dflt <- c("0" = "Control", "1" = "Central", "2" = "Local", "3" = "CLI", "4" = "CXL")
+    for (k in names(dflt)) out_map[[k]] <- dflt[[k]]
+  }
+  res <- vapply(as.character(code), function(k) if (!is.na(k) && !is.null(out_map[[k]])) out_map[[k]] else NA_character_, "")
+  unname(res)
+}
+
+map_arm <- function(x, nbid) {
+  a <- map_arm_labels(x)
+  if (mean(is.na(a)) > 0.5) {
+    a <- map_arm_numeric_by_counts(num(x), nbid)
+  }
+  a
+}
+
+# ---------------------------------------------------------------------------
+# Load data
+# ---------------------------------------------------------------------------
+rand  <- rd("admin_data/randomization_assignment.dta")
+troll <- rd("admin_data/taxroll_noPII.dta")
+reg   <- rd("admin_data/registration_noPII.dta")
+pay   <- rd("admin_data/tax_payments_noPII.dta")
+sched <- rd("admin_data/randomization_schedule.dta")
+timing <- rd("admin_data/tax_payment_timing_noPII.dta")
+desc("rand", rand); desc("taxroll", troll); desc("registration", reg); desc("payments", pay)
+desc("schedule", sched); desc("timing", timing)
+
+nb_cands <- c("a7", "polygon", "poly", "neighborhood", "neighbourhood", "grid_nm", "poly_nm")
+pid_cands <- c("code", "compound_code", "compound1", "compound", "house_code", "property_id",
+               "prop_id", "hh_code", "taxid", "tax_id", "id")
+
+# Neighborhood-level assignment
+nb_r <- fc(rand, nb_cands)
+nb <- data.frame(a7 = as.character(num(rand[[nb_r]])))
+if (all(is.na(nb$a7))) nb$a7 <- as.character(haven::zap_labels(rand[[nb_r]]))
+st_r <- fc(rand, c("stratum", "strata", "stratum_jon"))
+nb$stratum <- as.character(num(rand[[st_r]]))
+tr_r <- fc(rand, c("tmt", "treatment_defacto", "treatment", "treat", "arm"))
+nb$arm_rand <- map_arm(rand[[tr_r]], nb$a7)
+message("Randomization arm counts: "); print(table(nb$arm_rand, useNA = "ifany"))
+
+# ---------------------------------------------------------------------------
+# Property-level base: tax roll (fallback: registration)
+# ---------------------------------------------------------------------------
+P <- if (!is.null(troll)) troll else reg
+P_nb <- fc(P, nb_cands)
+df <- data.frame(a7 = as.character(num(P[[P_nb]])), stringsAsFactors = FALSE)
+if (all(is.na(df$a7))) df$a7 <- as.character(haven::zap_labels(P[[P_nb]]))
+P_pid <- fc(P, pid_cands)
+df$pid <- if (!is.na(P_pid)) as.character(haven::zap_labels(P[[P_pid]])) else NA_character_
+
+# Arm: prefer property file's own (de facto) treatment variable
+P_tr <- fc(P, c("tmt", "treatment_defacto", "treatment", "treat", "arm"))
+if (!is.na(P_tr)) {
+  df$arm <- map_arm(P[[P_tr]], df$a7)
+} else df$arm <- NA_character_
+df <- left_join(df, nb, by = "a7")
+if (mean(is.na(df$arm)) > 0.5) df$arm <- df$arm_rand
+df$arm[is.na(df$arm)] <- df$arm_rand[is.na(df$arm)]
+P_st <- fc(P, c("stratum", "strata"))
+if (!is.na(P_st)) {
+  s2 <- as.character(num(P[[P_st]]))
+  df$stratum <- ifelse(is.na(df$stratum), s2, df$stratum)
+}
+message("Property arm counts:"); print(table(df$arm, useNA = "ifany"))
+
+# Pilot drop
+P_pilot <- fc(P, c("pilot"))
+if (!is.na(P_pilot)) { pl <- num(P[[P_pilot]]); df$pilot <- pl } else df$pilot <- NA
+
+# Bring registration info if needed
+getP <- function(cands) {
+  v <- fc(P, cands)
+  if (!is.na(v)) return(P[[v]])
+  if (!is.null(reg) && !identical(P, reg) && !is.na(P_pid)) {
+    rv <- fc(reg, cands); rp <- fc(reg, pid_cands)
+    if (!is.na(rv) && !is.na(rp)) {
+      m <- data.frame(pid = as.character(haven::zap_labels(reg[[rp]])), v = num(reg[[rv]]), stringsAsFactors = FALSE)
+      m <- m[!duplicated(m$pid), ]
+      return(m$v[match(df$pid, m$pid)])
+    }
+  }
+  rep(NA, nrow(df))
+}
+
+df$house <- num(getP(c("house", "house_type", "housetype", "house_cat")))
+df$exempt <- binarize(getP(c("exempt", "exempt_status", "is_exempt")))
+
+# Compliance / revenue
+P_paid <- fc(P, c("taxes_paid", "paid", "tax_paid", "paid_tax", "compliance"))
+P_amt  <- fc(P, c("taxes_paid_amt", "amount_paid", "paid_amt", "amt_paid", "amount", "revenue"))
+if (!is.na(P_paid)) {
+  df$paid <- binarize(P[[P_paid]]); df$paid[is.na(df$paid)] <- 0
+} else df$paid <- NA
+if (!is.na(P_amt)) {
+  df$amt <- num(P[[P_amt]]); df$amt[is.na(df$amt)] <- 0
+} else df$amt <- NA
+if ((is.na(P_paid) || is.na(P_amt)) && !is.null(pay)) {
+  pp <- fc(pay, pid_cands); pa <- fc(pay, c("amount", "amt", "amount_paid", "taxes_paid_amt", "paid_amt"))
+  if (!is.na(pp)) {
+    py <- data.frame(pid = as.character(haven::zap_labels(pay[[pp]])),
+                     amt = if (!is.na(pa)) num(pay[[pa]]) else 1, stringsAsFactors = FALSE)
+    agg <- py %>% group_by(pid) %>% summarise(amt = sum(amt, na.rm = TRUE), .groups = "drop")
+    i <- match(df$pid, agg$pid)
+    if (is.na(P_paid)) df$paid <- as.numeric(!is.na(i))
+    if (is.na(P_amt)) df$amt <- ifelse(is.na(i), 0, agg$amt[i])
+  }
+}
+if (all(is.na(df$amt))) df$amt <- 0
+
+# Sample: 356 study neighborhoods, no pilot, no villas
+df <- df[df$a7 %in% nb$a7, ]
+if (!all(is.na(df$pilot))) df <- df[is.na(df$pilot) | df$pilot != 1, ]
+hv <- table(df$house)
+if (length(hv) > 2) {
+  keep <- as.numeric(names(sort(hv, decreasing = TRUE))[1:2])
+  df <- df[is.na(df$house) | df$house %in% keep, ]
+}
+message("Rows after restrictions: ", nrow(df))
+print(table(df$arm, useNA = "ifany"))
+
+# ---------------------------------------------------------------------------
+# Neighborhood campaign dates for time fixed effects
+# ---------------------------------------------------------------------------
+as_date_any <- function(x) {
+  if (inherits(x, "Date")) return(x)
+  if (inherits(x, "POSIXt")) return(as.Date(x))
+  NULL
+}
+nb_dates <- function(D) {
+  if (is.null(D)) return(NULL)
+  idc <- fc(D, nb_cands); if (is.na(idc)) return(NULL)
+  dcols <- names(D)[vapply(D, function(z) inherits(z, "Date") || inherits(z, "POSIXt"), TRUE)]
+  if (!length(dcols)) return(NULL)
+  pref <- dcols[grepl("start|first|date|today|day", tolower(dcols))]
+  dc <- if (length(pref)) pref[1] else dcols[1]
+  message("Using date column ", dc)
+  d <- data.frame(a7 = as.character(num(D[[idc]])), d = as_date_any(D[[dc]]))
+  d <- d[!is.na(d$d) & d$d > as.Date("2017-06-01") & d$d < as.Date("2019-12-31"), ]
+  if (!nrow(d)) return(NULL)
+  d %>% group_by(a7) %>% summarise(date = min(d), .groups = "drop")
+}
+nbd <- NULL
+for (D in list(sched, reg, troll, timing)) {
+  nbd <- tryCatch(nb_dates(D), error = function(e) NULL)
+  if (!is.null(nbd) && nrow(nbd) > 200) break
+}
+if (is.null(nbd)) {
+  # fallback: Month in collector info
+  ci <- rd("admin_data/campaign_collector_info.dta")
+  mc <- fc(ci, c("Month", "month")); ic <- fc(ci, nb_cands)
+  if (!is.na(mc) && !is.na(ic)) {
+    nbd <- data.frame(a7 = as.character(num(ci[[ic]])),
+                      date = as.Date("2018-01-01") + 30.44 * (num(ci[[mc]]) - 1)) %>%
+      group_by(a7) %>% summarise(date = min(date), .groups = "drop")
+  }
+}
+message("Neighborhood dates available: ", if (is.null(nbd)) 0 else nrow(nbd))
+
+make_period <- function(a7, arm, armA, armB) {
+  if (is.null(nbd)) return(rep(1, length(a7)))
+  d <- nbd$date[match(a7, nbd$a7)]
+  nbx <- data.frame(a7 = nb$a7, arm = nb$arm_rand)
+  nbx$date <- nbd$date[match(nbx$a7, nbd$a7)]
+  # use de facto arm from property data where available
+  arm_nb <- tapply(arm, a7, function(z) z[1])
+  nbx$arm <- ifelse(nbx$a7 %in% names(arm_nb), arm_nb[nbx$a7], nbx$arm)
+  fa <- min(nbx$date[nbx$arm == armA], na.rm = TRUE); fb <- min(nbx$date[nbx$arm == armB], na.rm = TRUE)
+  la <- max(nbx$date[nbx$arm == armA], na.rm = TRUE); lb <- max(nbx$date[nbx$arm == armB], na.rm = TRUE)
+  s <- fa + as.numeric(fb - fa) / 2
+  e <- la + as.numeric(lb - la) / 2
+  p <- floor(as.numeric(d - s) / (365.25 / 6))
+  p[is.na(d) | d < s | d > e] <- NA
+  p
+}
+
+# ---------------------------------------------------------------------------
+# Table 4
+# ---------------------------------------------------------------------------
+lc <- df[df$arm %in% c("Local", "Central"), ]
+lc$local <- as.numeric(lc$arm == "Local")
+lc$period <- make_period(lc$a7, lc$arm, "Local", "Central")
+
+r <- list()
+m1 <- tryCatch(feols(paid ~ local | stratum, data = lc, cluster = ~a7), error = function(e) { message(e$message); NULL })
+if (!is.null(m1)) { r$c1 <- coef(m1)["local"]; r$n1 <- nobs(m1) }
+lc2 <- lc[!is.na(lc$period), ]
+m2 <- tryCatch(feols(paid ~ local | stratum + period, data = lc2, cluster = ~a7), error = function(e) { message(e$message); NULL })
+if (!is.null(m2)) { r$c2 <- coef(m2)["local"]; r$n2 <- nobs(m2) }
+m4 <- tryCatch(feols(paid ~ local | stratum + period + house, data = lc2, cluster = ~a7), error = function(e) { message(e$message); NULL })
+if (!is.null(m4)) r$c4 <- coef(m4)["local"]
+lc5 <- lc2[is.na(lc2$exempt) | lc2$exempt != 1, ]
+m5 <- tryCatch(feols(paid ~ local | stratum + period + house, data = lc5, cluster = ~a7), error = function(e) { message(e$message); NULL })
+if (!is.null(m5)) r$c5 <- coef(m5)["local"]
+mb2 <- tryCatch(feols(amt ~ local | stratum + period, data = lc2, cluster = ~a7), error = function(e) { message(e$message); NULL })
+if (!is.null(mb2)) r$b2 <- coef(mb2)["local"]
+mb4 <- tryCatch(feols(amt ~ local | stratum + period + house, data = lc2, cluster = ~a7), error = function(e) { message(e$message); NULL })
+if (!is.null(mb4)) r$b4 <- coef(mb4)["local"]
+
+# ---------------------------------------------------------------------------
+# Table 7: CLI vs Central
+# ---------------------------------------------------------------------------
+cc <- df[df$arm %in% c("CLI", "Central"), ]
+cc$cli <- as.numeric(cc$arm == "CLI")
+cc$period <- make_period(cc$a7, cc$arm, "CLI", "Central")
+cc2 <- cc[!is.na(cc$period), ]
+m7a <- tryCatch(feols(paid ~ cli | stratum + period + house, data = cc2, cluster = ~a7), error = function(e) { message(e$message); NULL })
+m7b <- tryCatch(feols(amt ~ cli | stratum + period + house, data = cc2, cluster = ~a7), error = function(e) { message(e$message); NULL })
+
+# ---------------------------------------------------------------------------
+# Table 8: ease of payment rating within CLI
+# ---------------------------------------------------------------------------
+c8 <- NA
+tryCatch({
+  cli <- df[df$arm == "CLI", ]
+  rating <- rep(NA_real_, nrow(cli))
+  ease_pat <- "ease|abil|capac|pay_ease|easy"
+  v <- names(P)[grepl(ease_pat, tolower(names(P)))]
+  if (length(v)) {
+    vv <- num(P[[v[1]]])
+    idx <- match(cli$pid, as.character(haven::zap_labels(P[[P_pid]])))
+    rating <- vv[idx]
+    message("Ease rating from tax roll column ", v[1])
+  } else {
+    cons <- rd("survey_data/chief_consultations.dta"); desc("chief_consultations", cons)
+    v <- names(cons)[grepl(ease_pat, tolower(names(cons)))]
+    cp <- fc(cons, pid_cands)
+    if (length(v) && !is.na(cp)) {
+      message("Ease rating from chief_consultations column ", v[1])
+      m <- data.frame(pid = as.character(haven::zap_labels(cons[[cp]])), v = num(cons[[v[1]]]))
+      m <- m[!duplicated(m$pid), ]
+      rating <- m$v[match(cli$pid, m$pid)]
+    }
+  }
+  rating[!is.na(rating) & rating < 0] <- NA
+  cli$ease <- rating
+  m8 <- feols(paid ~ ease | house + stratum, data = cli, cluster = ~a7)
+  c8 <<- coef(m8)["ease"]
+}, error = function(e) message("Table 8: ", conditionMessage(e)))
+
+# ---------------------------------------------------------------------------
+# Table 5: bribe (endline)
+# ---------------------------------------------------------------------------
+c5b <- NA
+tryCatch({
+  en <- rd("survey_data/endline_round1_noPII.dta"); desc("endline_round1", en)
+  ei <- fc(en, nb_cands)
+  bv <- fc(en, c("paid_bribe", "bribe", "transport"))
+  e <- data.frame(a7 = as.character(num(en[[ei]])), y = binarize(en[[bv]]), stringsAsFactors = FALSE)
+  e <- left_join(e, nb[, c("a7", "stratum", "arm_rand")], by = "a7")
+  arm_nb <- tapply(df$arm, df$a7, function(z) z[1])
+  e$arm <- ifelse(e$a7 %in% names(arm_nb), arm_nb[e$a7], e$arm_rand)
+  e <- e[e$arm %in% c("Local", "Central") & !is.na(e$y), ]
+  e$local <- as.numeric(e$arm == "Local")
+  mb <- feols(y ~ local | stratum, data = e, cluster = ~a7)
+  c5b <<- coef(mb)["local"]
+}, error = function(e) message("Table 5: ", conditionMessage(e)))
+
+# ---------------------------------------------------------------------------
+# Table 6: visited by collector (midline)
+# ---------------------------------------------------------------------------
+c6 <- NA
+tryCatch({
+  mid <- rd("survey_data/midline_noPII.dta"); desc("midline", mid)
+  mi <- fc(mid, nb_cands)
+  vv <- fc(mid, c("visited", "visit", "visited_post"))
+  md <- data.frame(a7 = as.character(num(mid[[mi]])), y = binarize(mid[[vv]]), stringsAsFactors = FALSE)
+  mp <- fc(mid, pid_cands)
+  mh <- fc(mid, c("house", "house_type"))
+  if (!is.na(mh)) md$house <- num(mid[[mh]]) else if (!is.na(mp)) {
+    md$house <- df$house[match(as.character(haven::zap_labels(mid[[mp]])), df$pid)]
+  } else md$house <- 1
+  md <- left_join(md, nb[, c("a7", "stratum", "arm_rand")], by = "a7")
+  arm_nb <- tapply(df$arm, df$a7, function(z) z[1])
+  md$arm <- ifelse(md$a7 %in% names(arm_nb), arm_nb[md$a7], md$arm_rand)
+  md <- md[md$arm %in% c("Local", "Central") & !is.na(md$y), ]
+  md$local <- as.numeric(md$arm == "Local")
+  md$period <- make_period(md$a7, md$arm, "Local", "Central")
+  md <- md[!is.na(md$period), ]
+  mv <- feols(y ~ local | house + stratum + period, data = md, cluster = ~a7)
+  c6 <<- coef(mv)["local"]
+}, error = function(e) message("Table 6: ", conditionMessage(e)))
+
+# ---------------------------------------------------------------------------
+# Output
+# ---------------------------------------------------------------------------
+emit("compliance_local_table4_panelA_col1", unname(r$c1))
+emit("compliance_local_table4_panelA_col2", unname(r$c2))
+emit("compliance_local_house_fe_table4_panelA_col4", unname(r$c4))
+emit("compliance_local_exempt_excluded_table4_panelA_col5", unname(r$c5))
+emit("revenue_local_table4_panelB_col2", unname(r$b2))
+emit("revenue_local_house_fe_table4_panelB_col4", unname(r$b4))
+emit("n_obs_table4_col1", as.numeric(r$n1))
+emit("n_obs_table4_col2", as.numeric(r$n2))
+emit("paid_bribe_endline_local_table5_panelB", unname(c5b))
+emit("visited_by_collector_local_table6_col1", unname(c6))
+emit("compliance_cli_table7_col1", if (!is.null(m7a)) unname(coef(m7a)["cli"]) else NA)
+emit("revenue_cli_table7_col2", if (!is.null(m7b)) unname(coef(m7b)["cli"]) else NA)
+emit("compliance_ease_of_payment_cli_table8_panelA_col2", unname(c8))
+```
+
+## What the code produced
+  paid_bribe_endline_local_table5_panelB = 0.020075
+  visited_by_collector_local_table6_col1 = 0.000192
+
+## Last run's stdout (excerpt: first/last 3000 characters)
+```
+Central     CLI Control     CXL   Local 
+    110      80       5      51     110 
+
+Central     CLI Control     CXL   Local    <NA> 
+  14792   10139     801    6411   14626    1161 
+
+Central     CLI Control     CXL   Local 
+  14674   10040     801    6369   14600 
+RESULT:paid_bribe_endline_local_table5_panelB=0.020075
+RESULT:visited_by_collector_local_table6_col1=0.000192
+```
+
+## Last run's stderr (excerpt: first/last 3000 characters)
+```
+[rand] 356 rows x 37 cols: a7, rouge, geo_stratum, jontax, stratum_jon, commune, joncomp2016, chef_collect_types, chef_collect_ever, salongo_freq, chef_collect_proptax_ever, appoint_yr, chef_stratum, chef_collect_stratum, stratum, stratum_count, treatment, rand1, rank1, count1, numtoselect1_control, probleft2_control, rand2, probleft3_control, numtoselect1_central, probleft2_central, probleft3_central, numtoselect1_local, probleft2_local, probleft3_local, numtoselect1_centralwinfo, probleft2_centralwinfo, numtoselect1_centralxlocal, probleft2_centralxlocal, probleft3_centralwinfo, rand3, order_treatment
+[taxroll] 47930 rows x 12 cols: compound1, DateRDV, MontantIF, Bonus, DatePaye, Exempte, NbrLoc, Exempté, Bonus2, Observations, Date, a7
+[registration] 48034 rows x 105 cols: start, end, today, today_fr, a7, a7b, tmt, carto_pay, first, north_east, col_change, who, chief_asst_pres, house, correct, house_correct, breminder_mm2, other_flyers0, bother_flyers1, col_code, mm_num, mm_rate, old_code, compound1, compound2, present_sensi, present_info_owner, status, owner_found, owner_where, tenants, exempt, why_exempt, exempt_other, exempt_enum, why_exempt2, why_exempt2_other, designate, designate_why, designate_why_other, read_flyers, read_flyer2, treatment_fr, treatment_tsh, rate_assigned, read_language, read_who, read_which_chef, what_rate_periph, what_rate_periph_other, read_message_fr, read_message_tsh, who_give_flier, collect_now, collect_who, why_nocollect, why_nocollect_other, collect_success, amt_paid, appointment, apt_date, chalk_check, compound1_p, compound2_p, periph_vs_mm_p, mm_rate_pp, what_rate_periph_p, other_amt, advance, past_advance, past_advance_amt, metainstanceid, key, time, know_eachother, commune, quartier, present, other_flyers, other_flyers_other
+[payments] 3733 rows x 28 cols: compound1, house, TDM, did, rateUSD, amountCF, colcode, error_code, polygon, colcode2, error_colcode, Bonus2, a7, error_rate, Peripherie, Maison_Moyenne, Villas, paid, Bonus_paye_carto, amountUSD, endOfCollect, date, lateCollection, unmatched_compound, code, dup_receipt, mult_tax, rate_verified
+[schedule] 356 rows x 9 cols: a7, treatment, month, chef_code, agent1_code, agent2_code, agent_code, chef_group, order_for_assigning
+[timing] 4732 rows x 19 cols: TDMnumber, date, compound1, amountCF, amountUSD, colcode, collector_ID, tdm, rateUSD, date_download, downloadnum, download_userID, today, time, hours, minutes, seconds, hours_minutes_seconds, error_code
+Randomization arm counts: 
+Property arm counts:
+Rows after restrictions: 46484
+Using date column start
+Neighborhood dates available: 363
+in feols(paid ~ local | stratum, data = lc, cluster ...: 
+The dependent variable is a constant. The estimation with fixed-effects
+cannot be done.
+in feols(paid ~ local | stratum + period, data = lc2...: 
+The dependent variable is a constant. The estimation with fixed-effects
+cannot be done.
+in feols(paid ~ local | stratum + period + house, da...: 
+The dependent variable is 
+[... 875 characters omitted ...]
+col_focus, chef_info_use, key, compound1, polymult, compound, pay_ease, willingness, convinced, key2, setofr, date, date_f, type, short_label, value_label, keep, labelFrançais, dup_code, compound1_carto, _erge, carto_complete, skipped_code, _merge, tot_complete_cc
+Ease rating from chief_consultations column pay_ease
+Table 8: in feols(paid ~ ease | house + stratum, data = cli, ...: 
+The dependent variable is a constant. The estimation with fixed-effects
+cannot be done.
+[endline_round1] 5602 rows x 960 cols: today, compound_code, start, end, a7, a7b, a7c, a7_check, treatment, a7d, code, code2, replacement, why_replace, replace_approved, move, move_when, a7_previous, a7_currently, street_check, compound_code2, code_erased, code_found, compound_code_prev, age, sex, titling_respondent, titling_respondent_short, monitoring_redo, identity_post_tax, avail, not_avail, replacement_possible, x4, x5, x6, person_check2, chef_status, chef_code, deadchef, consent1_short, consent1_med, consent1_long, consent1_titling_short, lang, hh_head_newresp, relation_newresp, sex_newresp, age_newresp, edu_newresp, edu2_newresp, job1_newresp, job1_newresp_other, kga_born_newresp, kga_move_newresp, kga_mig1_newresp, kga_mig2_newresp, ave_born_newresp, ave_move_newresp, kga_mig3_newresp, kga_mig4_newresp, elect1, elect3, elect4, elect5, elect6, elect8, hh_size, hh_babies, hh_fam_lodgers, hh_migrant, hh_moved, renters, rand_status, title_status_c, title_status_t, secur, secur1, secur3, access_survey_e
+[midline] 45794 rows x 302 cols: a7, compound, start, end, today, key, a7b, a7c, a7_check, a7d, treatment, month, compound2, nocode, possible_compound, why_no_code, revisits_dates, date1, date2, date3, date4, date5, date6, date7, date8, date9, date10, survey1, survey1_code, survey1_resp_same, survey1_resp_diff, survey_chef, survey_chef_code, chef_resp_same, chef_resp_diff, compound_chef, compound_assis, exempt, first_attempt, present, abandoned, lang, visited, visits, flier, paid_self, taxed_dk, paid_who, why_pay, why_pay_o, pubgoods, sanctions, bribe_amt, whopay, whopay2, neighbor_know, num_500, num_1000, num_1500, num_2000, num_2500, num_3000, num_4000, num_5000, num_6000, num_6600, num_7000, num_8000, num_8800, num_9000, num_10000, num_11000, num_12000, num_13000, num_13200, num_9999, rand_neighbor, neighbor_know2, num_less, num_same
+NOTE: 4,467 observations removed because of NA values (Fixed-effects: 4,467).
+Could not compute compliance_local_table4_panelA_col1
+Could not compute compliance_local_table4_panelA_col2
+Could not compute compliance_local_house_fe_table4_panelA_col4
+Could not compute compliance_local_exempt_excluded_table4_panelA_col5
+Could not compute revenue_local_table4_panelB_col2
+Could not compute revenue_local_house_fe_table4_panelB_col4
+Could not compute n_obs_table4_col1
+Could not compute n_obs_table4_col2
+Could not compute compliance_cli_table7_col1
+Could not compute revenue_cli_table7_col2
+Could not compute compliance_ease_of_payment_cli_table8_panelA_col2
+```
+
+## Claims still failing
+1. compliance_local_table4_panelA_col1: paper claims 0.023 share of properties paying the property tax (0-1) (coefficient), your code produced N/A, tolerance 0.3478
+2. compliance_local_table4_panelA_col2: paper claims 0.032 share of properties paying the property tax (0-1) (coefficient), your code produced N/A, tolerance 0.2188
+3. compliance_local_house_fe_table4_panelA_col4: paper claims 0.033 share of properties paying the property tax (0-1) (coefficient), your code produced N/A, tolerance 0.2121
+4. compliance_local_exempt_excluded_table4_panelA_col5: paper claims 0.04 share of properties paying the property tax (0-1) (coefficient), your code produced N/A, tolerance 0.2
+5. revenue_local_table4_panelB_col2: paper claims 79.64 Congolese francs per property (coefficient), your code produced N/A, tolerance 0.287
+6. revenue_local_house_fe_table4_panelB_col4: paper claims 68.855 Congolese francs per property (coefficient), your code produced N/A, tolerance 0.2986
+7. n_obs_table4_col1: paper claims 28872.0 properties (count), your code produced N/A, tolerance 0.05
+8. n_obs_table4_col2: paper claims 27764.0 properties (count), your code produced N/A, tolerance 0.05
+9. compliance_cli_table7_col1: paper claims 0.024 share of properties paying the property tax (0-1) (coefficient), your code produced N/A, tolerance 0.375
+10. revenue_cli_table7_col2: paper claims 46.566 Congolese francs per property (coefficient), your code produced N/A, tolerance 0.4553
+11. compliance_ease_of_payment_cli_table8_panelA_col2: paper claims 0.056 change in the probability of payment per point of the chief's ease-of-payment rating (coefficient), your code produced N/A, tolerance 0.125
+
+## Previous attempts (oldest first)
+  Attempt 1: paid_bribe_endline_local_table5_panelB=0.020075, visited_by_collector_local_table6_col1=0.000192
+
+These attempts have already been tried.  Do not repeat a strategy
+that has already produced the same values.
+
+## Task
+Adjust the code minimally to close the gap on the failing claims.
+Prefer changes that align more closely with the paper's stated methodology:
+re-read the methodology summary above and check the model specification,
+covariate selection, fixed effects, clustering, and seed against what the
+paper actually specifies.  In econometrics papers, common gap-closers are:
+  - getting the cluster-robust SE right (vcovCL / cluster_var argument)
+  - matching the paper's exact fixed-effects structure
+  - using the same sample-restriction filters the paper applied
+  - matching the paper's weighting scheme (weights= argument)
+
+## Deviation reporting
+If you must change something the paper did NOT specify in order to close
+the gap, emit a ``DEVIATION:`` line via cat() describing the change:
+
+    cat('DEVIATION: Used HC1 robust SE because the paper does not specify but the default did not converge\n')
+
+## When to give up
+If after re-reading the methodology and the previous attempts you judge
+the gap cannot be closed without unreasonable deviation, return the SAME
+R CODE you were given, BYTE-FOR-BYTE unchanged.  The pipeline will record
+the claim as unreproducible.
+
+## Output convention (unchanged)
+Emit every metric as ``cat('RESULT:<name>=<value>\n')``.
+The dataset is a directory tree at '<repo>/.cache/datasets/balan_2022_local_elites_state_capacity.script-free' — see the file listing under Dataset Information.  Load the actual data file(s) by the exact paths listed there (readr::read_csv() for .csv, haven::read_dta() for Stata .dta, load() for .RData/.rda, which creates the objects listed for the file under exactly those names: use them, do not guess others; readRDS() for .rds).
+Installed packages (no network; nothing else can be installed): jsonlite, fixest, lfe, AER, ivreg, plm, estimatr, lme4, quantreg, car, sandwich, lmtest, clubSandwich, multiwayvcov, marginaleffects, MatchIt, optmatch, CBPS, WeightIt, cobalt, did, rdrobust, rddensity, Synth, modelsummary, stargazer, texreg, broom, tidyverse, dplyr, tidyr, readr, stringr, lubridate, data.table, haven, readxl, janitor, zoo, ggplot2, ggridges, ggrepel, gridExtra, cowplot, gtable, extrafont, sf, MASS, nnet, survival, splines, Matrix, boot, stats, utils.
+Prefer fixest for fixed effects, IV and clustered SEs; use the other installed packages where the paper's method calls for them.
+No network, no system().  set.seed(42).
+
+Output ONLY the R code — no explanation, no markdown fences.

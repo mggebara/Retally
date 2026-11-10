@@ -1,0 +1,33 @@
+{
+  "schema": 1,
+  "entry_id": "balan-2022-local-elites-state-capacity",
+  "mode": "blind",
+  "run_id": "2026-11-10-c",
+  "reproducer": "claude-code",
+  "language": "r",
+  "final": {"script": "script.R", "stdout": "stdout.txt", "stderr": "stderr.txt", "exit_code": 0},
+  "attempts": [
+    {"dir": "attempt-1", "exit_code": 0, "kind": ""},
+    {"dir": "attempt-2", "exit_code": 0, "kind": ""},
+    {"dir": "attempt-3", "exit_code": 0, "kind": ""},
+    {"dir": "attempt-4", "exit_code": 0, "kind": ""},
+    {"dir": "attempt-5", "exit_code": 0, "kind": ""},
+    {"dir": "attempt-6", "exit_code": 0, "kind": ""},
+    {"dir": "attempt-7", "exit_code": 0, "kind": ""},
+    {"dir": "attempt-8", "exit_code": 0, "kind": ""}
+  ],
+  "deviations": [
+    "Package ships only raw (01_base) data, so the analysis sample was rebuilt: property register = registration_noPII rows in the 356 randomized neighborhoods with pilot==0, tot_complete==1, house in {low, high band} (285 villas dropped), unique compound code. This gives 46,506 non-villa properties (paper reports 45,162), so observation counts differ from the paper's construction.",
+    "De facto treatment taken from campaign_collector_info Tmt (neighborhood 654, randomized CXL, coded Local), giving 111 Local / 110 Central as in the paper.",
+    "Time fixed effects: online Appendix A2.5 is not available. Implemented as 61-day (two-month) periods starting at the midpoint between the earliest property registration dates of the two arms compared and ending at the midpoint between their latest registration dates. Each property is dated by its own registration date, and properties outside the window are dropped. The paper describes neighborhood-level assignment; the exact date variable used for it is unknown.",
+    "Compliance = registered compound appears in tax_payments_noPII receipt data with a positive amount (all receipts kept, including error_code==1). Revenue = sum of amountCF, 0 for non-payers. Two keyed amounts above 1 million CF were recoded to the band liability (3,000 or 13,200).",
+    "Column 5 drops properties with registration exempt==1 (collector designated exempt); missing exemption answers are kept.",
+    "Endline bribe: endline_round1 (tot_complete==1, non-pilot, one record per respondent code). Bribe is asked only of households reporting a collector visit with someone present, so households reporting no visit or nobody home are coded 0; 8888/9999 are set to missing. Treatment comes from the endline a7.",
+    "Table 6 visited: midline (tot_complete==1, non-pilot, first record per compound) matched to the register. 'Visited after registration' = 1 if the reported total visits (which include the registration visit) are >= 2, and 0 if no visit was reported. House type and registration date come from the register.",
+    "Table 8: chief_consultations pay_ease coded 0/1/2 (8888 don't know set to missing), merged to registered CLI properties by compound code; stratum = randomization_assignment stratum (32 groups) throughout."
+  ],
+  "notes": "Independent blind reproduction from raw admin and survey files. Attempts 1-8 were exploratory: they inspected variables, labels, merges and dates, printed no RESULT lines and estimated no listed quantity. The final script estimates all 13 quantities with fixest OLS, stratum FE (plus period/house FE where specified) and SEs clustered by neighborhood (a7). The largest uncertainty is the time-FE construction: with registration-date windows, 209 of 221 Local/Central clusters keep at least one property in column 2 (paper: 213 clusters). Observation counts are also above the paper's because the paper's register cleaning (45,162 properties) could not be reproduced exactly. I did not consult any reported values; the only tool feedback was check_attempt's missing-name check. No run hung.",
+  "files_read_outside_mount": [],
+  "started_at": "2026-11-10T17:04:29Z",
+  "finished_at": "2026-11-10T17:15:00Z"
+}

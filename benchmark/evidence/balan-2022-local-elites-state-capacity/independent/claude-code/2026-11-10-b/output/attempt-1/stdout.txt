@@ -1,0 +1,361 @@
+
+===== admin_data/randomization_assignment.dta ncol 37 nrow 356 
+a7 [numeric] G1-A7
+rouge [numeric] 
+geo_stratum [numeric] 
+jontax [numeric] (mean) jontax
+stratum_jon [numeric] (first) stratum_jon
+commune [numeric] (first) commune
+joncomp2016 [numeric] 
+chef_collect_types [numeric] (mean) chef_collect_types
+chef_collect_ever [numeric] (mean) chef_collect_ever
+salongo_freq [numeric] (mean) salongo_freq
+chef_collect_proptax_ever [numeric] (mean) chef_collect_proptax_ever
+appoint_yr [numeric] (mean) appoint_yr
+chef_stratum [numeric] (first) chef_stratum
+chef_collect_stratum [numeric] 
+stratum [numeric] group(geo_stratum jontax chef_collect_stratum)
+stratum_count [numeric] 
+treatment [haven_labelled] c(Control = 0, Central = 1, Local = 2, `Central With Info` = 3, `Central X Local
+rand1 [numeric] 
+rank1 [numeric] unique rank of (rand1)    by stratum
+count1 [numeric] 
+numtoselect1_control [numeric] 
+probleft2_control [numeric] 
+rand2 [numeric] 
+probleft3_control [numeric] 
+numtoselect1_central [numeric] 
+probleft2_central [numeric] 
+probleft3_central [numeric] 
+numtoselect1_local [numeric] 
+probleft2_local [numeric] 
+probleft3_local [numeric] 
+numtoselect1_centralwinfo [numeric] 
+probleft2_centralwinfo [numeric] 
+numtoselect1_centralxlocal [numeric] 
+probleft2_centralxlocal [numeric] 
+probleft3_centralwinfo [numeric] 
+rand3 [numeric] 
+order_treatment [numeric] unique rank of (rand3)    by treatment
+   a7 rouge geo_stratum jontax stratum_jon commune joncomp2016 chef_collect_types chef_collect_ever salongo_freq chef_collect_proptax_ever appoint_yr chef_stratum chef_collect_stratum stratum stratum_count treatment     rand1 rank1 count1
+1 676     0          11      1          14       5           2          0.3333333         0.3333333     2.333333                 1.0000000   2005.333            2                    2      30             8         0 0.8998656     8      8
+2 587     1           9      0          12       5           1          0.0000000         0.0000000     4.000000                 0.5666667   2006.000            1                    1      22             6         0 0.8434700     6      6
+3 101     0           1      0           3       1           1          0.1666667         0.1666667     3.666667                 1.0000000   2009.667            1                    2       2             6         0 0.8644653     6      6
+4 589     0           9      0          10       5           1          0.1666667         0.1666667     4.000000                 1.0000000   2013.667            2                    2      23             5         0 0.6885255     5      5
+  numtoselect1_control probleft2_control     rand2 probleft3_control numtoselect1_central probleft2_central probleft3_central numtoselect1_local probleft2_local probleft3_local
+1           0.11235955        0.11235955 0.8998656                NA                   NA                NA                NA                 NA              NA              NA
+2           0.08426966        0.08426966 0.8434700                NA                   NA                NA                NA                 NA              NA              NA
+3           0.08426966        0.08426966 0.8644653                NA                   NA                NA                NA                 NA              NA              NA
+4           0.07022472        0.07022472 0.6885255                NA                   NA                NA                NA                 NA              NA              NA
+
+===== admin_data/randomization_schedule.dta ncol 9 nrow 356 
+a7 [numeric] G1-A7
+treatment [numeric] (first) treatment
+month [numeric] 
+chef_code [numeric] 
+agent1_code [numeric] 
+agent2_code [numeric] 
+agent_code [numeric] 
+chef_group [numeric] 
+order_for_assigning [numeric] 
+   a7 treatment month chef_code agent1_code agent2_code agent_code chef_group order_for_assigning
+1 320         0     1        NA          NA          NA         NA         NA                   1
+2 101         0     2        NA          NA          NA         NA         NA                   1
+3 587         0     3        NA          NA          NA         NA         NA                   1
+4 676         0     4        NA          NA          NA         NA         NA                   1
+
+===== admin_data/stratum.dta ncol 13 nrow 356 
+a7 [numeric] G1-A7
+rouge [numeric] 
+geo_stratum [numeric] 
+jontax [numeric] (mean) jontax
+stratum_jon [numeric] (first) stratum_jon
+commune [numeric] (first) commune
+joncomp2016 [numeric] 
+salongo_freq [numeric] How many times per month do you typically organize salongo? [0 if never]
+collect_ever [haven_labelled] Have you ever collected taxes in Kananga?
+collect_what_1 [haven_labelled] Which taxes have you collected? - Property tax
+chef_stratum [numeric] 
+comp_stratum [numeric] 
+stratum [numeric] group(geo_stratum jontax comp_stratum collect_what_1)
+   a7 rouge geo_stratum jontax stratum_jon commune joncomp2016 salongo_freq collect_ever collect_what_1 chef_stratum comp_stratum stratum
+1 100     0           1      0           3       1           1            4            0              0            1            1       1
+2 101     0           1      0           3       1           1            5            0              0            2            1       1
+3 102     0           1      0           1       1           1            2            0              0            1            1       1
+4 103     0           1      0           1       1           1            1            0              0           NA            1       1
+
+===== admin_data/tax_payments_neighborhoods.dta ncol 14 nrow 356 
+a7 [numeric] Neighborhood
+paid [numeric] Number unique payers
+amount [numeric] Total amount paid
+grid_nm [numeric] Satellite grid (for straficiation)
+hh_final [numeric] Estimated house count
+poly_size [numeric] Population terciles (for stratification)
+stratum [numeric] Strata for randomization
+program [numeric] Assigned to tax campaign
+nganza [numeric] Nganza commune
+program_start [Date] Start of tax campaign
+non_residential [numeric] Neighborhood without residential properties
+num_compounds [numeric] (count) respondent
+compliance [numeric] Property tax compliance (neighborhood level)
+revenue_per_person [numeric] Property tax revenue per capita  (neighborhood level)
+   a7 paid amount grid_nm hh_final poly_size stratum program nganza program_start non_residential num_compounds compliance revenue_per_person
+1 100    0      0       1      184         3       3       0      0          <NA>               0            56          0                  0
+2 101    0      0       1      200         3       3       0      0          <NA>               0           149          0                  0
+3 102    0      0       1       68         1       1       0      0          <NA>               0            20          0                  0
+4 103    0      0       1       82         1       1       0      0          <NA>               0            57          0                  0
+
+===== admin_data/tax_payments_noPII.dta ncol 28 nrow 3733 
+compound1 [numeric] Number of compound
+house [numeric] 
+TDM [numeric] TDM
+did [numeric] did
+rateUSD [numeric] rateUSD
+amountCF [numeric] amountcf
+colcode [numeric] colcode
+error_code [numeric] 
+polygon [numeric] 
+colcode2 [numeric] 
+error_colcode [numeric] 
+Bonus2 [character] 
+a7 [numeric] From repertoire_all
+error_rate [numeric] 
+Peripherie [numeric] 
+Maison_Moyenne [numeric] 
+Villas [numeric] 
+paid [haven_labelled] c(`master only (1)` = 1, `using only (2)` = 2, `matched (3)` = 3, `missing updat
+Bonus_paye_carto [numeric] 
+amountUSD [numeric] amountUSD
+endOfCollect [Date] 
+date [Date] 
+lateCollection [numeric] 
+unmatched_compound [numeric] 
+code [numeric] 
+dup_receipt [numeric] 
+mult_tax [numeric] 
+rate_verified [numeric] 
+  compound1 house TDM did rateUSD amountCF colcode error_code polygon colcode2 error_colcode Bonus2  a7 error_rate Peripherie Maison_Moyenne Villas paid Bonus_paye_carto amountUSD endOfCollect       date lateCollection unmatched_compound code
+1    102067     2  37  NA    0.79     1500     278          0     102      278            NA        102          1          1             NA     NA    1               NA        NA   2018-10-31 2018-10-26              0                  0   NA
+2    104144     1   5 102    1.32     2500     234          0     104      234            NA        104          1          1             NA     NA    1               NA        NA   2018-09-26 2018-09-07              0                  0   NA
+3    112001     2  11  70    0.79     2500     314          0     112      314            NA        112          1          1             NA     NA    1               NA        NA   2018-12-21 2018-11-30              0                  0   NA
+4    113127     2  31  NA    1.32     2000      58          0     113       NA            NA        113         NA         NA             NA     NA   NA               NA        NA   2018-07-15 2018-07-10              0                  0   NA
+  dup_receipt mult_tax rate_verified
+1          NA       NA             1
+2          NA       NA             1
+3          NA       NA             1
+4          NA       NA             1
+
+===== admin_data/taxroll_noPII.dta ncol 12 nrow 47930 
+compound1 [numeric] Write the code for the parcelle
+DateRDV [character] DAY
+MontantIF [character] 
+Bonus [character] 
+DatePaye [character] 
+Exempte [character] 
+NbrLoc [numeric] NUMBER OF TENANTS
+Exempté [haven_labelled] WHY IS IT EXEMPTED?
+Bonus2 [character] 
+Observations [character] 
+Date [character] 
+a7 [numeric] 
+  compound1 DateRDV MontantIF Bonus DatePaye Exempte NbrLoc Exempté Bonus2 Observations Date  a7
+1    588001           3000 FC 900FC                      NA      NA                          588
+2    588002           2500 FC 750FC                      NA      NA                          588
+3    588003           1500 FC 750FC                      NA      NA                          588
+4    588004           1500 FC 450FC                      NA      NA                          588
+
+===== admin_data/tax_payment_timing_noPII.dta ncol 19 nrow 4732 
+TDMnumber [character] TDM number
+date [character] date
+compound1 [numeric] compound
+amountCF [numeric] amountCF
+amountUSD [numeric] amountUSD
+colcode [numeric] colcode
+collector_ID [numeric] collector_ID
+tdm [character] prenom
+rateUSD [numeric] rateUSD
+date_download [character] date_download
+downloadnum [numeric] downloadnum
+download_userID [numeric] download_userID
+today [Date] 
+time [POSIXct] 
+hours [numeric] 
+minutes [numeric] 
+seconds [numeric] 
+hours_minutes_seconds [numeric] 
+error_code [numeric] 
+  TDMnumber                date compound1 amountCF amountUSD colcode collector_ID   tdm rateUSD date_download downloadnum download_userID today time hours minutes seconds hours_minutes_seconds error_code
+1         3 05-07-2018 00:00:00    534048     2000        NA      NA           NA TDM 3      NA                        NA              NA  <NA> <NA>     0       0       0                     0         NA
+2         3 05-07-2018 00:00:00    534040     2000        NA      NA           NA TDM 3      NA                        NA              NA  <NA> <NA>     0       0       0                     0         NA
+3         3 05-07-2018 00:00:00    534043     3000        NA      NA           NA TDM 3      NA                        NA              NA  <NA> <NA>     0       0       0                     0         NA
+4         3 05-07-2018 00:00:00    534057     2000        NA      NA           NA TDM 3      NA                        NA              NA  <NA> <NA>     0       0       0                     0         NA
+
+===== survey_data/chief_consultations.dta ncol 31 nrow 10036 
+start [POSIXct] Start Time
+end [POSIXct] End Time
+today [Date] Date of Survey
+a7 [numeric] Lieu d'interview - Numéro de polygone
+a7b [numeric] ECRIVEZ LE POLYGONE ENCORE UNE FOIS
+who_chief [character] NOM DU CHEF
+col_focus [haven_labelled] PENDANT LA DERNIERE SERIE DES PARCELLES, À QUEL POINT ÉTAIENT LES PERCEPTEURS AT
+chef_info_use [haven_labelled] PENDANT LA DERNIERE SERIE, A QUEL POINT EST-CE QUE LE CHEF A CONNU LES PARCELLES
+key [character] KEY
+compound1 [numeric] ECRIVEZ LE CODE DE LA PARCELLE
+polymult [numeric] 
+compound [numeric] 
+pay_ease [haven_labelled] EST CE QUE LE PROPRIÉTAIRE A LES MOYENS ÉCONOMIQUES DE PAYER ? SÉLECTIONNER LA R
+willingness [haven_labelled] EST CE QUE LE PROPRIÉTAIRE A LA VOLONTÉ DE PAYER ? SELECTIONNER LE JUGEMENT DU C
+convinced [haven_labelled] CONVAINQUANT?
+key2 [character] KEY
+setofr [character] SET-OF-R
+date [character] Date de l'interview
+date_f [Date] 
+type [character] type
+short_label [character] short_label
+value_label [character] 
+keep [numeric] 
+labelFrançais [character] label::Français
+dup_code [numeric] 
+compound1_carto [numeric] 
+_erge [haven_labelled] c(`master only (1)` = 1, `using only (2)` = 2, `matched (3)` = 3, `missing updat
+carto_complete [numeric] 
+skipped_code [numeric] 
+_merge [haven_labelled] c(`master only (1)` = 1, `using only (2)` = 2, `matched (3)` = 3, `missing updat
+tot_complete_cc [numeric] 
+                start                 end      today  a7 a7b who_chief col_focus chef_info_use                                       key compound1 polymult compound pay_ease willingness convinced                                           key2
+1 2018-08-01 12:15:21 2018-08-01 15:27:27 2018-08-01 100 100        23        NA            NA uuid:88a72011-1ba2-4697-ba06-e5c5f51d1174    100001    1e+05        1        0          NA         0 uuid:3971f79d-ed66-4caa-a182-527f3f9ee01a/R[1]
+2 2018-08-01 12:15:21 2018-08-01 15:27:27 2018-08-01 100 100        23        NA            NA uuid:88a72011-1ba2-4697-ba06-e5c5f51d1174    100002    1e+05        2        2          NA         0 uuid:3971f79d-ed66-4caa-a182-527f3f9ee01a/R[2]
+3 2018-08-01 12:15:21 2018-08-01 15:27:27 2018-08-01 100 100        23        NA            NA uuid:88a72011-1ba2-4697-ba06-e5c5f51d1174    100003    1e+05        3        0          NA         0 uuid:3971f79d-ed66-4caa-a182-527f3f9ee01a/R[3]
+4 2018-08-01 12:15:21 2018-08-01 15:27:27 2018-08-01 100 100        23        NA            NA uuid:88a72011-1ba2-4697-ba06-e5c5f51d1174    100004    1e+05        4        0          NA         1 uuid:3971f79d-ed66-4caa-a182-527f3f9ee01a/R[4]
+                                       setofr        date     date_f type short_label value_label keep labelFrançais dup_code compound1_carto X_erge carto_complete skipped_code X_merge
+1 uuid:3971f79d-ed66-4caa-a182-527f3f9ee01a/R 22 Feb 2019 2019-02-22                                NA                      0             176      3             NA           NA       1
+2 uuid:3971f79d-ed66-4caa-a182-527f3f9ee01a/R 22 Feb 2019 2019-02-22                                NA                      0              NA      3             NA           NA       1
+3 uuid:3971f79d-ed66-4caa-a182-527f3f9ee01a/R 22 Feb 2019 2019-02-22                                NA                      0              NA      3             NA           NA       1
+4 uuid:3971f79d-ed66-4caa-a182-527f3f9ee01a/R 22 Feb 2019 2019-02-22                                NA                      0              NA      3             NA           NA       1
+
+===== admin_data/campaign_2016_neighborhoods.dta ncol 13 nrow 434 
+a7 [numeric] (p 50) a7
+tot_compounds [numeric] (count) nonmissing
+tot_s1_repeats [numeric] (max) id_new
+target_surveys [numeric] 
+prob [numeric] 
+skip [numeric] 
+Ordre [numeric] Ordre
+today [Date] today
+DateTerminée [numeric] Date Terminée
+Obs [numeric] Obs
+program [numeric] 
+nganza [numeric] 
+num_poly [numeric] 
+   a7 tot_compounds tot_s1_repeats target_surveys       prob skip Ordre      today DateTerminée Obs program nganza num_poly
+1 100           199              2              6 0.03015075   10     8 2016-09-08           NA  NA       0      0        1
+2 101           195              4              5 0.02564103   10    18 2016-10-29           NA  NA       0      0        1
+3 102            62              4              5 0.08064516    3     4 2016-08-12           NA  NA       0      0        1
+4 103           175              3              5 0.02857143    9    11 2016-07-29           NA  NA       0      0        1
+
+===== admin_data/registration_noPII.dta ncol 105  
+start [POSIXct] Start Time
+end [POSIXct] End Time
+today [Date] Date of Survey
+today_fr [character] 
+a7 [numeric] Location of interview - Polygon ID
+a7b [numeric] Location of interview - Polygon ID
+tmt [numeric] 
+carto_pay [haven_labelled] IS THIS A CARTO SURVEY OR A SURVEY TO RECORD A PAYMENT DONE DURING THE CARTOGRAP
+first [haven_labelled] IS THIS THE FIRST CARTO SURVEY YOU HAVE DONE IN THIS POLYGON TODAY?
+north_east [haven_labelled] HAVE YOU STARTED CARTOGRAPHIE IN THE NORTHEASTERN PART OF THE POLYGON?
+col_change [haven_labelled] HAVE THE COLLECTORS WITH YOU CHANGED SINCE YOU STARTED CARTO IN THIS POLYGON TOD
+who [haven_labelled] Are you with a collector, a chief or both ?
+chief_asst_pres [haven_labelled] IS HIS ASSISTANT PRESENT?
+house [haven_labelled] WHAT KIND OF HOUSE DID THE COLLECTOR SAY THIS IS
+correct [haven_labelled] IN YOUR OPINION WAS THIS THE CORRECT CHOICE
+house_correct [haven_labelled] IN YOUR OPINION WHAT DO YOU THINK THE CORRECT TYPE OF HOUSE IS ?
+breminder_mm2 [numeric] G0-G3b-reminder_mm2
+other_flyers0 [haven_labelled] DID THE COLLECTOR FILL IN AND STAPLE THE SECOND FLYER (MM)?
+bother_flyers1 [numeric] G0-G3b-other_flyers1
+col_code [numeric] BEFORE THE HYPHEN
+mm_num [numeric] AFTER THE HYPHEN
+mm_rate [haven_labelled] WHAT RATE IS ON THE MM FLIER?
+old_code [numeric] If there is an old code, from the previous campaign please erase it and write th
+compound1 [numeric] Write the code for the parcelle
+compound2 [numeric] Write the code for the parcelle again
+present_sensi [haven_labelled] IS THERE AN ADULT WHO LIVES ON THE COMPOUND PRESENT RIGHT NOW TO RECEIVE THE INF
+present_info_owner [haven_labelled] IS THERE AN ADULT AROUND WHO KNOWS THE NAME OF THE OWNER OR THE PERSON RESPONSIB
+status [haven_labelled] Is this the owner of this house, a renter or a relative of the owner?
+owner_found [haven_labelled] Did you find the owner or an adult family member who lives on the compound?
+owner_where [haven_labelled] Where are they?
+tenants [numeric] NUMBER OF TENANTS
+exempt [haven_labelled] ACCORDING TO THE COLLECTORS, IS THIS HOUSEHOLD EXEMPTED?
+why_exempt [haven_labelled] WHY IS IT EXEMPTED?
+exempt_other [character] ACCORDING TO THE COLLECTORS, IS THIS HOUSEHOLD EXEMPTED? (Other)
+exempt_enum [haven_labelled] ACCORDING TO YOU, SHOULD THIS HOUSEHOLD BE EXEMPTED?
+why_exempt2 [haven_labelled] WHAT EXEMPTION?
+why_exempt2_other [character] WHAT EXEMPTION? (Other)
+designate [haven_labelled] Did the collector designate one of the renters as the person responsible for com
+designate_why [haven_labelled] Why did the collector not do this?
+designate_why_other [character] Why did the collector not do this? (Other)
+read_flyers [haven_labelled] DID THE COLLECTOR READ ALL OF THE FLYER
+read_flyer2 [character] WHAT PARTS DID THE COLLECTOR READ?
+treatment_fr [character] 
+treatment_tsh [character] 
+rate_assigned [numeric] 
+read_language [haven_labelled] IN WHICH LANGUAGES DID THE COLLECTOR READ THE FLYER
+read_who [haven_labelled] WHICH COLLECTOR READ THE TRACT?
+read_which_chef [haven_labelled] DID THE CHEF OR THE ASSISTANT READ THE FLIER?
+what_rate_periph [haven_labelled] WHAT TAX RATE DID THE COLLECTOR SAY THE HOUSEHOLD SHOULD PAY?
+what_rate_periph_other [character] WHAT TAX RATE DID THE COLLECTOR SAY THE HOUSEHOLD SHOULD PAY? (Other)
+read_message_fr [haven_labelled] DID THE COLLECTOR READ OUT THE CORRECT TREATMENT MESSAGE :
+read_message_tsh [haven_labelled] DID THE COLLECTOR READ OUT THE CORRECT TREATMENT MESSAGE :
+who_give_flier [haven_labelled] TO WHOM DID THE COLLECTORS GIVE THE FLIER?
+collect_now [haven_labelled] Did the collector try to collect taxes on the spot ?
+collect_who [haven_labelled] WHICH COLLECTOR TRIED TO COLLECT TAXES ON THE SPOT?
+why_nocollect [haven_labelled] WHY DID THE COLLECTOR NOT TRY TO COLLECT ON THE SPOT?
+why_nocollect_other [character] WHY DID THE COLLECTOR NOT TRY TO COLLECT ON THE SPOT? (Other)
+collect_success [haven_labelled] DID THE PERSON PAY ?
+amt_paid [haven_labelled] HOW MUCH DID THEY PAY?
+appointment [haven_labelled] WAS AN APPOINTMENT MADE?
+apt_date [character] DAY
+chalk_check [haven_labelled] THE COMPOUND CODE FOR THIS PARCELLE IS . IS THIS THE SAME CODE THE COLLECTOR WRO
+compound1_p [numeric] Write the code for the parcelle
+compound2_p [numeric] Write the code for the parcelle again
+periph_vs_mm_p [haven_labelled] EST-CE QU'IL S'AGISSAIT D'UNE MAISON DE TYPE PERIPHERIE OU DE TYPE MAISON MOYENN
+mm_rate_pp [haven_labelled] HOW MUCH DID HE COLLECT?
+what_rate_periph_p [haven_labelled] HOW MUCH DID HE COLLECT?
+other_amt [numeric] WHAT OTHER AMOUNT?
+advance [haven_labelled] WAS THIS AN ADVANCE PAIEMENT?
+past_advance [haven_labelled] HAD HE ALREADY PAID AN ADVANCE AND NOW HE IS COMPLETING THE PAYMENT?
+past_advance_amt [numeric] HOW MUCH DID HE COLLECT LAST TIME (AS AN ADVANCE)?
+metainstanceid [character] meta-instanceID
+key [character] KEY
+time [character] GX1-time
+know_eachother [haven_labelled] DOES THE RESPONDENT AND THE COLLECTOR/CHIEF SEEMS TO KNOW EACHOTHER
+commune [haven_labelled] Commune:
+quartier [haven_labelled] Quartier:
+present [numeric] 
+other_flyers [numeric] 
+other_flyers_other [character] 
+other_flyers_2 [numeric] 
+other_flyers_2_other [numeric] 
+reminder_mm [numeric] G6-G7-reminder_mm
+rate [numeric] G6-G7-rate
+what_rate [numeric] G6-G7-what_rate
+what_rate_other [numeric] G6-G7-what_rate_other
+other_flyers1 [haven_labelled] DID THE COLLECTOR FILL OUT AND STAPLE THE SECOND FLYER (VILLA)?
+reminder_mm1 [character] G7-G8-reminder_mm1
+reminder_mm2 [character] DID THE COLLECTOR STRIKE OUT THE PERIPHERY RATE ON THE MAIN FLYER?
+reminder_mm3 [character] G7-G8-reminder_mm3
+a7_compound [numeric] 
+date [character] 
+date_f [Date] 
+month_tmpp [numeric] 
+day_tmpp [numeric] 
+month_tmp_fr [character] 
+type [character] 
+short_label [character] short_label
+value_label [character] 
+keep [numeric] 
+labelEnglish [character] label::English
+tot_complete [numeric] 
+double_sensi [numeric] 
+dup_poly [numeric] 
+pilot [numeric] 

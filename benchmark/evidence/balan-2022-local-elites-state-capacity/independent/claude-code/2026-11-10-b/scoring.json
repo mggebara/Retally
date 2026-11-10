@@ -1,0 +1,721 @@
+{
+  "how": "recomputed: ResultComparator().compare_all(catalog claims, RESULT lines of output/stdout.txt, mode) - the comparator and claim conversion benchmark.runner.score_reproduction uses; row: the results row's claim_details entry as written by the run (tolerance, tolerance_source and rel_err come from there unchanged).",
+  "claims": [
+    {
+      "name": "compliance_local_table4_panelA_col1",
+      "ground_truth": {
+        "value": 0.023,
+        "standard_error": 0.008,
+        "unit": "share of properties paying the property tax (0-1)",
+        "claim_type": "coefficient",
+        "location": "Table 4, Panel A (Compliance), Local, column (1)",
+        "context": "Table 4, Panel A, column (1).  OLS of equation (1): the Local coefficient (city chiefs collected; Central, state agents, is the excluded category) in a regression of an indicator that the registered property paid the 2018 property tax (payment records matched to the property register by tax ID) on the Local indicator and randomization stratum fixed effects; no time or house type fixed effects.  Sample: all registered properties in Local and Central neighborhoods.  Standard errors clustered by neighborhood.\n",
+        "decimals": 3,
+        "sample_size": null
+      },
+      "i4r": {
+        "reproduced_value": 0.0226,
+        "outcome": "matches",
+        "notes": "Team 48 RI row, Table 4 col 1, 0.0226 (0.00809); baseline-respondent subsample 0.020 (0.016) is a different sample.",
+        "reproduced_within_band": true
+      },
+      "rule": {
+        "mode": "independent",
+        "type_relative_tolerance": 0.02,
+        "se_multiplier": 1.0,
+        "se_band_relative": 0.34782608695652173,
+        "printed_half_unit": 0.0005
+      },
+      "row": {
+        "description": "compliance_local_table4_panelA_col1",
+        "claim_type": "coefficient",
+        "claimed": 0.023,
+        "reproduced": 0.024467,
+        "tolerance": 0.34782608695652173,
+        "rel_err": 0.06378260869565215,
+        "passed": true,
+        "passed_first_attempt": false,
+        "passed_first_scored": true,
+        "tolerance_source": "se_band"
+      },
+      "recomputed": {
+        "result_name": "compliance_local_table4_panelA_col1",
+        "reproduced": 0.024467,
+        "band_source": "se_band",
+        "band_relative": 0.34782608695652173,
+        "band_absolute": 0.008,
+        "abs_err": 0.0014669999999999996,
+        "rel_err": 0.06378260869565215,
+        "margin": 0.18337499999999993,
+        "passed": true,
+        "notes": ""
+      },
+      "agrees_with_row": true,
+      "verdict": "PASS"
+    },
+    {
+      "name": "compliance_local_table4_panelA_col2",
+      "ground_truth": {
+        "value": 0.032,
+        "standard_error": 0.007,
+        "unit": "share of properties paying the property tax (0-1)",
+        "claim_type": "coefficient",
+        "location": "Table 4, Panel A (Compliance), Local, column (2)",
+        "context": "Table 4, Panel A, column (2), the preferred specification: the Local coefficient with stratum fixed effects plus time fixed effects for waves of the campaign, no house type fixed effects, SEs clustered by neighborhood.  Per online Appendix A2.5 the time fixed effects are two-month periods beginning at the midpoint between the first days of the two arms compared (Local, Central) and ending at the midpoint between their last days; properties whose neighborhood falls outside them drop out.\n",
+        "decimals": 3,
+        "sample_size": null
+      },
+      "i4r": {
+        "reproduced_value": 0.0322,
+        "outcome": "matches",
+        "notes": "Team 48 RI row, Table 4 col 2, 0.0322 (0.00715); baseline-respondent subsample 0.033 (0.014).",
+        "reproduced_within_band": true
+      },
+      "rule": {
+        "mode": "independent",
+        "type_relative_tolerance": 0.02,
+        "se_multiplier": 1.0,
+        "se_band_relative": 0.21875,
+        "printed_half_unit": 0.0005
+      },
+      "row": {
+        "description": "compliance_local_table4_panelA_col2",
+        "claim_type": "coefficient",
+        "claimed": 0.032,
+        "reproduced": 0.038996,
+        "tolerance": 0.21875,
+        "rel_err": 0.21862500000000007,
+        "passed": true,
+        "passed_first_attempt": false,
+        "passed_first_scored": true,
+        "tolerance_source": "se_band"
+      },
+      "recomputed": {
+        "result_name": "compliance_local_table4_panelA_col2",
+        "reproduced": 0.038996,
+        "band_source": "se_band",
+        "band_relative": 0.21875,
+        "band_absolute": 0.007,
+        "abs_err": 0.006996000000000002,
+        "rel_err": 0.21862500000000007,
+        "margin": 0.9994285714285718,
+        "passed": true,
+        "notes": ""
+      },
+      "agrees_with_row": true,
+      "verdict": "PASS"
+    },
+    {
+      "name": "compliance_local_house_fe_table4_panelA_col4",
+      "ground_truth": {
+        "value": 0.033,
+        "standard_error": 0.007,
+        "unit": "share of properties paying the property tax (0-1)",
+        "claim_type": "coefficient",
+        "location": "Table 4, Panel A (Compliance), Local, column (4)",
+        "context": "Table 4, Panel A, column (4): the column (2) regression (stratum and campaign-period time fixed effects) with house fixed effects added, i.e. dummies for the property value band (low-value versus high-value band, the two flat tax liabilities).  Same sample as column (2); standard errors clustered by neighborhood.  The entry is the Local coefficient.\n",
+        "decimals": 3,
+        "sample_size": null
+      },
+      "i4r": {
+        "reproduced_value": 0.0331,
+        "outcome": "matches",
+        "notes": "Team 48 RI row, Table 4 col 4, 0.0331 (0.00719); baseline-respondent subsample 0.034 (0.014).",
+        "reproduced_within_band": true
+      },
+      "rule": {
+        "mode": "independent",
+        "type_relative_tolerance": 0.02,
+        "se_multiplier": 1.0,
+        "se_band_relative": 0.21212121212121213,
+        "printed_half_unit": 0.0005
+      },
+      "row": {
+        "description": "compliance_local_house_fe_table4_panelA_col4",
+        "claim_type": "coefficient",
+        "claimed": 0.033,
+        "reproduced": 0.03956,
+        "tolerance": 0.21212121212121213,
+        "rel_err": 0.19878787878787868,
+        "passed": true,
+        "passed_first_attempt": false,
+        "passed_first_scored": true,
+        "tolerance_source": "se_band"
+      },
+      "recomputed": {
+        "result_name": "compliance_local_house_fe_table4_panelA_col4",
+        "reproduced": 0.03956,
+        "band_source": "se_band",
+        "band_relative": 0.21212121212121213,
+        "band_absolute": 0.007,
+        "abs_err": 0.006559999999999996,
+        "rel_err": 0.19878787878787868,
+        "margin": 0.9371428571428566,
+        "passed": true,
+        "notes": ""
+      },
+      "agrees_with_row": true,
+      "verdict": "PASS"
+    },
+    {
+      "name": "compliance_local_exempt_excluded_table4_panelA_col5",
+      "ground_truth": {
+        "value": 0.04,
+        "standard_error": 0.008,
+        "unit": "share of properties paying the property tax (0-1)",
+        "claim_type": "coefficient",
+        "location": "Table 4, Panel A (Compliance), Local, column (5)",
+        "context": "Table 4, Panel A, column (5): the column (4) specification (stratum, campaign-period time and house fixed effects) excluding properties the collectors designated as exempt from the tax.  Standard errors clustered by neighborhood.  The entry is the Local coefficient.\n",
+        "decimals": 3,
+        "sample_size": null
+      },
+      "i4r": {
+        "reproduced_value": 0.0396,
+        "outcome": "matches",
+        "notes": "Team 48 RI row, Table 4 col 5, 0.0396 (0.00827); baseline-respondent subsample 0.044 (0.018).",
+        "reproduced_within_band": false
+      },
+      "rule": {
+        "mode": "independent",
+        "type_relative_tolerance": 0.02,
+        "se_multiplier": 1.0,
+        "se_band_relative": 0.2,
+        "printed_half_unit": 0.0005
+      },
+      "row": {
+        "description": "compliance_local_exempt_excluded_table4_panelA_col5",
+        "claim_type": "coefficient",
+        "claimed": 0.04,
+        "reproduced": 0.047614,
+        "tolerance": 0.2,
+        "rel_err": 0.19034999999999988,
+        "passed": true,
+        "passed_first_attempt": false,
+        "passed_first_scored": true,
+        "tolerance_source": "se_band"
+      },
+      "recomputed": {
+        "result_name": "compliance_local_exempt_excluded_table4_panelA_col5",
+        "reproduced": 0.047614,
+        "band_source": "se_band",
+        "band_relative": 0.2,
+        "band_absolute": 0.008,
+        "abs_err": 0.007613999999999996,
+        "rel_err": 0.19034999999999988,
+        "margin": 0.9517499999999994,
+        "passed": true,
+        "notes": ""
+      },
+      "agrees_with_row": true,
+      "verdict": "PASS"
+    },
+    {
+      "name": "revenue_local_table4_panelB_col2",
+      "ground_truth": {
+        "value": 79.64,
+        "standard_error": 22.856,
+        "unit": "Congolese francs per property",
+        "claim_type": "coefficient",
+        "location": "Table 4, Panel B (Revenues), Local, column (2)",
+        "context": "Table 4, Panel B, column (2): the column (2) specification (Local indicator, stratum fixed effects, campaign-period time fixed effects, no house fixed effects) with property tax revenue per property in Congolese francs as the outcome (the amount paid, zero for non-payers).  Same sample as Panel A column (2); standard errors clustered by neighborhood.  The entry is the Local coefficient.\n",
+        "decimals": 3,
+        "sample_size": null
+      },
+      "i4r": {
+        "reproduced_value": 79.64,
+        "outcome": "matches",
+        "notes": "Team 48 RI row, Table 4 Panel B col 2, 79.64 (22.86); baseline-respondent subsample 92.149 (58.166).",
+        "reproduced_within_band": true
+      },
+      "rule": {
+        "mode": "independent",
+        "type_relative_tolerance": 0.02,
+        "se_multiplier": 1.0,
+        "se_band_relative": 0.28699146157709693,
+        "printed_half_unit": 0.0005
+      },
+      "row": {
+        "description": "revenue_local_table4_panelB_col2",
+        "claim_type": "coefficient",
+        "claimed": 79.64,
+        "reproduced": 92.175572,
+        "tolerance": 0.28699146157709693,
+        "rel_err": 0.15740296333500756,
+        "passed": true,
+        "passed_first_attempt": false,
+        "passed_first_scored": true,
+        "tolerance_source": "se_band"
+      },
+      "recomputed": {
+        "result_name": "revenue_local_table4_panelB_col2",
+        "reproduced": 92.175572,
+        "band_source": "se_band",
+        "band_relative": 0.28699146157709693,
+        "band_absolute": 22.855999999999998,
+        "abs_err": 12.535572000000002,
+        "rel_err": 0.15740296333500756,
+        "margin": 0.5484586979348969,
+        "passed": true,
+        "notes": ""
+      },
+      "agrees_with_row": true,
+      "verdict": "PASS"
+    },
+    {
+      "name": "revenue_local_house_fe_table4_panelB_col4",
+      "ground_truth": {
+        "value": 68.855,
+        "standard_error": 20.56,
+        "unit": "Congolese francs per property",
+        "claim_type": "coefficient",
+        "location": "Table 4, Panel B (Revenues), Local, column (4)",
+        "context": "Table 4, Panel B, column (4): revenue per property in Congolese francs on the Local indicator with stratum, campaign-period time and house (property value band) fixed effects.  Standard errors clustered by neighborhood.  The entry is the Local coefficient.\n",
+        "decimals": 3,
+        "sample_size": null
+      },
+      "i4r": {
+        "reproduced_value": 68.86,
+        "outcome": "matches",
+        "notes": "Team 48 RI row, Table 4 Panel B col 4, 68.86 (20.56); baseline-respondent subsample 86.269 (55.974).",
+        "reproduced_within_band": true
+      },
+      "rule": {
+        "mode": "independent",
+        "type_relative_tolerance": 0.02,
+        "se_multiplier": 1.0,
+        "se_band_relative": 0.29859850410282474,
+        "printed_half_unit": 0.0005
+      },
+      "row": {
+        "description": "revenue_local_house_fe_table4_panelB_col4",
+        "claim_type": "coefficient",
+        "claimed": 68.855,
+        "reproduced": 83.81948,
+        "tolerance": 0.29859850410282474,
+        "rel_err": 0.2173332365115096,
+        "passed": true,
+        "passed_first_attempt": false,
+        "passed_first_scored": true,
+        "tolerance_source": "se_band"
+      },
+      "recomputed": {
+        "result_name": "revenue_local_house_fe_table4_panelB_col4",
+        "reproduced": 83.81948,
+        "band_source": "se_band",
+        "band_relative": 0.29859850410282474,
+        "band_absolute": 20.56,
+        "abs_err": 14.964479999999995,
+        "rel_err": 0.2173332365115096,
+        "margin": 0.7278443579766535,
+        "passed": true,
+        "notes": ""
+      },
+      "agrees_with_row": true,
+      "verdict": "PASS"
+    },
+    {
+      "name": "n_obs_table4_col1",
+      "ground_truth": {
+        "value": 28872.0,
+        "standard_error": null,
+        "unit": "properties",
+        "claim_type": "count",
+        "location": "Table 4, Observations, column (1) (both panels)",
+        "context": "Number of observations in Table 4, column (1): every registered property in the Local and Central neighborhoods (no time fixed effects, so none is dropped).\n",
+        "decimals": 0,
+        "sample_size": null
+      },
+      "i4r": null,
+      "rule": {
+        "mode": "independent",
+        "type_relative_tolerance": 0.05,
+        "se_multiplier": 1.0,
+        "se_band_relative": null,
+        "printed_half_unit": 0.5
+      },
+      "row": {
+        "description": "n_obs_table4_col1",
+        "claim_type": "count",
+        "claimed": 28872.0,
+        "reproduced": 29396.0,
+        "tolerance": 0.05,
+        "rel_err": 0.018149071765031864,
+        "passed": true,
+        "passed_first_attempt": false,
+        "passed_first_scored": true,
+        "tolerance_source": "relative"
+      },
+      "recomputed": {
+        "result_name": "n_obs_table4_col1",
+        "reproduced": 29396.0,
+        "band_source": "relative",
+        "band_relative": 0.05,
+        "band_absolute": 1443.6000000000001,
+        "abs_err": 524.0,
+        "rel_err": 0.018149071765031864,
+        "margin": 0.36298143530063726,
+        "passed": true,
+        "notes": ""
+      },
+      "agrees_with_row": true,
+      "verdict": "PASS"
+    },
+    {
+      "name": "n_obs_table4_col2",
+      "ground_truth": {
+        "value": 27764.0,
+        "standard_error": null,
+        "unit": "properties",
+        "claim_type": "count",
+        "location": "Table 4, Observations, column (2) (both panels; column 4 has the same count)",
+        "context": "Number of observations in Table 4, column (2) (and column 4): registered Local and Central properties whose neighborhood falls within the campaign periods that define the time fixed effects.\n",
+        "decimals": 0,
+        "sample_size": null
+      },
+      "i4r": null,
+      "rule": {
+        "mode": "independent",
+        "type_relative_tolerance": 0.05,
+        "se_multiplier": 1.0,
+        "se_band_relative": null,
+        "printed_half_unit": 0.5
+      },
+      "row": {
+        "description": "n_obs_table4_col2",
+        "claim_type": "count",
+        "claimed": 27764.0,
+        "reproduced": 27913.0,
+        "tolerance": 0.05,
+        "rel_err": 0.0053666618642846855,
+        "passed": true,
+        "passed_first_attempt": false,
+        "passed_first_scored": true,
+        "tolerance_source": "relative"
+      },
+      "recomputed": {
+        "result_name": "n_obs_table4_col2",
+        "reproduced": 27913.0,
+        "band_source": "relative",
+        "band_relative": 0.05,
+        "band_absolute": 1388.2,
+        "abs_err": 149.0,
+        "rel_err": 0.0053666618642846855,
+        "margin": 0.1073332372856937,
+        "passed": true,
+        "notes": ""
+      },
+      "agrees_with_row": true,
+      "verdict": "PASS"
+    },
+    {
+      "name": "paid_bribe_endline_local_table5_panelB",
+      "ground_truth": {
+        "value": 0.018,
+        "standard_error": 0.009,
+        "unit": "share of respondents reporting a bribe payment (0-1)",
+        "claim_type": "coefficient",
+        "location": "Table 5, Panel B (Bribes), Paid bribe (endline), beta-hat and SE",
+        "context": "Table 5 (\"Local versus Central: Mismanagement and Views of Government, Chiefs, and Taxes\"), Panel B, row \"Paid bribe (endline)\".  OLS of equation (1) comparing Local and Central, with a self-reported indicator for having paid a bribe (\"transport\") to tax collectors, measured in the endline household survey (baseline respondents tracked in 2019), as the outcome, on the Local indicator and randomization stratum fixed effects; no time fixed effects and no house type fixed effects (endline outcome). Standard errors clustered by neighborhood.  The entry is the Local coefficient.\n",
+        "decimals": 3,
+        "sample_size": null
+      },
+      "i4r": {
+        "reproduced_value": 0.018,
+        "outcome": "matches",
+        "notes": "Team 48 RI row, Table 5 Paid bribe (endline), 0.018 (0.009).",
+        "reproduced_within_band": true
+      },
+      "rule": {
+        "mode": "independent",
+        "type_relative_tolerance": 0.02,
+        "se_multiplier": 1.0,
+        "se_band_relative": 0.5,
+        "printed_half_unit": 0.0005
+      },
+      "row": {
+        "description": "paid_bribe_endline_local_table5_panelB",
+        "claim_type": "coefficient",
+        "claimed": 0.018,
+        "reproduced": 0.0136,
+        "tolerance": 0.5,
+        "rel_err": 0.24444444444444444,
+        "passed": true,
+        "passed_first_attempt": false,
+        "passed_first_scored": true,
+        "tolerance_source": "se_band"
+      },
+      "recomputed": {
+        "result_name": "paid_bribe_endline_local_table5_panelB",
+        "reproduced": 0.0136,
+        "band_source": "se_band",
+        "band_relative": 0.5,
+        "band_absolute": 0.009,
+        "abs_err": 0.004399999999999999,
+        "rel_err": 0.24444444444444444,
+        "margin": 0.4888888888888889,
+        "passed": true,
+        "notes": ""
+      },
+      "agrees_with_row": true,
+      "verdict": "PASS"
+    },
+    {
+      "name": "visited_by_collector_local_table6_col1",
+      "ground_truth": {
+        "value": -0.009,
+        "standard_error": 0.026,
+        "unit": "share of properties visited (0-1)",
+        "claim_type": "coefficient",
+        "location": "Table 6, Local, column (1) Visited by collector",
+        "context": "Table 6 (\"Local versus Central: Tax Visits\"), column (1).  OLS of equation (1) with an indicator that the household reported (in the midline survey) any tax visit by collectors after the registration visit as the outcome, on the Local indicator with house type, randomization stratum and campaign-period time fixed effects; Local and Central properties.  Standard errors clustered by neighborhood.  The entry is the Local coefficient.\n",
+        "decimals": 3,
+        "sample_size": null
+      },
+      "i4r": {
+        "reproduced_value": -0.00901,
+        "outcome": "matches",
+        "notes": "Team 48 RI row, Table 6 col 1, -0.00901 (0.0258); subsample -0.054 (0.035), with controls -0.056 (0.034).",
+        "reproduced_within_band": false
+      },
+      "rule": {
+        "mode": "independent",
+        "type_relative_tolerance": 0.02,
+        "se_multiplier": 1.0,
+        "se_band_relative": 2.888888888888889,
+        "printed_half_unit": 0.0005
+      },
+      "row": {
+        "description": "visited_by_collector_local_table6_col1",
+        "claim_type": "coefficient",
+        "claimed": -0.009,
+        "reproduced": 0.02886,
+        "tolerance": 2.888888888888889,
+        "rel_err": 4.206666666666667,
+        "passed": false,
+        "passed_first_attempt": false,
+        "passed_first_scored": false,
+        "tolerance_source": "se_band"
+      },
+      "recomputed": {
+        "result_name": "visited_by_collector_local_table6_col1",
+        "reproduced": 0.02886,
+        "band_source": "se_band",
+        "band_relative": 2.888888888888889,
+        "band_absolute": 0.026,
+        "abs_err": 0.03786,
+        "rel_err": 4.206666666666667,
+        "margin": 1.4561538461538461,
+        "passed": false,
+        "notes": "Outside tolerance: reproduced=0.02886 vs claimed=-0.009 (relative error 420.67%, tolerance 288.89%, the ±1·SE band with SE=0.026)."
+      },
+      "agrees_with_row": true,
+      "verdict": "FAIL"
+    },
+    {
+      "name": "compliance_cli_table7_col1",
+      "ground_truth": {
+        "value": 0.024,
+        "standard_error": 0.009,
+        "unit": "share of properties paying the property tax (0-1)",
+        "claim_type": "coefficient",
+        "location": "Table 7, CLI, column (1) Compliance",
+        "context": "Table 7, column (1): the CLI coefficient (state collectors who consulted the chief on each owner's ability and willingness to pay before tax visits; Central excluded) in an OLS of the property tax payment indicator with house type, stratum and time fixed effects, the time fixed effects two-month campaign periods from the midpoint of the CLI and Central first days to the midpoint of their last days.  Sample: registered CLI and Central properties.  SEs clustered by neighborhood.\n",
+        "decimals": 3,
+        "sample_size": null
+      },
+      "i4r": {
+        "reproduced_value": 0.0242,
+        "outcome": "matches",
+        "notes": "Team 48 RI row, Table 7 col 1, 0.0242 (0.00914); subsample 0.029 (0.015).",
+        "reproduced_within_band": true
+      },
+      "rule": {
+        "mode": "independent",
+        "type_relative_tolerance": 0.02,
+        "se_multiplier": 1.0,
+        "se_band_relative": 0.37499999999999994,
+        "printed_half_unit": 0.0005
+      },
+      "row": {
+        "description": "compliance_cli_table7_col1",
+        "claim_type": "coefficient",
+        "claimed": 0.024,
+        "reproduced": 0.021708,
+        "tolerance": 0.37499999999999994,
+        "rel_err": 0.09549999999999995,
+        "passed": true,
+        "passed_first_attempt": false,
+        "passed_first_scored": true,
+        "tolerance_source": "se_band"
+      },
+      "recomputed": {
+        "result_name": "compliance_cli_table7_col1",
+        "reproduced": 0.021708,
+        "band_source": "se_band",
+        "band_relative": 0.37499999999999994,
+        "band_absolute": 0.009,
+        "abs_err": 0.002291999999999999,
+        "rel_err": 0.09549999999999995,
+        "margin": 0.25466666666666654,
+        "passed": true,
+        "notes": ""
+      },
+      "agrees_with_row": true,
+      "verdict": "PASS"
+    },
+    {
+      "name": "revenue_cli_table7_col2",
+      "ground_truth": {
+        "value": 46.566,
+        "standard_error": 21.2,
+        "unit": "Congolese francs per property",
+        "claim_type": "coefficient",
+        "location": "Table 7, CLI, column (2) Revenues",
+        "context": "Table 7, column (2): the column (1) specification with property tax revenue per property in Congolese francs as the outcome.  CLI and Central properties; standard errors clustered by neighborhood.  The entry is the CLI coefficient.\n",
+        "decimals": 3,
+        "sample_size": null
+      },
+      "i4r": {
+        "reproduced_value": 46.57,
+        "outcome": "matches",
+        "notes": "Team 48 RI row, Table 7 col 2, 46.57 (21.20) (its o_coeff is coded 46.556, a slip for 46.566); subsample 39.036 (33.850).",
+        "reproduced_within_band": true
+      },
+      "rule": {
+        "mode": "independent",
+        "type_relative_tolerance": 0.02,
+        "se_multiplier": 1.0,
+        "se_band_relative": 0.455267791951209,
+        "printed_half_unit": 0.0005
+      },
+      "row": {
+        "description": "revenue_cli_table7_col2",
+        "claim_type": "coefficient",
+        "claimed": 46.566,
+        "reproduced": 34.497558,
+        "tolerance": 0.455267791951209,
+        "rel_err": 0.2591685349826054,
+        "passed": true,
+        "passed_first_attempt": false,
+        "passed_first_scored": true,
+        "tolerance_source": "se_band"
+      },
+      "recomputed": {
+        "result_name": "revenue_cli_table7_col2",
+        "reproduced": 34.497558,
+        "band_source": "se_band",
+        "band_relative": 0.455267791951209,
+        "band_absolute": 21.2,
+        "abs_err": 12.068442000000005,
+        "rel_err": 0.2591685349826054,
+        "margin": 0.5692661320754719,
+        "passed": true,
+        "notes": ""
+      },
+      "agrees_with_row": true,
+      "verdict": "PASS"
+    },
+    {
+      "name": "compliance_ease_of_payment_cli_table8_panelA_col2",
+      "ground_truth": {
+        "value": 0.056,
+        "standard_error": 0.007,
+        "unit": "change in the probability of payment per point of the chief's ease-of-payment rating",
+        "claim_type": "coefficient",
+        "location": "Table 8, Panel A (Ease of payment), Ease of payment, column (2) Compliance",
+        "context": "Table 8 (\"The Value of Chiefs' Information\"), Panel A, column (2). Within the CLI arm only, OLS of the property tax payment indicator on the chief's rating of the owner's ability to pay (ease of payment, on the three-point scale recorded on the property register during the chief consultation), with house type and randomization stratum fixed effects and no further controls.  Standard errors clustered by neighborhood.  The entry is the Ease of payment coefficient.\n",
+        "decimals": 3,
+        "sample_size": null
+      },
+      "i4r": {
+        "reproduced_value": 0.0561,
+        "outcome": "matches",
+        "notes": "Team 48 RI row, Table 8 Panel A col 2, 0.0561 (0.0071); subsample 0.071 (0.017), ordered probit not run on this column.",
+        "reproduced_within_band": true
+      },
+      "rule": {
+        "mode": "independent",
+        "type_relative_tolerance": 0.02,
+        "se_multiplier": 1.0,
+        "se_band_relative": 0.125,
+        "printed_half_unit": 0.0005
+      },
+      "row": {
+        "description": "compliance_ease_of_payment_cli_table8_panelA_col2",
+        "claim_type": "coefficient",
+        "claimed": 0.056,
+        "reproduced": 0.05928,
+        "tolerance": 0.125,
+        "rel_err": 0.05857142857142854,
+        "passed": true,
+        "passed_first_attempt": false,
+        "passed_first_scored": true,
+        "tolerance_source": "se_band"
+      },
+      "recomputed": {
+        "result_name": "compliance_ease_of_payment_cli_table8_panelA_col2",
+        "reproduced": 0.05928,
+        "band_source": "se_band",
+        "band_relative": 0.125,
+        "band_absolute": 0.007,
+        "abs_err": 0.003279999999999998,
+        "rel_err": 0.05857142857142854,
+        "margin": 0.4685714285714283,
+        "passed": true,
+        "notes": ""
+      },
+      "agrees_with_row": true,
+      "verdict": "PASS"
+    }
+  ],
+  "row_only_claims": [],
+  "summary": {
+    "n_claims": 13,
+    "row_passed": 12,
+    "recomputed_passed": 12,
+    "disagreements": []
+  },
+  "cell": {
+    "entry_id": "balan-2022-local-elites-state-capacity",
+    "mode": "independent",
+    "reproducer": "claude-code",
+    "label": "claude-code",
+    "model": null,
+    "oracle": false,
+    "run": "2026-11-10-b",
+    "results_file": "claude-code-run2-1paper-balan-all-modes-2026-11-10.json",
+    "also_in": [],
+    "artifacts_dir": "benchmark/results/artifacts/balan-2022-local-elites-state-capacity/independent/claude-code/20261110T171752Z",
+    "run_dir": "benchmark/reproductions/balan-2022-local-elites-state-capacity/independent/2026-11-10-b",
+    "date": "2026-11-10T17:17:00Z",
+    "data_access": "manual",
+    "retally_ran": true,
+    "error": null,
+    "n_claims": 13,
+    "final": 12,
+    "first_scored": 12,
+    "first_scored_index": 7,
+    "first_attempt": 0,
+    "n_refinements": 1,
+    "n_error_refinements": 1,
+    "n_claim_refinements": 0,
+    "n_executions": 11,
+    "n_files_stripped": 58,
+    "agrees_with_i4r": false,
+    "deviations_manifest": [
+      "Property sample built from registration_noPII: rows in the 356 study neighborhoods (drops logistics pilot), villas (house==3) dropped, deduplicated on tax ID (compound1) keeping the earliest record. This gives 29,396 Local+Central properties vs 28,872 in the paper; the authors' further exclusions could not be identified from the paper text.",
+      "De facto treatment: a7 654 (assigned CXL) recoded to Local (footnote 40); identified because all its endline respondents carry treatment==Local and its registration was done by the chief only.",
+      "Compliance = tax ID appears in tax_payments_noPII; revenue = sum of amountCF per tax ID. 8 payment records with missing or implausible amounts (two >1.4 million CF, one 50 CF) were set to the property's official liability (3,000 CF low band, 13,200 CF high band).",
+      "Time FE: property-level registration date (form start time, since `today` is missing for one form version). Window from the midpoint of the two arms' first registration days to the midpoint of their last days; two-month periods from the window start; properties outside the window dropped. Reproduces the 221 -> 213 cluster drop for Local vs Central, but leaves 157 clusters for CLI vs Central (paper 165).",
+      "Table 6 visited: midline survey (pilot==0, tot_complete==1), visited after registration = reported visits >= 2 (visits include the registration visit), 0 if household reported no visit; merged to the register by tax ID for house type and period; Local vs Central window sample.",
+      "Table 5 endline bribe: endline_round1 `bribe` (paid 'transport' to collectors), coded 0 for respondents not visited by collectors (visited==0 or 'yes but nobody home'), since the question was only asked of visited households; N=1,222 vs 1,169 in the paper.",
+      "Table 8: chief_consultations pay_ease (0-2, 'don't know' dropped) merged to CLI properties by tax ID; N=8,624 vs 8,135."
+    ],
+    "deviations_stdout": [],
+    "notes": "Independent reconstruction from the paper text and data files only (no author scripts opened; README.pdf and output.tex in the mount were read as documentation: output.tex has no appendix text beyond table notes). Exploratory runs attempts 1-7 inspected the data; attempt-8 was the first estimation run; attempts 9-10 were exploratory checks of payment-record filters and period-FE constructions. After comparing attempt-8 with the claims I did not change the script, because the alternatives were ad hoc and none matched every claim; the final run is the same script rerun at the top level, with identical output. Main gaps: Local-vs-Central compliance effect with time FE is 0.039 vs 0.032 (sensitive to how periods are binned: 0.022-0.043 across variants in attempt-10), revenue 92 vs 80, observation counts about 1.8% high, the CLI window drops more Central neighborhoods than the paper, and the Table 6 visited effect is +0.029 vs -0.009. No run hung; all sandbox runs finished in under 20 s.",
+    "files_read_outside_mount": [],
+    "paper_text": "paper.txt",
+    "complete": true,
+    "missing": []
+  }
+}

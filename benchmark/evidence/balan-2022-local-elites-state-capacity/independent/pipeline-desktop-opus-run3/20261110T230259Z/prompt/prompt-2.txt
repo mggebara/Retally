@@ -1,0 +1,439 @@
+You are fixing R code that was generated to reproduce results from an econometrics paper.
+
+## Original Code
+```r
+suppressPackageStartupMessages({
+  library(haven)
+  library(dplyr)
+  library(fixest)
+})
+set.seed(42)
+
+root <- "<repo>/.cache/datasets/balan_2022_local_elites_state_capacity.script-free/Replication Materials - Updated October 2025/Data/01_base"
+adm <- file.path(root, "admin_data")
+svy <- file.path(root, "survey_data")
+
+msg <- function(...) cat(paste(..., collapse = " "), "\n", file = stderr())
+rd <- function(f) { d <- haven::read_dta(f); names(d) <- tolower(names(d)); d }
+pick <- function(nm, cands) { x <- intersect(cands, nm); if (length(x)) x[1] else NA_character_ }
+num <- function(x) suppressWarnings(as.numeric(haven::zap_labels(x)))
+
+res <- list()
+
+# ---------------- helpers ----------------
+arm_of <- function(x) {
+  if (inherits(x, "haven_labelled")) {
+    lab <- as.character(haven::as_factor(x, levels = "labels"))
+  } else lab <- as.character(x)
+  l <- tolower(lab)
+  out <- rep(NA_character_, length(l))
+  out[grepl("control|declar|pure", l)] <- "Control"
+  out[grepl("central", l)] <- "Central"
+  out[grepl("local", l)] <- "Local"
+  out[grepl("cxl|central x local|central_x_local|central-x-local|x local| x |both", l)] <- "CXL"
+  out[grepl("info|cli", l)] <- "CLI"
+  out
+}
+
+arm_by_count <- function(code) {
+  # fallback when treatment codes are unlabelled: map by neighborhood counts
+  v <- num(code)
+  tb <- sort(table(v))
+  out <- rep(NA_character_, length(v))
+  if (length(tb) < 4) return(out)
+  vals <- as.numeric(names(tb))
+  cnt <- as.numeric(tb)
+  m <- c()
+  m[as.character(vals[which.min(abs(cnt - 5))])] <- "Control"
+  m[as.character(vals[which.min(abs(cnt - 50))])] <- "CXL"
+  m[as.character(vals[which.min(abs(cnt - 80))])] <- "CLI"
+  big <- vals[order(-cnt)][1:2]
+  big <- sort(big)
+  m[as.character(big[1])] <- "Central"
+  m[as.character(big[2])] <- "Local"
+  out <- unname(m[as.character(v)])
+  out
+}
+
+to_bin <- function(x) {
+  lab <- NULL
+  if (inherits(x, "haven_labelled")) lab <- attr(x, "labels")
+  v <- num(x)
+  v[!is.na(v) & v < 0] <- NA
+  if (!is.null(lab)) {
+    nm <- tolower(names(lab))
+    yes <- lab[grepl("^yes|^oui", nm)]
+    no <- lab[grepl("^no$|^no |^no,|^non", nm)]
+    if (length(yes) && length(no)) {
+      return(ifelse(v %in% yes, 1, ifelse(v %in% no, 0, NA)))
+    }
+  }
+  u <- unique(na.omit(v))
+  if (all(u %in% c(0, 1))) return(v)
+  if (all(u %in% c(1, 2))) return(ifelse(is.na(v), NA, ifelse(v == 1, 1, 0)))
+  ifelse(is.na(v), NA, as.numeric(v > 0))
+}
+
+to_date <- function(x) {
+  if (inherits(x, "Date")) return(x)
+  if (inherits(x, "POSIXt")) return(as.Date(x))
+  if (is.character(x)) {
+    d <- suppressWarnings(as.Date(x))
+    if (all(is.na(d))) d <- suppressWarnings(as.Date(x, format = "%d%b%Y"))
+    return(d)
+  }
+  v <- num(x)
+  if (all(is.na(v))) return(as.Date(v, origin = "1960-01-01"))
+  if (median(v, na.rm = TRUE) > 1e8) return(as.Date(as.POSIXct(v / 1000, origin = "1960-01-01", tz = "UTC")))
+  as.Date(v, origin = "1960-01-01")
+}
+
+find_id <- function(a, b) {
+  c1 <- c("compound1", "compound_code", "compound", "code", "tax_id", "taxid", "property_id", "house_id", "id")
+  x <- intersect(intersect(c1, names(a)), names(b))
+  if (length(x)) return(x[1])
+  cm <- intersect(names(a), names(b))
+  cm <- cm[grepl("compound|code|^id", cm)]
+  if (length(cm)) cm[1] else NA_character_
+}
+
+# ---------------- neighborhood-level data ----------------
+nbp <- rd(file.path(adm, "tax_payments_neighborhoods.dta"))
+ra <- rd(file.path(adm, "randomization_assignment.dta"))
+msg("nb names:", names(nbp))
+msg("ra names:", names(ra))
+
+nbid_nb <- pick(names(nbp), c("a7", "polygon", "grid_nm"))
+nbid_ra <- pick(names(ra), c("a7", "polygon", "grid_nm"))
+
+nb <- data.frame(a7 = as.character(num(nbp[[nbid_nb]])), stringsAsFactors = FALSE)
+if (all(is.na(nb$a7))) nb$a7 <- as.character(nbp[[nbid_nb]])
+nb$stratum <- if ("stratum" %in% names(nbp)) num(nbp$stratum) else NA
+
+arm <- rep(NA_character_, nrow(nb))
+if ("program" %in% names(nbp)) {
+  arm <- arm_of(nbp$program)
+  if (sum(!is.na(arm)) < 300) arm <- arm_by_count(nbp$program)
+}
+if (sum(!is.na(arm)) < 300 && !is.na(nbid_ra)) {
+  ra_id <- as.character(num(ra[[nbid_ra]]))
+  if (all(is.na(ra_id))) ra_id <- as.character(ra[[nbid_ra]])
+  tcol <- pick(names(ra), c("treatment", "tmt"))
+  a2 <- arm_of(ra[[tcol]])
+  if (sum(!is.na(a2)) < 300) a2 <- arm_by_count(ra[[tcol]])
+  arm <- a2[match(nb$a7, ra_id)]
+  if (all(is.na(nb$stratum))) nb$stratum <- num(ra$stratum)[match(nb$a7, ra_id)]
+}
+nb$arm <- arm
+msg("nb arm table:"); msg(capture.output(print(table(nb$arm, useNA = "ifany"))))
+
+nb$start <- as.Date(NA)
+if ("program_start" %in% names(nbp)) nb$start <- to_date(nbp$program_start)
+
+# ---------------- registration / property register ----------------
+reg <- rd(file.path(adm, "registration_noPII.dta"))
+msg("reg names:", names(reg))
+rid <- pick(names(reg), c("a7", "polygon", "grid_nm"))
+reg$a7 <- as.character(num(reg[[rid]]))
+if (all(is.na(reg$a7))) reg$a7 <- as.character(reg[[rid]])
+if ("pilot" %in% names(reg)) reg <- reg[is.na(num(reg$pilot)) | num(reg$pilot) != 1, ]
+reg <- reg[reg$a7 %in% nb$a7, ]
+
+# house type; drop villas
+reg$house_n <- num(reg$house)
+msg("house table:"); msg(capture.output(print(table(reg$house_n, useNA = "ifany"))))
+if (inherits(reg$house, "haven_labelled")) {
+  hl <- attr(reg$house, "labels")
+  vil <- hl[grepl("villa", tolower(names(hl)))]
+  if (length(vil)) reg <- reg[!(reg$house_n %in% vil), ]
+}
+th <- table(reg$house_n)
+if (length(th) > 2) {
+  small <- as.numeric(names(th)[th < 1000])
+  reg <- reg[!(reg$house_n %in% small), ]
+}
+
+reg$exempt_n <- if ("exempt" %in% names(reg)) to_bin(reg$exempt) else 0
+
+# de facto treatment
+reg$arm <- nb$arm[match(reg$a7, nb$a7)]
+tc <- pick(names(reg), c("tmt", "treatment"))
+if (!is.na(tc)) {
+  a3 <- arm_of(reg[[tc]])
+  if (mean(!is.na(a3)) > 0.9) reg$arm <- a3
+}
+reg$stratum <- nb$stratum[match(reg$a7, nb$a7)]
+
+# neighborhood start date fallback from register dates
+if (all(is.na(nb$start))) {
+  dc <- pick(names(reg), c("today", "date", "time", "starttime", "submissiondate"))
+  if (!is.na(dc)) {
+    rd8 <- to_date(reg[[dc]])
+    tmp <- tapply(as.numeric(rd8), reg$a7, function(z) suppressWarnings(min(z, na.rm = TRUE)))
+    tmp[!is.finite(tmp)] <- NA
+    nb$start <- as.Date(as.numeric(tmp[nb$a7]), origin = "1970-01-01")
+  }
+}
+
+# ---------------- payments ----------------
+reg$taxes_paid <- NA_real_
+reg$revenue <- NA_real_
+done <- FALSE
+if ("taxes_paid" %in% names(reg)) {
+  reg$taxes_paid <- to_bin(reg$taxes_paid)
+  ac <- pick(names(reg), c("taxes_paid_amt", "amt_paid", "amount_paid"))
+  if (!is.na(ac)) { a <- num(reg[[ac]]); a[is.na(a)] <- 0; reg$revenue <- a * reg$taxes_paid }
+  done <- TRUE
+}
+if (!done) {
+  pay <- tryCatch(rd(file.path(adm, "tax_payments_noPII.dta")), error = function(e) NULL)
+  if (!is.null(pay)) {
+    msg("pay names:", names(pay))
+    pid <- find_id(reg, pay)
+    msg("payment id:", pid)
+    if (!is.na(pid)) {
+      amc <- pick(names(pay), c("amount", "amt_paid", "amount_paid", "paid_amount", "amt", "montant"))
+      pay$k <- as.character(pay[[pid]])
+      pay$amt <- if (!is.na(amc)) num(pay[[amc]]) else NA
+      pa <- pay %>% filter(!is.na(k) & k != "") %>% group_by(k) %>%
+        summarise(amt = sum(amt, na.rm = TRUE), n = n(), .groups = "drop")
+      key <- as.character(reg[[pid]])
+      m <- match(key, pa$k)
+      reg$taxes_paid <- ifelse(is.na(m), 0, 1)
+      am <- pa$amt[m]
+      if (all(is.na(pa$amt)) || all(pa$amt == 0)) {
+        rc <- pick(names(reg), c("rate", "rate_assigned"))
+        am <- ifelse(is.na(m), 0, num(reg[[rc]]))
+      }
+      am[is.na(m)] <- 0
+      reg$revenue <- am
+      done <- sum(reg$taxes_paid) > 100
+    }
+  }
+}
+if (!done && "amt_paid" %in% names(reg)) {
+  a <- num(reg$amt_paid); a[is.na(a)] <- 0
+  reg$taxes_paid <- as.numeric(a > 0)
+  reg$revenue <- a
+}
+msg("mean compliance:", mean(reg$taxes_paid, na.rm = TRUE))
+
+# ---------------- time periods ----------------
+make_period <- function(armA, armB) {
+  s <- nb[nb$arm %in% c(armA, armB) & !is.na(nb$start), ]
+  fa <- min(s$start[s$arm == armA]); fb <- min(s$start[s$arm == armB])
+  la <- max(s$start[s$arm == armA]); lb <- max(s$start[s$arm == armB])
+  st <- fa + as.numeric(fb - fa) / 2
+  en <- la + as.numeric(lb - la) / 2
+  st <- as.Date(floor(as.numeric(st)), origin = "1970-01-01")
+  en <- as.Date(ceiling(as.numeric(en)), origin = "1970-01-01")
+  br <- seq(st, en + 70, by = "2 months")
+  p <- findInterval(as.numeric(nb$start), as.numeric(br))
+  p[is.na(nb$start) | nb$start < st | nb$start > en] <- NA
+  msg("periods", armA, armB, as.character(st), as.character(en)); msg(capture.output(print(table(p[nb$arm %in% c(armA, armB)], useNA = "ifany"))))
+  setNames(p, nb$a7)
+}
+
+per_lc <- tryCatch(make_period("Local", "Central"), error = function(e) { msg("period fail", conditionMessage(e)); NULL })
+per_cli <- tryCatch(make_period("CLI", "Central"), error = function(e) { msg("period fail", conditionMessage(e)); NULL })
+
+run <- function(fml, data, cf) {
+  tryCatch({
+    m <- feols(as.formula(fml), data = data, cluster = ~a7, warn = FALSE, notes = FALSE)
+    msg(fml, "coef", coef(m)[cf], "se", sqrt(diag(vcov(m)))[cf], "N", nobs(m))
+    m
+  }, error = function(e) { msg("FAIL", fml, conditionMessage(e)); NULL })
+}
+getc <- function(m, cf) if (is.null(m)) NA else unname(coef(m)[cf])
+
+# ---------------- Table 4 ----------------
+lc <- reg[reg$arm %in% c("Local", "Central"), ]
+lc$local <- as.numeric(lc$arm == "Local")
+lc$period <- if (!is.null(per_lc)) unname(per_lc[lc$a7]) else NA
+lc$house_n[is.na(lc$house_n)] <- -1
+msg("N Local+Central:", nrow(lc))
+
+m1 <- run("taxes_paid ~ local | stratum", lc, "local")
+res$compliance_local_table4_panelA_col1 <- getc(m1, "local")
+if (!is.null(m1)) res$n_obs_table4_col1 <- nobs(m1)
+
+lc2 <- lc[!is.na(lc$period), ]
+m2 <- run("taxes_paid ~ local | stratum + period", lc2, "local")
+res$compliance_local_table4_panelA_col2 <- getc(m2, "local")
+if (!is.null(m2)) res$n_obs_table4_col2 <- nobs(m2)
+
+m4 <- run("taxes_paid ~ local | stratum + period + house_n", lc2, "local")
+res$compliance_local_house_fe_table4_panelA_col4 <- getc(m4, "local")
+
+lc5 <- lc2[is.na(lc2$exempt_n) | lc2$exempt_n != 1, ]
+m5 <- run("taxes_paid ~ local | stratum + period + house_n", lc5, "local")
+res$compliance_local_exempt_excluded_table4_panelA_col5 <- getc(m5, "local")
+
+r2 <- run("revenue ~ local | stratum + period", lc2, "local")
+res$revenue_local_table4_panelB_col2 <- getc(r2, "local")
+r4 <- run("revenue ~ local | stratum + period + house_n", lc2, "local")
+res$revenue_local_house_fe_table4_panelB_col4 <- getc(r4, "local")
+
+# ---------------- Table 7: CLI vs Central ----------------
+cc <- reg[reg$arm %in% c("CLI", "Central"), ]
+cc$cli <- as.numeric(cc$arm == "CLI")
+cc$period <- if (!is.null(per_cli)) unname(per_cli[cc$a7]) else NA
+cc$house_n[is.na(cc$house_n)] <- -1
+cc <- cc[!is.na(cc$period), ]
+t7a <- run("taxes_paid ~ cli | stratum + period + house_n", cc, "cli")
+res$compliance_cli_table7_col1 <- getc(t7a, "cli")
+t7b <- run("revenue ~ cli | stratum + period + house_n", cc, "cli")
+res$revenue_cli_table7_col2 <- getc(t7b, "cli")
+
+# ---------------- Table 5: endline bribe ----------------
+tryCatch({
+  el <- rd(file.path(svy, "endline_round1_noPII.dta"))
+  msg("endline names (first 200):", head(names(el), 200))
+  eid <- pick(names(el), c("a7", "polygon", "grid_nm"))
+  el$a7 <- as.character(num(el[[eid]]))
+  cpl <- pick(names(el), c("tot_complete", "complete"))
+  if (!is.na(cpl)) { v <- num(el[[cpl]]); if (any(v == 1, na.rm = TRUE)) el <- el[!is.na(v) & v == 1, ] }
+  el$arm <- nb$arm[match(el$a7, nb$a7)]
+  el$stratum <- nb$stratum[match(el$a7, nb$a7)]
+  bc <- pick(names(el), c("paid_bribe", "bribe", "transport", "bribe_self"))
+  msg("bribe var:", bc); msg(capture.output(print(table(num(el[[bc]]), useNA = "ifany"))))
+  el$bribe_b <- to_bin(el[[bc]])
+  e2 <- el[el$arm %in% c("Local", "Central"), ]
+  e2$local <- as.numeric(e2$arm == "Local")
+  mb <- run("bribe_b ~ local | stratum", e2, "local")
+  res$paid_bribe_endline_local_table5_panelB <<- getc(mb, "local")
+}, error = function(e) msg("endline fail", conditionMessage(e)))
+
+# ---------------- Table 6: midline visits ----------------
+tryCatch({
+  ml <- rd(file.path(svy, "midline_noPII.dta"))
+  msg("midline names:", names(ml))
+  cpl <- pick(names(ml), c("tot_complete", "complete"))
+  if (!is.na(cpl)) { v <- num(ml[[cpl]]); if (any(v == 1, na.rm = TRUE)) ml <- ml[!is.na(v) & v == 1, ] }
+  mid <- find_id(ml, reg)
+  if (!is.na(mid)) {
+    k <- match(as.character(ml[[mid]]), as.character(reg[[mid]]))
+    ml$house_n <- reg$house_n[k]
+    ml$a7r <- reg$a7[k]
+  } else { ml$house_n <- NA; ml$a7r <- NA }
+  meid <- pick(names(ml), c("a7", "polygon", "grid_nm"))
+  ml$a7 <- if (!is.na(meid)) as.character(num(ml[[meid]])) else ml$a7r
+  ml$a7[is.na(ml$a7)] <- ml$a7r[is.na(ml$a7)]
+  if (all(is.na(ml$house_n)) && "house" %in% names(ml)) ml$house_n <- num(ml$house)
+  ml$house_n[is.na(ml$house_n)] <- -1
+  ml$arm <- nb$arm[match(ml$a7, nb$a7)]
+  ml$stratum <- nb$stratum[match(ml$a7, nb$a7)]
+  ml$period <- if (!is.null(per_lc)) unname(per_lc[ml$a7]) else NA
+  vc <- pick(names(ml), c("visited", "visit"))
+  msg("visited table:"); msg(capture.output(print(table(num(ml[[vc]]), useNA = "ifany"))))
+  ml$visited_b <- to_bin(ml[[vc]])
+  m6 <- ml[ml$arm %in% c("Local", "Central") & !is.na(ml$period), ]
+  m6$local <- as.numeric(m6$arm == "Local")
+  mv <- run("visited_b ~ local | house_n + stratum + period", m6, "local")
+  res$visited_by_collector_local_table6_col1 <<- getc(mv, "local")
+}, error = function(e) msg("midline fail", conditionMessage(e)))
+
+# ---------------- Table 8: chief ease-of-payment rating (CLI only) ----------------
+tryCatch({
+  ch <- rd(file.path(svy, "chief_consultations.dta"))
+  msg("chief consult names:", names(ch))
+  cand <- names(ch)[grepl("ease|easy|facil|abil|capac", names(ch))]
+  msg("ease candidates:", cand)
+  ec <- cand[1]
+  cid <- find_id(ch, reg)
+  msg("chief id:", cid, "ease var:", ec)
+  x <- ch[[ec]]
+  v <- num(x); v[!is.na(v) & v < 0] <- NA
+  if (inherits(x, "haven_labelled")) {
+    lab <- attr(x, "labels"); lab <- lab[lab >= 0]
+    if (length(lab)) {
+      top <- tolower(names(lab)[which.max(lab)])
+      if (grepl("diffic|hard|unable|not|low|cannot|never", top)) v <- max(lab) + min(lab) - v
+    }
+  }
+  ch$ease <- v
+  chs <- ch %>% mutate(k = as.character(.data[[cid]])) %>% filter(!is.na(k)) %>%
+    group_by(k) %>% summarise(ease = mean(ease, na.rm = TRUE), .groups = "drop")
+  cl <- reg[reg$arm %in% "CLI", ]
+  cl$ease <- chs$ease[match(as.character(cl[[cid]]), chs$k)]
+  cl$house_n[is.na(cl$house_n)] <- -1
+  m8 <- run("taxes_paid ~ ease | house_n + stratum", cl, "ease")
+  res$compliance_ease_of_payment_cli_table8_panelA_col2 <<- getc(m8, "ease")
+}, error = function(e) msg("chief fail", conditionMessage(e)))
+
+# ---------------- output ----------------
+for (nm in names(res)) {
+  v <- res[[nm]]
+  if (length(v) == 1 && !is.na(v)) cat(sprintf("RESULT:%s=%s\n", nm, format(v, digits = 8)))
+}
+```
+
+## Error / Unexpected Output
+```
+nb names: a7 nb names: paid nb names: amount nb names: grid_nm nb names: hh_final nb names: poly_size nb names: stratum nb names: program nb names: nganza nb names: program_start nb names: non_residential nb names: num_compounds nb names: compliance nb names: revenue_per_person 
+ra names: a7 ra names: rouge ra names: geo_stratum ra names: jontax ra names: stratum_jon ra names: commune ra names: joncomp2016 ra names: chef_collect_types ra names: chef_collect_ever ra names: salongo_freq ra names: chef_collect_proptax_ever ra names: appoint_yr ra names: chef_stratum ra names: chef_collect_stratum ra names: stratum ra names: stratum_count ra names: treatment ra names: rand1 ra names: rank1 ra names: count1 ra names: numtoselect1_control ra names: probleft2_control ra names: rand2 ra names: probleft3_control ra names: numtoselect1_central ra names: probleft2_central ra names: probleft3_central ra names: numtoselect1_local ra names: probleft2_local ra names: probleft3_local ra names: numtoselect1_centralwinfo ra names: probleft2_centralwinfo ra names: numtoselect1_centralxlocal ra names: probleft2_centralxlocal ra names: probleft3_centralwinfo ra names: rand3 ra names: order_treatment 
+nb arm table: 
+ Central     CLI Control     CXL   Local    <NA>      108      78       5      49     107       9  
+reg names: start reg names: end reg names: today reg names: today_fr reg names: a7 reg names: a7b reg names: tmt reg names: carto_pay reg names: first reg names: north_east reg names: col_change reg names: who reg names: chief_asst_pres reg names: house reg names: correct reg names: house_correct reg names: breminder_mm2 reg names: other_flyers0 reg names: bother_flyers1 reg names: col_code reg names: mm_num reg names: mm_rate reg names: old_code reg names: compound1 reg names: compound2 reg names: present_sensi reg names: present_info_owner reg names: status reg names: owner_found reg names: owner_where reg names: tenants reg names: exempt reg names: why_exempt reg names: exempt_other reg names: exempt_enum reg names: why_exempt2 reg names: why_exempt2_other reg names: designate reg names: designate_why reg names: designate_why_other reg names: read_flyers reg names: read_flyer2 reg names: treatment_fr reg names: treatment_tsh reg names: rate_assigned reg names: read_language reg names: read_who reg names: read_which_chef reg names: what_rate_periph reg names: what_rate_periph_other reg names: read_message_fr reg names: read_message_tsh reg names: who_give_flier reg names: collect_now reg names: collect_who reg names: why_nocollect reg names: why_nocollect_other reg names: collect_success reg names: amt_paid reg names: appointment reg names: apt_date reg names: chalk_check reg names: compound1_p reg names: compound2_p reg names: periph_vs_mm_p reg names: mm_rate_pp reg names: what_rate_periph_p reg names: other_amt reg names: advance reg names: past_advance reg names: past_advance_amt reg names: metainstanceid reg names: key reg names: time reg names: know_eachother reg names: commune reg names: quartier reg names: present reg names: other_flyers reg names: other_flyers_other reg names: other_flyers_2 reg names: other_flyers_2_other reg names: reminder_mm reg names: rate reg names: what_rate reg names: what_rate_other reg names: other_flyers1 reg names: reminder_mm1 reg names: reminder_mm2 reg names: reminder_mm3 reg names: a7_compound reg names: date reg names: date_f reg names: month_tmpp reg names: day_tmpp reg names: month_tmp_fr reg names: type reg names: short_label reg names: value_label reg names: keep reg names: labelenglish reg names: tot_complete reg names: double_sensi reg names: dup_poly reg names: pilot 
+house table: 
+     1     2     3  39566  5834   261  
+mean compliance: NaN 
+periods Local Central 2016-04-18 2016-11-12 
+    1    2    3    4 <NA>    37   33   37   20   88  
+periods CLI Central 2016-04-18 2016-11-10 
+    1    2    3    4 <NA>    31   31   30   16   78  
+N Local+Central: 28714 
+FAIL taxes_paid ~ local | stratum in feols(as.formula(fml), data = data, cluster = ~a7...: 
+The dependent variable contains only NAs, the estimation cannot be done. 
+FAIL taxes_paid ~ local | stratum + period in feols(as.formula(fml), data = data, cluster = ~a7...: 
+The dependent variable contains only NAs, the estimation cannot be done. 
+FAIL taxes_paid ~ local | stratum + period + house_n in feols(as.formula(fml), data = data, cluster = ~a7...: 
+The dependent variable contains only NAs, the estimation cannot be done. 
+FAIL taxes_paid ~ local | stratum + period + house_n in feols(as.formula(fml), data = data, cluster = ~a7...: 
+The dependent variable contains only NAs, the estimation cannot be done. 
+FAIL revenue ~ local | stratum + period in feols(as.formula(fml), data = data, cluster = ~a7...: 
+The dependent variable contains only NAs, the estimation cannot be done. 
+FAIL revenue ~ local | stratum + period + house_n in feols(as.formula(fml), data = data, cluster = ~a7...: 
+The dependent variable contains only NAs, the estimation cannot be done. 
+FAIL taxes_paid ~ cli | stratum + period + house_n in feols(as.formula(fml), data = data, cluster = ~a7...: 
+The dependent variable contains only NAs, the estimation cannot be done. 
+FAIL revenue ~ cli | stratum + period + house_n in feols(as.formula(fml), data = data, cluster = ~a7...: 
+The dependent variable contains only NAs, the estimation cannot be done. 
+endline names (first 200): today endline names (first 200): compound_code endline names (first 200): start endline names (first 200): end endline names (first 200): a7 endline names (first 200): a7b endline names (first 200): a7c endline names (first 200): a7_check endline names (first 200): treatment endline names (first 200): a7d endline names (first 200): code endline names (first 200): code2 endline names (first 200): replacement endline names (first 200): why_replace endline names (first 200): replace_approved endline names (first 200): move endline names (first 200): move_when endline names (first 200): a7_previous endline names (first 200): a7_currently endline names (first 200): street_check endline names (first 200): compound_code2 endline names (first 200): code_erased endline names (first 200): code_found endline names (first 200): compound_code_prev endline names (first 200): age endline names (first 200): sex endline names (first 200): titling_respondent endline names (first 200): titling_respondent_short endline names (first 200): monitoring_redo endline names (first 200): identity_post_tax endline names (first 200): avail endline names (first 200): not_avail endline names (first 200): replacement_possible endline names (first 200): x4 endline names (first 200): x5 endline names (first 200): x6 endline names (first 200): person_check2 endline names (first 200): chef_status endline names (first 200): chef_code endline names (first 200): deadchef endline names (first 200): consent1_short endline names (first 200): consent1_med endline names (first 200): consent1_long endline names (first 200): consent1_titling_short endline names (first 200): lang endline names (first 200): hh_head_newresp endline names (first 200): relation_newresp endline names (first 200): sex_newresp endline names (first 200): age_newresp endline names (first 200): edu_newresp endline names (first 200): edu2_newresp endline names (first 200): job1_newresp endline names (first 200): job1_newresp_other endline names (first 200): kga_born_newresp endline names (first 200): kga_move_newresp endline names (first 200): kga_mig1_newresp endline names (first 200): kga_mig2_newresp endline names (first 200): ave_born_newresp endline names (first 200): ave_move_newresp endline names (first 200): kga_mig3_newresp endline names (first 200): kga_mig4_newresp endline names (first 200): elect1 endline names (first 200): elect3 endline names (first 200): elect4 endline names (first 200): elect5 endline names (first 200): elect6 endline names (first 200): elect8 endline names (first 200): hh_size endline names (first 200): hh_babies endline names (first 200): hh_fam_lodgers endline names (first 200): hh_migrant endline names (first 200): hh_moved endline names (first 200): renters endline names (first 200): rand_status endline names (first 200): title_status_c endline names (first 200): title_status_t endline names (first 200): secur endline names (first 200): secur1 endline names (first 200): secur3 endline names (first 200): access_survey_e endline names (first 200): parquet_family endline names (first 200): stay_compound endline names (first 200): sell_compound endline names (first 200): benefit_formalize1_survey_e endline names (first 200): benefit_formalize2_survey_e endline names (first 200): benefit_formalize3_survey_e endline names (first 200): benefit_formalize4_survey_e endline names (first 200): jealous endline names (first 200): jealous_fam endline names (first 200): witchcraft_victim endline names (first 200): reason_success endline names (first 200): reason_success_other endline names (first 200): number endline names (first 200): inc_mo endline names (first 200): transport endline names (first 200): cash_rich endline names (first 200): cash_poor endline names (first 200): liquidity_bind endline names (first 200): liquidity_bind_date endline names (first 200): cash_fee endline names (first 200): cash_fee_month endline names (first 200): cash_fee_month2 endline names (first 200): subj_wellbeing endline names (first 200): fam_ask endline names (first 200): fam_give endline names (first 200): church endline names (first 200): borrow_fam endline names (first 200): borrow_friend endline names (first 200): borrow_bank endline names (first 200): borrow_blackmkt endline names (first 200): wed_fun endline names (first 200): ristourne endline names (first 200): new_title endline names (first 200): new_title2 endline names (first 200): which_title_other endline names (first 200): title_here endline names (first 200): new_titleother endline names (first 200): which_titleother_other endline names (first 200): formal3 endline names (first 200): formal4 endline names (first 200): formal5 endline names (first 200): formal6 endline names (first 200): bus1 endline names (first 200): bus2 endline names (first 200): mutuality endline names (first 200): security endline names (first 200): solar endline names (first 200): solar_wtp endline names (first 200): tribe_endline endline names (first 200): tribe_o_endline endline names (first 200): subtribe_endline endline names (first 200): subtribe_o_endline endline names (first 200): close_ave endline names (first 200): close_ave_rich endline names (first 200): close_ave_poor endline names (first 200): close_tribe endline names (first 200): close_nottribe endline names (first 200): comfort1 endline names (first 200): comfort2 endline names (first 200): comfort3 endline names (first 200): comfort4 endline names (first 200): social1 endline names (first 200): social1_tribe endline names (first 200): social2 endline names (first 200): social2_tribe endline names (first 200): social3_all endline names (first 200): i1social3_rich endline names (first 200): i1social3_med endline names (first 200): i1social3_poor endline names (first 200): i1social3_tribe endline names (first 200): i1social3_otribe endline names (first 200): i1social3_pay endline names (first 200): salongo endline names (first 200): salongo_hours endline names (first 200): salongo_cash endline names (first 200): salongo_kind endline names (first 200): rand_sal endline names (first 200): salongo_who_sex endline names (first 200): salongo_who_poor endline names (first 200): salongo_who_migrant endline names (first 200): salongo_who_age endline names (first 200): rand1 endline names (first 200): rand2 endline names (first 200): salongo_fair endline names (first 200): salongo_imp endline names (first 200): salongo_oblig endline names (first 200): salongo_oblig_tax endline names (first 200): salongo_oblig_notax endline names (first 200): salongo_punish_any endline names (first 200): salongo_punish_severity endline names (first 200): salongo_punish_type1 endline names (first 200): salongo_punish_type2 endline names (first 200): salongo_punish_type3 endline names (first 200): salongo_punish_type4 endline names (first 200): salongo_punish_type6 endline names (first 200): salongo_punish_type7 endline names (first 200): salongo_punish1 endline names (first 200): salongo_punish2 endline names (first 200): salongo_punish3 endline names (first 200): access_water_survey_e endline names (first 200): access_power_survey_e endline names (first 200): access_trash_survey_e endline names (first 200): access_sewage_survey_e endline names (first 200): access_transport_survey_e endline names (first 200): access_roads_survey_e endline names (first 200): access_lights_survey_e endline names (first 200): access_health_survey_e endline names (first 200): access_educ_survey_e endline names (first 200): access_pension_survey_e endline names (first 200): satisfaction_water_survey_e endline names (first 200): satisfaction_power_survey_e endline names (first 200): satisfaction_trash_survey_e endline names (first 200): satisfaction_sewage_survey_e endline names (first 200): satisfaction_transport_survey_e endline names (first 200): satisfaction_roads_survey_e endline names (first 200): satisfaction_lights_survey_e endline names (first 200): satisfaction_health_survey_e endline names (first 200): satisfaction_educ_surveye endline names (first 200): satisfaction_pension_survey_e endline names (first 200): responsible_water_survey_e 
+bribe var: bribe 
+    0    1 <NA>  1307   41 2602  
+bribe_b ~ local | stratum coef 0.010904776016905 se 0.0134120200072158 N 778 
+endline fail object 'res' not found 
+midline names: a7 midline names: compound midline names: start midline names: end midline names: today midline names: key midline names: a7b midline names: a7c midline names: a7_check midline names: a7d midline names: treatment midline names: month midline names: compound2 midline names: nocode midline names: possible_compound midline names: why_no_code midline names: revisits_dates midline names: date1 midline names: date2 midline names: date3 midline names: date4 midline names: date5 midline names: date6 midline names: date7 midline names: date8 midline names: date9 midline names: date10 midline names: survey1 midline names: survey1_code midline names: survey1_resp_same midline names: survey1_resp_diff midline names: survey_chef midline names: survey_chef_code midline names: chef_resp_same midline names: chef_resp_diff midline names: compound_chef midline names: compound_assis midline names: exempt midline names: first_attempt midline names: present midline names: abandoned midline names: lang midline names: visited midline names: visits midline names: flier midline names: paid_self midline names: taxed_dk midline names: paid_who midline names: why_pay midline names: why_pay_o midline names: pubgoods midline names: sanctions midline names: bribe_amt midline names: whopay midline names: whopay2 midline names: neighbor_know midline names: num_500 midline names: num_1000 midline names: num_1500 midline names: num_2000 midline names: num_2500 midline names: num_3000 midline names: num_4000 midline names: num_5000 midline names: num_6000 midline names: num_6600 midline names: num_7000 midline names: num_8000 midline names: num_8800 midline names: num_9000 midline names: num_10000 midline names: num_11000 midline names: num_12000 midline names: num_13000 midline names: num_13200 midline names: num_9999 midline names: rand_neighbor midline names: neighbor_know2 midline names: num_less midline names: num_same midline names: num_more midline names: rand_discount midline names: discount_know midline names: discount_self midline names: salongo midline names: salongo_hours midline names: sex_prop midline names: age_prop midline names: age_prop_guess midline names: whopay3 midline names: whopay3c midline names: exempt_not midline names: tot_complete_short midline names: sample_select midline names: long_select midline names: nocode_rand midline names: nocode_select midline names: paid_rand midline names: paid_select midline names: status midline names: crieur midline names: col_type_fr midline names: col_type_tsh midline names: chef_type midline names: visits_other1a midline names: visits_other1b midline names: visits_other2a midline names: visits_other2b midline names: know_col midline names: know_how midline names: vis12 midline names: paid_amt midline names: paid_nb midline names: receipt midline names: no_receipt midline names: receipt_type midline names: receipt_later midline names: receipt_show midline names: receipt_noshow midline names: code_same midline names: code_diff midline names: col_code midline names: receipt_photo_ok midline names: receipt_photo_no midline names: receipt_photo_no_other midline names: receipt_photo midline names: amount_match midline names: amount_new midline names: amount_match_no midline names: tax_obs midline names: tot_complete_control midline names: consent7 midline names: hh_head midline names: hh_relation midline names: hh_relation_other midline names: born_kga midline names: move_kga midline names: sex midline names: age midline names: edu midline names: edu2 midline names: dgrkoc_submit midline names: dgrkoc_steal midline names: chef_submit midline names: chef_steal midline names: gov_use midline names: gov_steal midline names: neighbors_pay midline names: tax_oblig midline names: dgrkoc_perform midline names: gov_perform midline names: chef_perform midline names: salongo2 midline names: salongo_who midline names: conflict midline names: trust_gov midline names: trust_dgrkoc midline names: trust_chef midline names: payment midline names: tot_complete_long midline names: photo midline names: hh_photo midline names: walls midline names: walls_other midline names: roof midline names: roof2 midline names: ravine midline names: metainstanceid midline names: a3 midline names: a4 midline names: tmt midline names: commune midline names: quartier midline names: locality midline names: survey_chec_code midline names: attempt midline names: attempt2 midline names: attempt3 midline names: job midline names: job_other midline names: job_gov midline names: tribe midline names: move_ave midline names: ave_vis2 midline names: ave_vis2_other midline names: exempt_not_enums midline names: bribe midline names: whopay3d midline names: whopay3d_other midline names: whopaprenom midline names: appt midline names: whoreceipt midline names: consent1b midline names: consent2 midline names: consent3 midline names: consent3b midline names: consent4 midline names: consent6 midline names: record midline names: rumor1 midline names: rumor2 midline names: rumor3 midline names: rumor3_other midline names: tdm midline names: name_match midline names: name_match_no midline names: bribe2a midline names: bribe2a_amt midline names: bribe2b midline names: bribe2b_amt midline names: bribe3 midline names: bribe3_amt midline names: dgrkoc_imp midline names: gov_imp midline names: chef_imp midline names: salongo_acceptability midline names: trust_police midline names: trust_kin midline names: provide0 midline names: provide_schools midline names: provide_schools_other midline names: provide_water midline names: provide_water_other midline names: provide_health midline names: provide_health_other midline names: provide_security midline names: provide_security_other midline names: provide_welfare midline names: provide_welfare_other midline names: provide_development midline names: provide_development_ot midline names: provide_roads midline names: provide_roads_other midline names: know_dgrkoc midline names: dgrkoc_info midline names: attempt_check midline names: make_appt midline names: first midline names: miss_visit midline names: flier_remember midline names: trust midline names: province midline names: country midline names: territory midline names: subtribe midline names: subtribe_o midline names: v260 midline names: provide_schools_oth midline names: provide_health_othe midline names: provide_security_ot midline names: provide_welfare_oth midline names: v289 midline names: v290 midline names: v257 midline names: v286 midline names: v287 midline names: v226 midline names: v228 midline names: rand_recording midline names: recording1 midline names: consent07 midline names: consent08 midline names: consent09 midline names: record_short_finished midline names: record02 midline names: paid_who1 midline names: paid_who2 midline names: paid_who3 midline names: chef_type1 midline names: chef_type2 midline names: chef_type3 midline names: know_how1 midline names: know_how2 midline names: know_how3 midline names: know_how4 midline names: date midline names: date_f midline names: date_tmp1 midline names: date_tmp2 midline names: date_tmp3 midline names: date_tmpp1 midline names: date_tmpp2 midline names: date_tmpp3 midline names: type midline names: short_label midline names: value_label midline names: keep midline names: labelenglish midline names: labelfrancais midline names: tot_complete_temp midline names: _long midline names: control midline names: short midline names: short_empty midline names: tot_complete midline names: pilot midline names: new_survey_version midline names: survey_length midline names: dup_real midline names: monitoring_survey_twice midline names: unknown_compound midline names: dup_compound 
+visited table: 
+     0     1     2   3614 24005  8761  
+visited_b ~ local | house_n + stratum + period coef -0.0231821835423789 se 0.0174043432197117 N 13404 
+midline fail object 'res' not found 
+chief consult names: start chief consult names: end chief consult names: today chief consult names: a7 chief consult names: a7b chief consult names: who_chief chief consult names: col_focus chief consult names: chef_info_use chief consult names: key chief consult names: compound1 chief consult names: polymult chief consult names: compound chief consult names: pay_ease chief consult names: willingness chief consult names: convinced chief consult names: key2 chief consult names: setofr chief consult names: date chief consult names: date_f chief consult names: type chief consult names: short_label chief consult names: value_label chief consult names: keep chief consult names: labelfrançais chief consult names: dup_code chief consult names: compound1_carto chief consult names: _erge chief consult names: carto_complete chief consult names: skipped_code chief consult names: _merge chief consult names: tot_complete_cc 
+ease candidates: pay_ease 
+chief id: compound1 ease var: pay_ease 
+FAIL taxes_paid ~ ease | house_n + stratum in feols(as.formula(fml), data = data, cluster = ~a7...: 
+The dependent variable contains only NAs, the estimation cannot be done. 
+chief fail object 'res' not found 
+
+```
+
+## Task
+Fix specifically the identified problem above. Do not rewrite the entire approach unless necessary.
+
+## Reminder: Output Convention
+The fixed R code MUST emit each reproduced metric on its own line using EXACTLY this format:
+    RESULT:<metric_name>=<numeric_value>
+For example:  cat('RESULT:beta=0.342\n')
+Use snake_case metric names.
+
+## Reminder: Constraints
+- The dataset is a directory tree at '<repo>/.cache/datasets/balan_2022_local_elites_state_capacity.script-free' — see the file listing under Dataset Information.  Load the actual data file(s) by the exact paths listed there (readr::read_csv() for .csv, haven::read_dta() for Stata .dta, load() for .RData/.rda, which creates the objects listed for the file under exactly those names: use them, do not guess others; readRDS() for .rds).
+- Installed packages (no network; nothing else can be installed): jsonlite, fixest, lfe, AER, ivreg, plm, estimatr, lme4, quantreg, car, sandwich, lmtest, clubSandwich, multiwayvcov, marginaleffects, MatchIt, optmatch, CBPS, WeightIt, cobalt, did, rdrobust, rddensity, Synth, modelsummary, stargazer, texreg, broom, tidyverse, dplyr, tidyr, readr, stringr, lubridate, data.table, haven, readxl, janitor, zoo, ggplot2, ggridges, ggrepel, gridExtra, cowplot, gtable, extrafont, sf, MASS, nnet, survival, splines, Matrix, boot, stats, utils.
+- Prefer fixest for fixed effects, IV and clustered SEs; use the other installed packages where the paper's method calls for them.
+- Do NOT access the internet.
+- Do NOT call system() / system2().
+- Use set.seed(42) for reproducibility.
+- Print all RESULT: lines at the end via cat().
+
+Output ONLY the corrected R code — no explanation, no markdown fences.

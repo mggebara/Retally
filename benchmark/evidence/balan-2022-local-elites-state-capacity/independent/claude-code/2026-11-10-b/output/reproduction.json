@@ -1,0 +1,34 @@
+{
+  "schema": 1,
+  "entry_id": "balan-2022-local-elites-state-capacity",
+  "mode": "independent",
+  "run_id": "2026-11-10-b",
+  "reproducer": "claude-code",
+  "language": "r",
+  "final": {"script": "script.R", "stdout": "stdout.txt", "stderr": "stderr.txt", "exit_code": 0},
+  "attempts": [
+    {"dir": "attempt-1", "exit_code": 0, "kind": ""},
+    {"dir": "attempt-2", "exit_code": 0, "kind": ""},
+    {"dir": "attempt-3", "exit_code": 0, "kind": ""},
+    {"dir": "attempt-4", "exit_code": 0, "kind": ""},
+    {"dir": "attempt-5", "exit_code": 1, "kind": "error"},
+    {"dir": "attempt-6", "exit_code": 0, "kind": ""},
+    {"dir": "attempt-7", "exit_code": 0, "kind": ""},
+    {"dir": "attempt-8", "exit_code": 0, "kind": ""},
+    {"dir": "attempt-9", "exit_code": 0, "kind": ""},
+    {"dir": "attempt-10", "exit_code": 0, "kind": ""}
+  ],
+  "deviations": [
+    "Property sample built from registration_noPII: rows in the 356 study neighborhoods (drops logistics pilot), villas (house==3) dropped, deduplicated on tax ID (compound1) keeping the earliest record. This gives 29,396 Local+Central properties vs 28,872 in the paper; the authors' further exclusions could not be identified from the paper text.",
+    "De facto treatment: a7 654 (assigned CXL) recoded to Local (footnote 40); identified because all its endline respondents carry treatment==Local and its registration was done by the chief only.",
+    "Compliance = tax ID appears in tax_payments_noPII; revenue = sum of amountCF per tax ID. 8 payment records with missing or implausible amounts (two >1.4 million CF, one 50 CF) were set to the property's official liability (3,000 CF low band, 13,200 CF high band).",
+    "Time FE: property-level registration date (form start time, since `today` is missing for one form version). Window from the midpoint of the two arms' first registration days to the midpoint of their last days; two-month periods from the window start; properties outside the window dropped. Reproduces the 221 -> 213 cluster drop for Local vs Central, but leaves 157 clusters for CLI vs Central (paper 165).",
+    "Table 6 visited: midline survey (pilot==0, tot_complete==1), visited after registration = reported visits >= 2 (visits include the registration visit), 0 if household reported no visit; merged to the register by tax ID for house type and period; Local vs Central window sample.",
+    "Table 5 endline bribe: endline_round1 `bribe` (paid 'transport' to collectors), coded 0 for respondents not visited by collectors (visited==0 or 'yes but nobody home'), since the question was only asked of visited households; N=1,222 vs 1,169 in the paper.",
+    "Table 8: chief_consultations pay_ease (0-2, 'don't know' dropped) merged to CLI properties by tax ID; N=8,624 vs 8,135."
+  ],
+  "notes": "Independent reconstruction from the paper text and data files only (no author scripts opened; README.pdf and output.tex in the mount were read as documentation: output.tex has no appendix text beyond table notes). Exploratory runs attempts 1-7 inspected the data; attempt-8 was the first estimation run; attempts 9-10 were exploratory checks of payment-record filters and period-FE constructions. After comparing attempt-8 with the claims I did not change the script, because the alternatives were ad hoc and none matched every claim; the final run is the same script rerun at the top level, with identical output. Main gaps: Local-vs-Central compliance effect with time FE is 0.039 vs 0.032 (sensitive to how periods are binned: 0.022-0.043 across variants in attempt-10), revenue 92 vs 80, observation counts about 1.8% high, the CLI window drops more Central neighborhoods than the paper, and the Table 6 visited effect is +0.029 vs -0.009. No run hung; all sandbox runs finished in under 20 s.",
+  "files_read_outside_mount": [],
+  "started_at": "2026-11-10T17:04:28Z",
+  "finished_at": "2026-11-10T17:17:00Z"
+}

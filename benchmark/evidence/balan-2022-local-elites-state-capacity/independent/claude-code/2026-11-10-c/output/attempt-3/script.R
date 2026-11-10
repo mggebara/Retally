@@ -1,0 +1,73 @@
+# Exploratory run 3: sample construction counts (no estimates)
+suppressPackageStartupMessages({library(haven); library(dplyr)})
+B <- "<repo>/benchmark/.cache/claude-code/balan-2022-local-elites-state-capacity/independent/2026-11-10-c/mount/balan_2022_local_elites_state_capacity/Replication Materials - Updated October 2025/Data/01_base"
+options(width = 200, warn = 1)
+ra <- read_dta(file.path(B, "admin_data/randomization_assignment.dta")) %>% zap_labels()
+rs <- read_dta(file.path(B, "admin_data/randomization_schedule.dta")) %>% zap_labels()
+reg <- read_dta(file.path(B, "admin_data/registration_noPII.dta")) %>% zap_labels()
+pay <- read_dta(file.path(B, "admin_data/tax_payments_noPII.dta")) %>% zap_labels()
+tr <- read_dta(file.path(B, "admin_data/taxroll_noPII.dta")) %>% zap_labels()
+
+cat("assignment treatment:\n"); print(table(ra$treatment))
+cat("schedule treatment x month:\n"); print(table(rs$treatment, rs$month))
+cat("assignment vs schedule treatment:\n"); print(table(ra$treatment, rs$treatment[match(ra$a7, rs$a7)], useNA="ifany"))
+
+reg$ra_t <- ra$treatment[match(reg$a7, ra$a7)]
+cat("\nreg tmt x ra treatment\n"); print(table(reg$tmt, reg$ra_t, useNA = "ifany"))
+cat("pilot x ra_t\n"); print(table(reg$pilot, reg$ra_t, useNA="ifany"))
+cat("tot_complete x ra_t\n"); print(table(reg$tot_complete, reg$ra_t, useNA="ifany"))
+cat("carto_pay\n"); print(table(reg$carto_pay, useNA="ifany"))
+cat("house x ra_t\n"); print(table(reg$house, reg$ra_t, useNA="ifany"))
+cat("double_sensi\n"); print(table(reg$double_sensi, useNA="ifany"))
+cat("dup_poly\n"); print(table(reg$dup_poly, useNA="ifany"))
+cat("a7 == a7_compound:", sum(reg$a7 == reg$a7_compound), "\n")
+cat("dup compound1:", sum(duplicated(reg$compound1)), "\n")
+cat("compound1 != compound2:", sum(reg$compound1 != reg$compound2), "\n")
+cat("a7 not in assignment:", sum(is.na(reg$ra_t)), " unique:", paste(unique(reg$a7[is.na(reg$ra_t)]), collapse=","), "\n")
+# misassigned nbhd: tmt differs from ra treatment
+mm <- reg %>% filter(!is.na(tmt), !is.na(ra_t), tmt != ra_t) %>% count(a7, tmt, ra_t)
+cat("tmt != assignment by a7:\n"); print(as.data.frame(mm))
+# who: collector type by a7 for CXL nbhds
+cxl <- reg %>% filter(ra_t == 4) %>% group_by(a7) %>% summarise(n=n(), who_agent=mean(who==0,na.rm=T), who_chef=mean(who==1,na.rm=T), who_both=mean(who==2,na.rm=T), tmt=paste(unique(tmt),collapse="/"))
+cat("CXL nbhds who:\n"); print(as.data.frame(cxl %>% arrange(who_both)) %>% head(8))
+# counts per arm with different filters
+f <- function(d, lab) { cat(lab, ": N=", nrow(d), " by arm: ", paste(names(table(d$ra_t)), table(d$ra_t), sep="=", collapse=" "), "\n") }
+f(reg, "all")
+f(reg %>% filter(pilot == 0), "pilot0")
+f(reg %>% filter(pilot == 0, tot_complete == 1), "pilot0 complete")
+f(reg %>% filter(pilot == 0, tot_complete == 1, house != 3), "pilot0 complete nonvilla")
+f(reg %>% filter(pilot == 0, house != 3), "pilot0 nonvilla")
+f(reg %>% filter(pilot == 0, tot_complete == 1) %>% distinct(compound1, .keep_all=TRUE), "pilot0 complete dedup")
+f(reg %>% filter(pilot == 0, tot_complete == 1, house != 3) %>% distinct(compound1, .keep_all=TRUE), "pilot0 complete nonvilla dedup")
+f(reg %>% filter(pilot == 0, tot_complete == 1, house != 3, double_sensi == 0) %>% distinct(compound1, .keep_all=TRUE), "+ double_sensi0")
+f(reg %>% filter(pilot == 0, house != 3) %>% distinct(compound1, .keep_all=TRUE), "pilot0 nonvilla dedup")
+f(reg %>% filter(!is.na(ra_t), house != 3) %>% distinct(compound1, .keep_all=TRUE), "inassign nonvilla dedup")
+f(reg %>% filter(!is.na(ra_t)) %>% distinct(compound1, .keep_all=TRUE), "inassign dedup")
+cat("taxroll by arm\n"); tr$ra_t <- ra$treatment[match(tr$a7, ra$a7)]; print(table(tr$ra_t, useNA="ifany"))
+cat("taxroll compound in reg:", mean(tr$compound1 %in% reg$compound1), " reg in taxroll:", mean(reg$compound1 %in% tr$compound1), "\n")
+# dates by arm
+reg$d <- as.Date(reg$today)
+nb <- reg %>% filter(pilot == 0, !is.na(ra_t)) %>% group_by(a7, ra_t) %>% summarise(dmin=min(d,na.rm=T), dmax=max(d,na.rm=T), dmed=median(d, na.rm=T), n=n(), nNA=sum(is.na(d)), .groups="drop")
+nb$month <- rs$month[match(nb$a7, rs$a7)]
+cat("arm first/last registration day:\n"); print(as.data.frame(nb %>% group_by(ra_t) %>% summarise(first=min(dmin), last=max(dmax), lastmin=max(dmin), n=n())))
+cat("month vs dmin by arm:\n"); print(as.data.frame(nb %>% group_by(ra_t, month) %>% summarise(n=n(), lo=min(dmin), hi=max(dmin), .groups="drop")))
+cat("registration date NA by arm:\n"); print(table(is.na(reg$d), reg$ra_t))
+# payments
+cat("\npayments: paid table\n"); print(table(pay$paid, useNA="ifany"))
+cat("amountCF table\n"); print(table(pay$amountCF, useNA="ifany"))
+cat("dup compound in pay:", sum(duplicated(pay$compound1[!is.na(pay$compound1)])), "\n")
+cat("pay compound in reg:", mean(pay$compound1 %in% reg$compound1), "\n")
+cat("pay house:"); print(table(pay$house, useNA="ifany"))
+cat("error_code"); print(table(pay$error_code, useNA="ifany"))
+cat("lateCollection"); print(table(pay$lateCollection, useNA="ifany"))
+cat("unmatched_compound"); print(table(pay$unmatched_compound, useNA="ifany"))
+cat("dup_receipt"); print(table(pay$dup_receipt, useNA="ifany"))
+cat("mult_tax"); print(table(pay$mult_tax, useNA="ifany"))
+cat("pay date range:", range(pay$date, na.rm=T), "\n")
+pay$ra_t <- ra$treatment[match(pay$a7, ra$a7)]
+print(table(pay$ra_t, useNA="ifany"))
+print(head(as.data.frame(pay %>% filter(duplicated(compound1) | duplicated(compound1, fromLast=TRUE), !is.na(compound1)) %>% arrange(compound1) %>% select(compound1, amountCF, a7, date, paid, dup_receipt, mult_tax, error_code, lateCollection)), 20))
+# stratum mapping check
+st <- read_dta(file.path(B, "admin_data/stratum.dta")) %>% zap_labels()
+cat("stratum (assignment) vs stratum.dta identical?", all(st$stratum[match(ra$a7, st$a7)] == ra$stratum), "\n")
+cat("strata within L/C:", length(unique(ra$stratum[ra$treatment %in% 1:2])), "\n")

@@ -1,0 +1,17 @@
+suppressPackageStartupMessages({library(haven); library(dplyr)})
+base <- "<repo>/benchmark/.cache/claude-code/balan-2022-local-elites-state-capacity/blind/2026-11-10-b/mount/balan_2022_local_elites_state_capacity/Replication Materials - Updated October 2025/Data/01_base"
+rd <- function(f, ...) read_dta(file.path(base, f), ...)
+rs <- rd("admin_data/randomization_schedule.dta") %>% mutate(tr = as.numeric(treatment))
+reg <- rd("admin_data/registration_noPII.dta", col_select = c(a7, compound1, tot_complete, house, exempt, why_exempt, carto_pay)) %>% filter(a7 %in% rs$a7, tot_complete == 1)
+tr0 <- rd("admin_data/taxroll_noPII.dta")
+reg <- reg %>% left_join(tr0 %>% select(compound1, MontantIF, Exempte, Exempt2 = 8), by = "compound1")
+reg$tr <- rs$tr[match(reg$a7, rs$a7)]
+cat("Exempte strings:\n"); print(table(reg$Exempte, useNA = "ifany"))
+cat("reg exempt vs taxroll Exempte nonempty:\n"); print(table(regex = as.numeric(reg$exempt), tr_ex = reg$Exempte != "", useNA = "ifany"))
+cat("taxroll exempt reason labelled col:\n"); print(table(as.numeric(reg$Exempt2), useNA = "ifany"))
+cat("MontantIF x house:\n"); print(table(reg$MontantIF, as.numeric(reg$house), useNA = "ifany"))
+cat("exempt (any) by tr:\n"); reg$ex_any <- (as.numeric(reg$exempt) %in% 1) | (reg$Exempte %in% setdiff(unique(reg$Exempte), c("", NA)))
+print(prop.table(table(reg$tr, reg$ex_any), 1))
+tp <- rd("admin_data/tax_payments_noPII.dta")
+cat("odd payments:\n"); print(as.data.frame(tp %>% filter(amountCF > 13200 | amountCF < 1500 | is.na(amountCF)) %>% select(compound1, amountCF, rateUSD, house, Peripherie, Maison_Moyenne, error_rate, TDM)))
+cat("rateUSD x amountCF:\n"); print(table(tp$rateUSD, tp$amountCF, useNA = "ifany"))

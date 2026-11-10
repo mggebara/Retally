@@ -1,0 +1,27 @@
+Error in `summarise()`:
+ℹ In argument: `tmt_mode = names(sort(table(tmt), decreasing =
+  TRUE))[1]`.
+ℹ In group 9: `a7 = 108`.
+Caused by error:
+! `tmt_mode` must return compatible vectors across groups.
+✖ Can't combine NULL and non NULL results.
+Backtrace:
+     ▆
+  1. ├─reg %>% group_by(a7) %>% ...
+  2. ├─dplyr::summarise(...)
+  3. ├─dplyr:::summarise.grouped_df(...)
+  4. │ └─dplyr:::summarise_cols(.data, dplyr_quosures(...), by, "summarise")
+  5. │   ├─base::withCallingHandlers(...)
+  6. │   └─dplyr:::map(quosures, summarise_eval_one, mask = mask)
+  7. │     └─base::lapply(.x, .f, ...)
+  8. │       └─dplyr (local) FUN(X[[i]], ...)
+  9. │         └─mask$eval_all_summarise(quo)
+ 10. │           └─dplyr (local) eval()
+ 11. ├─dplyr:::dplyr_internal_error(...)
+ 12. │ └─rlang::abort(class = c(class, "dplyr:::internal_error"), dplyr_error_data = data)
+ 13. │   └─rlang:::signal_abort(cnd, .file)
+ 14. │     └─base::signalCondition(cnd)
+ 15. └─dplyr (local) `<fn>`(`<dpl:::__>`)
+ 16.   └─dplyr (local) handler(cnd)
+ 17.     └─rlang::abort(message, class = error_class, parent = parent, call = error_call)
+Execution halted

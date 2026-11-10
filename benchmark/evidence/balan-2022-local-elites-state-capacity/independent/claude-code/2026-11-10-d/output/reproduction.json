@@ -1,0 +1,41 @@
+{
+  "schema": 1,
+  "entry_id": "balan-2022-local-elites-state-capacity",
+  "mode": "independent",
+  "run_id": "2026-11-10-d",
+  "reproducer": "claude-code",
+  "language": "r",
+  "final": {"script": "script.R", "stdout": "stdout.txt", "stderr": "stderr.txt", "exit_code": 0},
+  "attempts": [
+    {"dir": "attempt-1", "exit_code": 0, "kind": ""},
+    {"dir": "attempt-2", "exit_code": 0, "kind": ""},
+    {"dir": "attempt-3", "exit_code": 0, "kind": ""},
+    {"dir": "attempt-4", "exit_code": 0, "kind": ""},
+    {"dir": "attempt-5", "exit_code": 0, "kind": ""},
+    {"dir": "attempt-6", "exit_code": 1, "kind": ""},
+    {"dir": "attempt-7", "exit_code": 0, "kind": ""},
+    {"dir": "attempt-8", "exit_code": 0, "kind": ""},
+    {"dir": "attempt-9", "exit_code": 1, "kind": ""},
+    {"dir": "attempt-10", "exit_code": 0, "kind": ""},
+    {"dir": "attempt-11", "exit_code": 0, "kind": ""},
+    {"dir": "attempt-12", "exit_code": 0, "kind": ""},
+    {"dir": "attempt-13", "exit_code": 0, "kind": ""},
+    {"dir": "attempt-14", "exit_code": 0, "kind": ""},
+    {"dir": "attempt-15", "exit_code": 0, "kind": ""},
+    {"dir": "attempt-16", "exit_code": 1, "kind": ""},
+    {"dir": "attempt-17", "exit_code": 0, "kind": ""},
+    {"dir": "attempt-18", "exit_code": 0, "kind": "claim"},
+    {"dir": "attempt-19", "exit_code": 0, "kind": ""}
+  ],
+  "deviations": [
+    "Time-period fixed effects: two-month periods from the floor of the midpoint between the two arms' first registration dates to the ceiling of the midpoint between their last registration dates, assigned by each property's registration date; the paper's exact construction (online Appendix A2.5) is not in the package. Local/Central column 2 keeps 213 clusters like the paper but 27,453 rather than 27,764 properties; CLI/Central keeps 157 rather than 165 clusters.",
+    "Property universe = hh_distances (registered properties) merged with the registration survey; neighborhood 654 recoded from CXL to Local (paper fn 40). Gives 14,501 Central vs the paper's 14,489 (12 extra), and Local, CLI and CXL counts matching Table 2 to within 3.",
+    "Compliance and revenue come from tax_payments records with error_code==0. Two impossible amounts (1.42m and 1.66m CF) are capped at 13,200 CF.",
+    "Endline bribe (Table 5): endline_round1 'bribe' (paid transport to the collector), set to 0 for households reporting no visit; N=1,217 vs the paper's 1,169.",
+    "Table 6: post-registration visit = midline 'visits' >= 2 (the count includes the registration visit), 0 if no visit. Midline is linked to the register by compound code; N=16,332 vs the paper's 18,162."
+  ],
+  "notes": "R/fixest OLS with stratum FE (randomization_assignment stratum, 32 groups), house band FE and period FE as the paper specifies, SEs clustered by neighborhood (a7). Attempts 1-17 and 19 were exploratory (variable inspection, sample counts and Central means; no estimates of listed quantities). Attempts 6, 9 and 16 crashed in exploration and were fixed. Attempt 18 was the first estimating run. check_attempt flagged only Table 6 visited (0.028 vs -0.009). I then explored Table 6 definitions (attempt 19) but found none that closed the gap, so the final script keeps the same estimates. It only corrects and extends the DEVIATION text, which is why attempt 18 is recorded as kind 'claim'. Unresolved: the exact time-window rule (the paper's dropped sample could not be reproduced: 8 neighborhoods/1,108 properties for Local/Central, 25 neighborhoods for CLI/Central). The README.pdf and output.tex inside the mount were read as documentation. No sandbox run hung.",
+  "files_read_outside_mount": [],
+  "started_at": "2026-11-10T17:04:29Z",
+  "finished_at": "2026-11-10T17:24:00Z"
+}

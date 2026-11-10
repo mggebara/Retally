@@ -1,0 +1,139 @@
+You are reproducing results from an econometrics paper for validation purposes.
+Write R code (not Python) — the paper's reference implementation is in R.
+
+## Paper Information
+Title: American Economic Review 2022, 112(3): 1–36
+Abstract (first 500 chars): 1 Local Elites as State Capacity: How City Chiefs Use Local Information to Increase Tax Compliance in the Democratic Republic of the Congo† By Pablo Balán, Augustin Bergeron, Gabriel Tourek, and Jonathan L. Weigel*
+Methodology Summary: - **Design / identification:** A cluster-randomized policy experiment run within Kasaï-Central's 2018 property tax campaign in Kananga (DRC). The unit of randomization is the neighborhood, defined from a satellite map to approximate the *localité*. There are 364 neighborhoods; 8 were excluded because they hosted a logistics pilot, and the commune of Nganza was excluded because of conflict. That leaves 356 neighborhoods and 45,162 registered properties. Neighborhoods were assigned to five arms (Table 2): Central (110, state tax-ministry collectors), Local (111, city chiefs), CLI (80, state collectors after a half-day consultation with the chief), CXL (50, a state collector and a chief together) and pure Control (5, the old declarative system). The randomization is blocked and stratified on (i) geographic location, (ii) treatment status in the 2016 campaign and (iii) the chief's past tax-collection experience. Following Banerjee et al. (2017), the full randomization was run 100 times and the run with the minimum t-statistics on balance checks of 8 neighborhood-level baseline variables was kept. The main comparison is Local vs. Central. Analysis uses de facto assignment: one CXL neighborhood was implemented as Local.
+- **Data / outcomes:** The main outcomes come from administrative data. Receipts from the handheld printers, plus payments made at the ministry, are matched by tax ID to the property register covering the universe of registered properties. Outcomes are household-level tax compliance (a paid/did-not-pay indicator) and revenue in Congolese francs per property. Secondary outcomes come from three surveys: a baseline of 4,246 households (Jul–Dec 2017, about 12 per neighborhood, every Xth house), a midline at every property 2–4 weeks after collection (36,130 completed) and an endline (Mar–Sep 2019) that re-tracked 3,893 baseline respondents.
+- **Estimating equation (eq. 1), OLS:** y_ijkt = β0 + β·Local_jkt + X_ijk·Γ + α_k + θ_t + ε_ijkt, where i indexes households/properties, j neighborhoods, k randomization strata and t campaign periods. The dependent variable enters in levels (a linear probability model for compliance, CF for revenue). The key regressor is the Local treatment dummy, with Central as the omitted category. The coefficients are in raw units (percentage points for compliance, CF for revenue) and are not standardized.
+- **Fixed effects and controls:** Every specification includes randomization-stratum fixed effects (α_k). The main analyses' covariate vector X contains only dummies for house type, i.e. the low- vs. high-value property band. The preferred specification for tax outcomes (Table 4, column 2) also includes time fixed effects (θ_t) for the waves of the staggered tax campaign, to net out time trends and time imbalance across arms. Column 1 is the same regression without the wave fixed effects. Endline-survey outcomes drop both the wave fixed effects and the house-type dummies.
+- **Standard errors:** Clustered at the neighborhood level, the unit of randomization (356 clusters).
+- **Sample restrictions:** Pure Control neighborhoods are excluded from the treatment comparisons. About 285 very-high-value "villa" properties fall outside the campaign and the evaluation. The main estimation sample is all registered properties in the compared arms, including exempt properties. Exempt properties (state-owned, schools/churches, owners who are elderly (55+), widowed or disabled, and houses under construction) are dropped only in a robustness column.
+- **Robustness (Table 4 and online appendix):** (col. 3) data collapsed to the neighborhood level; (col. 4) property-value-band fixed effects added; (col. 5) exempt properties excluded. Online Appendix Table A5 uses alternative adjustments for time imbalance. Table A6 controls for, and interacts treatment with, the cross-randomized collector-wage scheme (a 30% piece rate vs. a flat 750 CF) and the household-level tax-rate abatements. Table A7 adds pre-analysis-plan covariate sets, such as controlling for the imbalanced variable years of education, and drops the misassigned neighborhood. Table A8 controls for collector characteristics.
+- **Balance and attrition checks:** Table 3 regresses baseline, midline, registration and neighborhood characteristics on treatment indicators, with stratum fixed effects and neighborhood-clustered SEs and Central omitted. Online Appendix Table A2 adds omnibus parametric F-tests for each bilateral treatment comparison, run separately by data source. Attrition (baseline to endline, replacement at endline, registration to midline) is tested the same way.
+- **Mechanisms:** The analysis compares CLI to Central to test whether the chief's local information explains the effect; in CLI the chief rated each household's ability and willingness to pay on 3-point scales. It examines collector visits on the extensive and intensive margins and compares the characteristics of visited households across arms. It also tests whether chiefs outperform during the registration stage, when route-based visiting neutralized targeting. Heterogeneity is examined by chief knowledge (from a quiz module), baseline trust in and power of the chief, and the cross-randomized tax-notice messages.
+
+
+## Quantities to Compute
+Compute each quantity below and print it under the given name.  The paper's reported values are deliberately not shown.
+1. compliance_local_table4_panelA_col1 [type: coefficient; unit: share of properties paying the property tax (0-1)]
+   Location: Table 4, Panel A (Compliance), Local, column (1)
+   Context: Table 4, Panel A, column (1). OLS of equation (1): the Local coefficient (city chiefs collected; Central, state agents, is the excluded category) in a regression of an indicator that the registered property paid the 2018 property tax (payment records matched to the property register by tax ID) on the Local indicator and randomization stratum fixed effects; no time or house type fixed effects. Sample: all registered properties in Local and Central neighborhoods. Standard errors clustered by neighborhood.
+2. compliance_local_table4_panelA_col2 [type: coefficient; unit: share of properties paying the property tax (0-1)]
+   Location: Table 4, Panel A (Compliance), Local, column (2)
+   Context: Table 4, Panel A, column (2), the preferred specification: the Local coefficient with stratum fixed effects plus time fixed effects for waves of the campaign, no house type fixed effects, SEs clustered by neighborhood. Per online Appendix A2.5 the time fixed effects are two-month periods beginning at the midpoint between the first days of the two arms compared (Local, Central) and ending at the midpoint between their last days; properties whose neighborhood falls outside them drop out.
+3. compliance_local_house_fe_table4_panelA_col4 [type: coefficient; unit: share of properties paying the property tax (0-1)]
+   Location: Table 4, Panel A (Compliance), Local, column (4)
+   Context: Table 4, Panel A, column (4): the column (2) regression (stratum and campaign-period time fixed effects) with house fixed effects added, i.e. dummies for the property value band (low-value versus high-value band, the two flat tax liabilities). Same sample as column (2); standard errors clustered by neighborhood. The entry is the Local coefficient.
+4. compliance_local_exempt_excluded_table4_panelA_col5 [type: coefficient; unit: share of properties paying the property tax (0-1)]
+   Location: Table 4, Panel A (Compliance), Local, column (5)
+   Context: Table 4, Panel A, column (5): the column (4) specification (stratum, campaign-period time and house fixed effects) excluding properties the collectors designated as exempt from the tax. Standard errors clustered by neighborhood. The entry is the Local coefficient.
+5. revenue_local_table4_panelB_col2 [type: coefficient; unit: Congolese francs per property]
+   Location: Table 4, Panel B (Revenues), Local, column (2)
+   Context: Table 4, Panel B, column (2): the column (2) specification (Local indicator, stratum fixed effects, campaign-period time fixed effects, no house fixed effects) with property tax revenue per property in Congolese francs as the outcome (the amount paid, zero for non-payers). Same sample as Panel A column (2); standard errors clustered by neighborhood. The entry is the Local coefficient.
+6. revenue_local_house_fe_table4_panelB_col4 [type: coefficient; unit: Congolese francs per property]
+   Location: Table 4, Panel B (Revenues), Local, column (4)
+   Context: Table 4, Panel B, column (4): revenue per property in Congolese francs on the Local indicator with stratum, campaign-period time and house (property value band) fixed effects. Standard errors clustered by neighborhood. The entry is the Local coefficient.
+7. n_obs_table4_col1 [type: count; unit: properties]
+   Location: Table 4, Observations, column (1) (both panels)
+   Context: Number of observations in Table 4, column (1): every registered property in the Local and Central neighborhoods (no time fixed effects, so none is dropped).
+8. n_obs_table4_col2 [type: count; unit: properties]
+   Location: Table 4, Observations, column (2) (both panels; column 4 has the same count)
+   Context: Number of observations in Table 4, column (2) (and column 4): registered Local and Central properties whose neighborhood falls within the campaign periods that define the time fixed effects.
+9. paid_bribe_endline_local_table5_panelB [type: coefficient; unit: share of respondents reporting a bribe payment (0-1)]
+   Location: Table 5, Panel B (Bribes), Paid bribe (endline), beta-hat and SE
+   Context: Table 5 ("Local versus Central: Mismanagement and Views of Government, Chiefs, and Taxes"), Panel B, row "Paid bribe (endline)". OLS of equation (1) comparing Local and Central, with a self-reported indicator for having paid a bribe ("transport") to tax collectors, measured in the endline household survey (baseline respondents tracked in 2019), as the outcome, on the Local indicator and randomization stratum fixed effects; no time fixed effects and no house type fixed effects (endline outcome). Standard errors clustered by neighborhood. The entry is the Local coefficient.
+10. visited_by_collector_local_table6_col1 [type: coefficient; unit: share of properties visited (0-1)]
+   Location: Table 6, Local, column (1) Visited by collector
+   Context: Table 6 ("Local versus Central: Tax Visits"), column (1). OLS of equation (1) with an indicator that the household reported (in the midline survey) any tax visit by collectors after the registration visit as the outcome, on the Local indicator with house type, randomization stratum and campaign-period time fixed effects; Local and Central properties. Standard errors clustered by neighborhood. The entry is the Local coefficient.
+11. compliance_cli_table7_col1 [type: coefficient; unit: share of properties paying the property tax (0-1)]
+   Location: Table 7, CLI, column (1) Compliance
+   Context: Table 7, column (1): the CLI coefficient (state collectors who consulted the chief on each owner's ability and willingness to pay before tax visits; Central excluded) in an OLS of the property tax payment indicator with house type, stratum and time fixed effects, the time fixed effects two-month campaign periods from the midpoint of the CLI and Central first days to the midpoint of their last days. Sample: registered CLI and Central properties. SEs clustered by neighborhood.
+12. revenue_cli_table7_col2 [type: coefficient; unit: Congolese francs per property]
+   Location: Table 7, CLI, column (2) Revenues
+   Context: Table 7, column (2): the column (1) specification with property tax revenue per property in Congolese francs as the outcome. CLI and Central properties; standard errors clustered by neighborhood. The entry is the CLI coefficient.
+13. compliance_ease_of_payment_cli_table8_panelA_col2 [type: coefficient; unit: change in the probability of payment per point of the chief's ease-of-payment rating]
+   Location: Table 8, Panel A (Ease of payment), Ease of payment, column (2) Compliance
+   Context: Table 8 ("The Value of Chiefs' Information"), Panel A, column (2). Within the CLI arm only, OLS of the property tax payment indicator on the chief's rating of the owner's ability to pay (ease of payment, on the three-point scale recorded on the property register during the chief consultation), with house type and randomization stratum fixed effects and no further controls. Standard errors clustered by neighborhood. The entry is the Ease of payment coefficient.
+
+## Dataset Information
+Name: balan-2022-local-elites-state-capacity
+Local path: <repo>/.cache/datasets/balan_2022_local_elites_state_capacity.script-free
+File format: csv
+Files in the dataset directory (paths relative to the local path above):
+- Replication Materials - Updated October 2025/Data/01_base/survey_data/endline_2016campaign_noPII.dta (55.8 MB) — 3600 rows, 1591 columns: visit, status, transport, control, paid_self, exempt, stratum, commune, bribe, visited, visits, bribe_self, rent1, paid2017, visit_s2, visit_s2n, others, others2, others2_other, spend1, spend1_other, tax18_s1, others4, paid_if_s2, paid_if_s2n, tax13_s1, tax17_s1, tax19_s1, pay_num_0, col1_paid, col1_visited, col1_visits, col2_paid, col2_visited, col2_visits, col3_paid, col3_visited, col3_visits, col4_paid, col4_visited, col4_visits, col5_paid, col5_visited, col5_visits, recei…
+- Replication Materials - Updated October 2025/Data/01_base/survey_data/endline_round1_noPII.dta (48.4 MB) — 5602 rows, 960 columns: treatment, replacement, number, transport, visited, visits, paid_self, bribe, trust7_survey_2, percentage, property_paid, pilot, info2_chef, info2_chef_2, info2_chef_newchef, info2_chef_newchef2, info2_dgrkoc, heard_collectors_1, heard_collectors_2, heard_collectors_3, heard_collectors_4, salongo_punish3, chef_type_1, chef_type_2, chef_type_3, chef_type_4, chef_type_5, chef_type_6, salongo_oblig_tax, fair_newtax, vis12, trust6_survey_e, num_same, num_more, age_prop, access_educ_survey_e, responsible_educ_survey_e, provide1…
+- Replication Materials - Updated October 2025/Data/01_base/survey_data/midline_noPII.dta (184.5 MB) — 45794 rows, 302 columns: treatment, month, exempt, visited, visits, paid_self, status, conflict, payment, commune, bribe, first, trust, control, pilot, chef_type, neighbors_pay, vis12, num_same, num_more, age_prop, first_attempt, discount_self, sample_select, receipt_later, tot_complete_control, locality, salongo_acceptability, miss_visit, a7_check, exempt_not, exempt_not_enums, attempt_check, neighbor_know, rand_neighbor, neighbor_know2, amount_match, amount_new, amount_match_no, dgrkoc_perform, gov…
+- Replication Materials - Updated October 2025/Data/01_base/survey_data/baseline_noPII.dta (26.5 MB) — 7828 rows, 425 columns: visit, campaign_visit, status, transport, number, paid2017_2, tax13, tax15, tax15_other, trust6, access9, satisfied9, provides9, provide1, paid2017_6_new, renters_b, church, tot_complete, survey3, campaign_yes_meeting3_time, appt_time, stat…
+- Replication Materials - Updated October 2025/Data/01_base/admin_data/campaign_collector_info.dta (2.3 MB) — 363 rows, 343 columns: Month, col1_trust6, col1_wtp_1500, col1_wtp_2000, col1_wtp_2500, col1_wtp_3000, col2_trust6, col2_wtp_1500, col2_wtp_2000, col2_wtp_2500, col2_wtp_3000, col1_provide1, col2_provide1, days_collect_1poly, days_collection_2poly, days_consult, …
+- Replication Materials - Updated October 2025/Data/01_base/survey_data/endline_round2_noPII.dta (8.1 MB) — 1753 rows, 536 columns: treatment, replacement, number, transport, trust7_survey_2, salongo_punish3, salongo_oblig_tax, fair_newtax, trust6_survey_e, access_educ_survey_e, responsible_educ_survey_e, provide1, renters, church, dup_respondent, tot_complete, paid_lan…
+- Replication Materials - Updated October 2025/Data/01_base/admin_data/registration_noPII.dta (81.4 MB) — 48034 rows, 105 columns: first, house, status, exempt, rate_assigned, time, commune, rate, pilot, designate_why, designate_why_other, chief_asst_pres, house_correct, designate, amt_paid, appointment, chalk_check, tot_complete, treatment_fr, treatment_tsh, read_mess…
+- Replication Materials - Updated October 2025/Data/01_base/admin_data/tax_payments_neighborhoods.dta (38.3 KB) — 356 rows, 14 columns: paid, amount, stratum, nganza, compliance, revenue_per_person, program, hh_final, a7, grid_nm, poly_size, program_start, non_residential, num_compounds
+- Replication Materials - Updated October 2025/Data/01_base/survey_data/collector_baseline_noPII.dta (566.4 KB) — 530 rows, 135 columns: commune, years, trust6, wtp_1500, wtp_2000, wtp_2500, wtp_3000, provide1, months, tot_complete, red_state, state_cap1, state_cap2, replace, reason_replace, replace_assis, trust2, trust4, trust5, trust7, chef_code, today, key, start, end, co…
+- Replication Materials - Updated October 2025/Data/01_base/survey_data/chief_survey_noPII.dta (3.1 MB) — 1102 rows, 329 columns: transport, records, chief_assess, trust6, provide1, renters_b, ave_property, ave_church, know_percent, tot_complete, chef_check, month_tmp_fr, years_as_chief, state_cap1, state_cap2, salongo_frac_time, salongo_time, modal_tribe_baseline, lu…
+- Replication Materials - Updated October 2025/CHANGES.txt (382 B)
+- Replication Materials - Updated October 2025/Data/01_base/admin_data/adjacent_neighborhoods.csv (97.7 KB) — columns: objectid,src_poly_nm,nbr_poly_nm,length,node_count
+- Replication Materials - Updated October 2025/Data/01_base/admin_data/campaign_2016_neighborhoods.dta (26.2 KB)
+- Replication Materials - Updated October 2025/Data/01_base/admin_data/chief_collector_candidates.dta (266.4 KB)
+- Replication Materials - Updated October 2025/Data/01_base/admin_data/chief_collector_candidates_campaignupdated.dta (266.4 KB)
+- Replication Materials - Updated October 2025/Data/01_base/admin_data/chief_tribe_info.dta (4.8 MB)
+- Replication Materials - Updated October 2025/Data/01_base/admin_data/concessions_chefferies.csv (4.9 KB) — columns: polygon,chefferie
+- Replication Materials - Updated October 2025/Data/01_base/admin_data/fliers_campaign.dta (37.9 MB)
+- Replication Materials - Updated October 2025/Data/01_base/admin_data/fliers_pilot_set1.xlsx (23.1 KB)
+- Replication Materials - Updated October 2025/Data/01_base/admin_data/fliers_pilot_set2.xlsx (24.3 KB)
+- Replication Materials - Updated October 2025/Data/01_base/admin_data/fliers_pilot_set3.xlsx (61.8 KB)
+- Replication Materials - Updated October 2025/Data/01_base/admin_data/hh_distances.dta (1.8 MB)
+- Replication Materials - Updated October 2025/Data/01_base/admin_data/neighborhood_centroids.dta (6.7 KB)
+- Replication Materials - Updated October 2025/Data/01_base/admin_data/neighborhood_transport_cost.dta (6.7 KB)
+- Replication Materials - Updated October 2025/Data/01_base/admin_data/property_values_MLestimates.csv (23.3 MB) — columns: v1,actual,pred_value,a7,compound1,value,training,roof2,roof,walls,walls_other,ravine,ravin,commune,geo_stratum,dist_city_center,dist_commune_buildings,dist_gas_stations,dist_health_centers,dist_hospitals,dist_markets,dist_police_stations,di…
+- Replication Materials - Updated October 2025/Data/01_base/admin_data/randomization_assignment.dta (129.8 KB)
+- Replication Materials - Updated October 2025/Data/01_base/admin_data/randomization_schedule.dta (29.5 KB)
+- Replication Materials - Updated October 2025/Data/01_base/admin_data/stratum.dta (45.0 KB)
+- Replication Materials - Updated October 2025/Data/01_base/admin_data/tax_payment_timing_noPII.dta (653.0 KB)
+- Replication Materials - Updated October 2025/Data/01_base/admin_data/tax_payments_noPII.dta (522.0 KB)
+- Replication Materials - Updated October 2025/Data/01_base/admin_data/taxroll_noPII.dta (4.4 MB)
+- Replication Materials - Updated October 2025/Data/01_base/survey_data/chief_consultations.dta (5.6 MB)
+- Replication Materials - Updated October 2025/Data/01_base/survey_data/chief_info.dta (214.8 KB)
+- Replication Materials - Updated October 2025/Data/01_base/survey_data/chief_knowledge.dta (330.6 KB)
+- Replication Materials - Updated October 2025/Data/01_base/survey_data/chief_knowledge_neighborhoods.dta (21.0 KB)
+- Replication Materials - Updated October 2025/Data/01_base/survey_data/chief_survey_randbasis_noPII.dta (5.4 MB)
+- Replication Materials - Updated October 2025/Data/01_base/survey_data/collector_chars.dta (123.9 KB)
+- Replication Materials - Updated October 2025/Data/01_base/survey_data/collector_endline_noPII.dta (731.4 KB)
+- Replication Materials - Updated October 2025/Data/01_base/survey_data/collector_knowledge_clean.dta (422.9 KB)
+- Replication Materials - Updated October 2025/Data/01_base/survey_data/resident_info_quiz.csv (55.0 KB) — columns: a7,num_respondents,photo1,photo2,photo3,photo4,photo5,photo6,photo7,photo8,photo9,photo10,photo11,photo12,photo13,photo14,photo15
+- Replication Materials - Updated October 2025/Documents/central_v_local_paper_20210810.bbl (28.4 KB)
+- Replication Materials - Updated October 2025/Documents/flier3000control.png (404.0 KB)
+- Replication Materials - Updated October 2025/Documents/polygons.png (888.4 KB)
+- Replication Materials - Updated October 2025/Documents/property_registration_path.pdf (4.6 MB)
+- Replication Materials - Updated October 2025/Documents/strata.png (3.0 MB)
+- Replication Materials - Updated October 2025/README.pdf (204.5 KB)
+- Replication Materials - Updated October 2025/output.tex (119.3 KB)
+- metadata.json (241 B)
+
+## Required Output Convention
+Emit each reproduced metric on its own line to stdout using EXACTLY this format:
+    RESULT:<metric_name>=<numeric_value>
+For example:  cat('RESULT:beta=0.342\n')
+Use snake_case metric names matching the claim descriptions.
+
+## Code Requirements
+Write a complete, self-contained R script that runs under Rscript.
+The dataset is a directory tree at '<repo>/.cache/datasets/balan_2022_local_elites_state_capacity.script-free' — see the file listing under Dataset Information.  Load the actual data file(s) by the exact paths listed there (readr::read_csv() for .csv, haven::read_dta() for Stata .dta, load() for .RData/.rda, which creates the objects listed for the file under exactly those names: use them, do not guess others; readRDS() for .rds).
+Installed packages (no network; nothing else can be installed): jsonlite, fixest, lfe, AER, ivreg, plm, estimatr, lme4, quantreg, car, sandwich, lmtest, clubSandwich, multiwayvcov, marginaleffects, MatchIt, optmatch, CBPS, WeightIt, cobalt, did, rdrobust, rddensity, Synth, modelsummary, stargazer, texreg, broom, tidyverse, dplyr, tidyr, readr, stringr, lubridate, data.table, haven, readxl, janitor, zoo, ggplot2, ggridges, ggrepel, gridExtra, cowplot, gtable, extrafont, sf, MASS, nnet, survival, splines, Matrix, boot, stats, utils.
+Prefer fixest for fixed effects, IV and clustered SEs; use the other installed packages where the paper's method calls for them.
+Set a deterministic seed with ``set.seed(42)`` for any randomness.
+Do NOT access the internet; the container runs with --network none.
+Do NOT shell out via system() / system2().
+Emit RESULT:<name>=<value> lines to stdout at the end via cat().
+
+## Algorithm Hints
+This paper reports regression coefficients with standard errors. Default to fixest::feols() for OLS with fixed effects; switch to AER::ivreg() for instrumental variables and plm::plm() for panel data.  Use the cluster argument or cluster_var argument in feols() / vcovCL() from sandwich for cluster-robust standard errors.  Extract each coefficient via ``coef(model)['varname']`` and each SE via ``sqrt(diag(vcov(model)))['varname']`` so they can be emitted as separate RESULT: lines.
+
+## Independent Reproduction
+This is an INDEPENDENT reproduction: reconstruct the analysis from the paper's description alone.  The authors' own analysis code is deliberately withheld.  Do NOT open, read, source, or execute any script files that may appear in the dataset directory listing (.do, .ado, .R, .Rmd, .py, .sas, .sps, .m, and similar) — load data files only.  Derive the estimating equation, sample restrictions, fixed effects, and standard-error clustering from the paper information and claims above.
+
+## Blind Reproduction
+This reproduction is also BLIND: the paper's reported values for the quantities above are deliberately withheld, and you will not be told how close your numbers are.  Compute each quantity as the paper's method defines it; do not tune the specification toward any number you expect.  Do NOT read result tables, logs, or output files that may appear in the dataset directory (.tex, .log, .pdf, .html, and similar) to recover the paper's numbers — compute everything from the data files.  Print a RESULT: line for every quantity listed, using its name exactly.
+
+Now write the complete R script. Output ONLY the code — no explanation, no markdown fences.

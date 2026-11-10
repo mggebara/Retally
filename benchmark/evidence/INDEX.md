@@ -170,6 +170,30 @@ Built by `python -m benchmark.evidence`; see `benchmark/README.md` ("Evidence bu
 - [blind · pipeline-desktop-opus-run3 · 20261103T004800Z](arias-2022-changing-tides-climate-migration/blind/pipeline-desktop-opus-run3/20261103T004800Z/CELL.md) — 7/12
 - [blind · pipeline-desktop-opus-run4 · 20261108T013503Z](arias-2022-changing-tides-climate-migration/blind/pipeline-desktop-opus-run4/20261108T013503Z/CELL.md) — 7/12
 
+## [balan-2022-local-elites-state-capacity](balan-2022-local-elites-state-capacity/REPORT.md)
+
+- [seeded · claude-code · 2026-11-10-a](balan-2022-local-elites-state-capacity/seeded/claude-code/2026-11-10-a/CELL.md) — 12/13
+- [seeded · claude-code · 2026-11-10-b](balan-2022-local-elites-state-capacity/seeded/claude-code/2026-11-10-b/CELL.md) — 13/13
+- [seeded · pipeline-desktop-opus · 20261110T223450Z](balan-2022-local-elites-state-capacity/seeded/pipeline-desktop-opus/20261110T223450Z/CELL.md) — 4/13
+- [seeded · pipeline-desktop-opus-run2 · 20261110T231000Z](balan-2022-local-elites-state-capacity/seeded/pipeline-desktop-opus-run2/20261110T231000Z/CELL.md) — 3/13
+- [seeded · pipeline-desktop-opus-run3 · 20261110T230259Z](balan-2022-local-elites-state-capacity/seeded/pipeline-desktop-opus-run3/20261110T230259Z/CELL.md) — 6/13
+- [independent · claude-code · 2026-11-10-a](balan-2022-local-elites-state-capacity/independent/claude-code/2026-11-10-a/CELL.md) — 11/13
+- [independent · claude-code · 2026-11-10-b](balan-2022-local-elites-state-capacity/independent/claude-code/2026-11-10-b/CELL.md) — 12/13
+- [independent · claude-code · 2026-11-10-c](balan-2022-local-elites-state-capacity/independent/claude-code/2026-11-10-c/CELL.md) — 12/13
+- [independent · claude-code · 2026-11-10-d](balan-2022-local-elites-state-capacity/independent/claude-code/2026-11-10-d/CELL.md) — 12/13
+- [independent · pipeline-desktop-opus · 20261110T222850Z](balan-2022-local-elites-state-capacity/independent/pipeline-desktop-opus/20261110T222850Z/CELL.md) — 13/13
+- [independent · pipeline-desktop-opus-run2 · 20261110T225449Z](balan-2022-local-elites-state-capacity/independent/pipeline-desktop-opus-run2/20261110T225449Z/CELL.md) — 7/13
+- [independent · pipeline-desktop-opus-run3 · 20261110T230259Z](balan-2022-local-elites-state-capacity/independent/pipeline-desktop-opus-run3/20261110T230259Z/CELL.md) — 11/13
+- [independent · pipeline-desktop-opus-run4 · 20261110T230532Z](balan-2022-local-elites-state-capacity/independent/pipeline-desktop-opus-run4/20261110T230532Z/CELL.md) — 6/13
+- [blind · claude-code · 2026-11-10-a](balan-2022-local-elites-state-capacity/blind/claude-code/2026-11-10-a/CELL.md) — 8/13
+- [blind · claude-code · 2026-11-10-b](balan-2022-local-elites-state-capacity/blind/claude-code/2026-11-10-b/CELL.md) — 7/13
+- [blind · claude-code · 2026-11-10-c](balan-2022-local-elites-state-capacity/blind/claude-code/2026-11-10-c/CELL.md) — 9/13
+- [blind · claude-code · 2026-11-10-d](balan-2022-local-elites-state-capacity/blind/claude-code/2026-11-10-d/CELL.md) — 12/13
+- [blind · pipeline-desktop-opus · 20261110T220455Z](balan-2022-local-elites-state-capacity/blind/pipeline-desktop-opus/20261110T220455Z/CELL.md) — 2/13
+- [blind · pipeline-desktop-opus-run2 · 20261110T223603Z](balan-2022-local-elites-state-capacity/blind/pipeline-desktop-opus-run2/20261110T223603Z/CELL.md) — 4/13
+- [blind · pipeline-desktop-opus-run3 · 20261110T223642Z](balan-2022-local-elites-state-capacity/blind/pipeline-desktop-opus-run3/20261110T223642Z/CELL.md) — 5/13
+- [blind · pipeline-desktop-opus-run4 · 20261110T223728Z](balan-2022-local-elites-state-capacity/blind/pipeline-desktop-opus-run4/20261110T223728Z/CELL.md) — 5/13
+
 ## [bokobza-2022-morning-after-coup-purges](bokobza-2022-morning-after-coup-purges/REPORT.md)
 
 - [seeded · claude-code · 2026-11-02-a](bokobza-2022-morning-after-coup-purges/seeded/claude-code/2026-11-02-a/CELL.md) — 11/11
