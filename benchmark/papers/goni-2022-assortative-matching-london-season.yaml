@@ -1,0 +1,428 @@
+# Original paper: Goñi, M. (2022). "Assortative Matching at the Top of
+#   the Distribution: Evidence from the World's Most Exclusive Marriage
+#   Market." American Economic Journal: Applied Economics, 14(3),
+#   445-487.  doi:10.1257/app.20180463 (July 2022 issue).
+#
+# Reproduction report: Kattan, L., Mark, L., Morin, L.-P., & Tian, W.
+#   (2023). "A Comment on Assortative Matching at the Top of the
+#   Distribution: Evidence from the World's Most Exclusive Marriage
+#   Market (2022)." I4R Discussion Paper No. 47 (July 2023; I4R First
+#   Meta Database replication team 3, 71 rows).  Verdict: reproducible
+#   and robust — "we reproduce the paper's main findings and find no
+#   coding errors" (abstract), "we were successfully able to reproduce
+#   all tables and figures using the publicly available codes and
+#   datasets" (p. 4), and the conclusion calls the main findings robust
+#   and reliable.  The DP prints its own reproduction of Table 2 columns
+#   1-2 in both panels (DP Table 2, columns 1-2, "replicate columns 1 and
+#   2 of author's Table 2").  Every one of the 71 meta-database rows is a
+#   ROBUSTNESS or HETEROGENEITY variant of a Table 2 coefficient, not a
+#   plain reproduction: county fixed effects instead of distance to London
+#   (DP Table 1), the landholdings-restricted sample (DP Table 2 cols
+#   3-4), one interruption year at a time (DP Tables 3-5) and age groups
+#   15-26 / 27-35 (DP Tables 6-7).  So the rows' replicator values that
+#   differ from the paper (0.48 vs 0.524 is the younger-age column 3 of
+#   DP Table 6; -0.786 vs -0.516 is the 1861-only column 4 of DP Table 3)
+#   are different specifications, not failed reproductions.
+#
+# Why this paper:
+#   1. The first catalog entry with a MANUALLY PLACED package
+#      (openICPSR, login + terms; data_access: manual).
+#   2. A probit-with-marginal-effects table and an OLS table in one
+#      (Table 2), with standard errors clustered by birth year: average
+#      marginal effects from probit, which a reproduction must report on
+#      the probability scale, beside linear models on percentile ranks.
+#   3. The analysis data ship ready-made (one Stata file with the sample
+#      flags and the treatment variable), so the headline table is
+#      computable without the dataprep chain.
+#
+# What original_claims pins: Table 2 (the paper's main results table),
+#   Panel A (baseline) treatment effects in all six columns with SEs,
+#   Panel B (controlling for distance to London) treatment effects in
+#   columns 1-4 with SEs, and the three Panel A sample sizes (baseline,
+#   landholdings sample, marital-rates sample).  13 claims, values exactly
+#   as printed (3 decimals for the estimates).
+
+id: goni-2022-assortative-matching-london-season
+i4r_report_url: https://www.econstor.eu/bitstream/10419/273432/1/I4R-DP047.pdf
+# Target language for regeneration (the original is Stata, with ArcMap
+# .mxd files for the maps; Retally generates R and reads the .dta files
+# with haven).
+language: r
+outcome_label: reproducible
+# Pipeline tuning is frozen; this is an evaluation paper.
+split: holdout
+# Contamination bookkeeping.  publication_date is the FIRST public
+# version: chapter 1 of Goñi's Universitat Pompeu Fabra PhD thesis,
+# "Essays on marital sorting and fertility" (2015, hdl:10803/296803; the
+# UPF repository abstract describes the London Season disruption chapter,
+# with different headline numbers, "70-80%" of sorting).  Found by web
+# search 2026-11-09; the thesis PDF itself was not opened (the UPF
+# repository answered 403 to scripts).  The journal version: AEA article
+# page "July 2022" (citation_publication_date 2022/07), Crossref DOI
+# created 2022-06-28, issued 2022-07-01.  package_release_date is the
+# DataCite registration of doi:10.3886/E140921V1 (registered
+# 2022-06-15T19:15:11Z, DataCite API 2026-11-09); the openICPSR page
+# itself answers 403 to scripts.  Logs in the package are dated 21 Sep
+# 2021 (Table4.log "opened on").
+publication_date: "2015"
+package_release_date: "2022-06-15"
+
+paper:
+  # The published AEJ: Applied typeset article (43 pp., "American Economic
+  # Journal: Applied Economics 2022, 14(3): 445-487" on p. 1), mirrored on
+  # gwern.net; checked 2026-11-09: 200 application/pdf, 326,928 bytes, md5
+  # 00ae39e9a9287f253c4405f894812330.  The University of Bergen's own open
+  # deposit of the same published version (NVA / BORA record
+  # 0198cc3e6142-65b6e3a3-cda5-40e6-a70a-398ad7976b19, file app.20180463.pdf,
+  # 1,184,793 bytes, "PublishedVersion", "Copyright 2022 American Economic
+  # Association") is only reachable through a short-lived presigned S3 link
+  # from api.nva.unit.no/publication/<id>/filelink/<file>, so it cannot be
+  # the catalog source; its text was extracted and every number in Tables
+  # 1, 2, 3 and 5 compared with the gwern copy: identical (108 numeric
+  # tokens in Table 2, 104 in Table 3).  The AEA PDF is paywalled (HTML to
+  # scripts).
+  source: https://gwern.net/doc/sociology/2022-goni.pdf
+  title: "Assortative Matching at the Top of the Distribution: Evidence from the World's Most Exclusive Marriage Market"
+  authors:
+    - Marc Goñi
+
+dataset:
+  source: benchmark/manual-packages/T3/140921-V1.zip
+  data_access: manual
+  access_notes: >
+    AEA Data and Code Repository on openICPSR, project 140921, version V1
+    (doi:10.3886/E140921V1); login and terms-of-use click-through required,
+    so the zip was downloaded by hand (2026-11-09) and placed unchanged at
+    benchmark/manual-packages/T3/140921-V1.zip (45,116,424 bytes, md5
+    97615f58f9bf26f4994a1b84aed7a18a; SOURCE.txt beside it).  V1 is the
+    only version.  296 entries, 386 MB uncompressed, no nested archives.
+    Contents: README.pdf (18 pp.; data provenance, file-to-table map, run
+    times, no estimates); data/ with Stata .dta (final-data.dta, 231 MB,
+    the analysis file for Tables 1-3; placebo-data.dta;
+    final-data-sec4.dta), raw tab-delimited .txt sources (peers.txt
+    Hollingsworth extract, bateman-master.txt, familyseats.txt,
+    seasonattend.txt, landholings-baseline-sample.txt, sheppard.txt,
+    countycntrls.txt), biographies.xls, constituencies.xlsx and
+    data/shapefiles/ (ArcGIS shapefiles and a raster); programs/ with
+    00_setup.do, 01_dataprep/master-dataprep.do (plus an intermediate
+    data file, dta-temp-files/final-data-men.dta), 02_analysis/
+    master-analysis.do and numbers-paper.do, 03_appendix/
+    master-appendix.do (plus "aux data appendix/" .txt/.xlsx inputs),
+    04_auxiliary/cgmreg.do, grc1leg.ado and grc1leg.hlp, and three
+    ArcMap .mxd map documents; results/ with every main and appendix
+    table as outreg2 .txt and .tex, Stata .log files (Table 2
+    small-cluster bootstrap, Table 4, appendix) and every figure as PDF.
+    The script-free copy (independent / blind) withholds 120 files (the
+    runner's manifest, 2026-11-09): the 7 .do/.ado scripts and 17 Stata
+    .log files by suffix, and 96 regression-table .txt/.tex outputs by
+    content (results/Table2_A/B, Table3_A/B, Table6_A/B, Table7_A/B and
+    the appendix B/C regression tables).  Kept: README.pdf, the data, the .mxd files,
+    grc1leg.hlp, figure PDFs, and descriptive or non-regression .tex
+    tables (Table1.tex means, Table5.tex chi-squared tests, appendix
+    contingency and descriptive tables), none of which prints a pinned
+    value.  Project page:
+    https://www.openicpsr.org/openicpsr/project/140921/version/V1/view
+
+original_claims:
+  # ---- Table 2, Panel A: baseline ----
+  - description: treatment_married_commoner_table2_panelA_col1
+    value: 0.005
+    claim_type: coefficient
+    standard_error: 0.002
+    unit: change in the probability of marrying a commoner per percentage point of synthetic probability
+    location: "Table 2, Panel A (Baseline), column (1) Married a commoner, Treatment"
+    context: >
+      Table 2 ("The Season's Interruption and Marriage Outcomes, Probit,
+      and OLS Estimation"), Panel A, column (1).  Probit of an indicator
+      for marrying a commoner (a husband classed as a commoner rather
+      than a peer, a peer's son or a member of the gentry) on the
+      treatment: a woman's synthetic probability (in percent) to marry
+      during the interruption of the London Season (1861-1863), the sum of
+      the percentages of women marrying at her ages in 1861, 1862 and 1863
+      in "normal times", computed from a benchmark cohort of peers'
+      daughters born 1815-1830 (excluding those who married after 1861 or
+      died before age 30).  Controls: indicators for dukes', marquesses'
+      and earls' daughters and for English peerages, and birth order
+      excluding heirs.  Baseline sample: all peers' daughters aged 15-35
+      in 1861 who ever married, excluding second marriages, women married
+      to foreigners and royals.  The entry is the marginal effect of the
+      treatment on the probability (the paper reads it as a percentage-
+      point change in the probability per percentage point of synthetic
+      probability).  Standard errors clustered by birth year.
+  - description: treatment_married_heir_table2_panelA_col2
+    value: -0.004
+    claim_type: coefficient
+    standard_error: 0.002
+    unit: change in the probability of marrying a peer's heir per percentage point of synthetic probability
+    location: "Table 2, Panel A (Baseline), column (2) Married an heir, Treatment"
+    context: >
+      Table 2, Panel A, column (2): the same probit as column (1) with an
+      indicator for marrying an heir (a husband who would inherit a peerage
+      title) as the outcome; marginal effect of the synthetic probability
+      to marry during the interruption.  Same controls, baseline sample
+      and birth-year clustered standard errors.
+  - description: treatment_landholdings_diff_abs_table2_panelA_col3
+    value: 0.524
+    claim_type: coefficient
+    standard_error: 0.196
+    unit: percentile ranks of family landholdings per percentage point of synthetic probability
+    location: "Table 2, Panel A (Baseline), column (3) Spouses' landholdings, Difference (absolute value), Treatment"
+    context: >
+      Table 2, Panel A, column (3).  OLS of the absolute difference
+      between the spouses' birth families' landholdings, measured as
+      percentile ranks in acres (Bateman 1883), on the synthetic
+      probability to marry during the interruption and the Table 2
+      controls.  Sample: the baseline sample restricted to marriages for
+      which Bateman lists both spouses' family landholdings.  Larger
+      values mean less sorting.  Standard errors clustered by birth year.
+  - description: treatment_landholdings_diff_husband_minus_wife_table2_panelA_col4
+    value: -0.516
+    claim_type: coefficient
+    standard_error: 0.225
+    unit: percentile ranks of family landholdings per percentage point of synthetic probability
+    location: "Table 2, Panel A (Baseline), column (4) Spouses' landholdings, Difference (husband - wife), Treatment"
+    context: >
+      Table 2, Panel A, column (4): OLS as in column (3) with the signed
+      difference in family-landholdings percentile ranks, husband minus
+      wife, as the outcome (negative values are women marrying poorer
+      husbands).  Same landholdings sample, controls and birth-year
+      clustered standard errors.
+  - description: treatment_married_down_table2_panelA_col5
+    value: 0.009
+    claim_type: coefficient
+    standard_error: 0.003
+    unit: change in the probability of marrying down per percentage point of synthetic probability
+    location: "Table 2, Panel A (Baseline), column (5) Married down, Treatment"
+    context: >
+      Table 2, Panel A, column (5): probit of an indicator for marrying
+      down (a husband from a family with smaller landholdings than the
+      wife's) on the synthetic probability to marry during the
+      interruption and the Table 2 controls, in the landholdings sample of
+      columns (3)-(4); marginal effect of the treatment on the
+      probability.  Standard errors clustered by birth year.
+  - description: treatment_never_married_table2_panelA_col6
+    value: 0.002
+    claim_type: coefficient
+    standard_error: 0.002
+    unit: change in the probability of never marrying per percentage point of synthetic probability
+    location: "Table 2, Panel A (Baseline), column (6) Never married, Treatment"
+    context: >
+      Table 2, Panel A, column (6): probit of an indicator for never
+      marrying on the synthetic probability to marry during the
+      interruption and the Table 2 controls; marginal effect on the
+      probability.  Sample: peers' daughters aged 15-35 in 1861 whether
+      they married or not, excluding those who died before age 35.  The
+      paper notes the effect is not statistically different from zero.
+      Standard errors clustered by birth year.
+
+  # ---- Table 2, Panel B: controlling for distance to London ----
+  - description: treatment_married_commoner_table2_panelB_col1
+    value: 0.006
+    claim_type: coefficient
+    standard_error: 0.002
+    unit: change in the probability of marrying a commoner per percentage point of synthetic probability
+    location: "Table 2, Panel B (Controlling for distance to London), column (1) Married a commoner, Treatment"
+    context: >
+      Table 2, Panel B, column (1): the Panel A column (1) probit with the
+      distance between the woman's family seat and London added as a
+      control, which restricts the sample to women with a family seat
+      recorded in Burke (1826).  Marginal effect of the synthetic
+      probability to marry during the interruption; standard errors
+      clustered by birth year.
+  - description: treatment_married_heir_table2_panelB_col2
+    value: -0.005
+    claim_type: coefficient
+    standard_error: 0.002
+    unit: change in the probability of marrying a peer's heir per percentage point of synthetic probability
+    location: "Table 2, Panel B (Controlling for distance to London), column (2) Married an heir, Treatment"
+    context: >
+      Table 2, Panel B, column (2): the married-an-heir probit with the
+      distance from the family seat to London as an added control
+      (women with a recorded family seat).  Marginal effect of the
+      treatment; standard errors clustered by birth year.
+  - description: treatment_landholdings_diff_abs_table2_panelB_col3
+    value: 0.512
+    claim_type: coefficient
+    standard_error: 0.213
+    unit: percentile ranks of family landholdings per percentage point of synthetic probability
+    location: "Table 2, Panel B (Controlling for distance to London), column (3) Difference (absolute value), Treatment"
+    context: >
+      Table 2, Panel B, column (3): the column (3) OLS of the absolute
+      difference in spouses' family-landholdings percentile ranks with the
+      distance from the family seat to London added (landholdings sample,
+      women with a recorded family seat).  Standard errors clustered by
+      birth year.
+  - description: treatment_landholdings_diff_husband_minus_wife_table2_panelB_col4
+    value: -0.537
+    claim_type: coefficient
+    standard_error: 0.221
+    unit: percentile ranks of family landholdings per percentage point of synthetic probability
+    location: "Table 2, Panel B (Controlling for distance to London), column (4) Difference (husband - wife), Treatment"
+    context: >
+      Table 2, Panel B, column (4): the column (4) OLS of the husband-
+      minus-wife difference in family-landholdings percentile ranks with
+      the distance from the family seat to London added.  Standard errors
+      clustered by birth year.
+
+  # ---- Table 2, Panel A sample sizes ----
+  - description: n_obs_table2_panelA_baseline
+    value: 644
+    claim_type: count
+    unit: women (peers' daughters who ever married)
+    location: "Table 2, Panel A, Observations, columns (1)-(2)"
+    context: >
+      Number of observations in Table 2, Panel A, columns (1) and (2):
+      the baseline sample of peers' daughters aged 15-35 in 1861 who ever
+      married, excluding second marriages, women married to foreigners
+      and royals.
+  - description: n_obs_table2_panelA_landholdings
+    value: 324
+    claim_type: count
+    unit: marriages
+    location: "Table 2, Panel A, Observations, columns (3)-(5)"
+    context: >
+      Number of observations in Table 2, Panel A, columns (3) to (5): the
+      baseline marriages for which Bateman (1883) lists both spouses'
+      family landholdings.
+  - description: n_obs_table2_panelA_never_married
+    value: 765
+    claim_type: count
+    unit: women (peers' daughters, married or not)
+    location: "Table 2, Panel A, Observations, column (6)"
+    context: >
+      Number of observations in Table 2, Panel A, column (6): peers'
+      daughters aged 15-35 in 1861 including those who never married,
+      excluding those who died before age 35.
+
+# DP47 prints its own reproduction of Table 2 columns 1-2 in both panels
+# (DP Table 2, columns 1-2); those four coefficients and the baseline N
+# carry the DP's printed values.  For the other claims the DP states that
+# all tables reproduce ("successfully able to reproduce all tables and
+# figures", p. 4) without printing them; as in molina-garzon-2022, those
+# findings record the paper's value under that blanket verdict and quote
+# one of the meta-database's robustness rows for the claim in the note.
+i4r_replicator_findings:
+  - claim_id: 0
+    reproduced_value: 0.005
+    outcome: matches
+    notes: DP47 Table 2 col 1 (replicates paper Table 2 Panel A col 1) 0.005 (0.002), N 644.
+  - claim_id: 1
+    reproduced_value: -0.004
+    outcome: matches
+    notes: DP47 Table 2 col 2 (replicates Panel A col 2) -0.004 (0.002), N 644.
+  - claim_id: 2
+    reproduced_value: 0.524
+    outcome: matches
+    notes: Blanket DP47 verdict; DB rows are variants, e.g. 1861-only 1.288 (0.485) DP Table 3, ages 15-26 0.480 (0.352) DP Table 6.
+  - claim_id: 3
+    reproduced_value: -0.516
+    outcome: matches
+    notes: Blanket DP47 verdict; DB rows are variants, e.g. 1861-only -0.786 (0.529) DP Table 3, ages 15-26 -0.254 (0.317) DP Table 6.
+  - claim_id: 4
+    reproduced_value: 0.009
+    outcome: matches
+    notes: Blanket DP47 verdict; DB rows are variants, e.g. county FE 0.009 (0.005) DP Table 1, 1861-only 0.011 (0.006) DP Table 3.
+  - claim_id: 5
+    reproduced_value: 0.002
+    outcome: matches
+    notes: Blanket DP47 verdict; DB rows are variants, e.g. 1861-only 0.002 (0.005) DP Table 3, ages 27-35 0.011 (0.003) DP Table 7.
+  - claim_id: 6
+    reproduced_value: 0.006
+    outcome: matches
+    notes: DP47 Table 2 Panel B col 1 0.006 (0.003), N 484; SE prints (0.003) vs the paper's (0.002) (package output 0.0025).
+  - claim_id: 7
+    reproduced_value: -0.005
+    outcome: matches
+    notes: DP47 Table 2 Panel B col 2 -0.005 (0.002), N 484.
+  - claim_id: 8
+    reproduced_value: 0.512
+    outcome: matches
+    notes: Blanket DP47 verdict; DB rows are variants, e.g. 1862-only 1.300 (0.671) DP Table 4, ages 15-26 0.417 (0.370) DP Table 6.
+  - claim_id: 9
+    reproduced_value: -0.537
+    outcome: matches
+    notes: Blanket DP47 verdict; DB rows are variants, e.g. county FE -0.502 (0.326) DP Table 1, 1861-only -0.800 (0.520) DP Table 3.
+  - claim_id: 10
+    reproduced_value: 644
+    outcome: matches
+    notes: DP47 Table 2 cols 1-2 Observations 644.
+  - claim_id: 11
+    reproduced_value: 324
+    outcome: matches
+    notes: Blanket DP47 verdict; DP Tables 3-5 Panel A (same baseline specification by year) print 324 in cols 3-5.
+  - claim_id: 12
+    reproduced_value: 765
+    outcome: matches
+    notes: Blanket DP47 verdict; DP Tables 3-5 Panel A print 765 in col 6.
+
+notes: >
+  Headline findings: women whose age put them at risk of marrying during
+  the 1861-1863 interruption of the London Season were more likely to
+  marry a commoner (Table 2 Panel A col 1, 0.005 (0.002) per percentage
+  point of synthetic probability) and less likely to marry an heir
+  (-0.004 (0.002)), and sorted less by family landholdings (col 3, 0.524
+  (0.196) percentile ranks, which the text reads as a 31 percent
+  reduction in sorting, the abstract's "30 percent"; col 4 -0.516
+  (0.225); col 5 married down 0.009 (0.003)).  The abstract's "40
+  percent" more peer-commoner intermarriage is not a Table 2 number.
+  Never married, col 6, 0.002 (0.002), is insignificant.  Panel B
+  (distance to London) 0.006 (0.002), -0.005 (0.002), 0.512 (0.213),
+  -0.537 (0.221).  Ns: 644 baseline, 324 landholdings sample, 765
+  marital-rates sample (Panel B: 484 / 260 / 565, not pinned).
+
+  Curation pass (2026-11-09).  Pinned 13 claims from Table 2, values
+  exactly as printed.  Cross-check against the meta-database: every
+  o_coeff_dbl / o_std_err_dbl in the 70 Table 2 rows equals a printed
+  Table 2 value (0.005/0.002, -0.004/0.002, 0.524/0.196, -0.516/0.225,
+  0.009/0.003, 0.002/0.002, 0.006/0.002, -0.005/0.002, 0.512/0.213,
+  -0.537/0.221).  Left out: Panel B columns 5-6 and the Panel B Ns
+  (kept the entry at 13), the Distance coefficients, percent correct and
+  dependent-variable means (summary statistics), the bootstrap-t
+  p-values in brackets, Table 3's IV estimates (second-stage 0.39 /
+  0.54 / -0.33 / -0.45 ... with first-stage F; a separate estimator, kept
+  for a later pass), Tables 1, 4, 5 (descriptive / contingency /
+  chi-squared), Section IV and every appendix table.
+
+  Printed precision.  The package's outreg2 output (results/Table2_A.txt,
+  Table2_B.txt, withheld from independent / blind mounts) prints the
+  probit marginal effects at four decimals: Panel A col 1 0.0045
+  (0.0021), col 2 -0.0036 (0.0017), col 5 0.0090 (0.0026), col 6 0.0021
+  (0.0017); Panel B col 1 0.0062 (0.0025), col 2 -0.0047 (0.0018).  The
+  paper rounds them to three decimals; 0.0045 printed as 0.005 sits at
+  the half-unit edge of the printed-precision floor (the four-decimal
+  figure is itself rounded), and Panel B col 1's SE 0.0025 prints as
+  (0.002) in the paper but (0.003) in DP47.  The OLS columns are printed
+  at the same three decimals in both.
+
+  Paper vs package.  The Table 2 notes call the estimates "estimates of
+  equations (2) and (3)" without saying "marginal effects"; the do-file
+  runs probit ... cluster(byear) followed by margins, dydx(*) predict(pr)
+  post, i.e. average marginal effects, which is how the text interprets
+  them (and how Figure 6's notes describe the probit estimates).  The
+  contexts say "marginal effect".
+
+  Package-only facts (never in contexts).  Table 2 (programs/02_analysis/
+  master-analysis.do, "TABLE 2"): use data/final-data.dta, keep if
+  base_sample==1 (cols 1-5) or marital_rates_sample==1 (col 6);
+  outcomes cOut (married a commoner), mheir, fmissmatch (|diff|),
+  fmissmatch2 (husband - wife), fdown (married down: wife's family acres
+  fATot > husband's sfATot), celibacy; treatment syntheticT; controls
+  pr4 biorder hengpee; Panel B adds distlondon; probit / reg with
+  cluster(byear) (21 birth-year clusters); probit columns report margins,
+  dydx(*) predict(pr).  The bootstrap-t p-values come from
+  programs/04_auxiliary/cgmreg.do (the hour-long small-cluster step).
+  The analysis file carries the sample flags and the synthetic
+  probability ready-made, so the dataprep chain (master-dataprep.do on
+  the raw .txt sources) need not be re-run.
+
+  What was read.  The published article (all 43 pp., Tables 1-5 in
+  detail); DP47 in full; the 71 meta-database rows; README.pdf; the
+  Table 2 section of master-analysis.do; the results/Table2 and Table3
+  outputs; the strip-rule classification of the extracted package.
+
+  What could not be verified.  The authors' Stata code and the analysis
+  were not run (no Stata here, no independent R cross-check in this
+  pass).  The thesis version's numbers were not compared.
+
+  Original analysis in Stata (with ArcMap for the maps); language: r is
+  the reproduction target.
