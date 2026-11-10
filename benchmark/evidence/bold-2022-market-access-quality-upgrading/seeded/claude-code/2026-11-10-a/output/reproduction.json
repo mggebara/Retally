@@ -1,0 +1,17 @@
+{
+  "schema": 1,
+  "entry_id": "bold-2022-market-access-quality-upgrading",
+  "mode": "seeded",
+  "run_id": "2026-11-10-a",
+  "reproducer": "claude-code",
+  "language": "r",
+  "final": {"script": "script.R", "stdout": "stdout.txt", "stderr": "stderr.txt", "exit_code": 0},
+  "attempts": [
+    {"dir": "attempt-1", "exit_code": 0, "kind": ""}
+  ],
+  "deviations": [],
+  "notes": "attempt-1 was an exploratory run (variable names and tabulations, no RESULT lines). The final script translates FINAL_create_vars_main_g1.do (variable construction for the market access panel: acreage, yield, revenue and price, harvest value at village mean price, season-specific expenses incl. own hours valued at the data-derived hourly wage of 833 UGX, USD conversion) and table6.do Panel A (ANCOVA on follow-up seasons: buy_treatment + household spring-2018 baseline value, falling back to the mean over all baseline seasons + season dummies, clustered by village). It also translates FINAL_create_vars_returns.do and table2.do (visual defects per bag reshaped long, village FE, clustered by household; lab defect share with village FE and HC1 SEs; sales 2-4 reshaped long with village and week-of-sale FE, clustered by household). The Fisher permutation p-values in Table 6 were not computed because no listed claim needs them. The quasi-control and bought lab samples appended in the returns .do file have treatment missing and never enter Table 2, so they were omitted. All 13 claimed values match at their reported precision on the first scored run, so there were no claim or error attempts.",
+  "files_read_outside_mount": [],
+  "started_at": "2026-11-10T14:25:00Z",
+  "finished_at": "2026-11-10T14:48:00Z"
+}

@@ -1,0 +1,26 @@
+{
+  "schema": 1,
+  "entry_id": "bold-2022-market-access-quality-upgrading",
+  "mode": "blind",
+  "run_id": "2026-11-10-b",
+  "reproducer": "claude-code",
+  "language": "r",
+  "final": {"script": "script.R", "stdout": "stdout.txt", "stderr": "stderr.txt", "exit_code": 0},
+  "attempts": [
+    {"dir": "attempt-1", "exit_code": 1, "kind": ""},
+    {"dir": "attempt-2", "exit_code": 0, "kind": ""},
+    {"dir": "attempt-3", "exit_code": 0, "kind": ""}
+  ],
+  "deviations": [
+    "US dollar amounts (Table 6) use a constant exchange rate of 3700 UGX/USD; the paper does not state the rate.",
+    "Table 6 variables were constructed from the raw survey files (the authors' variable-creation code is withheld): price = household-season revenue / kg sold from seller_data (all buyers incl. the quality buyer); harvest = sum of plot harvests (fallback harvest_kg); acreage = sum of plot sizes; harvest value = sales revenue + unsold harvest valued at the village-season mean price of sales to buyers other than the quality buyer (code 555); monetary expenses = seeds, fertilizer, booster, manure, chemicals, equipment/other post-harvest, transport and hired labour (tot_lab_costs_*, labor_cost_ph).",
+    "Profit incl. own hours: family hours (pre-harvest tasks + decob/winnow/sort/bag) valued at a season median hourly hired wage (hired cost per day / median family hours per day, or cost per hour); only seasons 5-7 have the full hours module, and there is no pretreatment value, so that ANCOVA has no lagged outcome (missing-baseline indicator approach).",
+    "ANCOVA pretreatment value = household mean of the outcome over baseline seasons 1-3; missing baseline set to 0 with a missing indicator.",
+    "Table 2: visual defects = count over 10 types (dirty, cobs, stones, dust, insects live or dead, broken, immature, damaged, rotten, mould) with unrecorded items counted as absent; a bag counts as inspected if any defect item was recorded. Deductions use enumerator bag weights (add4_weight) of the bags in a sale as y and buyer weight after deduction (ind_ded_weight) as z; week FE = Stata-style week of year of the sale date.",
+    "fixest dropped one fixed-effect singleton sale in Table 2 cols 3-5 (210 sales with date -> 209 used); left as is."
+  ],
+  "notes": "Blind independent reproduction from paper text + raw .dta files. Three exploratory runs (variable listings, coverage tabulations; attempt-1 crashed on a haven label type issue in the listing code, no RESULT lines in any). The single scored run is the final one. Read the mount README.pdf and the survey instrument add5_bags_sales.xlsx (both inside the mount) for variable meaning; did not open 'other/Results reported in the main text.pdf'. Table 2 cols 1-2 use village FE (household-clustered / HC1 robust SEs), cols 3-5 village + week FE with household clustering. Table 6 panel A uses ANCOVA with season dummies and village-clustered SEs on seasons 4-7. Main uncertainties: exchange rate, exact components of expenses/harvest value, the wage used to value own hours, and the harvest-availability rule (658 follow-up obs with harvest).",
+  "files_read_outside_mount": [],
+  "started_at": "2026-11-10T14:44:18Z",
+  "finished_at": "2026-11-10T14:50:30Z"
+}

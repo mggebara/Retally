@@ -1,0 +1,149 @@
+returns data: 99 rows, 485 cols
+village column used: ea_code 
+bags: 620 
+OLS estimation, Dep. Var.: defects
+Observations: 620
+Fixed-effects: vil: 9
+Standard-errors: Clustered (hh_row) 
+      Estimate Std. Error  t value  Pr(>|t|)    
+treat -2.06144   0.183875 -11.2111 < 2.2e-16 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+RMSE: 0.882417     Adj. R2: 0.666749
+                 Within R2: 0.543431
+lab total column: Total_weight_of_maize_g  components: Foreign_matter_tot_g,Inorganic_matter_tot_g,Broken_grains_tot_g,Pest_damaged_grains_tot_g,Rotten_and_diseased_grain,Discoloured_grains_tot_g,Immature_or_shrivelled_gr 
+lab obs: 82  mean share: 0.2003342 
+OLS estimation, Dep. Var.: lab
+Observations: 82
+Fixed-effects: vil: 9
+Standard-errors: Heteroskedasticity-robust 
+       Estimate Std. Error  t value   Pr(>|t|)    
+treat -0.197798   0.053666 -3.68573 0.00043873 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+RMSE: 0.248652     Adj. R2: 0.282936
+                 Within R2: 0.126349
+other add5 stems: add5_sold_when_e 
+sale date stem: add5_sold_when_e 
+class of add5_sold_when_e_1 : Date 
+ [1] "2019-03-29" "2019-03-30" "2019-04-06" "2019-03-07" "2019-02-06"
+ [6] "2019-02-02" "2019-02-14" "2019-03-05" "2019-02-13" "2019-03-09"
+[11] "2019-02-19" "2019-02-04" "2019-02-16" "2019-02-03" "2019-01-27"
+ded/measured weight ratio: 0.9941358 
+bag/transaction records: 211 
+DEVIATION: Records of the same household with the same sale date and price collapsed into one sale (sale definition not given in excerpt)
+sales: 209  households: 95  weeks: 16 
+OLS estimation, Dep. Var.: p
+Observations: 207
+Fixed-effects: vil: 9,  week: 14
+Standard-errors: Clustered (hh_row) 
+      Estimate Std. Error  t value Pr(>|t|) 
+treat  1.22983    6.90421 0.178127  0.85901 
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+RMSE: 48.1     Adj. R2: 0.854909
+             Within R2: 1.349e-4
+OLS estimation, Dep. Var.: ded
+Observations: 207
+Fixed-effects: vil: 9,  week: 14
+Standard-errors: Clustered (hh_row) 
+       Estimate Std. Error  t value Pr(>|t|) 
+treat -0.144049    0.11623 -1.23935  0.21834 
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+RMSE: 0.840692     Adj. R2: 0.064236
+                 Within R2: 0.006013
+OLS estimation, Dep. Var.: netp
+Observations: 207
+Fixed-effects: vil: 9,  week: 14
+Standard-errors: Clustered (hh_row) 
+      Estimate Std. Error  t value Pr(>|t|) 
+treat  2.00673    7.12841 0.281512  0.77894 
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+RMSE: 49.5     Adj. R2: 0.844913
+             Within R2: 3.379e-4
+panel_g1: 1221 rows
+hh: hhh_id  village: ea_code 
+treat table:
+   
+      0   1
+  0 228 286
+  1 316 391
+harvest column: harvest_kg 
+DEVIATION: Harvest value uses household's own sale price (village-season median if no sale); valuation price not given in excerpt
+DEVIATION: Dropped component cost columns when a matching total column exists (avoid double counting)
+cost columns: seeds_cost_1,seeds_cost_2,manure_cost_1,manure_cost_2,fert_cost_1,fert_cost_2,booster_cost_1,booster_cost_2,equipment_cost_1,tot_lab_costs_1,equipment_cost_2,tot_lab_costs_2,tot_chem_costs_1,tot_chem_costs_2,harvest_cost_1,harvest_cost_2,labor_cost_dry,drying_cost,labor_cost_store,storage_cost,labor_cost_ph,otherph_cost,tot_transport_cost,seeds_cost_3,seeds_cost_4,fert_cost_3,fert_cost_4,tot_lab_costs_3,tot_lab_costs_4,tot_chem_costs_3,tot_chem_costs_4,seeds_cost_5,seeds_cost_6,tot_lab_costs_5,tot_lab_costs_6,tot_chem_costs_5,tot_chem_costs_6,fert_cost_5,booster_cost_3,booster_cost_4,booster_cost_5,equipment_cost_3,equipment_cost_4,equipment_cost_5,harvest_cost_3,harvest_cost_4,harvest_cost_5,decobbing_cost_1,decobbing_cost_2,manure_cost_3,decobbing_cost_3,decobbing_cost_4,decobbing_cost_5 
+OLS estimation, Dep. Var.: y
+Observations: 623
+Fixed-effects: season: 4
+Standard-errors: Clustered (vil) 
+        Estimate Std. Error t value  Pr(>|t|)    
+treat   0.015743   0.004435 3.54963 0.0021400 ** 
+bl      0.193461   0.064642 2.99281 0.0074798 ** 
+bl_miss 0.022447   0.018746 1.19741 0.2458735    
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+RMSE: 0.034829     Adj. R2: 0.678488
+                 Within R2: 0.080899
+OLS estimation, Dep. Var.: y
+Observations: 640
+Fixed-effects: season: 4
+Standard-errors: Clustered (vil) 
+        Estimate Std. Error t value Pr(>|t|)    
+treat 113.033455  50.117467 2.25537 0.036097 *  
+bl      0.108704   0.036183 3.00430 0.007292 ** 
+... 1 variable was removed because of collinearity (bl_miss)
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+RMSE: 406.8     Adj. R2: 0.073023
+              Within R2: 0.054032
+OLS estimation, Dep. Var.: y
+Observations: 658
+Fixed-effects: season: 4
+Standard-errors: Clustered (vil) 
+       Estimate Std. Error  t value   Pr(>|t|)    
+treat 45.272614   46.61388 0.971226 0.34363847    
+bl     0.218969    0.04981 4.396095 0.00031046 ***
+... 1 variable was removed because of collinearity (bl_miss)
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+RMSE: 351.4     Adj. R2: 0.195852
+              Within R2: 0.136762
+OLS estimation, Dep. Var.: y
+Observations: 658
+Fixed-effects: season: 4
+Standard-errors: Clustered (vil) 
+       Estimate Std. Error  t value Pr(>|t|)    
+treat 30.268395  36.799649 0.822519 0.420985    
+bl     0.128745   0.047689 2.699681 0.014199 *  
+... 1 variable was removed because of collinearity (bl_miss)
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+RMSE: 291.5     Adj. R2: 0.153721
+              Within R2: 0.0569  
+OLS estimation, Dep. Var.: y
+Observations: 658
+Fixed-effects: season: 4
+Standard-errors: Clustered (vil) 
+       Estimate Std. Error t value Pr(>|t|)    
+treat 44.061989  38.722244 1.13790 0.269309    
+bl     0.129526   0.045365 2.85517 0.010127 *  
+... 1 variable was removed because of collinearity (bl_miss)
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+RMSE: 289.3     Adj. R2: 0.122867
+              Within R2: 0.06225 
+RESULT:treatment_defects_visual_table2_col1=-2.061441
+RESULT:n_obs_table2_col1_bags=620.000000
+RESULT:treatment_defects_lab_table2_col2=-0.197798
+RESULT:treatment_price_table2_col3=1.229828
+RESULT:n_obs_table2_cols3_5_sales=207.000000
+RESULT:treatment_deductions_table2_col4=-0.144049
+RESULT:treatment_net_price_table2_col5=2.006731
+RESULT:market_access_price_table6_panelA_col1=0.015743
+RESULT:market_access_yield_table6_panelA_col4=113.033455
+RESULT:market_access_harvest_value_table6_panelA_col5=45.272614
+RESULT:n_obs_table6_panelA_cols3_5=658.000000
+RESULT:market_access_profit_monetary_table6_panelA_col7=30.268395
+RESULT:market_access_profit_incl_own_hours_table6_panelA_col8=44.061989

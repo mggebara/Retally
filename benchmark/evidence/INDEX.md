@@ -199,6 +199,30 @@ Built by `python -m benchmark.evidence`; see `benchmark/README.md` ("Evidence bu
 - [blind · pipeline-desktop-opus-run3 · 20261103T010557Z](bokobza-2022-morning-after-coup-purges/blind/pipeline-desktop-opus-run3/20261103T010557Z/CELL.md) — 9/11
 - [blind · pipeline-desktop-opus-run4 · 20261108T013503Z](bokobza-2022-morning-after-coup-purges/blind/pipeline-desktop-opus-run4/20261108T013503Z/CELL.md) — 4/11
 
+## [bold-2022-market-access-quality-upgrading](bold-2022-market-access-quality-upgrading/REPORT.md)
+
+- [seeded · claude-code · 2026-11-10-a](bold-2022-market-access-quality-upgrading/seeded/claude-code/2026-11-10-a/CELL.md) — 13/13
+- [seeded · claude-code · 2026-11-10-b](bold-2022-market-access-quality-upgrading/seeded/claude-code/2026-11-10-b/CELL.md) — 13/13
+- [seeded · pipeline-desktop-opus · 20261110T173855Z](bold-2022-market-access-quality-upgrading/seeded/pipeline-desktop-opus/20261110T173855Z/CELL.md) — 10/13
+- [seeded · pipeline-desktop-opus-run2 · 20261110T215013Z](bold-2022-market-access-quality-upgrading/seeded/pipeline-desktop-opus-run2/20261110T215013Z/CELL.md) — 9/13
+- [seeded · pipeline-desktop-opus-run3 · 20261110T215031Z](bold-2022-market-access-quality-upgrading/seeded/pipeline-desktop-opus-run3/20261110T215031Z/CELL.md) — 9/13
+- [independent · claude-code · 2026-11-10-a](bold-2022-market-access-quality-upgrading/independent/claude-code/2026-11-10-a/CELL.md) — 9/13
+- [independent · claude-code · 2026-11-10-b](bold-2022-market-access-quality-upgrading/independent/claude-code/2026-11-10-b/CELL.md) — 11/13
+- [independent · claude-code · 2026-11-10-c](bold-2022-market-access-quality-upgrading/independent/claude-code/2026-11-10-c/CELL.md) — 8/13
+- [independent · claude-code · 2026-11-10-d](bold-2022-market-access-quality-upgrading/independent/claude-code/2026-11-10-d/CELL.md) — 8/13
+- [independent · pipeline-desktop-opus · 20261110T170624Z](bold-2022-market-access-quality-upgrading/independent/pipeline-desktop-opus/20261110T170624Z/CELL.md) — 8/13
+- [independent · pipeline-desktop-opus-run2 · 20261110T215013Z](bold-2022-market-access-quality-upgrading/independent/pipeline-desktop-opus-run2/20261110T215013Z/CELL.md) — 7/13
+- [independent · pipeline-desktop-opus-run3 · 20261110T215031Z](bold-2022-market-access-quality-upgrading/independent/pipeline-desktop-opus-run3/20261110T215031Z/CELL.md) — 6/13
+- [independent · pipeline-desktop-opus-run4 · 20261110T215048Z](bold-2022-market-access-quality-upgrading/independent/pipeline-desktop-opus-run4/20261110T215048Z/CELL.md) — 7/13
+- [blind · claude-code · 2026-11-10-a](bold-2022-market-access-quality-upgrading/blind/claude-code/2026-11-10-a/CELL.md) — 8/13
+- [blind · claude-code · 2026-11-10-b](bold-2022-market-access-quality-upgrading/blind/claude-code/2026-11-10-b/CELL.md) — 7/13
+- [blind · claude-code · 2026-11-10-c](bold-2022-market-access-quality-upgrading/blind/claude-code/2026-11-10-c/CELL.md) — 9/13
+- [blind · claude-code · 2026-11-10-d](bold-2022-market-access-quality-upgrading/blind/claude-code/2026-11-10-d/CELL.md) — 8/13
+- [blind · pipeline-desktop-opus · 20261110T164122Z](bold-2022-market-access-quality-upgrading/blind/pipeline-desktop-opus/20261110T164122Z/CELL.md) — 3/13
+- [blind · pipeline-desktop-opus-run2 · 20261110T172233Z](bold-2022-market-access-quality-upgrading/blind/pipeline-desktop-opus-run2/20261110T172233Z/CELL.md) — 4/13
+- [blind · pipeline-desktop-opus-run3 · 20261110T172243Z](bold-2022-market-access-quality-upgrading/blind/pipeline-desktop-opus-run3/20261110T172243Z/CELL.md) — 3/13
+- [blind · pipeline-desktop-opus-run4 · 20261110T171244Z](bold-2022-market-access-quality-upgrading/blind/pipeline-desktop-opus-run4/20261110T171244Z/CELL.md) — 3/13
+
 ## [brouwer-2022-teaching-norms](brouwer-2022-teaching-norms/REPORT.md)
 
 - [seeded · claude-code · 2026-11-02-a](brouwer-2022-teaching-norms/seeded/claude-code/2026-11-02-a/CELL.md) — 12/12

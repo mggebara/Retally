@@ -1,0 +1,31 @@
+{
+  "schema": 1,
+  "entry_id": "bold-2022-market-access-quality-upgrading",
+  "mode": "independent",
+  "run_id": "2026-11-10-c",
+  "reproducer": "claude-code",
+  "language": "r",
+  "final": {"script": "script.R", "stdout": "stdout.txt", "stderr": "stderr.txt", "exit_code": 0},
+  "attempts": [
+    {"dir": "attempt-1", "exit_code": 0, "kind": ""},
+    {"dir": "attempt-2", "exit_code": 0, "kind": ""},
+    {"dir": "attempt-3", "exit_code": 0, "kind": ""},
+    {"dir": "attempt-4", "exit_code": 0, "kind": ""},
+    {"dir": "attempt-5", "exit_code": 0, "kind": "claim"},
+    {"dir": "attempt-6", "exit_code": 0, "kind": ""},
+    {"dir": "attempt-7", "exit_code": 1, "kind": ""},
+    {"dir": "attempt-8", "exit_code": 0, "kind": ""},
+    {"dir": "attempt-9", "exit_code": 0, "kind": "claim"}
+  ],
+  "deviations": [
+    "UGX/USD exchange rates are not stated in the paper; annual averages assumed (3611 for 2017, 3727 for 2018, 3704 for 2019, 3718 for 2020).",
+    "Hourly market wage for valuing family labor = median hired-labor day rate (5000 UGX) / median family hours per day (6).",
+    "Profit incl. own hours: no baseline family-hour data, so the lagged control is last-baseline monetary profit.",
+    "Lagged outcome in the ANCOVA = household's value in the last baseline survey round (missing set to 0 plus a missing indicator); chosen after exploratory runs on the unlisted harvest and acreage columns. The price regression therefore has 623 rather than 617 observations.",
+    "Community-specific price for harvest value = village-season mean of household average sale prices from seller_data.dta; monetary expenses aggregated from survey cost items (seeds, fertilizer, boosters, manure, chemicals, plot-level hired labor, equipment, harvest/decobbing, post-harvest labor and other costs, drying, storage, transport); defined only where the plot-level input module was administered (640 obs)."
+  ],
+  "notes": "Table 2: bag-level count of ten visual defect types (dirty, cobs, stones, dust, broken, immature, damage, rot, insects dead or live, mould) on treatment with village FE, household-clustered SEs (622 bags). Lab defects = sum of defect/waste grams / sample weight, village FE, robust SEs (82 obs). Sales module repeat 1 is the lab bag bought by the research team; repeats 2-4 are the 116 sales. Deduction = 100*(y-z)/y with y = enumerator-measured weight of the bags sold (add4_weight) and z = buyer-stated weight net of deductions; net price = price*z/y; village + Stata week-of-sale FE; singletons kept. Table 2 cols 1-4 and both N match the paper; net price is 1.33 vs 0.98 claimed. Table 6 panel A: ANCOVA on follow-up seasons 4-7 with season dummies and the lagged outcome, village-clustered. Harvest (unlisted) 240.7 vs 239.3 and N=658 match. Yield, harvest value and profit columns are near the claims but not exact, because the authors' variable construction (exchange rate, wage, cost items, community price) is not fully documented. Exploratory runs 1-4 and 6-8 printed no RESULT lines (attempt-7 crashed on a function-name clash and was fixed in attempt-8). Read README.pdf, 'other/Results reported in the main text.pdf' and survey_materials xlsx forms; all are inside the mount. No scripts opened (dofiles/ is empty). No sandbox run hung.",
+  "files_read_outside_mount": [],
+  "started_at": "2026-11-10T14:44:20Z",
+  "finished_at": "2026-11-10T16:22:30Z"
+}

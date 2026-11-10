@@ -1,0 +1,17 @@
+{
+  "schema": 1,
+  "entry_id": "bold-2022-market-access-quality-upgrading",
+  "mode": "seeded",
+  "run_id": "2026-11-10-b",
+  "reproducer": "claude-code",
+  "language": "r",
+  "final": {"script": "script.R", "stdout": "stdout.txt", "stderr": "stderr.txt", "exit_code": 0},
+  "attempts": [
+    {"dir": "attempt-1", "exit_code": 0, "kind": ""}
+  ],
+  "deviations": [],
+  "notes": "attempt-1 was exploratory (variable names/types in panel_g1, anonym_returns_data, buy_data; no RESULT lines). The final script translates FINAL_create_vars_returns.do + table2.do (Table 2: bag-level visual defects with village FE clustered by household; lab defect share with village FE and HC1 SEs; sales 2-4 with village and Stata week-of-sale FE clustered by household) and FINAL_create_vars_main_g1.do + table6.do (Table 6 Panel A: full construction of acreage, harvest, yield, revenue, village-mean price imputation, harvest value, season-specific expense aggregates incl. own hours at the data-derived hourly wage of 833 UGX, conversion to USD by season exchange rate; ANCOVA on follow-up seasons with buy_treatment, season dummies and the spring-2018 (else baseline-mean) household value, clustered by village). Permutation p-values were not computed (not claimed). No claim-feedback attempts were used: the first scored run matched every claim to the printed precision (Ns 622/82/116 and 617/677/658/658/658/640/640/464 also match the paper).",
+  "files_read_outside_mount": [],
+  "started_at": "2026-11-10T14:44:23Z",
+  "finished_at": "2026-11-10T14:58:00Z"
+}

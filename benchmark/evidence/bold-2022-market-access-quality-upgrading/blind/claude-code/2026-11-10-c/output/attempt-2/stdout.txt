@@ -1,0 +1,1345 @@
+
+##### survey_materials/return_survey/add5_bags_sales.xlsx 
+[1] "survey"   "choices"  "settings"
+calculate | compensation | 10000 |  
+calculate | random | once(random()) |  
+start | start |  |  
+end | end |  |  
+today | today |  |  
+deviceid | deviceid |  |  
+text audit | text_audit |  |  
+subscriberid | subscriberid |  |  
+imei | imei |  |  
+phonenumber | phonenumber |  |  
+begin group | start_group |  |  
+select_one enumerator_name | enumerator_name |  |  
+select_one ea | ea_code |  |  
+end group |  |  |  
+calculate | ea_name | pulldata('listing_addint_followup', 'ea_name', 'ea_code', ${ea_code}) |  
+calculate | district_name | pulldata('listing_addint_followup', 'district_name', 'ea_code', ${ea_code}) |  
+calculate | this_season | 'August 2018' |  
+calculate | last_season | 'January 2018' |  
+select_one hhh | hhh1 |  |  
+calculate | hhh | if(${hhh1}=99, ${hhh2}, ${hhh1}) |  
+calculate | phone_number_old | pulldata('listing_addint_jan2019', 'phone_number', 'hhh', ${hhh}) |  
+calculate | N | pulldata('listing_addint_jan2019', 'N', 'hhh', ${hhh}) |  
+calculate | sl_hhh | pulldata('listing_addint_jan2019', 'serial_number', 'hhh', ${hhh}) |  
+calculate | treatment | pulldata('listing_addint_jan2019', 'treatment ', 'hhh', ${hhh}) |  
+calculate | treatment_quality | pulldata('listing_addint_jan2019', 'treatment_quality', 'hhh', ${hhh}) |  
+calculate | maize_tot_plotn_newR | pulldata('listing_addint_jan2019', 'maize_tot_plotn_new', 'hhh', ${hhh}) |  
+calculate | tot_kg_newR | pulldata('listing_addint_jan2019', 'tot_kg_new', 'hhh', ${hhh}) |  
+calculate | tot_acres_new_traceR | pulldata('listing_addint_jan2019', 'tot_acres_new_trace', 'hhh', ${hhh}) |  
+calculate | tot_acres_newR | pulldata('listing_addint_jan2019', 'tot_acres_new', 'hhh', ${hhh}) |  
+calculate | decob_new_when_eR | pulldata('listing_addint_jan2019', 'decob_new_when_e', 'hhh', ${hhh}) |  
+calculate | harvest_new_when_eR | pulldata('listing_addint_jan2019', 'harvest_new_when_e', 'hhh', ${hhh}) |  
+calculate | dry_new_when_eR | pulldata('listing_addint_jan2019', 'dry_new_when_e', 'hhh', ${hhh}) |  
+calculate | bag_new_when_eR | pulldata('listing_addint_jan2019', 'bag_new_when_e', 'hhh', ${hhh}) |  
+calculate | sell_new_when_eR | pulldata('listing_addint_jan2019', 'sell_new_when_e', 'hhh', ${hhh}) |  
+select_one yes_no_locate | adult |  |  
+text | household_head | if(${hhh1}=99, ${hhh2}, pulldata('listing_addint_jan2019', 'hhh_name', 'hhh', ${hhh1})) |  
+calculate | household_head_hhh | concat(${household_head}, ', ', ${hhh}) |  
+select_one yes_no_only | moved |  |  
+select_one yes_no_only | come_back |  |  
+note | come_back_note |  |  
+select_one yes_no_only | check_hhh |  |  
+note | wrong_hh |  |  
+select_one yes_no_only | sold_maize |  |  
+note | introduction |  |  
+select_one yes_no_only | adress |  | .='yes' 
+select_one yes_no_only | consent |  |  
+note | interview_end |  |  
+integer | bag_number |  | .<=20 
+begin group | info |  |  
+select_one yes_no_only | info_has |  |  
+image | info_photo |  |  
+end group |  |  |  
+note | buyer_note |  |  
+begin repeat | buyer |  |  
+select_one  where_sold | this_buyer_resp |  | if(selected(., 'dk') or selected(., 'ra'), count-selected(.)=1, count-selected(.)>=1) 
+text | this_buyer_name |  |  
+calculate | this_buyer_label_resp | if(${this_buyer_resp}='trader' or ${this_buyer_resp}='other', ${this_buyer_name} , jr:choice-name(${this_buyer |  
+select_one date_frame_ra | sold_when_tell |  |  
+begin group | w |  |  
+date | sold_when_e |  |  
+date | sold_when_l |  | .>${sold_when_e} 
+end group |  |  |  
+select_multiple bags | bags_sold | bag_number<=${bag_number} |  
+integer | tot_weight |  |  
+select_one yes_no_only | ind_weight_yn |  |  
+begin group | ind_weight |  |  
+note | ind_weight_ent |  |  
+integer | ind_weight1 |  | .<200 
+integer | ind_weight2 |  | .<200 
+integer | ind_weight3 |  | .<200 
+integer | ind_weight4 |  | .<200 
+integer | ind_weight5 |  | .<200 
+integer | ind_weight6 |  | .<200 
+integer | ind_weight7 |  | .<200 
+integer | ind_weight8 |  | .<200 
+integer | ind_weight9 |  | .<200 
+integer | ind_weight10 |  | .<200 
+integer | ind_weight11 |  | .<200 
+integer | ind_weight12 |  | .<200 
+integer | ind_weight13 |  | .<200 
+integer | ind_weight14 |  | .<200 
+integer | ind_weight15 |  | .<200 
+integer | ind_weight16 |  | .<200 
+integer | ind_weight17 |  | .<200 
+integer | ind_weight18 |  | .<200 
+integer | ind_weight19 |  | .<200 
+integer | ind_weight20 |  | .<200 
+end group |  |  |  
+calculate | ind_weight_tot | if(${ind_weight1}!='', ${ind_weight1}, 0)+if(${ind_weight2}!='', ${ind_weight2}, 0)+if(${ind_weight3}!='', ${i |  
+select_one yes_no_only | tot_weight_check |  | .='yes' 
+select_one yes_no_only | tot_weight_diff |  |  
+text | tot_weight_other |  |  
+integer | tot_deduction |  |  
+select_one yes_no_only | ind_deduction_yn |  |  
+begin group | ind_deduction |  |  
+note | ind_deduction_ent0 |  |  
+note | ind_deduction_ent |  |  
+integer | ind_deduction1 | if(${ind_deduction_yn}='yes', '', ${tot_deduction} div count-selected(${bags_sold})) | .<50 
+integer | ind_deduction2 | if(${ind_deduction_yn}='yes', '', ${tot_deduction} div count-selected(${bags_sold})) | .<50 
+integer | ind_deduction3 | if(${ind_deduction_yn}='yes', '', ${tot_deduction} div count-selected(${bags_sold})) | .<50 
+integer | ind_deduction4 | if(${ind_deduction_yn}='yes', '', ${tot_deduction} div count-selected(${bags_sold})) | .<50 
+integer | ind_deduction5 | if(${ind_deduction_yn}='yes', '', ${tot_deduction} div count-selected(${bags_sold})) | .<50 
+integer | ind_deduction6 | if(${ind_deduction_yn}='yes', '', ${tot_deduction} div count-selected(${bags_sold})) | .<50 
+integer | ind_deduction7 | if(${ind_deduction_yn}='yes', '', ${tot_deduction} div count-selected(${bags_sold})) | .<50 
+integer | ind_deduction8 | if(${ind_deduction_yn}='yes', '', ${tot_deduction} div count-selected(${bags_sold})) | .<50 
+integer | ind_deduction9 | if(${ind_deduction_yn}='yes', '', ${tot_deduction} div count-selected(${bags_sold})) | .<50 
+integer | ind_deduction10 | if(${ind_deduction_yn}='yes', '', ${tot_deduction} div count-selected(${bags_sold})) | .<50 
+integer | ind_deduction11 | if(${ind_deduction_yn}='yes', '', ${tot_deduction} div count-selected(${bags_sold})) | .<50 
+integer | ind_deduction12 | if(${ind_deduction_yn}='yes', '', ${tot_deduction} div count-selected(${bags_sold})) | .<50 
+integer | ind_deduction13 | if(${ind_deduction_yn}='yes', '', ${tot_deduction} div count-selected(${bags_sold})) | .<50 
+integer | ind_deduction14 | if(${ind_deduction_yn}='yes', '', ${tot_deduction} div count-selected(${bags_sold})) | .<50 
+integer | ind_deduction15 | if(${ind_deduction_yn}='yes', '', ${tot_deduction} div count-selected(${bags_sold})) | .<50 
+integer | ind_deduction16 | if(${ind_deduction_yn}='yes', '', ${tot_deduction} div count-selected(${bags_sold})) | .<50 
+integer | ind_deduction17 | if(${ind_deduction_yn}='yes', '', ${tot_deduction} div count-selected(${bags_sold})) | .<50 
+integer | ind_deduction18 | if(${ind_deduction_yn}='yes', '', ${tot_deduction} div count-selected(${bags_sold})) | .<50 
+integer | ind_deduction19 | if(${ind_deduction_yn}='yes', '', ${tot_deduction} div count-selected(${bags_sold})) | .<50 
+integer | ind_deduction20 | if(${ind_deduction_yn}='yes', '', ${tot_deduction} div count-selected(${bags_sold})) | .<50 
+end group |  |  |  
+calculate | ind_deduction_tot | if(${ind_deduction1}!='', ${ind_deduction1}, 0)+if(${ind_deduction2}!='', ${ind_deduction2}, 0)+if(${ind_deduc |  
+select_one yes_no_only | tot_deduction_check |  | .='yes' 
+select_one yes_no_only | tot_deduction_diff |  |  
+text | tot_deduction_other |  |  
+calculate | tot_ded_weight | ${tot_weight}-${tot_deduction} |  
+select_one yes_no_only | tot_ded_weight_check |  | .='yes' 
+begin group | ind_ded_weight |  |  
+note | ind_ded_weight_note |  |  
+integer | ind_ded_weight1 | ${ind_weight1} - ${ind_deduction1} | .= ${ind_weight1} - ${ind_deduction1} 
+integer | ind_ded_weight2 | ${ind_weight2} - ${ind_deduction2} | .= ${ind_weight2} - ${ind_deduction2} 
+integer | ind_ded_weight3 | ${ind_weight3} - ${ind_deduction3} | .= ${ind_weight3} - ${ind_deduction3} 
+integer | ind_ded_weight4 | ${ind_weight4} - ${ind_deduction4} | .= ${ind_weight4} - ${ind_deduction4} 
+integer | ind_ded_weight5 | ${ind_weight5} - ${ind_deduction5} | .= ${ind_weight5} - ${ind_deduction5} 
+integer | ind_ded_weight6 | ${ind_weight6} - ${ind_deduction6} | .= ${ind_weight6} - ${ind_deduction6} 
+integer | ind_ded_weight7 | ${ind_weight7} - ${ind_deduction7} | .= ${ind_weight7} - ${ind_deduction7} 
+integer | ind_ded_weight8 | if( ${ind_deduction8}!='',  ${ind_weight8} - ${ind_deduction8},  ${ind_weight8}) | .= ${ind_weight8} - ${ind_deduction8} 
+integer | ind_ded_weight9 | if( ${ind_deduction9}!='',  ${ind_weight9} - ${ind_deduction9},  ${ind_weight9}) | .= ${ind_weight9} - ${ind_deduction9} 
+integer | ind_ded_weight10 | if( ${ind_deduction10}!='',  ${ind_weight10} - ${ind_deduction10},  ${ind_weight10}) | .= ${ind_weight10} - ${ind_deduction10} 
+integer | ind_ded_weight11 | if( ${ind_deduction11}!='',  ${ind_weight11} - ${ind_deduction11},  ${ind_weight11}) | .= ${ind_weight11} - ${ind_deduction11} 
+integer | ind_ded_weight12 | if( ${ind_deduction12}!='',  ${ind_weight12} - ${ind_deduction12},  ${ind_weight12}) | .= ${ind_weight12} - ${ind_deduction12} 
+integer | ind_ded_weight13 | if( ${ind_deduction13}!='',  ${ind_weight13} - ${ind_deduction13},  ${ind_weight13}) | .= ${ind_weight13} - ${ind_deduction13} 
+integer | ind_ded_weight14 | if( ${ind_deduction14}!='',  ${ind_weight14} - ${ind_deduction14},  ${ind_weight14}) | .= ${ind_weight14} - ${ind_deduction14} 
+integer | ind_ded_weight15 | if( ${ind_deduction15}!='',  ${ind_weight15} - ${ind_deduction15},  ${ind_weight15}) | .= ${ind_weight15} - ${ind_deduction15} 
+integer | ind_ded_weight16 | if( ${ind_deduction16}!='',  ${ind_weight16} - ${ind_deduction16},  ${ind_weight16}) | .= ${ind_weight16} - ${ind_deduction16} 
+integer | ind_ded_weight17 | if( ${ind_deduction17}!='',  ${ind_weight17} - ${ind_deduction17},  ${ind_weight17}) | .= ${ind_weight17} - ${ind_deduction17} 
+integer | ind_ded_weight18 | if( ${ind_deduction18}!='',  ${ind_weight18} - ${ind_deduction18},  ${ind_weight18}) | .= ${ind_weight18} - ${ind_deduction18} 
+integer | ind_ded_weight19 | if( ${ind_deduction19}!='',  ${ind_weight19} - ${ind_deduction19},  ${ind_weight19}) | .= ${ind_weight19} - ${ind_deduction19} 
+integer | ind_ded_weight20 | if( ${ind_deduction20}!='',  ${ind_weight20} - ${ind_deduction20},  ${ind_weight20}) | .= ${ind_weight20} - ${ind_deduction20} 
+end group |  |  |  
+select_multiple deduction | deduction_why |  |  
+text | deduction_why_other |  |  
+select_one yes_dk_ra | ppk_tell |  |  
+integer | ppk |  |  
+calculate | tot_rev_buyer_calc | ${ppk}*${tot_ded_weight} |  
+integer | tot_rev_buyer_told | ${tot_rev_buyer_calc} |  
+text | tot_rev_why |  |  
+begin group | rev_pb |  |  
+note | ind_rev_ent |  |  
+integer | ind_rev1 | ${ppk}*${ind_ded_weight1} |  
+integer | ind_rev2 | ${ppk}*${ind_ded_weight2} |  
+integer | ind_rev3 | ${ppk}*${ind_ded_weight3} |  
+integer | ind_rev4 | ${ppk}*${ind_ded_weight4} |  
+integer | ind_rev5 | ${ppk}*${ind_ded_weight5} |  
+integer | ind_rev6 | ${ppk}*${ind_ded_weight6} |  
+integer | ind_rev7 | ${ppk}*${ind_ded_weight7} |  
+integer | ind_rev8 | ${ppk}*${ind_ded_weight8} |  
+integer | ind_rev9 | ${ppk}*${ind_ded_weight9} |  
+integer | ind_rev10 | ${ppk}*${ind_ded_weight10} |  
+integer | ind_rev11 | ${ppk}*${ind_ded_weight11} |  
+integer | ind_rev12 | ${ppk}*${ind_ded_weight12} |  
+integer | ind_rev13 | ${ppk}*${ind_ded_weight13} |  
+integer | ind_rev14 | ${ppk}*${ind_ded_weight14} |  
+integer | ind_rev15 | ${ppk}*${ind_ded_weight15} |  
+integer | ind_rev16 | ${ppk}*${ind_ded_weight16} |  
+integer | ind_rev17 | ${ppk}*${ind_ded_weight17} |  
+integer | ind_rev18 | ${ppk}*${ind_ded_weight18} |  
+integer | ind_rev19 | ${ppk}*${ind_ded_weight19} |  
+integer | ind_rev20 | ${ppk}*${ind_ded_weight20} |  
+end group |  |  |  
+calculate | ind_rev_buyer_tot | if( ${ind_weight_yn}='yes', if(${ind_rev1}!='', ${ind_rev1}, 0)+if(${ind_rev2}!='', ${ind_rev2}, 0)+if(${ind_r |  
+note | end_note |  |  
+
+##### survey_materials/return_survey/add4_measuring_bags.xlsx 
+[1] "survey"   "choices"  "settings" "Sheet1"  
+start | start |  |  
+end | end |  |  
+today | today |  |  
+deviceid | deviceid |  |  
+text audit | text_audit |  |  
+subscriberid | subscriberid |  |  
+imei | imei |  |  
+phonenumber | phonenumber |  |  
+calculate | random | once(random()) |  
+integer | price |  |  
+begin group | start_group |  |  
+select_one enumerator_name | enumerator_name |  |  
+select_one ea | ea_code |  |  
+end group |  |  |  
+calculate | ea_name | pulldata('listing_addint_jan2019', 'ea_name', 'ea_code', ${ea_code}) |  
+calculate | district_name | pulldata('listing_addint_jan2019', 'district_name', 'ea_code', ${ea_code}) |  
+calculate | buy_time | 'January 2019' |  
+calculate | this_season | 'January 2019' |  
+calculate | last_season | 'August 2018' |  
+calculate | beforelast_season | 'January 2018' |  
+select_one hhh | hhh1 |  |  
+calculate | hhh | if(${hhh1}=99, ${hhh2}, ${hhh1}) |  
+calculate | phone_number_old | pulldata('listing_addint_jan2019', 'phone_number', 'hhh', ${hhh}) |  
+calculate | N | pulldata('listing_addint_jan2019', 'N', 'hhh', ${hhh}) |  
+calculate | sl_hhh | pulldata('listing_addint_jan2019', 'serial_number', 'hhh', ${hhh}) |  
+calculate | treatment | pulldata('listing_addint_jan2019', 'treatment ', 'hhh', ${hhh}) |  
+calculate | treatment_info | pulldata('listing_addint_jan2019', 'treatment_info', 'hhh', ${hhh}) |  
+calculate | treatment_quality | pulldata('listing_addint_jan2019', 'treatment_quality', 'hhh', ${hhh}) |  
+calculate | maize_tot_plotn_newR | pulldata('listing_addint_jan2019', 'maize_tot_plotn_new', 'hhh', ${hhh}) |  
+calculate | tot_kg_newR | pulldata('listing_addint_jan2019', 'tot_kg_new', 'hhh', ${hhh}) |  
+calculate | tot_acres_new_traceR | pulldata('listing_addint_jan2019', 'tot_acres_new_trace', 'hhh', ${hhh}) |  
+calculate | tot_acres_newR | pulldata('listing_addint_jan2019', 'tot_acres_new', 'hhh', ${hhh}) |  
+calculate | decob_new_when_eR | pulldata('listing_addint_jan2019', 'decob_new_when_e', 'hhh', ${hhh}) |  
+calculate | harvest_new_when_eR | pulldata('listing_addint_jan2019', 'harvest_new_when_e', 'hhh', ${hhh}) |  
+calculate | dry_new_when_eR | pulldata('listing_addint_jan2019', 'dry_new_when_e', 'hhh', ${hhh}) |  
+calculate | bag_new_when_eR | pulldata('listing_addint_jan2019', 'bag_new_when_e', 'hhh', ${hhh}) |  
+calculate | sell_new_when_eR | pulldata('listing_addint_jan2019', 'sell_new_when_e', 'hhh', ${hhh}) |  
+select_one yes_no_locate | adult |  |  
+text | household_head | if(${hhh1}=99, ${hhh2}, pulldata('listing_addint_jan2019', 'hhh_name', 'hhh', ${hhh1})) |  
+calculate | household_head_hhh | concat(${household_head}, ', ', ${hhh}) |  
+select_one yes_no_only | moved |  |  
+select_one yes_no_only | come_back |  |  
+note | come_back_note |  |  
+select_one yes_no_only | check_hhh |  |  
+note | wrong_hh |  |  
+begin group | int |  |  
+note | introduction |  |  
+select_one stage | stage |  |  
+note | intro_T |  |  
+note | intro_end |  |  
+select_one yes_no_only | adress |  | .='yes' 
+select_one yes_no_only | consent |  |  
+end group |  |  |  
+select_one yes_no_only | exclude_tot |  |  
+note | interview_end |  |  
+begin group | con |  |  
+select_one yes_no_only | phone_number_old_yn |  |  
+select_one yes_no_only | phone_number_yn |  |  
+begin group | phone |  |  
+string | phone_number |  |  
+string | phone_number_check |  | ${phone_number} = ${phone_number_check} 
+calculate | phone_number_E164 | concat('+256',${phone_number}) |  
+select_multiple language | lang_sms |  |  
+text | lang_sms_other |  | if(selected(${lang_sms}, 'other'), .!='', .='') 
+end group |  |  |  
+geopoint | household_location |  |  
+begin group | gps_m |  |  
+text | manual_gps_lat_hh |  |  
+text | manual_gps_lon_hh |  |  
+end group |  |  |  
+begin group | conf |  |  
+decimal | maize_tot_plotn_new | ${maize_tot_plotn_newR} |  
+decimal | tot_acres_new_trace | ${tot_acres_new_traceR} |  
+decimal | tot_acres_new | ${tot_acres_newR} |  
+decimal | tot_kg_new | ${tot_kg_newR} |  
+end group |  |  |  
+select_one yes_no_only | leaflet |  | .='yes' 
+select_one yes_no_only | tarpaulin |  |  
+text | tarpaulin_whynot |  |  
+select_one date_frame_ra | harvested_when_tell |  |  
+begin group | wrn |  |  
+date | harvested_when_e |  |  
+date | harvested_when_l |  | .>${harvested_when_e} 
+end group |  |  |  
+integer | bag_number |  | .<=20 and .>1 
+begin repeat | measure |  |  
+calculate | TN | if(${treatment_info}=1, 1, 2) |  
+begin group | info |  |  
+note | info_number |  |  
+note | info_checkT |  |  
+note | weight_note_t2 |  |  
+note | weight_note_c2 |  |  
+end group |  |  |  
+calculate | bag_no | position(..) |  
+note | bag_no_note |  |  
+begin group | pract |  |  
+select_multiple seeds | seeds |  |  
+select_multiple chemical | chemical |  |  
+end group |  |  |  
+begin group | quality |  |  
+select_one yes_no_examine | smell |  |  
+select_one color | color |  |  
+select_one yes_no_examine | dirty |  |  
+select_one yes_no_examine | cobs |  |  
+select_one yes_no_examine | stones |  |  
+select_one yes_no_examine | dust |  |  
+select_one yes_no_examine | broken |  |  
+select_one yes_no_examine | immature |  |  
+select_one yes_no_examine | damage |  |  
+select_one yes_no_examine | rot |  |  
+select_one yes_no_examine | insect |  |  
+select_one yes_no_examine | insect_live |  |  
+select_one yes_no_examine | mould |  |  
+decimal | moisture |  | .>5 and .<50 
+end group |  |  |  
+calculate | ok_buy | if(${smell}='yes' and ${dirty}='no' and ${cobs}='no' and ${dust}='no' and ${broken}='no' and ${immature}='no'  |  
+begin group | quality2 |  |  
+note | sumup_quality |  |  
+note | advice_yes |  |  
+note | advice_no |  |  
+end group |  |  |  
+begin group | W |  |  
+integer | weight_est |  | .>5 and .<200 
+note | weight_note_t1 |  |  
+note | weight_note_c1 |  |  
+integer | weight |  | .>5 and .<200 
+note | weight_note_t |  |  
+end group |  |  |  
+end repeat |  |  |  
+calculate | num_bags | count(${measure}) |  
+note | check_num_bags |  |  
+calculate | tot_weight | sum(${weight}) |  
+calculate | tot_weight_est | sum(${weight_est}) |  
+begin group | sumup_gr |  |  
+note | sumup_tot_note |  |  
+integer | sumup_tot | ${tot_weight} | .= ${tot_weight} 
+note | sumup_each0 |  |  
+note | sumup_each1 | indexed-repeat(${weight}, ${measure}, 1) |  
+note | sumup_each2 | indexed-repeat(${weight}, ${measure}, 2) |  
+note | sumup_each3 | indexed-repeat(${weight}, ${measure}, 3) |  
+note | sumup_each4 | indexed-repeat(${weight}, ${measure}, 4) |  
+note | sumup_each5 | indexed-repeat(${weight}, ${measure}, 5) |  
+note | sumup_each6 | indexed-repeat(${weight}, ${measure}, 6) |  
+note | sumup_each7 | indexed-repeat(${weight}, ${measure}, 7) |  
+note | sumup_each8 | indexed-repeat(${weight}, ${measure}, 8) |  
+note | sumup_each9 | indexed-repeat(${weight}, ${measure}, 9) |  
+note | sumup_each10 | indexed-repeat(${weight}, ${measure}, 10) |  
+note | sumup_each11 | indexed-repeat(${weight}, ${measure}, 11) |  
+note | sumup_each12 | indexed-repeat(${weight}, ${measure}, 12) |  
+note | sumup_each13 | indexed-repeat(${weight}, ${measure}, 13) |  
+note | sumup_each14 | indexed-repeat(${weight}, ${measure}, 14) |  
+note | sumup_each15 | indexed-repeat(${weight}, ${measure}, 15) |  
+note | sumup_each16 | indexed-repeat(${weight}, ${measure}, 16) |  
+note | sumup_each17 | indexed-repeat(${weight}, ${measure}, 17) |  
+note | sumup_each18 | indexed-repeat(${weight}, ${measure}, 18) |  
+note | sumup_each19 | indexed-repeat(${weight}, ${measure}, 19) |  
+note | sumup_each20 | indexed-repeat(${weight}, ${measure}, 20) |  
+select_one yes_no_only | sumup_check |  | .='yes' 
+end group |  |  |  
+image | info_photo |  |  
+calculate | image_name | if(${treatment_info}=1, 'info_card_example.jpg', 'info0_card_example.jpg') |  
+select_one yes_no_only | info_explain | ${image_name} | .='yes' 
+select_one yes_no_only | info_explainT |  | .='yes' 
+date | sale_timing |  |  
+calculate | random_bag | int(${random}*${bag_number})+1 |  
+calculate | random_bag_weight | indexed-repeat(${weight}, ${measure}, ${random_bag}) |  
+begin group | buy_bag |  |  
+note | note_buying |  |  
+select_one yes_no_only | reweight_yn |  |  
+integer | reweight_buybag |  | .<250 
+calculate | weight_buybag | if(${reweight_buybag}!='', ${reweight_buybag}, ${random_bag_weight}) |  
+calculate | totprice_buybag | ${price}*${weight_buybag} |  
+select_one yes_no_only | want_to_sell |  |  
+select_one yes_no_only | write_name |  |  
+select_one yes_no_only | receipt |  | .='yes' 
+image | receipt_photo |  |  
+end group |  |  |  
+select_one yes_no_only | compensation_C |  |  
+select_one yes_no_only | compensation_all |  |  
+end group |  |  |  
+note | thank_you |  |  
+calculate | endquestionnaire | once(now()) |  
+select_one enumerator_name | quality_check |  | .!=${enumerator_name} 
+
+##### survey_materials/main_survey/survey_instrument_main.xlsx 
+[1] "survey"   "choices"  "settings" "Sheet1"  
+cols: type name label::english hint::english constraint constraint_message::english required appearance default relevant read_only calculation repeat_count choice_filter media::image::english NOTES - group 1 NOTES - group 2 NOTES - group 0 
+calculate | acres_tot1 | pulldata('listing', 'tot_acres_new_trace_correct', 'hhh_code', ${hhh}) 
+decimal | acres_tot_1st |  
+select_one dk_ra | acres_tot_1st_dk |  
+select_one yes_no_dk_ra | harvest_kg_tot_5000 |  
+calculate | oplot_size1 | pulldata('listing', 'oplot_size', 'hhh_code', ${hhh}) 
+calculate | harvest_kg_tot_last | pulldata('listing', 'harvest_kg_tot', 'hhh_code', ${hhh}) 
+decimal | acres_tot_1st1 | ${acres_tot_1st} 
+select_one dk_ra | acres_tot_1st_dk1 |  
+decimal | oplot_size_1st |  
+select_one dk_ra | oplot_size_1st_dk |  
+decimal | harvest_meas_tot_1st |  
+select_one dk_ra | harvest_meas_tot_1st_dk |  
+decimal | sold_meas_1st |  
+select_one dk_ra | sold_meas_1st_dk |  
+calculate | harvest_kg_tot_1sti | ${harvest_meas_tot_1st}*${kgs_measure_resp} 
+calculate | sold_kg_1sti | ${sold_meas_1st}*${kgs_measure_resp} 
+decimal | harvest_kg_tot_1st | ${harvest_kg_tot_1sti} 
+select_one dk_ra | harvest_kg_tot_1st_dk |  
+decimal | sold_kg_1st | ${sold_kg_1sti} 
+select_one dk_ra | sold_kg_1st_dk |  
+decimal | tot_rev_tot_1st |  
+select_one dk_ra | tot_rev_tot_1st_dk |  
+note | harvest_kg_tot_1check |  
+calculate | acres_tot_1 | pulldata('listing', 'plot_acres_maize', 'plot_code', ${plot_code_1}) 
+calculate | acres_tot_2 | pulldata('listing', 'plot_acres_maize', 'plot_code', ${plot_code_2}) 
+calculate | acres_tot_3 | pulldata('listing', 'plot_acres_maize', 'plot_code', ${plot_code_3}) 
+calculate | acres_tot_4 | pulldata('listing', 'plot_acres_maize', 'plot_code', ${plot_code_4}) 
+calculate | acres_tot_5 | pulldata('listing', 'plot_acres_maize', 'plot_code', ${plot_code_5}) 
+calculate | acres_tot_6 | pulldata('listing', 'plot_acres_maize', 'plot_code', ${plot_code_6}) 
+decimal | plot_size_1 | ${acres_tot_1} 
+select_one dk_ra | plot_size_1dk |  
+decimal | plot_size_2 | ${acres_tot_2} 
+select_one dk_ra | plot_size_2dk |  
+decimal | plot_size_3 | ${acres_tot_3} 
+select_one dk_ra | plot_size_3dk |  
+decimal | plot_size_4 | ${acres_tot_4} 
+select_one dk_ra | plot_size_4dk |  
+decimal | plot_size_5 | ${acres_tot_5} 
+select_one dk_ra | plot_size_5dk |  
+decimal | plot_size_6 | ${acres_tot_6} 
+select_one dk_ra | plot_size_6dk |  
+calculate | acres_tot_int | if(${maize_tot_plotn}>5, ${plot_size_1}+${plot_size_2}+${plot_size_3}+${plot_size_4}+${plot_size_5}+${plot_size_6}, if(${maize_tot_plotn}>4, 
+select_one acres_check | acres_tot_which |  
+calculate | acres_tot_check | if(${acres_tot_which}=1,${acres_tot_1st},  ${acres_tot_int}) 
+begin group | acres_tot_q |  
+decimal | acres_tot |  
+select_one dk_ra | acres_tot_dk |  
+begin group | equipment_cost_g |  
+decimal | equipment_cost_1 |  
+select_one dk_ra | equipment_cost_1dk |  
+decimal | equipment_cost_2 |  
+select_one dk_ra | equipment_cost_2dk |  
+decimal | equipment_cost_3 |  
+select_one dk_ra | equipment_cost_3dk |  
+decimal | equipment_cost_4 |  
+select_one dk_ra | equipment_cost_4dk |  
+decimal | equipment_cost_5 |  
+select_one dk_ra | equipment_cost_5dk |  
+decimal | equipment_cost_6 |  
+select_one dk_ra | equipment_cost_6dk |  
+decimal | seeds_cost_1 |  
+decimal | seeds_cost_2 |  
+decimal | seeds_cost_3 |  
+decimal | seeds_cost_4 |  
+decimal | seeds_cost_5 |  
+decimal | seeds_cost_6 |  
+calculate | seeds_cost_check | if(${maize_tot_plotn}>5, ${seeds_cost_1}+${seeds_cost_2}+${seeds_cost_3}+${seeds_cost_4}+${seeds_cost_5}+${seeds_cost_6}, if(${maize_tot_plo 
+select_one yes_no_only | seeds_cost_check_yn |  
+begin group | seeds_cost_q |  
+integer | seeds_cost |  
+select_one dk_ra | seeds_cost_dk |  
+decimal | fert_cost_1 |  
+decimal | fert_cost_2 |  
+decimal | fert_cost_3 |  
+decimal | fert_cost_4 |  
+decimal | fert_cost_5 |  
+decimal | fert_cost_6 |  
+calculate | fert_cost_check | if( ${fert_cost_6}>0, ${fert_cost_6}, 0) + if( ${fert_cost_5}>0, ${fert_cost_5}, 0) + if( ${fert_cost_4}>0, ${fert_cost_4}, 0 ) + if( ${fert 
+select_one yes_no_only | fert_cost_check_yn |  
+integer | fert_cost |  
+select_one dk_ra | fert_cost_dk |  
+decimal | booster_cost_1 |  
+decimal | booster_cost_2 |  
+decimal | booster_cost_3 |  
+decimal | booster_cost_4 |  
+decimal | booster_cost_5 |  
+decimal | booster_cost_6 |  
+calculate | booster_cost_check | if( ${booster_cost_6}>0, ${booster_cost_6}, 0) + if( ${booster_cost_5}>0, ${booster_cost_5}, 0) + if( ${booster_cost_4}>0, ${booster_cost_4} 
+select_one yes_no_only | booster_cost_check_yn |  
+integer | booster_cost |  
+select_one dk_ra | booster_cost_dk |  
+note | lh_prep1 |  
+select_one unit | lh_prep_unit1 |  
+text | lh_prep_unit_other1 |  
+decimal | lh_prep_hours_unit1 |  
+decimal | lh_prep_ppl_season1 |  
+decimal | lh_prep_units_season1 |  
+note | lh_plant1 |  
+select_one unit | lh_plant_unit1 |  
+text | lh_plant_unit_other1 |  
+decimal | lh_plant_hours_unit1 |  
+decimal | lh_plant_ppl_season1 |  
+decimal | lh_plant_units_season1 |  
+note | lh_weed1 |  
+select_one unit | lh_weed_unit1 |  
+text | lh_weed_unit_other1 |  
+decimal | lh_weed_hours_unit1 |  
+decimal | lh_weed_ppl_season1 |  
+decimal | lh_weed_units_season1 |  
+note | lh_spray1 |  
+select_one unit | lh_spray_unit1 |  
+text | lh_spray_unit_other1 |  
+decimal | lh_spray_hours_unit1 |  
+decimal | lh_spray_ppl_season1 |  
+decimal | lh_spray_units_season1 |  
+note | lh_harv1 |  
+select_one unit | lh_harv_unit1 |  
+text | lh_harv_unit_other1 |  
+decimal | lh_harv_hours_unit1 |  
+decimal | lh_harv_ppl_season1 |  
+decimal | lh_harv_units_season1 |  
+calculate | lh_prep_hours_season1i | if(${lh_prep_units_season1}!='' and ${lh_prep_hours_unit1}!='' and ${lh_prep_ppl_season1}!='' , ${lh_prep_units_season1}*${lh_prep_hours_uni 
+calculate | lh_plant_hours_season1i | if(${lh_plant_units_season1}!='' and ${lh_plant_hours_unit1}!='' and ${lh_plant_ppl_season1}!='' , ${lh_plant_units_season1}*${lh_plant_hour 
+calculate | lh_weed_hours_season1i | if(${lh_weed_units_season1}!='' and ${lh_weed_hours_unit1}!='' and ${lh_weed_ppl_season1}!='' , ${lh_weed_units_season1}*${lh_weed_hours_uni 
+calculate | lh_spray_hours_season1i | if(${lh_spray_units_season1}!='' and ${lh_spray_hours_unit1}!='' and ${lh_spray_ppl_season1}!='' , ${lh_spray_units_season1}*${lh_spray_hour 
+calculate | lh_harv_hours_season1i | if(${lh_harv_units_season1}!='' and ${lh_harv_hours_unit1}!='' and ${lh_harv_ppl_season1}!='' , ${lh_harv_units_season1}*${lh_harv_hours_uni 
+calculate | lh_tot_hours_season1i | ${lh_prep_hours_season1i}+${lh_plant_hours_season1i}+${lh_weed_hours_season1i}+${lh_spray_hours_season1i}+${lh_harv_hours_season1i} 
+begin group | lh_tot1 |  
+decimal | lh_prep_hours_season1 | ${lh_prep_hours_season1i} 
+decimal | lh_plant_hours_season1 | ${lh_plant_hours_season1i} 
+decimal | lh_weed_hours_season1 | ${lh_weed_hours_season1i} 
+decimal | lh_spray_hours_season1 | ${lh_spray_hours_season1i} 
+decimal | lh_harv_hours_season1 | ${lh_harv_hours_season1i} 
+decimal | lh_tot_hours_season1 | ${lh_tot_hours_season1i} 
+note | lh_prep2 |  
+select_one unit | lh_prep_unit2 |  
+text | lh_prep_unit_other2 |  
+decimal | lh_prep_hours_unit2 |  
+decimal | lh_prep_ppl_season2 |  
+decimal | lh_prep_units_season2 |  
+note | lh_plant2 |  
+select_one unit | lh_plant_unit2 |  
+text | lh_plant_unit_other2 |  
+decimal | lh_plant_hours_unit2 |  
+decimal | lh_plant_ppl_season2 |  
+decimal | lh_plant_units_season2 |  
+note | lh_weed2 |  
+select_one unit | lh_weed_unit2 |  
+text | lh_weed_unit_other2 |  
+decimal | lh_weed_hours_unit2 |  
+decimal | lh_weed_ppl_season2 |  
+decimal | lh_weed_units_season2 |  
+note | lh_spray2 |  
+select_one unit | lh_spray_unit2 |  
+text | lh_spray_unit_other2 |  
+decimal | lh_spray_hours_unit2 |  
+decimal | lh_spray_ppl_season2 |  
+decimal | lh_spray_units_season2 |  
+note | lh_harv2 |  
+select_one unit | lh_harv_unit2 |  
+text | lh_harv_unit_other2 |  
+decimal | lh_harv_hours_unit2 |  
+decimal | lh_harv_ppl_season2 |  
+decimal | lh_harv_units_season2 |  
+calculate | lh_prep_hours_season2i | if(${lh_prep_units_season2}!='' and ${lh_prep_hours_unit2}!='' and ${lh_prep_ppl_season2}!='' , ${lh_prep_units_season2}*${lh_prep_hours_uni 
+calculate | lh_plant_hours_season2i | if(${lh_plant_units_season2}!='' and ${lh_plant_hours_unit2}!='' and ${lh_plant_ppl_season2}!='' , ${lh_plant_units_season2}*${lh_plant_hour 
+calculate | lh_weed_hours_season2i | if(${lh_weed_units_season2}!='' and ${lh_weed_hours_unit2}!='' and ${lh_weed_ppl_season2}!='' , ${lh_weed_units_season2}*${lh_weed_hours_uni 
+calculate | lh_spray_hours_season2i | if(${lh_spray_units_season2}!='' and ${lh_spray_hours_unit2}!='' and ${lh_spray_ppl_season2}!='' , ${lh_spray_units_season2}*${lh_spray_hour 
+calculate | lh_harv_hours_season2i | if(${lh_harv_units_season2}!='' and ${lh_harv_hours_unit2}!='' and ${lh_harv_ppl_season2}!='' , ${lh_harv_units_season2}*${lh_harv_hours_uni 
+calculate | lh_tot_hours_season2i | ${lh_prep_hours_season2i} + ${lh_plant_hours_season2i} + ${lh_weed_hours_season2i} + ${lh_spray_hours_season2i} + ${lh_harv_hours_season2i} 
+begin group | lh_tot2 |  
+decimal | lh_prep_hours_season2 | ${lh_prep_hours_season2i} 
+decimal | lh_plant_hours_season2 | ${lh_plant_hours_season2i} 
+decimal | lh_weed_hours_season2 | ${lh_weed_hours_season2i} 
+decimal | lh_spray_hours_season2 | ${lh_spray_hours_season2i} 
+decimal | lh_harv_hours_season2 | ${lh_harv_hours_season2i} 
+decimal | lh_tot_hours_season2 | ${lh_tot_hours_season2i} 
+note | lh_prep3 |  
+select_one unit | lh_prep_unit3 |  
+text | lh_prep_unit_other3 |  
+decimal | lh_prep_hours_unit3 |  
+decimal | lh_prep_ppl_season3 |  
+decimal | lh_prep_units_season3 |  
+note | lh_plant3 |  
+select_one unit | lh_plant_unit3 |  
+text | lh_plant_unit_other3 |  
+decimal | lh_plant_hours_unit3 |  
+decimal | lh_plant_ppl_season3 |  
+decimal | lh_plant_units_season3 |  
+note | lh_weed3 |  
+select_one unit | lh_weed_unit3 |  
+text | lh_weed_unit_other3 |  
+decimal | lh_weed_hours_unit3 |  
+decimal | lh_weed_ppl_season3 |  
+decimal | lh_weed_units_season3 |  
+note | lh_spray3 |  
+select_one unit | lh_spray_unit3 |  
+text | lh_spray_unit_other3 |  
+decimal | lh_spray_hours_unit3 |  
+decimal | lh_spray_ppl_season3 |  
+decimal | lh_spray_units_season3 |  
+note | lh_harv3 |  
+select_one unit | lh_harv_unit3 |  
+text | lh_harv_unit_other3 |  
+decimal | lh_harv_hours_unit3 |  
+decimal | lh_harv_ppl_season3 |  
+decimal | lh_harv_units_season3 |  
+calculate | lh_prep_hours_season3i | if(${lh_prep_units_season3}!='' and ${lh_prep_hours_unit3}!='' and ${lh_prep_ppl_season3}!='' , ${lh_prep_units_season3}*${lh_prep_hours_uni 
+calculate | lh_plant_hours_season3i | if(${lh_plant_units_season3}!='' and ${lh_plant_hours_unit3}!='' and ${lh_plant_ppl_season3}!='' , ${lh_plant_units_season3}*${lh_plant_hour 
+calculate | lh_weed_hours_season3i | if(${lh_weed_units_season3}!='' and ${lh_weed_hours_unit3}!='' and ${lh_weed_ppl_season3}!='' , ${lh_weed_units_season3}*${lh_weed_hours_uni 
+calculate | lh_spray_hours_season3i | if(${lh_spray_units_season3}!='' and ${lh_spray_hours_unit3}!='' and ${lh_spray_ppl_season3}!='' , ${lh_spray_units_season3}*${lh_spray_hour 
+calculate | lh_harv_hours_season3i | if(${lh_harv_units_season3}!='' and ${lh_harv_hours_unit3}!='' and ${lh_harv_ppl_season3}!='' , ${lh_harv_units_season3}*${lh_harv_hours_uni 
+calculate | lh_tot_hours_season3i | ${lh_prep_hours_season3i} + ${lh_plant_hours_season3i} + ${lh_weed_hours_season3i} + ${lh_spray_hours_season3i} + ${lh_harv_hours_season3i} 
+begin group | lh_tot3 |  
+decimal | lh_prep_hours_season3 | ${lh_prep_hours_season3i} 
+decimal | lh_plant_hours_season3 | ${lh_plant_hours_season3i} 
+decimal | lh_weed_hours_season3 | ${lh_weed_hours_season3i} 
+decimal | lh_spray_hours_season3 | ${lh_spray_hours_season3i} 
+decimal | lh_harv_hours_season3 | ${lh_harv_hours_season3i} 
+decimal | lh_tot_hours_season3 | ${lh_tot_hours_season3i} 
+note | lh_prep4 |  
+select_one unit | lh_prep_unit4 |  
+text | lh_prep_unit_other4 |  
+decimal | lh_prep_hours_unit4 |  
+decimal | lh_prep_ppl_season4 |  
+decimal | lh_prep_units_season4 |  
+note | lh_plant4 |  
+select_one unit | lh_plant_unit4 |  
+text | lh_plant_unit_other4 |  
+decimal | lh_plant_hours_unit4 |  
+decimal | lh_plant_ppl_season4 |  
+decimal | lh_plant_units_season4 |  
+note | lh_weed4 |  
+select_one unit | lh_weed_unit4 |  
+text | lh_weed_unit_other4 |  
+decimal | lh_weed_hours_unit4 |  
+decimal | lh_weed_ppl_season4 |  
+decimal | lh_weed_units_season4 |  
+note | lh_spray4 |  
+select_one unit | lh_spray_unit4 |  
+text | lh_spray_unit_other4 |  
+decimal | lh_spray_hours_unit4 |  
+decimal | lh_spray_ppl_season4 |  
+decimal | lh_spray_units_season4 |  
+note | lh_harv4 |  
+select_one unit | lh_harv_unit4 |  
+text | lh_harv_unit_other4 |  
+decimal | lh_harv_hours_unit4 |  
+decimal | lh_harv_ppl_season4 |  
+decimal | lh_harv_units_season4 |  
+calculate | lh_prep_hours_season4i | if(${lh_prep_units_season4}!='' and ${lh_prep_hours_unit4}!='' and ${lh_prep_ppl_season4}!='' , ${lh_prep_units_season4}*${lh_prep_hours_uni 
+calculate | lh_plant_hours_season4i | if(${lh_plant_units_season4}!='' and ${lh_plant_hours_unit4}!='' and ${lh_plant_ppl_season4}!='' , ${lh_plant_units_season4}*${lh_plant_hour 
+calculate | lh_weed_hours_season4i | if(${lh_weed_units_season4}!='' and ${lh_weed_hours_unit4}!='' and ${lh_weed_ppl_season4}!='' , ${lh_weed_units_season4}*${lh_weed_hours_uni 
+calculate | lh_spray_hours_season4i | if(${lh_spray_units_season4}!='' and ${lh_spray_hours_unit4}!='' and ${lh_spray_ppl_season4}!='' , ${lh_spray_units_season4}*${lh_spray_hour 
+calculate | lh_harv_hours_season4i | if(${lh_harv_units_season4}!='' and ${lh_harv_hours_unit4}!='' and ${lh_harv_ppl_season4}!='' , ${lh_harv_units_season4}*${lh_harv_hours_uni 
+calculate | lh_tot_hours_season4i | ${lh_prep_hours_season4i} + ${lh_plant_hours_season4i} + ${lh_weed_hours_season4i} + ${lh_spray_hours_season4i} + ${lh_harv_hours_season4i} 
+begin group | lh_tot4 |  
+decimal | lh_prep_hours_season4 | ${lh_prep_hours_season4i} 
+decimal | lh_plant_hours_season4 | ${lh_plant_hours_season4i} 
+decimal | lh_weed_hours_season4 | ${lh_weed_hours_season4i} 
+decimal | lh_spray_hours_season4 | ${lh_spray_hours_season4i} 
+decimal | lh_harv_hours_season4 | ${lh_harv_hours_season4i} 
+decimal | lh_tot_hours_season4 | ${lh_tot_hours_season4i} 
+note | lh_prep5 |  
+select_one unit | lh_prep_unit5 |  
+text | lh_prep_unit_other5 |  
+decimal | lh_prep_hours_unit5 |  
+decimal | lh_prep_ppl_season5 |  
+decimal | lh_prep_units_season5 |  
+note | lh_plant5 |  
+select_one unit | lh_plant_unit5 |  
+text | lh_plant_unit_other5 |  
+decimal | lh_plant_hours_unit5 |  
+decimal | lh_plant_ppl_season5 |  
+decimal | lh_plant_units_season5 |  
+note | lh_weed5 |  
+select_one unit | lh_weed_unit5 |  
+text | lh_weed_unit_other5 |  
+decimal | lh_weed_hours_unit5 |  
+decimal | lh_weed_ppl_season5 |  
+decimal | lh_weed_units_season5 |  
+note | lh_spray5 |  
+select_one unit | lh_spray_unit5 |  
+text | lh_spray_unit_other5 |  
+decimal | lh_spray_hours_unit5 |  
+decimal | lh_spray_ppl_season5 |  
+decimal | lh_spray_units_season5 |  
+note | lh_harv5 |  
+select_one unit | lh_harv_unit5 |  
+text | lh_harv_unit_other5 |  
+decimal | lh_harv_hours_unit5 |  
+decimal | lh_harv_ppl_season5 |  
+decimal | lh_harv_units_season5 |  
+calculate | lh_prep_hours_season5i | if(${lh_prep_units_season5}!='' and ${lh_prep_hours_unit5}!='' and ${lh_prep_ppl_season5}!='' , ${lh_prep_units_season5}*${lh_prep_hours_uni 
+calculate | lh_plant_hours_season5i | if(${lh_plant_units_season5}!='' and ${lh_plant_hours_unit5}!='' and ${lh_plant_ppl_season5}!='' , ${lh_plant_units_season5}*${lh_plant_hour 
+calculate | lh_weed_hours_season5i | if(${lh_weed_units_season5}!='' and ${lh_weed_hours_unit5}!='' and ${lh_weed_ppl_season5}!='' , ${lh_weed_units_season5}*${lh_weed_hours_uni 
+calculate | lh_spray_hours_season5i | if(${lh_spray_units_season5}!='' and ${lh_spray_hours_unit5}!='' and ${lh_spray_ppl_season5}!='' , ${lh_spray_units_season5}*${lh_spray_hour 
+calculate | lh_harv_hours_season5i | if(${lh_harv_units_season5}!='' and ${lh_harv_hours_unit5}!='' and ${lh_harv_ppl_season5}!='' , ${lh_harv_units_season5}*${lh_harv_hours_uni 
+calculate | lh_tot_hours_season5i | ${lh_prep_hours_season5i} + ${lh_plant_hours_season5i} + ${lh_weed_hours_season5i} + ${lh_spray_hours_season5i} + ${lh_harv_hours_season5i} 
+begin group | lh_tot5 |  
+decimal | lh_prep_hours_season5 | ${lh_prep_hours_season5i} 
+decimal | lh_plant_hours_season5 | ${lh_plant_hours_season5i} 
+decimal | lh_weed_hours_season5 | ${lh_weed_hours_season5i} 
+decimal | lh_spray_hours_season5 | ${lh_spray_hours_season5i} 
+decimal | lh_harv_hours_season5 | ${lh_harv_hours_season5i} 
+decimal | lh_tot_hours_season5 | ${lh_tot_hours_season5i} 
+note | lh_prep6 |  
+select_one unit | lh_prep_unit6 |  
+text | lh_prep_unit_other6 |  
+decimal | lh_prep_hours_unit6 |  
+decimal | lh_prep_ppl_season6 |  
+decimal | lh_prep_units_season6 |  
+note | lh_plant6 |  
+select_one unit | lh_plant_unit6 |  
+text | lh_plant_unit_other6 |  
+decimal | lh_plant_hours_unit6 |  
+decimal | lh_plant_ppl_season6 |  
+decimal | lh_plant_units_season6 |  
+note | lh_weed6 |  
+select_one unit | lh_weed_unit6 |  
+text | lh_weed_unit_other6 |  
+decimal | lh_weed_hours_unit6 |  
+decimal | lh_weed_ppl_season6 |  
+decimal | lh_weed_units_season6 |  
+note | lh_spray6 |  
+select_one unit | lh_spray_unit6 |  
+text | lh_spray_unit_other6 |  
+decimal | lh_spray_hours_unit6 |  
+decimal | lh_spray_ppl_season6 |  
+decimal | lh_spray_units_season6 |  
+note | lh_harv6 |  
+select_one unit | lh_harv_unit6 |  
+text | lh_harv_unit_other6 |  
+decimal | lh_harv_hours_unit6 |  
+decimal | lh_harv_ppl_season6 |  
+decimal | lh_harv_units_season6 |  
+calculate | lh_prep_hours_season6i | if(${lh_prep_units_season6}!='' and ${lh_prep_hours_unit6}!='' and ${lh_prep_ppl_season6}!='' , ${lh_prep_units_season6}*${lh_prep_hours_uni 
+calculate | lh_plant_hours_season6i | if(${lh_plant_units_season6}!='' and ${lh_plant_hours_unit6}!='' and ${lh_plant_ppl_season6}!='' , ${lh_plant_units_season6}*${lh_plant_hour 
+calculate | lh_weed_hours_season6i | if(${lh_weed_units_season6}!='' and ${lh_weed_hours_unit6}!='' and ${lh_weed_ppl_season6}!='' , ${lh_weed_units_season6}*${lh_weed_hours_uni 
+calculate | lh_spray_hours_season6i | if(${lh_spray_units_season6}!='' and ${lh_spray_hours_unit6}!='' and ${lh_spray_ppl_season6}!='' , ${lh_spray_units_season6}*${lh_spray_hour 
+calculate | lh_harv_hours_season6i | if(${lh_harv_units_season6}!='' and ${lh_harv_hours_unit6}!='' and ${lh_harv_ppl_season6}!='' , ${lh_harv_units_season6}*${lh_harv_hours_uni 
+calculate | lh_tot_hours_season6i | ${lh_prep_hours_season6i} + ${lh_plant_hours_season6i} + ${lh_weed_hours_season6i} + ${lh_spray_hours_season6i} + ${lh_harv_hours_season6i} 
+begin group | lh_tot6 |  
+decimal | lh_prep_hours_season6 | ${lh_prep_hours_season6i} 
+decimal | lh_plant_hours_season6 | ${lh_plant_hours_season6i} 
+decimal | lh_weed_hours_season6 | ${lh_weed_hours_season6i} 
+decimal | lh_spray_hours_season6 | ${lh_spray_hours_season6i} 
+decimal | lh_harv_hours_season6 | ${lh_harv_hours_season6i} 
+decimal | lh_tot_hours_season6 | ${lh_tot_hours_season6i} 
+begin group | lab_hours |  
+note | hour_labour_note |  
+decimal | tot_lab_hours_1 | ${lh_tot_hours_season1} 
+select_one dk_ra | tot_lab_hours_1dk |  
+decimal | tot_lab_hours_2 | ${lh_tot_hours_season2} 
+select_one dk_ra | tot_lab_hours_2dk |  
+decimal | tot_lab_hours_3 | ${lh_tot_hours_season3} 
+select_one dk_ra | tot_lab_hours_3dk |  
+decimal | tot_lab_hours_4 | ${lh_tot_hours_season4} 
+select_one dk_ra | tot_lab_hours_4dk |  
+decimal | tot_lab_hours_5 | ${lh_tot_hours_season5} 
+select_one dk_ra | tot_lab_hours_5dk |  
+decimal | tot_lab_hours_6 | ${lh_tot_hours_season6} 
+select_one dk_ra | tot_lab_hours_6dk |  
+calculate | tot_lab_hours | if(${tot_lab_hours_1}>=0 , ${tot_lab_hours_1} , 0) + if(${tot_lab_hours_2}>=0 , ${tot_lab_hours_2} , 0) + if(${tot_lab_hours_3}>=0 , ${tot_l 
+note | tot_lab_hours_note | ${tot_lab_hours} 
+note | lc_prep1 |  
+select_one unit | lc_prep_unit1 |  
+text | lc_prep_unit_other1 |  
+decimal | lc_prep_costs_unit1 |  
+decimal | lc_prep_ppl_season1 |  
+decimal | lc_prep_units_season1 |  
+note | lc_plant1 |  
+select_one unit | lc_plant_unit1 |  
+text | lc_plant_unit_other1 |  
+decimal | lc_plant_costs_unit1 |  
+decimal | lc_plant_ppl_season1 |  
+decimal | lc_plant_units_season1 |  
+note | lc_weed1 |  
+select_one unit | lc_weed_unit1 |  
+text | lc_weed_unit_other1 |  
+decimal | lc_weed_costs_unit1 |  
+decimal | lc_weed_ppl_season1 |  
+decimal | lc_weed_units_season1 |  
+note | lc_spray1 |  
+select_one unit | lc_spray_unit1 |  
+text | lc_spray_unit_other1 |  
+decimal | lc_spray_costs_unit1 |  
+decimal | lc_spray_ppl_season1 |  
+decimal | lc_spray_units_season1 |  
+note | lc_harv1 |  
+select_one unit | lc_harv_unit1 |  
+text | lc_harv_unit_other1 |  
+decimal | lc_harv_costs_unit1 |  
+decimal | lc_harv_ppl_season1 |  
+decimal | lc_harv_units_season1 |  
+calculate | lc_prep_costs_season1i | if(${lc_prep_units_season1}!='' and ${lc_prep_costs_unit1}!='' and ${lc_prep_ppl_season1}!='' , ${lc_prep_units_season1}*${lc_prep_costs_uni 
+calculate | lc_plant_costs_season1i | if(${lc_plant_units_season1}!='' and ${lc_plant_costs_unit1}!='' and ${lc_plant_ppl_season1}!='' , ${lc_plant_units_season1}*${lc_plant_cost 
+calculate | lc_weed_costs_season1i | if(${lc_weed_units_season1}!='' and ${lc_weed_costs_unit1}!='' and ${lc_weed_ppl_season1}!='' , ${lc_weed_units_season1}*${lc_weed_costs_uni 
+calculate | lc_spray_costs_season1i | if(${lc_spray_units_season1}!='' and ${lc_spray_costs_unit1}!='' and ${lc_spray_ppl_season1}!='' , ${lc_spray_units_season1}*${lc_spray_cost 
+calculate | lc_harv_costs_season1i | if(${lc_harv_units_season1}!='' and ${lc_harv_costs_unit1}!='' and ${lc_harv_ppl_season1}!='' , ${lc_harv_units_season1}*${lc_harv_costs_uni 
+calculate | lc_tot_costs_season1i | ${lc_prep_costs_season1i} + ${lc_plant_costs_season1i} + ${lc_weed_costs_season1i} + ${lc_spray_costs_season1i} + ${lc_harv_costs_season1i} 
+begin group | lc_tot1 |  
+decimal | lc_prep_costs_season1 | ${lc_prep_costs_season1i} 
+decimal | lc_plant_costs_season1 | ${lc_plant_costs_season1i} 
+decimal | lc_weed_costs_season1 | ${lc_weed_costs_season1i} 
+decimal | lc_spray_costs_season1 | ${lc_spray_costs_season1i} 
+decimal | lc_harv_costs_season1 | ${lc_harv_costs_season1i} 
+decimal | lc_tot_costs_season1 | ${lc_tot_costs_season1i} 
+note | lc_prep2 |  
+select_one unit | lc_prep_unit2 |  
+text | lc_prep_unit_other2 |  
+decimal | lc_prep_costs_unit2 |  
+decimal | lc_prep_ppl_season2 |  
+decimal | lc_prep_units_season2 |  
+note | lc_plant2 |  
+select_one unit | lc_plant_unit2 |  
+text | lc_plant_unit_other2 |  
+decimal | lc_plant_costs_unit2 |  
+decimal | lc_plant_ppl_season2 |  
+decimal | lc_plant_units_season2 |  
+note | lc_weed2 |  
+select_one unit | lc_weed_unit2 |  
+text | lc_weed_unit_other2 |  
+decimal | lc_weed_costs_unit2 |  
+decimal | lc_weed_ppl_season2 |  
+decimal | lc_weed_units_season2 |  
+note | lc_spray2 |  
+select_one unit | lc_spray_unit2 |  
+text | lc_spray_unit_other2 |  
+decimal | lc_spray_costs_unit2 |  
+decimal | lc_spray_ppl_season2 |  
+decimal | lc_spray_units_season2 |  
+note | lc_harv2 |  
+select_one unit | lc_harv_unit2 |  
+text | lc_harv_unit_other2 |  
+decimal | lc_harv_costs_unit2 |  
+decimal | lc_harv_ppl_season2 |  
+decimal | lc_harv_units_season2 |  
+calculate | lc_prep_costs_season2i | if(${lc_prep_units_season2}!='' and ${lc_prep_costs_unit2}!='' and ${lc_prep_ppl_season2}!='' , ${lc_prep_units_season2}*${lc_prep_costs_uni 
+calculate | lc_plant_costs_season2i | if(${lc_plant_units_season2}!='' and ${lc_plant_costs_unit2}!='' and ${lc_plant_ppl_season2}!='' , ${lc_plant_units_season2}*${lc_plant_cost 
+calculate | lc_weed_costs_season2i | if(${lc_weed_units_season2}!='' and ${lc_weed_costs_unit2}!='' and ${lc_weed_ppl_season2}!='' , ${lc_weed_units_season2}*${lc_weed_costs_uni 
+calculate | lc_spray_costs_season2i | if(${lc_spray_units_season2}!='' and ${lc_spray_costs_unit2}!='' and ${lc_spray_ppl_season2}!='' , ${lc_spray_units_season2}*${lc_spray_cost 
+calculate | lc_harv_costs_season2i | if(${lc_harv_units_season2}!='' and ${lc_harv_costs_unit2}!='' and ${lc_harv_ppl_season2}!='' , ${lc_harv_units_season2}*${lc_harv_costs_uni 
+calculate | lc_tot_costs_season2i | ${lc_prep_costs_season2i} + ${lc_plant_costs_season2i} + ${lc_weed_costs_season2i} + ${lc_spray_costs_season2i} + ${lc_harv_costs_season2i} 
+begin group | lc_tot2 |  
+decimal | lc_prep_costs_season2 | ${lc_prep_costs_season2i} 
+decimal | lc_plant_costs_season2 | ${lc_plant_costs_season2i} 
+decimal | lc_weed_costs_season2 | ${lc_weed_costs_season2i} 
+decimal | lc_spray_costs_season2 | ${lc_spray_costs_season2i} 
+decimal | lc_harv_costs_season2 | ${lc_harv_costs_season2i} 
+decimal | lc_tot_costs_season2 | ${lc_tot_costs_season2i} 
+note | lc_prep3 |  
+select_one unit | lc_prep_unit3 |  
+text | lc_prep_unit_other3 |  
+decimal | lc_prep_costs_unit3 |  
+decimal | lc_prep_ppl_season3 |  
+decimal | lc_prep_units_season3 |  
+note | lc_plant3 |  
+select_one unit | lc_plant_unit3 |  
+text | lc_plant_unit_other3 |  
+decimal | lc_plant_costs_unit3 |  
+decimal | lc_plant_ppl_season3 |  
+decimal | lc_plant_units_season3 |  
+note | lc_weed3 |  
+select_one unit | lc_weed_unit3 |  
+text | lc_weed_unit_other3 |  
+decimal | lc_weed_costs_unit3 |  
+decimal | lc_weed_ppl_season3 |  
+decimal | lc_weed_units_season3 |  
+note | lc_spray3 |  
+select_one unit | lc_spray_unit3 |  
+text | lc_spray_unit_other3 |  
+decimal | lc_spray_costs_unit3 |  
+decimal | lc_spray_ppl_season3 |  
+decimal | lc_spray_units_season3 |  
+note | lc_harv3 |  
+select_one unit | lc_harv_unit3 |  
+text | lc_harv_unit_other3 |  
+decimal | lc_harv_costs_unit3 |  
+decimal | lc_harv_ppl_season3 |  
+decimal | lc_harv_units_season3 |  
+calculate | lc_prep_costs_season3i | if(${lc_prep_units_season3}!='' and ${lc_prep_costs_unit3}!='' and ${lc_prep_ppl_season3}!='' , ${lc_prep_units_season3}*${lc_prep_costs_uni 
+calculate | lc_plant_costs_season3i | if(${lc_plant_units_season3}!='' and ${lc_plant_costs_unit3}!='' and ${lc_plant_ppl_season3}!='' , ${lc_plant_units_season3}*${lc_plant_cost 
+calculate | lc_weed_costs_season3i | if(${lc_weed_units_season3}!='' and ${lc_weed_costs_unit3}!='' and ${lc_weed_ppl_season3}!='' , ${lc_weed_units_season3}*${lc_weed_costs_uni 
+calculate | lc_spray_costs_season3i | if(${lc_spray_units_season3}!='' and ${lc_spray_costs_unit3}!='' and ${lc_spray_ppl_season3}!='' , ${lc_spray_units_season3}*${lc_spray_cost 
+calculate | lc_harv_costs_season3i | if(${lc_harv_units_season3}!='' and ${lc_harv_costs_unit3}!='' and ${lc_harv_ppl_season3}!='' , ${lc_harv_units_season3}*${lc_harv_costs_uni 
+calculate | lc_tot_costs_season3i | ${lc_prep_costs_season3i} + ${lc_plant_costs_season3i} + ${lc_weed_costs_season3i} + ${lc_spray_costs_season3i} + ${lc_harv_costs_season3i} 
+begin group | lc_tot3 |  
+decimal | lc_prep_costs_season3 | ${lc_prep_costs_season3i} 
+decimal | lc_plant_costs_season3 | ${lc_plant_costs_season3i} 
+decimal | lc_weed_costs_season3 | ${lc_weed_costs_season3i} 
+decimal | lc_spray_costs_season3 | ${lc_spray_costs_season3i} 
+decimal | lc_harv_costs_season3 | ${lc_harv_costs_season3i} 
+decimal | lc_tot_costs_season3 | ${lc_tot_costs_season3i} 
+note | lc_prep4 |  
+select_one unit | lc_prep_unit4 |  
+text | lc_prep_unit_other4 |  
+decimal | lc_prep_costs_unit4 |  
+decimal | lc_prep_ppl_season4 |  
+decimal | lc_prep_units_season4 |  
+note | lc_plant4 |  
+select_one unit | lc_plant_unit4 |  
+text | lc_plant_unit_other4 |  
+decimal | lc_plant_costs_unit4 |  
+decimal | lc_plant_ppl_season4 |  
+decimal | lc_plant_units_season4 |  
+note | lc_weed4 |  
+select_one unit | lc_weed_unit4 |  
+text | lc_weed_unit_other4 |  
+decimal | lc_weed_costs_unit4 |  
+decimal | lc_weed_ppl_season4 |  
+decimal | lc_weed_units_season4 |  
+note | lc_spray4 |  
+select_one unit | lc_spray_unit4 |  
+text | lc_spray_unit_other4 |  
+decimal | lc_spray_costs_unit4 |  
+decimal | lc_spray_ppl_season4 |  
+decimal | lc_spray_units_season4 |  
+note | lc_harv4 |  
+select_one unit | lc_harv_unit4 |  
+text | lc_harv_unit_other4 |  
+decimal | lc_harv_costs_unit4 |  
+decimal | lc_harv_ppl_season4 |  
+decimal | lc_harv_units_season4 |  
+calculate | lc_prep_costs_season4i | if(${lc_prep_units_season4}!='' and ${lc_prep_costs_unit4}!='' and ${lc_prep_ppl_season4}!='' , ${lc_prep_units_season4}*${lc_prep_costs_uni 
+calculate | lc_plant_costs_season4i | if(${lc_plant_units_season4}!='' and ${lc_plant_costs_unit4}!='' and ${lc_plant_ppl_season4}!='' , ${lc_plant_units_season4}*${lc_plant_cost 
+calculate | lc_weed_costs_season4i | if(${lc_weed_units_season4}!='' and ${lc_weed_costs_unit4}!='' and ${lc_weed_ppl_season4}!='' , ${lc_weed_units_season4}*${lc_weed_costs_uni 
+calculate | lc_spray_costs_season4i | if(${lc_spray_units_season4}!='' and ${lc_spray_costs_unit4}!='' and ${lc_spray_ppl_season4}!='' , ${lc_spray_units_season4}*${lc_spray_cost 
+calculate | lc_harv_costs_season4i | if(${lc_harv_units_season4}!='' and ${lc_harv_costs_unit4}!='' and ${lc_harv_ppl_season4}!='' , ${lc_harv_units_season4}*${lc_harv_costs_uni 
+calculate | lc_tot_costs_season4i | ${lc_prep_costs_season4i} + ${lc_plant_costs_season4i} + ${lc_weed_costs_season4i} + ${lc_spray_costs_season4i} + ${lc_harv_costs_season4i} 
+begin group | lc_tot4 |  
+decimal | lc_prep_costs_season4 | ${lc_prep_costs_season4i} 
+decimal | lc_plant_costs_season4 | ${lc_plant_costs_season4i} 
+decimal | lc_weed_costs_season4 | ${lc_weed_costs_season4i} 
+decimal | lc_spray_costs_season4 | ${lc_spray_costs_season4i} 
+decimal | lc_harv_costs_season4 | ${lc_harv_costs_season4i} 
+decimal | lc_tot_costs_season4 | ${lc_tot_costs_season4i} 
+note | lc_prep5 |  
+select_one unit | lc_prep_unit5 |  
+text | lc_prep_unit_other5 |  
+decimal | lc_prep_costs_unit5 |  
+decimal | lc_prep_ppl_season5 |  
+decimal | lc_prep_units_season5 |  
+note | lc_plant5 |  
+select_one unit | lc_plant_unit5 |  
+text | lc_plant_unit_other5 |  
+decimal | lc_plant_costs_unit5 |  
+decimal | lc_plant_ppl_season5 |  
+decimal | lc_plant_units_season5 |  
+note | lc_weed5 |  
+select_one unit | lc_weed_unit5 |  
+text | lc_weed_unit_other5 |  
+decimal | lc_weed_costs_unit5 |  
+decimal | lc_weed_ppl_season5 |  
+decimal | lc_weed_units_season5 |  
+note | lc_spray5 |  
+select_one unit | lc_spray_unit5 |  
+text | lc_spray_unit_other5 |  
+decimal | lc_spray_costs_unit5 |  
+decimal | lc_spray_ppl_season5 |  
+decimal | lc_spray_units_season5 |  
+note | lc_harv5 |  
+select_one unit | lc_harv_unit5 |  
+text | lc_harv_unit_other5 |  
+decimal | lc_harv_costs_unit5 |  
+decimal | lc_harv_ppl_season5 |  
+decimal | lc_harv_units_season5 |  
+calculate | lc_prep_costs_season5i | if(${lc_prep_units_season5}!='' and ${lc_prep_costs_unit5}!='' and ${lc_prep_ppl_season5}!='' , ${lc_prep_units_season5}*${lc_prep_costs_uni 
+calculate | lc_plant_costs_season5i | if(${lc_plant_units_season5}!='' and ${lc_plant_costs_unit5}!='' and ${lc_plant_ppl_season5}!='' , ${lc_plant_units_season5}*${lc_plant_cost 
+calculate | lc_weed_costs_season5i | if(${lc_weed_units_season5}!='' and ${lc_weed_costs_unit5}!='' and ${lc_weed_ppl_season5}!='' , ${lc_weed_units_season5}*${lc_weed_costs_uni 
+calculate | lc_spray_costs_season5i | if(${lc_spray_units_season5}!='' and ${lc_spray_costs_unit5}!='' and ${lc_spray_ppl_season5}!='' , ${lc_spray_units_season5}*${lc_spray_cost 
+calculate | lc_harv_costs_season5i | if(${lc_harv_units_season5}!='' and ${lc_harv_costs_unit5}!='' and ${lc_harv_ppl_season5}!='' , ${lc_harv_units_season5}*${lc_harv_costs_uni 
+calculate | lc_tot_costs_season5i | ${lc_prep_costs_season5i} + ${lc_plant_costs_season5i} + ${lc_weed_costs_season5i} + ${lc_spray_costs_season5i} + ${lc_harv_costs_season5i} 
+begin group | lc_tot5 |  
+decimal | lc_prep_costs_season5 | ${lc_prep_costs_season5i} 
+decimal | lc_plant_costs_season5 | ${lc_plant_costs_season5i} 
+decimal | lc_weed_costs_season5 | ${lc_weed_costs_season5i} 
+decimal | lc_spray_costs_season5 | ${lc_spray_costs_season5i} 
+decimal | lc_harv_costs_season5 | ${lc_harv_costs_season5i} 
+decimal | lc_tot_costs_season5 | ${lc_tot_costs_season5i} 
+note | lc_prep6 |  
+select_one unit | lc_prep_unit6 |  
+text | lc_prep_unit_other6 |  
+decimal | lc_prep_costs_unit6 |  
+decimal | lc_prep_ppl_season6 |  
+decimal | lc_prep_units_season6 |  
+note | lc_plant6 |  
+select_one unit | lc_plant_unit6 |  
+text | lc_plant_unit_other6 |  
+decimal | lc_plant_costs_unit6 |  
+decimal | lc_plant_ppl_season6 |  
+decimal | lc_plant_units_season6 |  
+note | lc_weed6 |  
+select_one unit | lc_weed_unit6 |  
+text | lc_weed_unit_other6 |  
+decimal | lc_weed_costs_unit6 |  
+decimal | lc_weed_ppl_season6 |  
+decimal | lc_weed_units_season6 |  
+note | lc_spray6 |  
+select_one unit | lc_spray_unit6 |  
+text | lc_spray_unit_other6 |  
+decimal | lc_spray_costs_unit6 |  
+decimal | lc_spray_ppl_season6 |  
+decimal | lc_spray_units_season6 |  
+note | lc_harv6 |  
+select_one unit | lc_harv_unit6 |  
+text | lc_harv_unit_other6 |  
+decimal | lc_harv_costs_unit6 |  
+decimal | lc_harv_ppl_season6 |  
+decimal | lc_harv_units_season6 |  
+calculate | lc_prep_costs_season6i | if(${lc_prep_units_season6}!='' and ${lc_prep_costs_unit6}!='' and ${lc_prep_ppl_season6}!='' , ${lc_prep_units_season6}*${lc_prep_costs_uni 
+calculate | lc_plant_costs_season6i | if(${lc_plant_units_season6}!='' and ${lc_plant_costs_unit6}!='' and ${lc_plant_ppl_season6}!='' , ${lc_plant_units_season6}*${lc_plant_cost 
+calculate | lc_weed_costs_season6i | if(${lc_weed_units_season6}!='' and ${lc_weed_costs_unit6}!='' and ${lc_weed_ppl_season6}!='' , ${lc_weed_units_season6}*${lc_weed_costs_uni 
+calculate | lc_spray_costs_season6i | if(${lc_spray_units_season6}!='' and ${lc_spray_costs_unit6}!='' and ${lc_spray_ppl_season6}!='' , ${lc_spray_units_season6}*${lc_spray_cost 
+calculate | lc_harv_costs_season6i | if(${lc_harv_units_season6}!='' and ${lc_harv_costs_unit6}!='' and ${lc_harv_ppl_season6}!='' , ${lc_harv_units_season6}*${lc_harv_costs_uni 
+calculate | lc_tot_costs_season6i | ${lc_prep_costs_season6i} + ${lc_plant_costs_season6i} + ${lc_weed_costs_season6i} + ${lc_spray_costs_season6i} + ${lc_harv_costs_season6i} 
+begin group | lc_tot6 |  
+decimal | lc_prep_costs_season6 | ${lc_prep_costs_season6i} 
+decimal | lc_plant_costs_season6 | ${lc_plant_costs_season6i} 
+decimal | lc_weed_costs_season6 | ${lc_weed_costs_season6i} 
+decimal | lc_spray_costs_season6 | ${lc_spray_costs_season6i} 
+decimal | lc_harv_costs_season6 | ${lc_harv_costs_season6i} 
+decimal | lc_tot_costs_season6 | ${lc_tot_costs_season6i} 
+begin group | lab_costs_check |  
+note | cost_labour_note_check |  
+decimal | tot_lab_costs_check_1 | ${lc_tot_costs_season1} 
+select_one dk_ra | tot_lab_costs_check_1dk |  
+decimal | tot_lab_costs_check_2 | ${lc_tot_costs_season2} 
+select_one dk_ra | tot_lab_costs_check_2dk |  
+decimal | tot_lab_costs_check_3 | ${lc_tot_costs_season3} 
+select_one dk_ra | tot_lab_costs_check_3dk |  
+decimal | tot_lab_costs_check_4 | ${lc_tot_costs_season4} 
+select_one dk_ra | tot_lab_costs_check_4dk |  
+decimal | tot_lab_costs_check_5 | ${lc_tot_costs_season5} 
+select_one dk_ra | tot_lab_costs_check_5dk |  
+decimal | tot_lab_costs_check_6 | ${lc_tot_costs_season6} 
+select_one dk_ra | tot_lab_costs_check_6dk |  
+calculate | tot_lab_costs_check | if(${tot_lab_costs_check_1}>=0 , ${tot_lab_costs_check_1} , 0) + if(${tot_lab_costs_check_2}>=0 , ${tot_lab_costs_check_2} , 0) + if(${tot_l 
+note | tot_lab_costs_check_note | ${tot_lab_costs_check} 
+begin group | lab_costs |  
+note | cost_labour_note |  
+decimal | tot_lab_costs_1 |  
+select_one dk_ra | tot_lab_costs_1dk |  
+decimal | tot_lab_costs_2 |  
+select_one dk_ra | tot_lab_costs_2dk |  
+decimal | tot_lab_costs_3 |  
+select_one dk_ra | tot_lab_costs_3dk |  
+decimal | tot_lab_costs_4 |  
+select_one dk_ra | tot_lab_costs_4dk |  
+decimal | tot_lab_costs_5 |  
+select_one dk_ra | tot_lab_costs_5dk |  
+decimal | tot_lab_costs_6 |  
+select_one dk_ra | tot_lab_costs_6dk |  
+calculate | tot_lab_costs_check2 | if(${tot_lab_costs_1}>=0 , ${tot_lab_costs_1} , 0) + if(${tot_lab_costs_2}>=0 , ${tot_lab_costs_2} , 0) + if(${tot_lab_costs_3}>=0 , ${tot_l 
+note | tot_lab_costs_check2_note | ${tot_lab_costs_check2} 
+begin group | chem_costs |  
+note | cost_chem_note |  
+decimal | tot_chem_costs_1 |  
+select_one dk_ra | tot_chem_costs_1dk |  
+decimal | tot_chem_costs_2 |  
+select_one dk_ra | tot_chem_costs_2dk |  
+decimal | tot_chem_costs_3 |  
+select_one dk_ra | tot_chem_costs_3dk |  
+decimal | tot_chem_costs_4 |  
+select_one dk_ra | tot_chem_costs_4dk |  
+decimal | tot_chem_costs_5 |  
+select_one dk_ra | tot_chem_costs_5dk |  
+decimal | tot_chem_costs_6 |  
+select_one dk_ra | tot_chem_costs_6dk |  
+begin group | harvest |  
+note | harvest_meas_note |  
+decimal | harvest_meas_1 |  
+select_one dk_ra | harvest_meas_1dk |  
+decimal | harvest_meas_2 |  
+select_one dk_ra | harvest_meas_2dk |  
+decimal | harvest_meas_3 |  
+select_one dk_ra | harvest_meas_3dk |  
+decimal | harvest_meas_4 |  
+select_one dk_ra | harvest_meas_4dk |  
+decimal | harvest_meas_5 |  
+select_one dk_ra | harvest_meas_5dk |  
+decimal | harvest_meas_6 |  
+select_one dk_ra | harvest_meas_6dk |  
+calculate | harvest_meas_tot | if(${maize_tot_plotn}>5, ${harvest_meas_1}+${harvest_meas_2}+${harvest_meas_3}+${harvest_meas_4}+${harvest_meas_5}+${harvest_meas_6}, if(${m 
+note | harvest_meas_tot_note |  
+calculate | harvest_kg_1i | ${harvest_meas_1}*${kgs_measure_resp} 
+calculate | harvest_kg_2i | ${harvest_meas_2}*${kgs_measure_resp} 
+calculate | harvest_kg_3i | ${harvest_meas_3}*${kgs_measure_resp} 
+calculate | harvest_kg_4i | ${harvest_meas_4}*${kgs_measure_resp} 
+calculate | harvest_kg_5i | ${harvest_meas_5}*${kgs_measure_resp} 
+calculate | harvest_kg_6i | ${harvest_meas_6}*${kgs_measure_resp} 
+begin group | harvest_kg_g |  
+note | harvest_kg_note |  
+note | harvest_kg_note2 |  
+decimal | harvest_kg_1 | ${harvest_kg_1i} 
+select_one dk_ra | harvest_kg_1dk |  
+select_one measured | harvest_measured_1 |  
+decimal | harvest_kg_2 | ${harvest_kg_2i} 
+select_one dk_ra | harvest_kg_2dk |  
+select_one measured | harvest_measured_2 |  
+decimal | harvest_kg_3 | ${harvest_kg_3i} 
+select_one dk_ra | harvest_kg_3dk |  
+select_one measured | harvest_measured_3 |  
+decimal | harvest_kg_4 | ${harvest_kg_4i} 
+select_one dk_ra | harvest_kg_4dk |  
+select_one measured | harvest_measured_4 |  
+decimal | harvest_kg_5 | ${harvest_kg_5i} 
+select_one dk_ra | harvest_kg_5dk |  
+select_one measured | harvest_measured_5 |  
+decimal | harvest_kg_6 | ${harvest_kg_6i} 
+select_one dk_ra | harvest_kg_6dk |  
+select_one measured | harvest_measured_6 |  
+calculate | harvest_kg_tot | if(${maize_tot_plotn}>5, ${harvest_kg_1}+${harvest_kg_2}+${harvest_kg_3}+${harvest_kg_4}+${harvest_kg_5}+${harvest_kg_6}, if(${maize_tot_plo 
+note | harvest_kg_tot_note |  
+begin group | other_cost |  
+decimal | cost_transportpre |  
+select_one dk_ra | cost_transportpredk |  
+decimal | cost_transportpost |  
+select_one dk_ra | cost_transportpostdk |  
+integer | tot_transport_cost |  
+select_one dk_ra | tot_transport_costdk |  
+decimal | labor_cost_dry |  
+decimal | drying_cost |  
+select_one dk_ra | drying_costdk |  
+decimal | labor_cost_store |  
+decimal | storage_cost |  
+select_one dk_ra | storage_costdk |  
+integer | labor_cost_ph |  
+calculate | tot_transport_cost_check | ${cost_transportpre}+${cost_transportpost} 
+begin group | decobbing_cost_g |  
+decimal | decobbing_cost_1 |  
+select_one dk_ra | decobbing_cost_1dk |  
+decimal | decobbing_cost_2 |  
+select_one dk_ra | decobbing_cost_2dk |  
+decimal | decobbing_cost_3 |  
+select_one dk_ra | decobbing_cost_3dk |  
+decimal | decobbing_cost_4 |  
+select_one dk_ra | decobbing_cost_4dk |  
+decimal | decobbing_cost_5 |  
+select_one dk_ra | decobbing_cost_5dk |  
+decimal | decobbing_cost_6 |  
+select_one dk_ra | decobbing_cost_6dk |  
+decimal | lh_decob_hours |  
+select_one dk_ra | lh_decob_hoursdk |  
+decimal | lc_decob_labour_costs |  
+select_one dk_ra | lc_decob_labour_costsdk |  
+decimal | lc_decob_labmaize_costs |  
+select_one dk_ra | lc_decob_labmaize_costsdk |  
+decimal | lc_decob_price |  
+select_one dk_ra | lc_decob_pricedk |  
+decimal | lc_decob_other_costs |  
+select_one dk_ra | lc_decob_other_costsdk |  
+calculate | lc_decob_labour_costs_tot | if(${lc_decob_labour_costs}>0, ${lc_decob_labour_costs}, 0) + if(${lc_decob_price}>0 and ${lc_decob_labmaize_costs}>0 , ${lc_decob_price}*${ 
+decimal | lh_winnow_hours |  
+select_one dk_ra | lh_winnow_hoursdk |  
+decimal | lc_winnow_labour_costs |  
+select_one dk_ra | lc_winnow_labour_costsdk |  
+decimal | lc_winnow_labmaize_costs |  
+select_one dk_ra | lc_winnow_labmaize_costsdk |  
+decimal | lc_winnow_price |  
+select_one dk_ra | lc_winnow_pricedk |  
+decimal | lc_winnow_other_costs |  
+select_one dk_ra | lc_winnow_other_costsdk |  
+calculate | lc_winnow_labour_costs_tot | if(${lc_winnow_labour_costs}>0, ${lc_winnow_labour_costs}, 0) + if(${lc_winnow_price}>0 and ${lc_winnow_labmaize_costs}>0 , ${lc_winnow_pric 
+decimal | lh_sort_hours |  
+select_one dk_ra | lh_sort_hoursdk |  
+decimal | lc_sort_labour_costs |  
+select_one dk_ra | lc_sort_labour_costsdk |  
+decimal | lc_sort_labmaize_costs |  
+select_one dk_ra | lc_sort_labmaize_costsdk |  
+decimal | lc_sort_price |  
+select_one dk_ra | lc_sort_pricedk |  
+decimal | lc_sort_other_costs |  
+select_one dk_ra | lc_sort_other_costsdk |  
+calculate | lc_sort_labour_costs_tot | if(${lc_sort_labour_costs}>0, ${lc_sort_labour_costs}, 0) + if(${lc_sort_price}>0 and ${lc_sort_labmaize_costs}>0 , ${lc_sort_price}*${lc_so 
+decimal | lh_bag_hours |  
+select_one dk_ra | lh_bag_hoursdk |  
+decimal | lc_bag_labour_costs |  
+select_one dk_ra | lc_bag_labour_costsdk |  
+decimal | lc_bag_labmaize_costs |  
+select_one dk_ra | lc_bag_labmaize_costsdk |  
+decimal | lc_bag_price |  
+select_one dk_ra | lc_bag_pricedk |  
+decimal | lc_bag_other_costs |  
+select_one dk_ra | lc_bag_other_costsdk |  
+calculate | lc_bag_labour_costs_tot | if(${lc_bag_labour_costs}>0, ${lc_bag_labour_costs}, 0) + if(${lc_bag_price}>0 and ${lc_bag_labmaize_costs}>0 , ${lc_bag_price}*${lc_bag_lab 
+calculate | labor_cost_ph_check | if(${lc_decob_labour_costs_tot}!='', ${lc_decob_labour_costs_tot}, 0)+if(${lc_winnow_labour_costs_tot}!='', ${lc_winnow_labour_costs_tot}, 0 
+calculate | labor_hour_ph_check | if(${lh_decob_hours}!='', ${lh_decob_hours}, 0)+if(${lh_winnow_hours}!='', ${lh_winnow_hours}, 0)+if(${lh_sort_hours}!='', ${lh_sort_hours}, 
+calculate | otherph_cost_check | if(${lc_decob_other_costs}!='', ${lc_decob_other_costs}, 0)+if(${lc_winnow_other_costs}!='', ${lc_winnow_other_costs}, 0)+if(${lc_sort_other 
+select_one yes_no_only | sold_crop |  
+decimal | sold_crop_meas |  
+decimal | sold_crop_kg |  
+select_one dk_ra | sold_crop_qty_tell |  
+decimal | sold_crop_kg_corr | ${sold_crop_meas}*${kgs_measure_resp} 
+calculate | sold_kg | if(not(selected(${crop_measure}, 'kgs')),${sold_crop_kg_corr}, ${sold_crop_kg}) 
+calculate | not_sold_kg_int | ${harvest_kg_tot}-${sold_kg}-${home_kg_1st} 
+note | sold_kg_note |  
+note | harvest_check_2 |  
+calculate | this_buyer_label_resp | if(${this_buyer_resp}='trader' or ${this_buyer_resp}='other', ${this_buyer_name} , jr:choice-name(${this_buyer_resp}, '${this_buyer_resp}')) 
+calculate | sold_hq | if(${this_buyer_resp}='hq', 1, 0) 
+select_one yes_no_dk_ra | buyer_already_sold |  
+select_one yes_ra | sold_qty_tell |  
+decimal | sold_qty |  
+calculate | sold_kg_p | if(not(selected(${crop_measure}, 'kgs')),${sold_qty}*${kgs_measure_resp}, ${sold_qty}) 
+calculate | sold_kg_ded | ${sold_kg_p}-${deduction_moist} 
+decimal | sold_kg_ded_rep | ${sold_kg_ded} 
+calculate | sold_kg_part | ${sold_kg_ded_rep}+${deduction_moist} 
+text | sold_diff_why |  
+select_one date_frame_ra | sold_when_tell |  
+date | sold_when_e |  
+date | sold_when_l |  
+decimal | sale_transport_cost |  
+select_one yes_ra | tot_rev_tell |  
+decimal | tot_rev_told |  
+calculate | tot_rev_calc | ${ppk_told} * ${sold_kg_ded_rep} 
+calculate | tot_rev_part | if(${tot_rev_tell}='yes', ${tot_rev_told}, ${tot_rev_calc}) 
+calculate | price_week_near_max | pulldata('maize_prices', ${big_tc_max}, 'days_from_1jan1970', decimal-date-time(${sold_when_e})) 
+calculate | price_week_near_min | pulldata('maize_prices', ${big_tc_min}, 'days_from_1jan1970', decimal-date-time(${sold_when_e})) 
+select_one yes_no_only | match_price |  
+calculate | sold_hq_date | pulldata('listing', 'sold_hq_date', 'hhh_code', ${hhh}) 
+calculate | sold_hq_kg | pulldata('listing', 'sold_hq_kg', 'hhh_code', ${hhh}) 
+calculate | sold_hq_sl | pulldata('listing', 'sold_hq_sl', 'hhh_code', ${hhh}) 
+calculate | sold_hq_rec | pulldata('listing', 'sold_hq_rec', 'hhh_code', ${hhh}) 
+calculate | sold_hq_tot | sum(${sold_hq}) 
+calculate | sold_kg_tot | sum(${sold_kg_p}) 
+calculate | sold_kg_ded_tot | sum(${sold_kg_part}) 
+calculate | tot_rev_tot | sum(${tot_rev_part}) 
+text | sold_note |  
+note | final_revenue |  
+decimal | tot_acres_new_1st |  
+calculate | tot_chem_costs | if(${maize_tot_plotn}>5, ${tot_chem_costs_1}+${tot_chem_costs_2}+${tot_chem_costs_3}+${tot_chem_costs_4}+${tot_chem_costs_5}+${tot_chem_cost 
+calculate | tot_costs_pre | if(${seeds_cost}>0,${seeds_cost}, 0) +if(${fert_cost_check}>0,${fert_cost_check}, 0)+if(${tot_lab_costs_check}>0,${tot_lab_costs_check}, 0)+ 
+calculate | tot_costs_post | if(${tot_transport_cost_check}>0, ${tot_transport_cost_check}, 0)+if(${drying_cost}>0, ${drying_cost}, 0)+if(${labor_cost_store}>0, ${labor_ 
+calculate | ap_acres_tot | pulldata('listing', 'plot_acres_maize', 'plot_code', ${ap_new_code_sel}) 
+decimal | ap_acres | ${ap_acres_tot} 
+text | ap_acres_measure |  
+decimal | ap_maize_acres |  
+calculate | tot_acres_new | sum(${ap_maize_acres}) 
+note | tot_acres_new_note |  
+
+returns: treatment table
+
+ 0  1 
+50 49 
+sale 1 ppk nonNA 95  date nonNA NA  hh with >=1 bag weight 95  ppk&nobag 0 
+sale 2 ppk nonNA 94  date nonNA NA  hh with >=1 bag weight 94  ppk&nobag 0 
+sale 3 ppk nonNA 16  date nonNA NA  hh with >=1 bag weight 16  ppk&nobag 0 
+sale 4 ppk nonNA 6  date nonNA NA  hh with >=1 bag weight 6  ppk&nobag 0 
+class of sold_when: Date 
+ [1] "2019-03-29" "2019-03-30" "2019-04-06" "2019-03-07" "2019-03-30" "2019-02-06" "2019-02-02" "2019-04-06" "2019-03-07" "2019-03-29"
+bags (weight nonNA) total 644  by treatment: 375 269 
+hh with any ppk: 95 
+dirty        bag1: NA by T: 13/17  values: 0 66 1 3 NA 30
+cobs         bag1: NA by T: 9/9  values: 0 49 1 32 NA 18
+stones       bag1: NA by T: 5/1  values: 0 92 1 1 NA 6
+dust         bag1: NA by T: 9/9  values: 0 48 1 33 NA 18
+insect       bag1: NA by T: 4/1  values: 0 91 1 3 NA 5
+insect_live  bag1: NA by T: 4/1  values: 0 91 1 3 NA 5
+broken       bag1: NA by T: 13/17  values: 0 63 1 6 NA 30
+immature     bag1: NA by T: 13/17  values: 0 58 1 11 NA 30
+damage       bag1: NA by T: 3/1  values: 0 93 1 2 NA 4
+rot          bag1: NA by T: 2/1  values: 0 87 1 9 NA 3
+mould        bag1: NA by T: 4/1  values: 0 92 1 2 NA 5
+random bag in sale weights? 
+inS
+FALSE  TRUE 
+    4    95 
+hh 1 T 0 rb 6 
+  add4 w: 163 156 161 161 163 159 160 155 165 NA NA NA 
+  s 1 ppk 830 w: NA NA NA NA NA 159 NA NA NA NA NA NA  dw: NA NA NA NA NA 159 NA NA NA NA NA NA 
+  s 2 ppk 1030 w: 158 150 153 156 158 NA 161 155 162 NA NA NA  dw: 158 150 153 156 158 NA 161 155 162 NA NA NA 
+  s 3 ppk NA w: NA NA NA NA NA NA NA NA NA NA NA NA  dw: NA NA NA NA NA NA NA NA NA NA NA NA 
+  s 4 ppk NA w: NA NA NA NA NA NA NA NA NA NA NA NA  dw: NA NA NA NA NA NA NA NA NA NA NA NA 
+hh 2 T 0 rb 10 
+  add4 w: 147 148 151 155 150 148 145 154 153 151 NA NA 
+  s 1 ppk 820 w: NA NA NA NA NA NA NA NA NA 151 NA NA  dw: NA NA NA NA NA NA NA NA NA 151 NA NA 
+  s 2 ppk 800 w: 146 144 147 150 147 145 142 151 151 NA NA NA  dw: 146 144 147 150 147 145 142 151 151 NA NA NA 
+  s 3 ppk NA w: NA NA NA NA NA NA NA NA NA NA NA NA  dw: NA NA NA NA NA NA NA NA NA NA NA NA 
+  s 4 ppk NA w: NA NA NA NA NA NA NA NA NA NA NA NA  dw: NA NA NA NA NA NA NA NA NA NA NA NA 
+hh 3 T 0 rb 10 
+  add4 w: 137 153 150 148 143 135 145 150 143 138 NA NA 
+  s 1 ppk 930 w: NA NA NA NA NA NA NA NA NA 138 NA NA  dw: NA NA NA NA NA NA NA NA NA 138 NA NA 
+  s 2 ppk 1000 w: 136 153 150 137 142 132 143 148 139 NA NA NA  dw: 134 151 148 135 140 130 141 146 137 NA NA NA 
+  s 3 ppk NA w: NA NA NA NA NA NA NA NA NA NA NA NA  dw: NA NA NA NA NA NA NA NA NA NA NA NA 
+  s 4 ppk NA w: NA NA NA NA NA NA NA NA NA NA NA NA  dw: NA NA NA NA NA NA NA NA NA NA NA NA 
+hh 4 T 1 rb 2 
+  add4 w: 151 145 NA NA NA NA NA NA NA NA NA NA 
+  s 1 ppk 680 w: NA 145 NA NA NA NA NA NA NA NA NA NA  dw: NA 145 NA NA NA NA NA NA NA NA NA NA 
+  s 2 ppk 640 w: 148 NA NA NA NA NA NA NA NA NA NA NA  dw: 148 NA NA NA NA NA NA NA NA NA NA NA 
+  s 3 ppk NA w: NA NA NA NA NA NA NA NA NA NA NA NA  dw: NA NA NA NA NA NA NA NA NA NA NA NA 
+  s 4 ppk NA w: NA NA NA NA NA NA NA NA NA NA NA NA  dw: NA NA NA NA NA NA NA NA NA NA NA NA 
+hh 5 T 0 rb 6 
+  add4 w: 144 163 152 159 153 162 161 157 155 NA NA NA 
+  s 1 ppk 800 w: NA NA NA NA NA 162 NA NA NA NA NA NA  dw: NA NA NA NA NA 162 NA NA NA NA NA NA 
+  s 2 ppk 800 w: 144 161 NA NA NA NA NA NA NA NA NA NA  dw: 144 161 NA NA NA NA NA NA NA NA NA NA 
+  s 3 ppk 980 w: NA NA 148 NA NA NA NA NA NA NA NA NA  dw: NA NA 147 NA NA NA NA NA NA NA NA NA 
+  s 4 ppk 1020 w: NA NA NA 144 145 NA 153 149 150 NA NA NA  dw: NA NA NA 142 143 NA 151 147 148 NA NA NA 
+hh 6 T 1 rb 2 
+  add4 w: 128 131 NA NA NA NA NA NA NA NA NA NA 
+  s 1 ppk 600 w: NA 131 NA NA NA NA NA NA NA NA NA NA  dw: NA 131 NA NA NA NA NA NA NA NA NA NA 
+  s 2 ppk 550 w: 128 NA NA NA NA NA NA NA NA NA NA NA  dw: 128 NA NA NA NA NA NA NA NA NA NA NA 
+  s 3 ppk NA w: NA NA NA NA NA NA NA NA NA NA NA NA  dw: NA NA NA NA NA NA NA NA NA NA NA NA 
+  s 4 ppk NA w: NA NA NA NA NA NA NA NA NA NA NA NA  dw: NA NA NA NA NA NA NA NA NA NA NA NA 
+
+panel_g1 first columns:
+ [1] "ea_code"          "survey_season"    "group"            "buy_treatment"    "main_road_min"    "hhr_n"            "seeds_1"          "seeds_2"          "seeds_3"          "seeds_4"          "seeds_5"          "seeds_6"         
+[13] "seeds_7"          "form_used"        "survey_round"     "maize_tot_plotn"  "plot_size_1"      "plot_size_2"      "seeds_types_1"    "seeds_kg_1"       "seeds_cost_1"     "seeds_types_2"    "seeds_kg_2"       "seeds_cost_2"    
+[25] "manure_kg_1"      "manure_cost_1"    "manure_kg_2"      "manure_cost_2"    "fert_kg_1"        "fert_spec_1"      "fert_cost_1"      "fert_kg_2"        "fert_spec_2"      "fert_cost_2"      "booster_kg_1"     "booster_cost_1"  
+[37] "booster_kg_2"     "booster_cost_2"   "equipment_cost_1" "tot_lab_costs_1" 
+hh per season:
+
+  1   2   3   4   5   6   7 
+178 186 180 176 166 167 168 
+n unique hh: 189 
+harvest_kg                nonNA by season: 0 175 180 176 156 160 166
+harvest_kg_1              nonNA by season: 117 184 178 176 156 160 148
+acres_tot                 nonNA by season: 0 0 180 176 165 167 168
+plot_size_1               nonNA by season: 117 184 178 176 154 160 148
+sold_kg_p_1               nonNA by season: 134 178 171 166 149 157 153
+tot_rev_combined_1        nonNA by season: 0 0 170 165 148 157 153
+tot_lab_costs_1           nonNA by season: 0 175 178 176 154 160 148
+labor_cost_ph             nonNA by season: 0 185 178 176 156 160 148
+otherph_cost              nonNA by season: 0 186 178 176 166 167 149
+tot_transport_cost        nonNA by season: 0 0 0 175 154 156 148
+cost_transportpre         nonNA by season: 0 185 178 0 154 158 148
+cost_transportpost        nonNA by season: 0 185 178 0 156 158 148
+tot_chem_costs_1          nonNA by season: 0 184 178 176 154 159 147
+lh_prep_hours_season1     nonNA by season: 0 0 0 11 156 160 148
+lc_prep_costs_season1     nonNA by season: 0 184 178 11 153 160 148
+decob                     nonNA by season: 178 186 180 176 166 167 168
+equipment_cost_1          nonNA by season: 0 0 178 0 0 0 0
+harvest_cost_1            nonNA by season: 0 180 178 0 0 0 0
+drying_cost               nonNA by season: 0 186 178 176 156 160 148
+storage_cost              nonNA by season: 0 186 178 176 156 160 148
+decobbing_cost_1          nonNA by season: 0 184 0 0 0 0 0
+seeds_cost_1              nonNA by season: 0 184 178 176 156 160 148
+fert_cost_1               nonNA by season: 0 184 178 176 155 160 148
+booster_cost_1            nonNA by season: 0 184 178 175 154 160 147
+manure_cost_1             nonNA by season: 0 184 178 0 0 0 0
+form_used by season
+                                
+                                   1   2   3   4   5   6   7
+  ANEW_baseline                  178   0   0   0   0   0   0
+  ANEW_baseline_Vaspecial_WIDE     0  11   0   0   0   0   0
+  ANEW_followup_sep2017            0 175   0   0   0   0   0
+  Market_Survey_fall2019           0   0   0   0   0 167   0
+  Market_Survey_mar2018            0   0 180   0   0   0   0
+  Market_Survey_mar2019            0   0   0   0 166   0   0
+  Market_Survey_oct2018            0   0   0 176   0   0   0
+  Market_Survey_spring2020         0   0   0   0   0   0 149
+  Phone_Market_Survey_spring2020   0   0   0   0   0   0  19
+
+seller rows by season:
+
+  1   2   3   4   5   6   7 
+146 179 220 192 193 248 211 
+   ea_code survey_season buy_treatment sold_kg_p_   hhh_id sold_kg_tot name     price
+1  EA10078             2             1        840 10078006         840   NA 1000.0000
+2  EA10078             3             1       2940 10078006        3220  999  600.0000
+3  EA10078             3             1        280 10078006        3220    4  471.4286
+4  EA10078             1             1        910 10078013         910   NA 1000.0000
+5  EA10078             2             1        675 10078013         675   NA  674.0741
+6  EA10078             3             1        260 10078013         260  999  500.0000
+7  EA10078             4             1        840 10078013         840    2  246.4286
+8  EA10078             7             1        280 10078013         856    2  690.0000
+9  EA10078             7             1        576 10078013         856  555  850.0000
+10 EA10078             1             1       1485 10078018        1485   NA 1050.0000
+11 EA10078             2             1       1960 10078018        1960   NA  836.9898
+12 EA10078             3             1        910 10078018        1105  999  551.3846
+13 EA10078             3             1        195 10078018        1105    4  600.0000
+14 EA10078             4             1       1245 10078018        1245  555  360.0000
+15 EA10078             5             1        476 10078018         476  555  700.0000
+price==0 count: 1  sold_kg_p_==0: 1 

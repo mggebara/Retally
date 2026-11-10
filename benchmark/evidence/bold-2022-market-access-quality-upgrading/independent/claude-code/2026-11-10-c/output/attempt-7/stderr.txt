@@ -1,0 +1,45 @@
+Error in `summarise()`:
+ℹ In argument: `pre = last(.data[["harvest"]])`.
+Caused by error in `filter()`:
+ℹ In argument: `is.finite(.data[[c(960, 3500)]])`.
+Caused by error in `.data[[<dbl: 960, 3500>]]`:
+! Must subset the data pronoun with a string, not a double vector.
+Backtrace:
+     ▆
+  1. ├─global run(...)
+  2. │ └─post %>% left_join(pre, by = "hhh_id")
+  3. ├─dplyr::left_join(., pre, by = "hhh_id")
+  4. ├─dplyr:::left_join.data.frame(., pre, by = "hhh_id")
+  5. │ └─dplyr::auto_copy(x, y, copy = copy)
+  6. │   ├─dplyr::same_src(x, y)
+  7. │   └─dplyr:::same_src.data.frame(x, y)
+  8. │     └─base::is.data.frame(y)
+  9. ├─global last(v)
+ 10. │ └─... %>% summarise(pre = last(.data[[v]]), .groups = "drop")
+ 11. ├─dplyr::summarise(., pre = last(.data[[v]]), .groups = "drop")
+ 12. ├─dplyr:::summarise.grouped_df(., pre = last(.data[[v]]), .groups = "drop")
+ 13. │ └─dplyr:::summarise_cols(.data, dplyr_quosures(...), by, "summarise")
+ 14. │   ├─base::withCallingHandlers(...)
+ 15. │   └─dplyr:::map(quosures, summarise_eval_one, mask = mask)
+ 16. │     └─base::lapply(.x, .f, ...)
+ 17. │       └─dplyr (local) FUN(X[[i]], ...)
+ 18. │         └─mask$eval_all_summarise(quo)
+ 19. │           └─dplyr (local) eval()
+ 20. ├─global last(.data[["harvest"]])
+ 21. │ └─... %>% summarise(pre = last(.data[[v]]), .groups = "drop")
+ 22. ├─dplyr::summarise(., pre = last(.data[[v]]), .groups = "drop")
+ 23. ├─dplyr::arrange(., survey_season, .by_group = TRUE)
+ 24. ├─dplyr::group_by(., hhh_id)
+ 25. ├─dplyr::filter(., survey_season <= 3, is.finite(.data[[v]]))
+ 26. ├─dplyr:::filter.data.frame(., survey_season <= 3, is.finite(.data[[v]]))
+ 27. │ └─dplyr:::filter_impl(...)
+ 28. │   └─dplyr:::filter_rows(...)
+ 29. │     └─dplyr:::filter_eval(...)
+ 30. │       ├─base::withCallingHandlers(...)
+ 31. │       └─mask$eval_all_filter(dots_expanded, invert, env_filter)
+ 32. │         └─dplyr (local) eval()
+ 33. ├─<unknown>
+ 34. └─rlang:::`[[.rlang_data_pronoun`(.data, `<dbl>`)
+ 35.   └─rlang:::data_pronoun_get(...)
+ 36.     └─rlang::abort(...)
+Execution halted

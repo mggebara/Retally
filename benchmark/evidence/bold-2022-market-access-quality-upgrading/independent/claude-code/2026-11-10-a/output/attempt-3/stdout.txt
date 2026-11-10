@@ -1,0 +1,622 @@
+===== survey_materials/return_survey/add5_bags_sales.xlsx 
+[1] "survey"   "choices"  "settings"
+type | name | label::english | hint::english | constraint | constraint_message::english | required | appearance | default | relevant | read_only | calculation | repeat_count | choice_filter | media::image::english | read-only | ...17 | ...18 | ...19 
+1 : calculate || compensation || 10000 ||  ||  
+2 : calculate || random || once(random()) ||  ||  
+3 : start || start ||  ||  ||  
+4 : end || end ||  ||  ||  
+5 : today || today ||  ||  ||  
+6 : deviceid || deviceid ||  ||  ||  
+7 : text audit || text_audit ||  ||  ||  
+8 : subscriberid || subscriberid ||  ||  ||  
+9 : imei || imei ||  ||  ||  
+10 : phonenumber || phonenumber ||  ||  ||  
+11 : begin group || start_group ||  ||  ||  
+12 : select_one enumerator_name || enumerator_name ||  ||  ||  
+13 : select_one ea || ea_code ||  ||  ||  
+14 : end group ||  ||  ||  ||  
+15 : calculate || ea_name || pulldata('listing_addint_followup', 'ea_name', 'ea_code', ${ea_code}) ||  ||  
+16 : calculate || district_name || pulldata('listing_addint_followup', 'district_name', 'ea_code', ${ea_code}) ||  ||  
+17 : calculate || this_season || 'August 2018' ||  ||  
+18 : calculate || last_season || 'January 2018' ||  ||  
+19 : select_one hhh || hhh1 ||  ||  ||  
+20 : calculate || hhh || if(${hhh1}=99, ${hhh2}, ${hhh1}) ||  ||  
+21 : calculate || phone_number_old || pulldata('listing_addint_jan2019', 'phone_number', 'hhh', ${hhh}) ||  ||  
+22 : calculate || N || pulldata('listing_addint_jan2019', 'N', 'hhh', ${hhh}) ||  ||  
+23 : calculate || sl_hhh || pulldata('listing_addint_jan2019', 'serial_number', 'hhh', ${hhh}) ||  ||  
+24 : calculate || treatment || pulldata('listing_addint_jan2019', 'treatment ', 'hhh', ${hhh}) ||  ||  
+25 : calculate || treatment_quality || pulldata('listing_addint_jan2019', 'treatment_quality', 'hhh', ${hhh}) ||  ||  
+26 : calculate || maize_tot_plotn_newR || pulldata('listing_addint_jan2019', 'maize_tot_plotn_new', 'hhh', ${hhh}) ||  ||  
+27 : calculate || tot_kg_newR || pulldata('listing_addint_jan2019', 'tot_kg_new', 'hhh', ${hhh}) ||  ||  
+28 : calculate || tot_acres_new_traceR || pulldata('listing_addint_jan2019', 'tot_acres_new_trace', 'hhh', ${hhh}) ||  ||  
+29 : calculate || tot_acres_newR || pulldata('listing_addint_jan2019', 'tot_acres_new', 'hhh', ${hhh}) ||  ||  
+30 : calculate || decob_new_when_eR || pulldata('listing_addint_jan2019', 'decob_new_when_e', 'hhh', ${hhh}) ||  ||  
+31 : calculate || harvest_new_when_eR || pulldata('listing_addint_jan2019', 'harvest_new_when_e', 'hhh', ${hhh}) ||  ||  
+32 : calculate || dry_new_when_eR || pulldata('listing_addint_jan2019', 'dry_new_when_e', 'hhh', ${hhh}) ||  ||  
+33 : calculate || bag_new_when_eR || pulldata('listing_addint_jan2019', 'bag_new_when_e', 'hhh', ${hhh}) ||  ||  
+34 : calculate || sell_new_when_eR || pulldata('listing_addint_jan2019', 'sell_new_when_e', 'hhh', ${hhh}) ||  ||  
+35 : select_one yes_no_locate || adult ||  ||  ||  
+36 : text || household_head || if(${hhh1}=99, ${hhh2}, pulldata('listing_addint_jan2019', 'hhh_name', 'hhh', ${hhh1})) ||  ||  
+37 : calculate || household_head_hhh || concat(${household_head}, ', ', ${hhh}) ||  ||  
+38 : select_one yes_no_only || moved ||  ||  ||  
+39 : select_one yes_no_only || come_back ||  ||  ||  
+40 : note || come_back_note ||  ||  ||  
+41 : select_one yes_no_only || check_hhh ||  ||  ||  
+42 : note || wrong_hh ||  ||  ||  
+43 : select_one yes_no_only || sold_maize ||  ||  ||  
+44 : note || introduction ||  ||  ||  
+45 : select_one yes_no_only || adress ||  ||  || .='yes' 
+46 : select_one yes_no_only || consent ||  ||  ||  
+47 : note || interview_end ||  ||  ||  
+48 : integer || bag_number ||  ||  || .<=20 
+49 : begin group || info ||  ||  ||  
+50 : select_one yes_no_only || info_has ||  ||  ||  
+51 : image || info_photo ||  ||  ||  
+52 : end group ||  ||  ||  ||  
+53 : note || buyer_note ||  ||  ||  
+54 : begin repeat || buyer ||  ||  ||  
+55 : select_one  where_sold || this_buyer_resp ||  ||  || if(selected(., 'dk') or selected(., 'ra'), count-selected(.)=1, count-selected(.)>=1) 
+56 : text || this_buyer_name ||  ||  ||  
+57 : calculate || this_buyer_label_resp || if(${this_buyer_resp}='trader' or ${this_buyer_resp}='other', ${this_buyer_name} , jr:choice-name(${this_buyer ||  ||  
+58 : select_one date_frame_ra || sold_when_tell ||  ||  ||  
+59 : begin group || w ||  ||  ||  
+60 : date || sold_when_e ||  ||  ||  
+61 : date || sold_when_l ||  ||  || .>${sold_when_e} 
+62 : end group ||  ||  ||  ||  
+63 : select_multiple bags || bags_sold || bag_number<=${bag_number} ||  ||  
+64 : integer || tot_weight ||  ||  ||  
+65 : select_one yes_no_only || ind_weight_yn ||  ||  ||  
+66 : begin group || ind_weight ||  ||  ||  
+67 : note || ind_weight_ent ||  ||  ||  
+68 : integer || ind_weight1 ||  ||  || .<200 
+69 : integer || ind_weight2 ||  ||  || .<200 
+70 : integer || ind_weight3 ||  ||  || .<200 
+71 : integer || ind_weight4 ||  ||  || .<200 
+72 : integer || ind_weight5 ||  ||  || .<200 
+73 : integer || ind_weight6 ||  ||  || .<200 
+74 : integer || ind_weight7 ||  ||  || .<200 
+75 : integer || ind_weight8 ||  ||  || .<200 
+76 : integer || ind_weight9 ||  ||  || .<200 
+77 : integer || ind_weight10 ||  ||  || .<200 
+78 : integer || ind_weight11 ||  ||  || .<200 
+79 : integer || ind_weight12 ||  ||  || .<200 
+80 : integer || ind_weight13 ||  ||  || .<200 
+81 : integer || ind_weight14 ||  ||  || .<200 
+82 : integer || ind_weight15 ||  ||  || .<200 
+83 : integer || ind_weight16 ||  ||  || .<200 
+84 : integer || ind_weight17 ||  ||  || .<200 
+85 : integer || ind_weight18 ||  ||  || .<200 
+86 : integer || ind_weight19 ||  ||  || .<200 
+87 : integer || ind_weight20 ||  ||  || .<200 
+88 : end group ||  ||  ||  ||  
+89 : calculate || ind_weight_tot || if(${ind_weight1}!='', ${ind_weight1}, 0)+if(${ind_weight2}!='', ${ind_weight2}, 0)+if(${ind_weight3}!='', ${i ||  ||  
+90 : select_one yes_no_only || tot_weight_check ||  ||  || .='yes' 
+91 : select_one yes_no_only || tot_weight_diff ||  ||  ||  
+92 : text || tot_weight_other ||  ||  ||  
+93 : integer || tot_deduction ||  ||  ||  
+94 : select_one yes_no_only || ind_deduction_yn ||  ||  ||  
+95 : begin group || ind_deduction ||  ||  ||  
+96 : note || ind_deduction_ent0 ||  ||  ||  
+97 : note || ind_deduction_ent ||  ||  ||  
+98 : integer || ind_deduction1 || if(${ind_deduction_yn}='yes', '', ${tot_deduction} div count-selected(${bags_sold})) ||  || .<50 
+99 : integer || ind_deduction2 || if(${ind_deduction_yn}='yes', '', ${tot_deduction} div count-selected(${bags_sold})) ||  || .<50 
+100 : integer || ind_deduction3 || if(${ind_deduction_yn}='yes', '', ${tot_deduction} div count-selected(${bags_sold})) ||  || .<50 
+101 : integer || ind_deduction4 || if(${ind_deduction_yn}='yes', '', ${tot_deduction} div count-selected(${bags_sold})) ||  || .<50 
+102 : integer || ind_deduction5 || if(${ind_deduction_yn}='yes', '', ${tot_deduction} div count-selected(${bags_sold})) ||  || .<50 
+103 : integer || ind_deduction6 || if(${ind_deduction_yn}='yes', '', ${tot_deduction} div count-selected(${bags_sold})) ||  || .<50 
+104 : integer || ind_deduction7 || if(${ind_deduction_yn}='yes', '', ${tot_deduction} div count-selected(${bags_sold})) ||  || .<50 
+105 : integer || ind_deduction8 || if(${ind_deduction_yn}='yes', '', ${tot_deduction} div count-selected(${bags_sold})) ||  || .<50 
+106 : integer || ind_deduction9 || if(${ind_deduction_yn}='yes', '', ${tot_deduction} div count-selected(${bags_sold})) ||  || .<50 
+107 : integer || ind_deduction10 || if(${ind_deduction_yn}='yes', '', ${tot_deduction} div count-selected(${bags_sold})) ||  || .<50 
+108 : integer || ind_deduction11 || if(${ind_deduction_yn}='yes', '', ${tot_deduction} div count-selected(${bags_sold})) ||  || .<50 
+109 : integer || ind_deduction12 || if(${ind_deduction_yn}='yes', '', ${tot_deduction} div count-selected(${bags_sold})) ||  || .<50 
+110 : integer || ind_deduction13 || if(${ind_deduction_yn}='yes', '', ${tot_deduction} div count-selected(${bags_sold})) ||  || .<50 
+111 : integer || ind_deduction14 || if(${ind_deduction_yn}='yes', '', ${tot_deduction} div count-selected(${bags_sold})) ||  || .<50 
+112 : integer || ind_deduction15 || if(${ind_deduction_yn}='yes', '', ${tot_deduction} div count-selected(${bags_sold})) ||  || .<50 
+113 : integer || ind_deduction16 || if(${ind_deduction_yn}='yes', '', ${tot_deduction} div count-selected(${bags_sold})) ||  || .<50 
+114 : integer || ind_deduction17 || if(${ind_deduction_yn}='yes', '', ${tot_deduction} div count-selected(${bags_sold})) ||  || .<50 
+115 : integer || ind_deduction18 || if(${ind_deduction_yn}='yes', '', ${tot_deduction} div count-selected(${bags_sold})) ||  || .<50 
+116 : integer || ind_deduction19 || if(${ind_deduction_yn}='yes', '', ${tot_deduction} div count-selected(${bags_sold})) ||  || .<50 
+117 : integer || ind_deduction20 || if(${ind_deduction_yn}='yes', '', ${tot_deduction} div count-selected(${bags_sold})) ||  || .<50 
+118 : end group ||  ||  ||  ||  
+119 : calculate || ind_deduction_tot || if(${ind_deduction1}!='', ${ind_deduction1}, 0)+if(${ind_deduction2}!='', ${ind_deduction2}, 0)+if(${ind_deduc ||  ||  
+120 : select_one yes_no_only || tot_deduction_check ||  ||  || .='yes' 
+121 : select_one yes_no_only || tot_deduction_diff ||  ||  ||  
+122 : text || tot_deduction_other ||  ||  ||  
+123 : calculate || tot_ded_weight || ${tot_weight}-${tot_deduction} ||  ||  
+124 : select_one yes_no_only || tot_ded_weight_check ||  ||  || .='yes' 
+125 : begin group || ind_ded_weight ||  ||  ||  
+126 : note || ind_ded_weight_note ||  ||  ||  
+127 : integer || ind_ded_weight1 || ${ind_weight1} - ${ind_deduction1} ||  || .= ${ind_weight1} - ${ind_deduction1} 
+128 : integer || ind_ded_weight2 || ${ind_weight2} - ${ind_deduction2} ||  || .= ${ind_weight2} - ${ind_deduction2} 
+129 : integer || ind_ded_weight3 || ${ind_weight3} - ${ind_deduction3} ||  || .= ${ind_weight3} - ${ind_deduction3} 
+130 : integer || ind_ded_weight4 || ${ind_weight4} - ${ind_deduction4} ||  || .= ${ind_weight4} - ${ind_deduction4} 
+131 : integer || ind_ded_weight5 || ${ind_weight5} - ${ind_deduction5} ||  || .= ${ind_weight5} - ${ind_deduction5} 
+132 : integer || ind_ded_weight6 || ${ind_weight6} - ${ind_deduction6} ||  || .= ${ind_weight6} - ${ind_deduction6} 
+133 : integer || ind_ded_weight7 || ${ind_weight7} - ${ind_deduction7} ||  || .= ${ind_weight7} - ${ind_deduction7} 
+134 : integer || ind_ded_weight8 || if( ${ind_deduction8}!='',  ${ind_weight8} - ${ind_deduction8},  ${ind_weight8}) ||  || .= ${ind_weight8} - ${ind_deduction8} 
+135 : integer || ind_ded_weight9 || if( ${ind_deduction9}!='',  ${ind_weight9} - ${ind_deduction9},  ${ind_weight9}) ||  || .= ${ind_weight9} - ${ind_deduction9} 
+136 : integer || ind_ded_weight10 || if( ${ind_deduction10}!='',  ${ind_weight10} - ${ind_deduction10},  ${ind_weight10}) ||  || .= ${ind_weight10} - ${ind_deduction10} 
+137 : integer || ind_ded_weight11 || if( ${ind_deduction11}!='',  ${ind_weight11} - ${ind_deduction11},  ${ind_weight11}) ||  || .= ${ind_weight11} - ${ind_deduction11} 
+138 : integer || ind_ded_weight12 || if( ${ind_deduction12}!='',  ${ind_weight12} - ${ind_deduction12},  ${ind_weight12}) ||  || .= ${ind_weight12} - ${ind_deduction12} 
+139 : integer || ind_ded_weight13 || if( ${ind_deduction13}!='',  ${ind_weight13} - ${ind_deduction13},  ${ind_weight13}) ||  || .= ${ind_weight13} - ${ind_deduction13} 
+140 : integer || ind_ded_weight14 || if( ${ind_deduction14}!='',  ${ind_weight14} - ${ind_deduction14},  ${ind_weight14}) ||  || .= ${ind_weight14} - ${ind_deduction14} 
+141 : integer || ind_ded_weight15 || if( ${ind_deduction15}!='',  ${ind_weight15} - ${ind_deduction15},  ${ind_weight15}) ||  || .= ${ind_weight15} - ${ind_deduction15} 
+142 : integer || ind_ded_weight16 || if( ${ind_deduction16}!='',  ${ind_weight16} - ${ind_deduction16},  ${ind_weight16}) ||  || .= ${ind_weight16} - ${ind_deduction16} 
+143 : integer || ind_ded_weight17 || if( ${ind_deduction17}!='',  ${ind_weight17} - ${ind_deduction17},  ${ind_weight17}) ||  || .= ${ind_weight17} - ${ind_deduction17} 
+144 : integer || ind_ded_weight18 || if( ${ind_deduction18}!='',  ${ind_weight18} - ${ind_deduction18},  ${ind_weight18}) ||  || .= ${ind_weight18} - ${ind_deduction18} 
+145 : integer || ind_ded_weight19 || if( ${ind_deduction19}!='',  ${ind_weight19} - ${ind_deduction19},  ${ind_weight19}) ||  || .= ${ind_weight19} - ${ind_deduction19} 
+146 : integer || ind_ded_weight20 || if( ${ind_deduction20}!='',  ${ind_weight20} - ${ind_deduction20},  ${ind_weight20}) ||  || .= ${ind_weight20} - ${ind_deduction20} 
+147 : end group ||  ||  ||  ||  
+148 : select_multiple deduction || deduction_why ||  ||  ||  
+149 : text || deduction_why_other ||  ||  ||  
+150 : select_one yes_dk_ra || ppk_tell ||  ||  ||  
+151 : integer || ppk ||  ||  ||  
+152 : calculate || tot_rev_buyer_calc || ${ppk}*${tot_ded_weight} ||  ||  
+153 : integer || tot_rev_buyer_told || ${tot_rev_buyer_calc} ||  ||  
+154 : text || tot_rev_why ||  ||  ||  
+155 : begin group || rev_pb ||  ||  ||  
+156 : note || ind_rev_ent ||  ||  ||  
+157 : integer || ind_rev1 || ${ppk}*${ind_ded_weight1} ||  ||  
+158 : integer || ind_rev2 || ${ppk}*${ind_ded_weight2} ||  ||  
+159 : integer || ind_rev3 || ${ppk}*${ind_ded_weight3} ||  ||  
+160 : integer || ind_rev4 || ${ppk}*${ind_ded_weight4} ||  ||  
+161 : integer || ind_rev5 || ${ppk}*${ind_ded_weight5} ||  ||  
+162 : integer || ind_rev6 || ${ppk}*${ind_ded_weight6} ||  ||  
+163 : integer || ind_rev7 || ${ppk}*${ind_ded_weight7} ||  ||  
+164 : integer || ind_rev8 || ${ppk}*${ind_ded_weight8} ||  ||  
+165 : integer || ind_rev9 || ${ppk}*${ind_ded_weight9} ||  ||  
+166 : integer || ind_rev10 || ${ppk}*${ind_ded_weight10} ||  ||  
+167 : integer || ind_rev11 || ${ppk}*${ind_ded_weight11} ||  ||  
+168 : integer || ind_rev12 || ${ppk}*${ind_ded_weight12} ||  ||  
+169 : integer || ind_rev13 || ${ppk}*${ind_ded_weight13} ||  ||  
+170 : integer || ind_rev14 || ${ppk}*${ind_ded_weight14} ||  ||  
+171 : integer || ind_rev15 || ${ppk}*${ind_ded_weight15} ||  ||  
+172 : integer || ind_rev16 || ${ppk}*${ind_ded_weight16} ||  ||  
+173 : integer || ind_rev17 || ${ppk}*${ind_ded_weight17} ||  ||  
+174 : integer || ind_rev18 || ${ppk}*${ind_ded_weight18} ||  ||  
+175 : integer || ind_rev19 || ${ppk}*${ind_ded_weight19} ||  ||  
+176 : integer || ind_rev20 || ${ppk}*${ind_ded_weight20} ||  ||  
+177 : end group ||  ||  ||  ||  
+178 : calculate || ind_rev_buyer_tot || if( ${ind_weight_yn}='yes', if(${ind_rev1}!='', ${ind_rev1}, 0)+if(${ind_rev2}!='', ${ind_rev2}, 0)+if(${ind_r ||  ||  
+179 : note || end_note ||  ||  ||  
+===== survey_materials/return_survey/add4_measuring_bags.xlsx 
+[1] "survey"   "choices"  "settings" "Sheet1"  
+type | name | label::english | hint::english | constraint | constraint_message::english | required | appearance | default | relevant | read_only | calculation | repeat_count | choice_filter | media::image::english 
+1 : start || start ||  ||  ||  
+2 : end || end ||  ||  ||  
+3 : today || today ||  ||  ||  
+4 : deviceid || deviceid ||  ||  ||  
+5 : text audit || text_audit ||  ||  ||  
+6 : subscriberid || subscriberid ||  ||  ||  
+7 : imei || imei ||  ||  ||  
+8 : phonenumber || phonenumber ||  ||  ||  
+9 : calculate || random || once(random()) ||  ||  
+10 : integer || price ||  ||  ||  
+11 : begin group || start_group ||  ||  ||  
+12 : select_one enumerator_name || enumerator_name ||  ||  ||  
+13 : select_one ea || ea_code ||  ||  ||  
+14 : end group ||  ||  ||  ||  
+15 : calculate || ea_name || pulldata('listing_addint_jan2019', 'ea_name', 'ea_code', ${ea_code}) ||  ||  
+16 : calculate || district_name || pulldata('listing_addint_jan2019', 'district_name', 'ea_code', ${ea_code}) ||  ||  
+17 : calculate || buy_time || 'January 2019' ||  ||  
+18 : calculate || this_season || 'January 2019' ||  ||  
+19 : calculate || last_season || 'August 2018' ||  ||  
+20 : calculate || beforelast_season || 'January 2018' ||  ||  
+21 : select_one hhh || hhh1 ||  ||  ||  
+22 : calculate || hhh || if(${hhh1}=99, ${hhh2}, ${hhh1}) ||  ||  
+23 : calculate || phone_number_old || pulldata('listing_addint_jan2019', 'phone_number', 'hhh', ${hhh}) ||  ||  
+24 : calculate || N || pulldata('listing_addint_jan2019', 'N', 'hhh', ${hhh}) ||  ||  
+25 : calculate || sl_hhh || pulldata('listing_addint_jan2019', 'serial_number', 'hhh', ${hhh}) ||  ||  
+26 : calculate || treatment || pulldata('listing_addint_jan2019', 'treatment ', 'hhh', ${hhh}) ||  ||  
+27 : calculate || treatment_info || pulldata('listing_addint_jan2019', 'treatment_info', 'hhh', ${hhh}) ||  ||  
+28 : calculate || treatment_quality || pulldata('listing_addint_jan2019', 'treatment_quality', 'hhh', ${hhh}) ||  ||  
+29 : calculate || maize_tot_plotn_newR || pulldata('listing_addint_jan2019', 'maize_tot_plotn_new', 'hhh', ${hhh}) ||  ||  
+30 : calculate || tot_kg_newR || pulldata('listing_addint_jan2019', 'tot_kg_new', 'hhh', ${hhh}) ||  ||  
+31 : calculate || tot_acres_new_traceR || pulldata('listing_addint_jan2019', 'tot_acres_new_trace', 'hhh', ${hhh}) ||  ||  
+32 : calculate || tot_acres_newR || pulldata('listing_addint_jan2019', 'tot_acres_new', 'hhh', ${hhh}) ||  ||  
+33 : calculate || decob_new_when_eR || pulldata('listing_addint_jan2019', 'decob_new_when_e', 'hhh', ${hhh}) ||  ||  
+34 : calculate || harvest_new_when_eR || pulldata('listing_addint_jan2019', 'harvest_new_when_e', 'hhh', ${hhh}) ||  ||  
+35 : calculate || dry_new_when_eR || pulldata('listing_addint_jan2019', 'dry_new_when_e', 'hhh', ${hhh}) ||  ||  
+36 : calculate || bag_new_when_eR || pulldata('listing_addint_jan2019', 'bag_new_when_e', 'hhh', ${hhh}) ||  ||  
+37 : calculate || sell_new_when_eR || pulldata('listing_addint_jan2019', 'sell_new_when_e', 'hhh', ${hhh}) ||  ||  
+38 : select_one yes_no_locate || adult ||  ||  ||  
+39 : text || household_head || if(${hhh1}=99, ${hhh2}, pulldata('listing_addint_jan2019', 'hhh_name', 'hhh', ${hhh1})) ||  ||  
+40 : calculate || household_head_hhh || concat(${household_head}, ', ', ${hhh}) ||  ||  
+41 : select_one yes_no_only || moved ||  ||  ||  
+42 : select_one yes_no_only || come_back ||  ||  ||  
+43 : note || come_back_note ||  ||  ||  
+44 : select_one yes_no_only || check_hhh ||  ||  ||  
+45 : note || wrong_hh ||  ||  ||  
+46 : begin group || int ||  ||  ||  
+47 : note || introduction ||  ||  ||  
+48 : select_one stage || stage ||  ||  ||  
+49 : note || intro_T ||  ||  ||  
+50 : note || intro_end ||  ||  ||  
+51 : select_one yes_no_only || adress ||  ||  || .='yes' 
+52 : select_one yes_no_only || consent ||  ||  ||  
+53 : end group ||  ||  ||  ||  
+54 : select_one yes_no_only || exclude_tot ||  ||  ||  
+55 : note || interview_end ||  ||  ||  
+56 : begin group || con ||  ||  ||  
+57 : select_one yes_no_only || phone_number_old_yn ||  ||  ||  
+58 : select_one yes_no_only || phone_number_yn ||  ||  ||  
+59 : begin group || phone ||  ||  ||  
+60 : string || phone_number ||  ||  ||  
+61 : string || phone_number_check ||  ||  || ${phone_number} = ${phone_number_check} 
+62 : calculate || phone_number_E164 || concat('+256',${phone_number}) ||  ||  
+63 : select_multiple language || lang_sms ||  ||  ||  
+64 : text || lang_sms_other ||  ||  || if(selected(${lang_sms}, 'other'), .!='', .='') 
+65 : end group ||  ||  ||  ||  
+66 : geopoint || household_location ||  ||  ||  
+67 : begin group || gps_m ||  ||  ||  
+68 : text || manual_gps_lat_hh ||  ||  ||  
+69 : text || manual_gps_lon_hh ||  ||  ||  
+70 : end group ||  ||  ||  ||  
+71 : begin group || conf ||  ||  ||  
+72 : decimal || maize_tot_plotn_new || ${maize_tot_plotn_newR} ||  ||  
+73 : decimal || tot_acres_new_trace || ${tot_acres_new_traceR} ||  ||  
+74 : decimal || tot_acres_new || ${tot_acres_newR} ||  ||  
+75 : decimal || tot_kg_new || ${tot_kg_newR} ||  ||  
+76 : end group ||  ||  ||  ||  
+77 : select_one yes_no_only || leaflet ||  ||  || .='yes' 
+78 : select_one yes_no_only || tarpaulin ||  ||  ||  
+79 : text || tarpaulin_whynot ||  ||  ||  
+80 : select_one date_frame_ra || harvested_when_tell ||  ||  ||  
+81 : begin group || wrn ||  ||  ||  
+82 : date || harvested_when_e ||  ||  ||  
+83 : date || harvested_when_l ||  ||  || .>${harvested_when_e} 
+84 : end group ||  ||  ||  ||  
+85 : integer || bag_number ||  ||  || .<=20 and .>1 
+86 : begin repeat || measure ||  || ${bag_number} ||  
+87 : calculate || TN || if(${treatment_info}=1, 1, 2) ||  ||  
+88 : begin group || info ||  ||  ||  
+89 : note || info_number ||  ||  ||  
+90 : note || info_checkT ||  ||  ||  
+91 : note || weight_note_t2 ||  ||  ||  
+92 : note || weight_note_c2 ||  ||  ||  
+93 : end group ||  ||  ||  ||  
+94 : calculate || bag_no || position(..) ||  ||  
+95 : note || bag_no_note ||  ||  ||  
+96 : begin group || pract ||  ||  ||  
+97 : select_multiple seeds || seeds ||  ||  ||  
+98 : select_multiple chemical || chemical ||  ||  ||  
+99 : end group ||  ||  ||  ||  
+100 : begin group || quality ||  ||  ||  
+101 : select_one yes_no_examine || smell ||  ||  ||  
+102 : select_one color || color ||  ||  ||  
+103 : select_one yes_no_examine || dirty ||  ||  ||  
+104 : select_one yes_no_examine || cobs ||  ||  ||  
+105 : select_one yes_no_examine || stones ||  ||  ||  
+106 : select_one yes_no_examine || dust ||  ||  ||  
+107 : select_one yes_no_examine || broken ||  ||  ||  
+108 : select_one yes_no_examine || immature ||  ||  ||  
+109 : select_one yes_no_examine || damage ||  ||  ||  
+110 : select_one yes_no_examine || rot ||  ||  ||  
+111 : select_one yes_no_examine || insect ||  ||  ||  
+112 : select_one yes_no_examine || insect_live ||  ||  ||  
+113 : select_one yes_no_examine || mould ||  ||  ||  
+114 : decimal || moisture ||  ||  || .>5 and .<50 
+115 : end group ||  ||  ||  ||  
+116 : calculate || ok_buy || if(${smell}='yes' and ${dirty}='no' and ${cobs}='no' and ${dust}='no' and ${broken}='no' and ${immature}='no'  ||  ||  
+117 : begin group || quality2 ||  ||  ||  
+118 : note || sumup_quality ||  ||  ||  
+119 : note || advice_yes ||  ||  ||  
+120 : note || advice_no ||  ||  ||  
+121 : end group ||  ||  ||  ||  
+122 : begin group || W ||  ||  ||  
+123 : integer || weight_est ||  ||  || .>5 and .<200 
+124 : note || weight_note_t1 ||  ||  ||  
+125 : note || weight_note_c1 ||  ||  ||  
+126 : integer || weight ||  ||  || .>5 and .<200 
+127 : note || weight_note_t ||  ||  ||  
+128 : end group ||  ||  ||  ||  
+129 : end repeat ||  ||  ||  ||  
+130 : calculate || num_bags || count(${measure}) ||  ||  
+131 : note || check_num_bags ||  ||  ||  
+132 : calculate || tot_weight || sum(${weight}) ||  ||  
+133 : calculate || tot_weight_est || sum(${weight_est}) ||  ||  
+134 : begin group || sumup_gr ||  ||  ||  
+135 : note || sumup_tot_note ||  ||  ||  
+136 : integer || sumup_tot || ${tot_weight} ||  || .= ${tot_weight} 
+137 : note || sumup_each0 ||  ||  ||  
+138 : note || sumup_each1 || indexed-repeat(${weight}, ${measure}, 1) ||  ||  
+139 : note || sumup_each2 || indexed-repeat(${weight}, ${measure}, 2) ||  ||  
+140 : note || sumup_each3 || indexed-repeat(${weight}, ${measure}, 3) ||  ||  
+141 : note || sumup_each4 || indexed-repeat(${weight}, ${measure}, 4) ||  ||  
+142 : note || sumup_each5 || indexed-repeat(${weight}, ${measure}, 5) ||  ||  
+143 : note || sumup_each6 || indexed-repeat(${weight}, ${measure}, 6) ||  ||  
+144 : note || sumup_each7 || indexed-repeat(${weight}, ${measure}, 7) ||  ||  
+145 : note || sumup_each8 || indexed-repeat(${weight}, ${measure}, 8) ||  ||  
+146 : note || sumup_each9 || indexed-repeat(${weight}, ${measure}, 9) ||  ||  
+147 : note || sumup_each10 || indexed-repeat(${weight}, ${measure}, 10) ||  ||  
+148 : note || sumup_each11 || indexed-repeat(${weight}, ${measure}, 11) ||  ||  
+149 : note || sumup_each12 || indexed-repeat(${weight}, ${measure}, 12) ||  ||  
+150 : note || sumup_each13 || indexed-repeat(${weight}, ${measure}, 13) ||  ||  
+151 : note || sumup_each14 || indexed-repeat(${weight}, ${measure}, 14) ||  ||  
+152 : note || sumup_each15 || indexed-repeat(${weight}, ${measure}, 15) ||  ||  
+153 : note || sumup_each16 || indexed-repeat(${weight}, ${measure}, 16) ||  ||  
+154 : note || sumup_each17 || indexed-repeat(${weight}, ${measure}, 17) ||  ||  
+155 : note || sumup_each18 || indexed-repeat(${weight}, ${measure}, 18) ||  ||  
+156 : note || sumup_each19 || indexed-repeat(${weight}, ${measure}, 19) ||  ||  
+157 : note || sumup_each20 || indexed-repeat(${weight}, ${measure}, 20) ||  ||  
+158 : select_one yes_no_only || sumup_check ||  ||  || .='yes' 
+159 : end group ||  ||  ||  ||  
+160 : image || info_photo ||  ||  ||  
+161 : calculate || image_name || if(${treatment_info}=1, 'info_card_example.jpg', 'info0_card_example.jpg') ||  ||  
+162 : select_one yes_no_only || info_explain || ${image_name} ||  || .='yes' 
+163 : select_one yes_no_only || info_explainT ||  ||  || .='yes' 
+164 : date || sale_timing ||  ||  ||  
+165 : calculate || random_bag || int(${random}*${bag_number})+1 ||  ||  
+166 : calculate || random_bag_weight || indexed-repeat(${weight}, ${measure}, ${random_bag}) ||  ||  
+167 : begin group || buy_bag ||  ||  ||  
+168 : note || note_buying ||  ||  ||  
+169 : select_one yes_no_only || reweight_yn ||  ||  ||  
+170 : integer || reweight_buybag ||  ||  || .<250 
+171 : calculate || weight_buybag || if(${reweight_buybag}!='', ${reweight_buybag}, ${random_bag_weight}) ||  ||  
+172 : calculate || totprice_buybag || ${price}*${weight_buybag} ||  ||  
+173 : select_one yes_no_only || want_to_sell ||  ||  ||  
+174 : select_one yes_no_only || write_name ||  ||  ||  
+175 : select_one yes_no_only || receipt ||  ||  || .='yes' 
+176 : image || receipt_photo ||  ||  ||  
+177 : end group ||  ||  ||  ||  
+178 : select_one yes_no_only || compensation_C ||  ||  ||  
+179 : select_one yes_no_only || compensation_all ||  ||  ||  
+180 : end group ||  ||  ||  ||  
+181 : note || thank_you ||  ||  ||  
+182 : calculate || endquestionnaire || once(now()) ||  ||  
+183 : select_one enumerator_name || quality_check ||  ||  || .!=${enumerator_name} 
+==== returns
+   
+    EA10095 EA10149 EA10178 EA10179 EA10197 EA10248 EA10318 EA10342 EA10358
+  0       3       2       4       4       5       3       6       5      18
+  1       6       2       3       6       7       7       6       5       7
+sale 1 ppk nonmiss 95  hh with any weight 95  both 95  date nonmiss NA 
+sale 2 ppk nonmiss 94  hh with any weight 94  both 94  date nonmiss NA 
+sale 3 ppk nonmiss 16  hh with any weight 16  both 16  date nonmiss NA 
+sale 4 ppk nonmiss 6  hh with any weight 6  both 6  date nonmiss NA 
+     hhh_id treatment add5_ppk_1 add5_ppk_2 add5_ppk_3 add5_ppk_4 add5_sold_when_e_1 add5_sold_when_e_2 add5_sold_when_e_3 add5_sold_when_e_4 add5_ind_weight1_1 add5_ind_weight1_2 add5_ind_weight1_3 add5_ind_weight1_4 add5_ind_ded_weight1_1
+1  10358063         0        830       1030         NA         NA         2019-03-29         2019-04-10               <NA>               <NA>                 NA                158                 NA                 NA                     NA
+2  10358064         0        820        800         NA         NA         2019-03-30         2019-04-07               <NA>               <NA>                 NA                146                 NA                 NA                     NA
+3  10358074         0        930       1000         NA         NA         2019-04-06         2019-04-18               <NA>               <NA>                 NA                136                 NA                 NA                     NA
+4  10197063         1        680        640         NA         NA         2019-03-07         2019-03-23               <NA>               <NA>                 NA                148                 NA                 NA                     NA
+5  10358067         0        800        800        980       1020         2019-03-30         2019-04-01         2019-04-15         2019-04-23                 NA                144                 NA                 NA                     NA
+6  10179037         1        600        550         NA         NA         2019-02-06         2019-02-07               <NA>               <NA>                 NA                128                 NA                 NA                     NA
+7  10179038         0        600        550         NA         NA         2019-02-02         2019-02-10               <NA>               <NA>                 NA                158                 NA                 NA                     NA
+8  10358075         0        930       1060         NA         NA         2019-04-06         2019-04-18               <NA>               <NA>                 NA                146                 NA                 NA                     NA
+9  10095056         0        680        850         NA         NA         2019-03-07         2019-04-05               <NA>               <NA>                 NA                151                 NA                 NA                     NA
+10 10358065         0        830       1000         NA         NA         2019-03-29         2019-05-25               <NA>               <NA>                 NA                151                 NA                 NA                     NA
+11 10095003         0        670        670         NA         NA         2019-02-14         2019-02-17               <NA>               <NA>                 NA                151                 NA                 NA                     NA
+12 10095009         1        670        970         NA         NA         2019-02-14         2019-04-10               <NA>               <NA>                 NA                158                 NA                 NA                     NA
+13 10095010         1        680        600         NA         NA         2019-03-05         2019-03-16               <NA>               <NA>                 NA                157                 NA                 NA                     NA
+14 10095019         1        670        620        630        600         2019-02-13         2019-02-15         2019-02-20         2019-02-25                 NA                 NA                 NA                144                     NA
+15 10095026         0        650        600         NA         NA         2019-03-09         2019-03-24               <NA>               <NA>                147                 NA                 NA                 NA                    147
+16 10095041         1        670        600         NA         NA         2019-02-14         2019-02-22               <NA>               <NA>                 NA                 62                 NA                 NA                     NA
+17 10095054         1        720        620         NA         NA         2019-02-19         2019-03-01               <NA>               <NA>                 NA                140                 NA                 NA                     NA
+18 10149001         1        600        500         NA         NA         2019-02-04         2019-02-10               <NA>               <NA>                148                 NA                 NA                 NA                    148
+19 10149026         0        720        650         NA         NA         2019-02-16         2019-02-17               <NA>               <NA>                158                 NA                 NA                 NA                    158
+20 10149028         1        600        500         NA         NA         2019-02-04         2019-02-20               <NA>               <NA>                 NA                 70                 NA                 NA                     NA
+21 10149030         0        720        700         NA         NA         2019-02-16         2019-03-11               <NA>               <NA>                 NA                146                 NA                 NA                     NA
+22 10178002         0        600        550         NA         NA         2019-02-03         2019-02-10               <NA>               <NA>                 NA                135                 NA                 NA                     NA
+23 10178006         0        600        550         NA         NA         2019-01-27         2019-01-28               <NA>               <NA>                 NA                130                 NA                 NA                     NA
+24 10178008         1        600        600        500        750         2019-02-10         2019-02-11         2019-02-19         2019-02-25                156                 NA                 NA                 NA                    156
+25 10178009         0        600        600         NA         NA         2019-01-30         2019-01-31               <NA>               <NA>                 NA                171                 NA                 NA                     NA
+26 10178014         0        600        570         NA         NA         2019-02-07         2019-02-08               <NA>               <NA>                161                 NA                 NA                 NA                    161
+27 10178021         1        600        550         NA         NA         2019-01-31         2019-02-02               <NA>               <NA>                 NA                118                 NA                 NA                     NA
+28 10178023         1        600        550         NA         NA         2019-01-29         2019-01-31               <NA>               <NA>                 NA                 75                 NA                 NA                     NA
+29 10179008         0        600        540         NA         NA         2019-01-27         2019-01-29               <NA>               <NA>                 NA                156                 NA                 NA                     NA
+30 10179009         1        600        570         NA         NA         2019-02-03         2019-02-03               <NA>               <NA>                 NA                157                 NA                 NA                     NA
+31 10179014         1        600        600         NA         NA         2019-02-05         2019-02-16               <NA>               <NA>                155                 NA                 NA                 NA                    155
+32 10197007         0        600        600        680        700         2019-02-12         2019-02-18         2019-03-20         2019-03-30                 NA                 NA                 NA                122                     NA
+33 10197009         1        720        650       1000         NA         2019-02-16         2019-03-16         2019-04-07               <NA>                 NA                 NA                141                 NA                     NA
+34 10197014         1        600        620        670        770         2019-02-10         2019-02-16         2019-03-20         2019-03-30                 NA                148                 NA                 NA                     NA
+35 10197016         0        600        600         NA         NA         2019-02-08         2019-02-10               <NA>               <NA>                 NA                158                 NA                 NA                     NA
+36 10197017         1        600        670         NA         NA         2019-02-09         2019-02-20               <NA>               <NA>                 NA                138                 NA                 NA                     NA
+37 10197019         0        720        700        600         NA         2019-02-16         2019-02-20         2019-03-22               <NA>                 NA                 NA                132                 NA                     NA
+38 10197020         0        720        650        650         NA         2019-02-16         2019-02-17         2019-02-17               <NA>                 NA                117                 NA                 NA                     NA
+39 10197021         1        600        730         NA         NA         2019-02-09         2019-02-22               <NA>               <NA>                 NA                141                 NA                 NA                     NA
+40 10197022         1         NA         NA         NA         NA               <NA>               <NA>               <NA>               <NA>                 NA                 NA                 NA                 NA                     NA
+   add5_ind_ded_weight1_2 add5_ind_ded_weight1_3 add5_ind_ded_weight1_4
+1                     158                     NA                     NA
+2                     146                     NA                     NA
+3                     134                     NA                     NA
+4                     148                     NA                     NA
+5                     144                     NA                     NA
+6                     128                     NA                     NA
+7                     154                     NA                     NA
+8                     146                     NA                     NA
+9                     151                     NA                     NA
+10                    151                     NA                     NA
+11                    150                     NA                     NA
+12                    158                     NA                     NA
+13                    157                     NA                     NA
+14                     NA                     NA                    143
+15                     NA                     NA                     NA
+16                     60                     NA                     NA
+17                    137                     NA                     NA
+18                     NA                     NA                     NA
+19                     NA                     NA                     NA
+20                     70                     NA                     NA
+21                    144                     NA                     NA
+22                    133                     NA                     NA
+23                    128                     NA                     NA
+24                     NA                     NA                     NA
+25                    169                     NA                     NA
+26                     NA                     NA                     NA
+27                    116                     NA                     NA
+28                     73                     NA                     NA
+29                    155                     NA                     NA
+30                    157                     NA                     NA
+31                     NA                     NA                     NA
+32                     NA                     NA                    122
+33                     NA                    139                     NA
+34                    146                     NA                     NA
+35                    155                     NA                     NA
+36                    138                     NA                     NA
+37                     NA                    130                     NA
+38                    117                     NA                     NA
+39                    141                     NA                     NA
+40                     NA                     NA                     NA
+bags with weight 644  bags with any defect var 622 
+      dirty        cobs      stones        dust      insect insect_live      broken    immature      damage         rot       mould 
+         69          81          93          81          94          94          69          69          95          96          94 
+      dirty        cobs      stones        dust      insect insect_live      broken    immature      damage         rot       mould 
+         72          84          97          84          97          97          72          72          98          98          97 
+      dirty        cobs      stones        dust      insect insect_live      broken    immature      damage         rot       mould 
+         60          70          79          70          80          80          60          60          79          79          79 
+     nb
+treat  2  3  4  5  6  7  8  9 10 11 12 13 14 15 17 18 19 20
+    0  3  8  8  3  3  3  3  3  4  3  2  1  2  1  1  1  0  1
+    1 14  6  5  6  3  3  1  4  2  0  2  1  1  0  0  0  1  0
+
+ 1  2  3  4  5  6  8  9 10 12 16 18 
+24 19 18  6 11  6  5  4  3  1  1  1 
+lab: 
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max.     NAs 
+  200.0   200.4   200.5   200.5   200.7   200.9      17 
+       
+         0  1
+  FALSE 43 39
+  TRUE   7 10
+     hhh_id add1_harvest_new_when_e_1 add4_moisture_1 add4_weight_1 add4_weight_2 add4_random_bag
+1  10358063                2019-02-15            10.4           163           156               6
+2  10358064                2019-01-15            10.6           147           148              10
+3  10358074                2019-01-20            10.0           137           153              10
+4  10197063                2019-02-11            10.9           151           145               2
+5  10358067                2019-02-15            10.4           144           163               6
+6  10179037                2019-02-05            11.4           128           131               2
+7  10179038                2019-02-04            13.3           161           158               3
+8  10358075                2019-01-06            10.3           148           142               8
+9  10095056                2019-02-04            10.9           153           155              16
+10 10358065                2019-01-20            10.1           154           148               6
+==== panel_g1
+   
+      0   1
+  1  75 103
+  2  77 109
+  3  76 104
+  4  75 101
+  5  69  97
+  6  69  98
+  7  73  95
+   
+    ANEW_baseline ANEW_baseline_Vaspecial_WIDE ANEW_followup_sep2017 Market_Survey_fall2019 Market_Survey_mar2018 Market_Survey_mar2019 Market_Survey_oct2018 Market_Survey_spring2020 Phone_Market_Survey_spring2020
+  1           178                            0                     0                      0                     0                     0                     0                        0                              0
+  2             0                           11                   175                      0                     0                     0                     0                        0                              0
+  3             0                            0                     0                      0                   180                     0                     0                        0                              0
+  4             0                            0                     0                      0                     0                     0                   176                        0                              0
+  5             0                            0                     0                      0                     0                   166                     0                        0                              0
+  6             0                            0                     0                    167                     0                     0                     0                        0                              0
+  7             0                            0                     0                      0                     0                     0                     0                      149                             19
+  survey_season   n  hk hk1  ac ps1 lab1 lhp lcp  sk rev rev11 seeds chem phl oph  tr ctp dec  mean_hk  mean_ac
+1             1 178   0 117   0 117    0   0   0 134   0   115     0    0   0   0   0   0 178      NaN      NaN
+2             2 186 175 184   0 184  175   0 184 178   0   173   184  184 185 186   0 185 186 5014.457      NaN
+3             3 180 180 178 180 178  178   0 178 171 170     0   178  178 178 178   0 178 180 2327.311 2.448278
+4             4 176 176 176 176 176  176  11  11 166 165     0   176  176 176 176 175   0 176 2251.009 2.334091
+5             5 166 156 156 165 154  154 156 153 149 148     0   156  154 156 166 154 156 166 1747.984 2.216230
+6             6 167 160 160 167 160  160 160 160 157 157     0   160  159 160 167 156 158 167 2296.022 2.385629
+7             7 168 166 148 168 148  148 148 148 153 153     0   148  147 148 149 148 148 168 1827.750 2.363690
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max.     NAs 
+    0.0     0.0     0.0   552.1     0.0 10754.2     208 
+    Min.  1st Qu.   Median     Mean  3rd Qu.     Max.      NAs 
+-1.40000  0.00000  0.00000  0.05252  0.00000  8.00000      365 
+     hhh_id harvest_kg harvest_kg_1 harvest_kg_2 harvest_kg_3 acres_tot plot_size_1 plot_size_2 plot_size_3 maize_tot_plotn tot_lab_costs_1 lc_prep_costs_season1 lc_plant_costs_season1 lc_weed_costs_season1 lc_spray_costs_season1
+1  10078013        320          320           NA           NA      0.45        0.45          NA          NA               1               0                     0                      0                     0                      0
+2  10078018        596          596           NA           NA      2.50        2.50          NA          NA               1               0                     0                      0                     0                      0
+3  10078024       2317         2317           NA           NA      2.10        2.10          NA          NA               1          370000                140000                  60000                100000                      0
+4  10078031       2965         2965           NA           NA      1.50        1.50          NA          NA               1           20000                     0                      0                     0                      0
+5  10078039       1339         1339           NA           NA      0.83        0.83          NA          NA               1          105000                 40000                      0                 50000                  15000
+6  10078042       6300          700         2100         2800      7.60        1.10        1.70         3.2               4           80000                 25000                      0                 35000                  20000
+7  10078047        372          372           NA           NA      0.24        0.24          NA          NA               1           21000                  6000                      0                     0                      0
+8  10078054         NA           NA           NA           NA      0.00          NA          NA          NA               0              NA                    NA                     NA                    NA                     NA
+9  10099001       1300          700          600           NA      2.30        1.30        1.00          NA               2           30000                     0                      0                 30000                      0
+10 10099003       1960          980          420          560      2.90        1.20        0.70         1.0               3          100000                 60000                  10000                     0                      0
+11 10099019       1904         1904           NA           NA      2.20        2.20          NA          NA               1          175000                     0                  80000                 80000                      0
+12 10099023        600          300          300           NA      0.91        0.42        0.49          NA               2               0                     0                      0                     0                      0
+13 10099026       4620         3220         1400           NA      3.70        2.70        0.98          NA               2          295000                     0                  40000                195000                      0
+14 10099033       5265         2430         2835           NA     11.20        2.20        9.00          NA               2          440000                200000                  20000                160000                      0
+15 10099038       2100         2100           NA           NA      2.00        2.00          NA          NA               1          270000                 70000                  40000                120000                      0
+   lc_harv_costs_season1 lh_prep_hours_season1 sold_kg_p_1 tot_rev_combined_1 tot_rev_combined2_1 tot_rev_combined_1_1
+1                      0                    48          NA                 NA                  NA                   NA
+2                      0                   720         476             333200              333200                   NA
+3                  70000                     8        2267            1586900             1586900                   NA
+4                  20000                   140        1500             945000              975000                   NA
+5                      0                     0        1219             853300              853300                   NA
+6                      0                     0        1495            1046500             1046500                   NA
+7                  15000                    36         292             204400              204400                   NA
+8                     NA                    NA          NA                 NA                  NA                   NA
+9                      0                    70        1230             603000              603000                   NA
+10                 30000                    12         980             661500              661500                   NA
+11                 15000                    25        1624             974400              954600                   NA
+12                     0                    72         525             262500              262500                   NA
+13                 60000                    84        4480            2464000             2411200                   NA
+14                 60000                   945        2430            1170000             1170000                   NA
+15                 40000                   100        2050            1516500             1516500                   NA
+     hhh_id harvest_kg harvest_kg_1 harvest_kg_2 harvest_kg_3 acres_tot plot_size_1 plot_size_2 plot_size_3 maize_tot_plotn tot_lab_costs_1 lc_prep_costs_season1 lh_prep_hours_season1 sold_kg_p_1 tot_rev_combined_1 tot_rev_combined_1_1 labor_cost_ph
+1  10078006         NA           NA           NA           NA        NA          NA          NA          NA               0              NA                    NA                    NA          NA                 NA                   NA            NA
+2  10078013         NA          910           NA           NA        NA           1          NA          NA               1              NA                    NA                    NA         910                 NA               910000            NA
+3  10078018         NA         1620           NA           NA        NA           2          NA          NA               1              NA                    NA                    NA        1485                 NA              1559250            NA
+4  10078024         NA           NA           NA           NA        NA          NA          NA          NA               0              NA                    NA                    NA          NA                 NA                   NA            NA
+5  10078031         NA         9000           NA           NA        NA           4          NA          NA               1              NA                    NA                    NA        8800                 NA              6600000            NA
+6  10078039         NA         3500           NA           NA        NA           3          NA          NA               1              NA                    NA                    NA        3500                 NA              4200000            NA
+7  10078042         NA         4200         2800           NA        NA           3           2          NA               2              NA                    NA                    NA        7000                 NA              6594000            NA
+8  10078047         NA         2340           NA           NA        NA           2          NA          NA               1              NA                    NA                    NA        2340                 NA              1404000            NA
+9  10078054         NA           NA           NA           NA        NA          NA          NA          NA               0              NA                    NA                    NA          NA                 NA                   NA            NA
+10 10099003         NA         2610           NA           NA        NA           3          NA          NA               1              NA                    NA                    NA        2410                 NA              2289500            NA
+   otherph_cost
+1            NA
+2            NA
+3            NA
+4            NA
+5            NA
+6            NA
+7            NA
+8            NA
+9            NA
+10           NA
+hh in followup: 180  obs followup: 677 
+==== seller
+   ea_code survey_season buy_treatment sold_kg_p_   hhh_id sold_kg_tot name     price
+1  EA10078             2             1        840 10078006         840   NA 1000.0000
+2  EA10078             3             1       2940 10078006        3220  999  600.0000
+3  EA10078             3             1        280 10078006        3220    4  471.4286
+4  EA10078             1             1        910 10078013         910   NA 1000.0000
+5  EA10078             2             1        675 10078013         675   NA  674.0741
+6  EA10078             3             1        260 10078013         260  999  500.0000
+7  EA10078             4             1        840 10078013         840    2  246.4286
+8  EA10078             7             1        280 10078013         856    2  690.0000
+9  EA10078             7             1        576 10078013         856  555  850.0000
+10 EA10078             1             1       1485 10078018        1485   NA 1050.0000
+11 EA10078             2             1       1960 10078018        1960   NA  836.9898
+12 EA10078             3             1        910 10078018        1105  999  551.3846
+13 EA10078             3             1        195 10078018        1105    4  600.0000
+14 EA10078             4             1       1245 10078018        1245  555  360.0000
+15 EA10078             5             1        476 10078018         476  555  700.0000
+16 EA10078             6             1        442 10078018         864  555  810.0000
+17 EA10078             6             1        422 10078018         864  555  980.0000
+18 EA10078             7             1        434 10078018         434  555  850.0000
+19 EA10078             2             1       2250 10078024        2250   NA  870.0000
+20 EA10078             3             1       1625 10078024        1625    4  600.0000
+  survey_season   n  nh        p p0
+1             1 146 134 887.5171  0
+2             2 179 167 765.0696  1
+3             3 220 170 565.4570  0
+4             4 192 165 294.2112  0
+5             5 193 148 611.0383  0
+6             6 248 157 751.9929  0
+7             7 211 153 744.9046  0
+==== buy
+  ea_code survey_season buy_treatment   hhh_id status
+1 EA10078             6             1 10078013     NA
+2 EA10078             7             1 10078013      1
+3 EA10078             6             1 10078018      1
+4 EA10078             7             1 10078018      3
+5 EA10078             6             1 10078024      4
+6 EA10078             7             1 10078024      1
+   
+     6  7
+  0 43 23
+  1 30 38
+  3  9 18
+  4 10  6
+  5  0  1

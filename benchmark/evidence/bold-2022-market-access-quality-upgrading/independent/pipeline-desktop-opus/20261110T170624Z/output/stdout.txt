@@ -1,0 +1,155 @@
+DEVIATION: Exchange rate set to 3,450 UGX/USD (rate not given in excerpt; previous 3,700 assumption)
+returns data: 99 rows, 485 cols
+village column used: ea_code 
+bags: 620 
+OLS estimation, Dep. Var.: defects
+Observations: 620
+Fixed-effects: vil: 9
+Standard-errors: Clustered (hh_row) 
+      Estimate Std. Error  t value  Pr(>|t|)    
+treat -2.06144   0.183875 -11.2111 < 2.2e-16 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+RMSE: 0.882417     Adj. R2: 0.666749
+                 Within R2: 0.543431
+lab total column: Total_weight_of_maize_g  components: Foreign_matter_tot_g,Inorganic_matter_tot_g,Broken_grains_tot_g,Pest_damaged_grains_tot_g,Rotten_and_diseased_grain,Discoloured_grains_tot_g,Immature_or_shrivelled_gr 
+lab obs: 82  mean share: 0.2003342 
+OLS estimation, Dep. Var.: lab
+Observations: 82
+Fixed-effects: vil: 9
+Standard-errors: Heteroskedasticity-robust 
+       Estimate Std. Error  t value   Pr(>|t|)    
+treat -0.197798   0.053666 -3.68573 0.00043873 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+RMSE: 0.248652     Adj. R2: 0.282936
+                 Within R2: 0.126349
+other add5 stems: add5_sold_when_e 
+sale date stem: add5_sold_when_e 
+ded/measured weight ratio: 0.9941358 
+bag/transaction records: 211 
+records with measured weight: 211  hh: 95 
+distinct hh x date: 203 
+distinct hh x date (weighed only): 203 
+DEVIATION: Sales restricted to records with measured weights (needed for deductions and net price)
+DEVIATION: Records of the same household on the same sale date collapsed into one sale (weight-weighted price; sale definition not given in excerpt)
+sales: 203  households: 95  weeks: 16 
+OLS estimation, Dep. Var.: p
+Observations: 201
+Fixed-effects: vil: 9,  week: 14
+Standard-errors: Clustered (hh_row) 
+      Estimate Std. Error  t value Pr(>|t|) 
+treat 0.578526    6.94781 0.083267  0.93382 
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+RMSE: 48.4     Adj. R2: 0.854842
+             Within R2: 2.944e-5
+OLS estimation, Dep. Var.: ded
+Observations: 201
+Fixed-effects: vil: 9,  week: 14
+Standard-errors: Clustered (hh_row) 
+       Estimate Std. Error  t value Pr(>|t|) 
+treat -0.153654   0.118594 -1.29563  0.19831 
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+RMSE: 0.838166     Adj. R2: 0.06544 
+                 Within R2: 0.006886
+OLS estimation, Dep. Var.: netp
+Observations: 201
+Fixed-effects: vil: 9,  week: 14
+Standard-errors: Clustered (hh_row) 
+      Estimate Std. Error  t value Pr(>|t|) 
+treat   1.4193    7.16645 0.198048  0.84344 
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+RMSE: 49.9     Adj. R2: 0.845055
+             Within R2: 1.669e-4
+panel_g1: 1221 rows
+hh: hhh_id  village: ea_code 
+treat table:
+   
+      0   1
+  0 228 286
+  1 316 391
+harvest column: harvest_kg 
+harvest-like columns: harvest_cost_1,harvest_kg_1,harvest_cost_2,harvest_kg_2,harvest_kg,harvest_kg_3,harvest_kg_4,harvest_kg_5,harvest_kg_6,harvest_cost_3,harvest_cost_4,harvest_cost_5,harvest_kg_7,harvest_kg_8,harvest_kg_9 
+DEVIATION: Harvest value uses household's own sale price (village-season median if no sale); valuation price not given in excerpt
+DEVIATION: Dropped component cost columns when a matching total column exists (avoid double counting)
+cost columns: seeds_cost_1,seeds_cost_2,manure_cost_1,manure_cost_2,fert_cost_1,fert_cost_2,booster_cost_1,booster_cost_2,equipment_cost_1,tot_lab_costs_1,equipment_cost_2,tot_lab_costs_2,tot_chem_costs_1,tot_chem_costs_2,harvest_cost_1,harvest_cost_2,labor_cost_dry,drying_cost,labor_cost_store,storage_cost,labor_cost_ph,otherph_cost,tot_transport_cost,seeds_cost_3,seeds_cost_4,fert_cost_3,fert_cost_4,tot_lab_costs_3,tot_lab_costs_4,tot_chem_costs_3,tot_chem_costs_4,seeds_cost_5,seeds_cost_6,tot_lab_costs_5,tot_lab_costs_6,tot_chem_costs_5,tot_chem_costs_6,fert_cost_5,booster_cost_3,booster_cost_4,booster_cost_5,equipment_cost_3,equipment_cost_4,equipment_cost_5,harvest_cost_3,harvest_cost_4,harvest_cost_5,decobbing_cost_1,decobbing_cost_2,manure_cost_3,decobbing_cost_3,decobbing_cost_4,decobbing_cost_5 
+own hour cols: lh_prep_hours_unit1,lh_plant_hours_unit1,lh_weed_hours_unit1,lh_spray_hours_unit1,lh_harv_hours_unit1,lh_prep_hours_season1,lh_plant_hours_season1,lh_weed_hours_season1,lh_spray_hours_season1,lh_harv_hours_season1,lh_prep_hours_unit2,lh_plant_hours_unit2,lh_weed_hours_unit2,lh_spray_hours_unit2,lh_harv_hours_unit2,lh_prep_hours_season2,lh_plant_hours_season2,lh_weed_hours_season2,lh_spray_hours_season2,lh_harv_hours_season2,lh_prep_hours_unit3,lh_plant_hours_unit3,lh_weed_hours_unit3,lh_spray_hours_unit3,lh_harv_hours_unit3,lh_prep_hours_season3,lh_plant_hours_season3,lh_weed_hours_season3,lh_spray_hours_season3,lh_harv_hours_season3,lh_prep_hours_unit4,lh_plant_hours_unit4,lh_weed_hours_unit4,lh_spray_hours_unit4,lh_harv_hours_unit4,lh_prep_hours_season4,lh_plant_hours_season4,lh_weed_hours_season4,lh_spray_hours_season4,lh_harv_hours_season4,lh_decob_hours,lh_winnow_hours,lh_sort_hours,lh_bag_hours,lh_prep_hours_unit5,lh_plant_hours_unit5,lh_weed_hours_unit5,lh_spray_hours_unit5,lh_harv_hours_unit5,lh_prep_hours_season5,lh_plant_hours_season5,lh_weed_hours_season5,lh_spray_hours_season5,lh_harv_hours_season5,lh_prep_hours_unit6,lh_plant_hours_unit6,lh_weed_hours_unit6,lh_spray_hours_unit6,lh_harv_hours_unit6,lh_prep_hours_season6,lh_plant_hours_season6,lh_weed_hours_season6,lh_spray_hours_season6,lh_harv_hours_season6 
+hired hour cols:  
+data-derived hired wage (UGX/hour): NA 
+DEVIATION: Own hours valued at assumed wage of 10,000 UGX per 7-hour day (hired wage not recoverable)
+OLS estimation, Dep. Var.: y
+Observations: 623
+Fixed-effects: season: 4
+Standard-errors: Clustered (vil) 
+        Estimate Std. Error t value  Pr(>|t|)    
+treat   0.016883   0.004756 3.54963 0.0021400 ** 
+bl      0.193461   0.064642 2.99281 0.0074798 ** 
+bl_miss 0.024074   0.020105 1.19741 0.2458735    
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+RMSE: 0.037353     Adj. R2: 0.678488
+                 Within R2: 0.080899
+OLS estimation, Dep. Var.: y
+Observations: 640
+Fixed-effects: season: 4
+Standard-errors: Clustered (vil) 
+        Estimate Std. Error t value Pr(>|t|)    
+treat 113.033455  50.117467 2.25537 0.036097 *  
+bl      0.108704   0.036183 3.00430 0.007292 ** 
+... 1 variable was removed because of collinearity (bl_miss)
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+RMSE: 406.8     Adj. R2: 0.073023
+              Within R2: 0.054032
+OLS estimation, Dep. Var.: y
+Observations: 658
+Fixed-effects: season: 4
+Standard-errors: Clustered (vil) 
+       Estimate Std. Error  t value   Pr(>|t|)    
+treat 48.553238   49.99169 0.971226 0.34363847    
+bl     0.218969    0.04981 4.396095 0.00031046 ***
+... 1 variable was removed because of collinearity (bl_miss)
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+RMSE: 376.8     Adj. R2: 0.195852
+              Within R2: 0.136762
+OLS estimation, Dep. Var.: y
+Observations: 658
+Fixed-effects: season: 4
+Standard-errors: Clustered (vil) 
+       Estimate Std. Error  t value Pr(>|t|)    
+treat 32.461756  39.466290 0.822519 0.420985    
+bl     0.128745   0.047689 2.699681 0.014199 *  
+... 1 variable was removed because of collinearity (bl_miss)
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+RMSE: 312.6     Adj. R2: 0.153721
+              Within R2: 0.0569  
+OLS estimation, Dep. Var.: y
+Observations: 658
+Fixed-effects: season: 4
+Standard-errors: Clustered (vil) 
+       Estimate Std. Error t value  Pr(>|t|)    
+treat 66.274625  45.886709 1.44431 0.1649410    
+bl     0.130531   0.043415 3.00656 0.0072555 ** 
+... 1 variable was removed because of collinearity (bl_miss)
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+RMSE: 331.7     Adj. R2: 0.095651
+              Within R2: 0.061304
+RESULT:treatment_defects_visual_table2_col1=-2.061441
+RESULT:n_obs_table2_col1_bags=620.000000
+RESULT:treatment_defects_lab_table2_col2=-0.197798
+RESULT:treatment_price_table2_col3=0.578526
+RESULT:n_obs_table2_cols3_5_sales=201.000000
+RESULT:treatment_deductions_table2_col4=-0.153654
+RESULT:treatment_net_price_table2_col5=1.419302
+RESULT:market_access_price_table6_panelA_col1=0.016883
+RESULT:market_access_yield_table6_panelA_col4=113.033455
+RESULT:market_access_harvest_value_table6_panelA_col5=48.553238
+RESULT:n_obs_table6_panelA_cols3_5=658.000000
+RESULT:market_access_profit_monetary_table6_panelA_col7=32.461756
+RESULT:market_access_profit_incl_own_hours_table6_panelA_col8=66.274625

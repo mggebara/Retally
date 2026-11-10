@@ -1,0 +1,26 @@
+Error in `vec_equal()` at vctrs/R/type-vctr.R:403:3:
+! Can't combine `x` <character> and `y` <double>.
+Backtrace:
+     ▆
+  1. ├─base::sapply(...)
+  2. │ └─base::lapply(X = X, FUN = FUN, ...)
+  3. │   └─global FUN(X[[i]], ...)
+  4. │     ├─base::tapply(...)
+  5. │     └─vctrs:::`==.vctrs_vctr`(g1[[v]], "")
+  6. │       └─vctrs::vec_equal(e1, e2) at vctrs/R/type-vctr.R:403:3
+  7. │         └─vctrs (local) `<fn>`() at vctrs/R/equal.R:73:3
+  8. │           └─haven:::vec_ptype2.haven_labelled.character(...)
+  9. │             └─vctrs::vec_ptype2(y, x, ...)
+ 10. │               └─vctrs (local) `<fn>`() at vctrs/R/type2.R:50:3
+ 11. │                 └─haven:::vec_ptype2.character.haven_labelled(...)
+ 12. │                   └─vctrs::vec_ptype2(x, vec_data(y), ...)
+ 13. └─vctrs (local) `<fn>`() at vctrs/R/type2.R:50:3
+ 14.   └─vctrs::vec_default_ptype2(...)
+ 15.     ├─base::withRestarts(...) at vctrs/R/type2.R:178:3
+ 16.     │ └─base (local) withOneRestart(expr, restarts[[1L]])
+ 17.     │   └─base (local) doWithOneRestart(return(expr), restart)
+ 18.     └─vctrs::stop_incompatible_type(...) at vctrs/R/type2.R:178:3
+ 19.       └─vctrs:::stop_incompatible(...) at vctrs/R/conditions.R:146:3
+ 20.         └─vctrs:::stop_vctrs(...) at vctrs/R/conditions.R:95:3
+ 21.           └─rlang::abort(message, class = c(class, "vctrs_error"), ..., call = call) at vctrs/R/conditions.R:65:3
+Execution halted

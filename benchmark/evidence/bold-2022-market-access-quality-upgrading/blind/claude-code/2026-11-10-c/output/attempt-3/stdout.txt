@@ -1,0 +1,178 @@
+tot_costs_pre :: TYPE calculate :: LABEL NA :: CALC if(${seeds_cost}>0,${seeds_cost}, 0) +if(${fert_cost_check}>0,${fert_cost_check}, 0)+if(${tot_lab_costs_check}>0,${tot_lab_costs_check}, 0)+if(${tot_chem_costs}>0,${tot_chem_costs}, 0) :: REL NA 
+
+tot_costs_post :: TYPE calculate :: LABEL NA :: CALC if(${tot_transport_cost_check}>0, ${tot_transport_cost_check}, 0)+if(${drying_cost}>0, ${drying_cost}, 0)+if(${labor_cost_store}>0, ${labor_cost_store}, 0)+if(${storage_cost}>0, ${storage_cost}, 0)+if(${labor_cost_ph_check}>0, ${labor_cost_ph_check}, 0)+if(${otherph_cost_check}>0, ${otherph_cost_check}, 0) :: REL NA 
+
+labor_cost_ph_check :: TYPE calculate :: LABEL NA :: CALC if(${lc_decob_labour_costs_tot}!='', ${lc_decob_labour_costs_tot}, 0)+if(${lc_winnow_labour_costs_tot}!='', ${lc_winnow_labour_costs_tot}, 0)+if(${lc_sort_labour_costs_tot}!='', ${lc_sort_labour_costs_tot}, 0)+if(${lc_bag_labour_costs_tot}!='', ${lc_bag_labour_costs_tot}, 0) :: REL NA 
+
+otherph_cost_check :: TYPE calculate :: LABEL NA :: CALC if(${lc_decob_other_costs}!='', ${lc_decob_other_costs}, 0)+if(${lc_winnow_other_costs}!='', ${lc_winnow_other_costs}, 0)+if(${lc_sort_other_costs}!='', ${lc_sort_other_costs}, 0)+if(${lc_bag_other_costs}!='', ${lc_bag_other_costs}, 0) :: REL NA 
+
+labor_cost_dry :: TYPE decimal :: LABEL costs (in Shillings) FOR HIRED LABOUR for DRYING :: CALC NA :: REL NA 
+
+drying_cost :: TYPE decimal :: LABEL DRYING costs (in Shillings) in the last season (planting ${last_season})
+
+Include cost of buying or renting tarpaulin
+DO NOT INCLUDE LABOUR costs - :: CALC NA :: REL ${maize_tot_plotn}>0 
+
+labor_cost_store :: TYPE decimal :: LABEL costs (in Shillings) FOR HIRED LABOUR for STORING :: CALC NA :: REL NA 
+
+storage_cost :: TYPE decimal :: LABEL TOTAL STORAGE costs (in Shillings) in the last season (planting ${last_season})
+
+Includes renting / building a store.
+DO NOT INCLUDE LABOUR costs :: CALC NA :: REL ${maize_tot_plotn}>0 
+
+labor_cost_ph :: TYPE integer :: LABEL COSTS (in Shillings)  FOR HIRED LABOUR for OTHER POST HARVEST activities :: CALC NA :: REL NA 
+
+tot_lab_costs_1 :: TYPE decimal :: LABEL ********************************
+${plot_name_1} :: CALC NA :: REL ${maize_tot_plotn}>0 
+
+tot_chem_costs_1 :: TYPE decimal :: LABEL ********************************
+${plot_name_1} :: CALC NA :: REL ${maize_tot_plotn}>0 
+
+equipment_cost_1 :: TYPE decimal :: LABEL ********************************
+${plot_name_1} :: CALC NA :: REL ${maize_tot_plotn}>0 
+
+acres_tot :: TYPE decimal :: LABEL TOTAL acres planted with MAIZE last season (planting ${last_season}) :: CALC NA :: REL NA 
+
+home_kg_1st :: TYPE decimal :: LABEL *****************************
+How many KGs of maize did you keep for home use (include maize kept for planting, gifting…)? :: CALC ${home_kg_1sti} :: REL NA 
+
+kgs_measure_resp :: TYPE decimal :: LABEL How many kilograms is a measure approximately? :: CALC NA :: REL NA 
+
+seeds_cost_1 :: TYPE decimal :: LABEL Total cost (UGX) of seeds: :: CALC NA :: REL ${maize_tot_plotn}>0 
+
+lc_prep_costs_unit1 :: TYPE decimal :: LABEL costs per UNIT :: CALC NA :: REL NA 
+
+lc_prep_ppl_season1 :: TYPE decimal :: LABEL PERSONS :: CALC NA :: REL NA 
+
+lc_prep_units_season1 :: TYPE decimal :: LABEL UNITS in a SEASON per PERSON :: CALC NA :: REL NA 
+
+lh_prep_ppl_season1 :: TYPE decimal :: LABEL PERSONS :: CALC NA :: REL NA 
+
+lh_prep_hours_unit1 :: TYPE decimal :: LABEL HOURS per UNIT :: CALC NA :: REL NA 
+
+sale_transport_cost :: TYPE decimal :: LABEL How much money did you spend to get the maize to ${this_buyer_label_resp} during the last season (planting ${last_season})? In shilling :: CALC NA :: REL NA 
+
+tot_lab_costs vs lc sum: cor 0.996962  mean diff 3722.545  share equal 0.9042424 
+harvest_kg vs plot sum: share equal 0.8237664  n both 993 
+acres_tot vs plot sum: share equal 0.9449878  cor 0.998083 
+acres by season nonNA (acres_tot | plot sum):
+       1   2   3   4   5   6   7
+[1,]   0   0 180 176 165 167 168
+[2,] 136 185 178 176 156 160 148
+[3,] 136 185 180 176 156 160 166
+labor_cost_ph vs components: share equal 0.8743769 
+otherph vs components: share equal 0.6526419  by season:
+         1          2          3          4          5          6          7 
+       NaN 0.83333333 0.06179775 0.10795455 1.00000000 1.00000000 1.00000000 
+tot_transport vs pre+post equal share: 0.9978166 
+labor_cost_dry <= drying_cost share: 0.9831461  labor_cost_store<=storage_cost: 0.9734266 
+units for lc (all plots, all tasks):
+
+              0       1    1000   10000   10500  105000  107000   11000  110000 1170000  118000  118750   12000  120000  125000   13000  130000  135000   14000  140000  142500  144000  145000    1500   15000  150000  155000     160   16000  160000 
+  33188    1743       6       1      46       1       3       1       1       8       1       1       1       7      54       3       2      14       2       1      13       1       1       1       1      31      25       1       1       8      13 
+ 165000  170000  172000  174500   18000  180000  190000  194000  195000   1e+05   1e+06    2000   20000  210000 2100000   22000  220000   22500  225000  230000  235000   24000  240000    2500   25000  250000   26000  265000  270000   28000  280000 
+      1       2       1       1       8      25       2       1       1      47       1       2      63       9       2       1       4       1       1       1       1       6      16       1      28       8       1       1       5       3       2 
+ 288000   2e+05    3000   30000  315000  320000  327000  330000  340000   35000  350000   36000  360000  362000   37500  390000   3e+05    4000   40000   41000   42000   44000  440000   45000  450000   46000   48000  480000  490000   4e+05    5000 
+      1      24       3      96       3       2       1       2       1      14       4       1       5       1       1       2      18      23     123       1       1       1       1      23       1       1       1       2       1       1     278 
+  50000  501000   52500   53000  540000    5500   55000  550000  555000  560000   57000   59000   5e+05    6000   60000  628000  630000   64000  640000   65000  650000  660000   6e+05    7000   70000   72000  720000 7200000   74000   75000  750000 
+     63       1       1       1       2       1       7       2       1       4       1       1       3      18     106       1       1       2       1       4       1       2       1       9      43       1       1       1       1       5       2 
+  78000  780000       8    8000   80000   81000   84000   85000  857500  889000   8e+05   90000   95000   96000  960000   97000   98000  980000   99000    days   hours   other  season 
+      1       2       1       8      69       1       1       3       1       1       3      22       2       2       1       1       1       1       1     542      60       2    1617 
+units for lh:
+
+            0      1     10     12      2    2.5    224      3      4    4.5      5      6     65      7      8     82      9     96   days  hours months  other season 
+ 33103    914      9     27      1     28      1      1     35    111      2    681   1340      1    168    148      1     49      1   2786    574      1      3    163 
+lh hours/unit when unit=days: median 6 
+lc cost/unit for hours : quantiles 4000 5500 25000 47500 305000 
+lc cost/unit for days : quantiles 5000 5000 5000 45000 1e+05 
+lc cost/unit for season : quantiles 5000 30000 60000 120000 240000 
+lc unit by season:
+   u
+            0    1 1000 10000 10500 105000 107000 11000 110000 1170000 118000 118750 12000 120000 125000 13000 130000 135000 14000 140000 142500 144000 145000 1500 15000 150000 155000  160 16000 160000 165000 170000 172000 174500 18000 180000 190000
+  1 5162    0    0    0     0     0      0      0     0      0       0      0      0     0      0      0     0      0      0     0      0      0      0      0    0     0      0      0    0     0      0      0      0      0      0     0      0      0
+  2 5394    0    0    0     0     0      0      0     0      0       0      0      0     0      0      0     0      0      0     0      0      0      0      0    0     0      0      0    0     0      0      0      0      0      0     0      0      0
+  3 5220    0    0    0     0     0      0      0     0      0       0      0      0     0      0      0     0      0      0     0      0      0      0      0    0     0      0      0    0     0      0      0      0      0      0     0      0      0
+  4 5065   14    0    0     2     0      0      0     0      0       0      0      0     0      1      0     0      1      0     0      0      0      0      0    0     0      0      0    0     0      1      0      0      0      0     0      0      0
+  5 4095  589    5    1    11     0      2      1     0      1       0      0      1     3     15      2     0      2      0     0      4      1      1      1    0     7      7      1    0     0      5      1      1      0      0     2      9      1
+  6 4077  607    0    0    22     1      1      0     1      6       1      1      0     3     20      1     2      3      1     1      2      0      0      0    1    12      7      0    0     0      7      0      1      1      1     3     10      1
+  7 4175  533    1    0    11     0      0      0     0      1       0      0      0     1     18      0     0      8      1     0      7      0      0      0    0    12     11      0    1     8      0      0      0      0      0     3      6      0
+   u
+    194000 195000 1e+05 1e+06 2000 20000 210000 2100000 22000 220000 22500 225000 230000 235000 24000 240000 2500 25000 250000 26000 265000 270000 28000 280000 288000 2e+05 3000 30000 315000 320000 327000 330000 340000 35000 350000 36000 360000
+  1      0      0     0     0    0     0      0       0     0      0     0      0      0      0     0      0    0     0      0     0      0      0     0      0      0     0    0     0      0      0      0      0      0     0      0     0      0
+  2      0      0     0     0    0     0      0       0     0      0     0      0      0      0     0      0    0     0      0     0      0      0     0      0      0     0    0     0      0      0      0      0      0     0      0     0      0
+  3      0      0     0     0    0     0      0       0     0      0     0      0      0      0     0      0    0     0      0     0      0      0     0      0      0     0    0     0      0      0      0      0      0     0      0     0      0
+  4      0      0     0     0    0     0      0       0     0      0     0      0      0      0     0      0    0     1      0     0      0      0     0      0      0     1    0     1      0      0      0      0      0     0      0     0      0
+  5      0      0    14     0    0    19      4       0     0      3     0      1      1      1     0      6    1     9      2     0      0      1     1      2      1    13    2    36      2      0      1      1      0     4      2     1      1
+  6      0      0    14     0    2    19      2       2     0      0     1      0      0      0     4      4    0     6      2     1      1      2     1      0      0     6    1    32      1      2      0      1      1     8      2     0      0
+  7      1      1    19     1    0    25      3       0     1      1     0      0      0      0     2      6    0    12      4     0      0      2     1      0      0     4    0    27      0      0      0      0      0     2      0     0      4
+   u
+    362000 37500 390000 3e+05 4000 40000 41000 42000 44000 440000 45000 450000 46000 48000 480000 490000 4e+05 5000 50000 501000 52500 53000 540000 5500 55000 550000 555000 560000 57000 59000 5e+05 6000 60000 628000 630000 64000 640000 65000 650000
+  1      0     0      0     0    0     0     0     0     0      0     0      0     0     0      0      0     0    0     0      0     0     0      0    0     0      0      0      0     0     0     0    0     0      0      0     0      0     0      0
+  2      0     0      0     0    0     0     0     0     0      0     0      0     0     0      0      0     0    0     0      0     0     0      0    0     0      0      0      0     0     0     0    0     0      0      0     0      0     0      0
+  3      0     0      0     0    0     0     0     0     0      0     0      0     0     0      0      0     0    0     0      0     0     0      0    0     0      0      0      0     0     0     0    0     0      0      0     0      0     0      0
+  4      0     0      0     2    2     1     0     0     0      0     0      0     0     0      0      0     0    9     0      0     0     0      0    0     0      0      0      0     0     0     0    0     1      0      0     0      0     0      0
+  5      0     1      0     2    8    36     0     0     1      1     6      0     0     0      0      0     0  109    23      0     0     0      0    1     1      2      0      1     1     1     0    3    25      1      0     2      0     0      0
+  6      1     0      2     6    8    48     0     1     0      0     7      1     0     1      1      0     0   88    18      0     0     1      0    0     3      0      1      1     0     0     3    8    44      0      1     0      0     3      1
+  7      0     0      0     8    5    38     1     0     0      0    10      0     1     0      1      1     1   72    22      1     1     0      2    0     3      0      0      2     0     0     0    7    36      0      0     0      1     1      0
+   u
+    660000 6e+05 7000 70000 72000 720000 7200000 74000 75000 750000 78000 780000    8 8000 80000 81000 84000 85000 857500 889000 8e+05 90000 95000 96000 960000 97000 98000 980000 99000 days hours other season
+  1      0     0    0     0     0      0       0     0     0      0     0      0    0    0     0     0     0     0      0      0     0     0     0     0      0     0     0      0     0    0     0     0      0
+  2      0     0    0     0     0      0       0     0     0      0     0      0    0    0     0     0     0     0      0      0     0     0     0     0      0     0     0      0     0    0     0     0      0
+  3      0     0    0     0     0      0       0     0     0      0     0      0    0    0     0     0     0     0      0      0     0     0     0     0      0     0     0      0     0    0     0     0      0
+  4      0     0    0     0     0      0       0     0     0      0     0      0    0    1     2     0     0     0      0      0     0     0     0     0      0     0     0      0     0   14     3     0     22
+  5      1     0    0    13     1      1       1     0     2      1     1      0    0    2    16     0     0     2      1      0     0     6     1     2      0     1     0      0     1  162    51     1    505
+  6      0     1    7    19     0      0       0     1     1      0     0      1    0    3    26     0     0     1      0      0     2     5     0     0      1     0     1      0     0  199     1     1    565
+  7      1     0    2    11     0      0       0     0     2      1     0      1    1    2    25     1     1     0      0      1     1    11     1     0      0     0     0      1     0  167     5     0    525
+lh total own hours by season (sum over tasks & plots):
+$`1`
+   n mean 
+   0  NaN 
+
+$`2`
+   n mean 
+   0  NaN 
+
+$`3`
+   n mean 
+   0  NaN 
+
+$`4`
+       n     mean 
+ 11.0000 333.6364 
+
+$`5`
+       n     mean 
+154.0000 458.1429 
+
+$`6`
+       n     mean 
+160.0000 434.4094 
+
+$`7`
+       n     mean 
+148.0000 352.9122 
+
+postharvest own hours vars lh_decob_hours etc nonNA by season:
+  1   2   3   4   5   6   7 
+  0   0   0   0 153 158 144 
+ 1  2  3  4  5  6  7 
+ 0  0  0  0 38 44 57 
+ 1  2  3  4  5  6  7 
+ 0  0  0  0 32 41 33 
+  1   2   3   4   5   6   7 
+  0   0   0   0 145 155 139 
+hh with no baseline obs among follow-up hh:
+0 
+follow-up hh count: 180  follow-up obs: 677 
+seller: name codes table head
+
+555 777 999 888 101  60   6 110 105  16  33  74  86  19  51 
+199 108  73  32  31  27  25  20  16  15  14  14  12  11  11 
+seller hh-season with price: by season
+
+  1   2   3   4   5   6   7 
+134 166 170 165 148 157 153 
+seller hh-seasons not in g1: 0 
+sold_kg_tot vs g1 sold total (sum sold_kg_p_) check
+g1 sold_kg_p_ sum by season nonNA: 134 178 171 166 149 157 153 
+harvest < sold share: 0.005494505 

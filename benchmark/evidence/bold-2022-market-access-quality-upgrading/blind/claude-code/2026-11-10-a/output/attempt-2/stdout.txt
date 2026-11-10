@@ -1,0 +1,1350 @@
+sheets: survey choices settings Sheet1 
+cols: type name label::english hint::english constraint constraint_message::english required appearance default relevant read_only calculation repeat_count choice_filter media::image::english NOTES - group 1 NOTES - group 2 NOTES - group 0 
+39 | calculate | acres_tot1 | NA | pulldata('listing', 'tot_acres_new_trace_correct', 'hhh_code', ${hhh}) 
+44 | decimal | acres_tot_1st | *****************************
+ TOTAL acres planted with MAIZE last season (planting ${last_season}) | NA 
+45 | select_one dk_ra | acres_tot_1st_dk | Why no answer: | NA 
+46 | select_one yes_no_dk_ra | harvest_kg_tot_5000 | Did you harvest more than 5 Tonnes (5000 kgs) of maize in total in the last season? (please try to estimate as precisely as possible) | NA 
+53 | select_one yes_no_only | consent | Has the respondent signed the consent form and was he given a copy of the consent form? This indicates consent to proceed. | NA 
+72 | calculate | harvest_kg_tot_last | NA | pulldata('listing', 'harvest_kg_tot', 'hhh_code', ${hhh}) 
+126 | select_multiple hh_members | dec_inputs | Who in your household made decisions on where to buy and the price to buy maize seed and other inputs for planting maize during the January 2017 seaso | NA 
+128 | select_multiple hh_members | dec_sales | Who in your household managed the sale of maize e.g. made decisions on when to sell, the selling price, who to sell to during the January 2017 plantin | NA 
+145 | decimal | acres_tot_1st1 | *****************************
+ TOTAL acres planted with MAIZE planted in ${last_season}. | ${acres_tot_1st} 
+146 | select_one dk_ra | acres_tot_1st_dk1 | Why no answer: | NA 
+160 | calculate | harvest_kg_tot_1sti | NA | ${harvest_meas_tot_1st}*${kgs_measure_resp} 
+162 | calculate | sold_kg_1sti | NA | ${sold_meas_1st}*${kgs_measure_resp} 
+165 | decimal | harvest_kg_tot_1st | *****************************
+ How many KGs of maize did you harvest from all your plots last season (planting ${last_season})? | ${harvest_kg_tot_1sti} 
+166 | select_one dk_ra | harvest_kg_tot_1st_dk | Why no answer: | NA 
+169 | decimal | sold_kg_1st | *****************************
+ How many KGs of maize did you sell? | ${sold_kg_1sti} 
+170 | select_one dk_ra | sold_kg_1st_dk | Why no answer: | NA 
+171 | decimal | tot_rev_tot_1st | *****************************
+ How much did you get IN TOTAL for the sale of all your maize? (UGX) | NA 
+172 | select_one dk_ra | tot_rev_tot_1st_dk | Why no answer: | NA 
+176 | note | harvest_kg_tot_1check | You said before you have harvested more than 5,000 Kg of maize but you listed only ${harvest_kg_tot_1st}. Please go back and correct your answer. | NA 
+199 | calculate | acres_tot_1 | NA | pulldata('listing', 'plot_acres_maize', 'plot_code', ${plot_code_1}) 
+201 | calculate | acres_tot_2 | NA | pulldata('listing', 'plot_acres_maize', 'plot_code', ${plot_code_2}) 
+203 | calculate | acres_tot_3 | NA | pulldata('listing', 'plot_acres_maize', 'plot_code', ${plot_code_3}) 
+205 | calculate | acres_tot_4 | NA | pulldata('listing', 'plot_acres_maize', 'plot_code', ${plot_code_4}) 
+207 | calculate | acres_tot_5 | NA | pulldata('listing', 'plot_acres_maize', 'plot_code', ${plot_code_5}) 
+209 | calculate | acres_tot_6 | NA | pulldata('listing', 'plot_acres_maize', 'plot_code', ${plot_code_6}) 
+213 | decimal | plot_size_1 | SIZE in acres PLANTED WITH MAIZE in ${plot_name_1} | ${acres_tot_1} 
+214 | select_one dk_ra | plot_size_1dk | Why no answer: | NA 
+219 | decimal | plot_size_2 | SIZE in acres PLANTED WITH MAIZE in ${plot_name_2} | ${acres_tot_2} 
+220 | select_one dk_ra | plot_size_2dk | Why no answer: | NA 
+225 | decimal | plot_size_3 | SIZE in acres PLANTED WITH MAIZE in ${plot_name_3} | ${acres_tot_3} 
+226 | select_one dk_ra | plot_size_3dk | Why no answer: | NA 
+231 | decimal | plot_size_4 | SIZE in acres PLANTED WITH MAIZE in ${plot_name_4} | ${acres_tot_4} 
+232 | select_one dk_ra | plot_size_4dk | Why no answer: | NA 
+237 | decimal | plot_size_5 | SIZE in acres PLANTED WITH MAIZE in ${plot_name_5} | ${acres_tot_5} 
+238 | select_one dk_ra | plot_size_5dk | Why no answer: | NA 
+243 | decimal | plot_size_6 | SIZE in acres PLANTED WITH MAIZE in ${plot_name_6} | ${acres_tot_6} 
+244 | select_one dk_ra | plot_size_6dk | Why no answer: | NA 
+247 | calculate | acres_tot_int | NA | if(${maize_tot_plotn}>5, ${plot_size_1}+${plot_size_2}+${plot_size_3}+${plot_size_4}+${plot_size_5}+${plot_size_6}, if(${maize_tot_plotn}>4, ${plot_size_1}+${plot_size_2}+${plot_size_3}+${plot_size_4} 
+248 | select_one acres_check | acres_tot_which | You said you planted ${acres_tot_1st} at the beginning of the survey but you just listed ${acres_tot_int}. Which of the answers is correct? | NA 
+249 | calculate | acres_tot_check | NA | if(${acres_tot_which}=1,${acres_tot_1st},  ${acres_tot_int}) 
+250 | begin group | acres_tot_q | question acres_tot | NA 
+251 | decimal | acres_tot | TOTAL acres planted with MAIZE last season (planting ${last_season}) | NA 
+252 | select_one dk_ra | acres_tot_dk | Why no answer: | NA 
+423 | begin group | lhs_form1 | Please fill in the hours OF UNPAID LABOUR worked in plot ${plot_name_1} in the whole season
+ 
+ IF YOU WOULD LIKE TO ENTER THE TOTAL AMOUNT OF HOURS WO | NA 
+424 | note | lh_prep1 | <big> PLOUGHING, WEEDING, DIGGING or other PRE PLANTING ACTIVITIES, </big> | NA 
+425 | select_one unit | lh_prep_unit1 | UNIT | NA 
+426 | text | lh_prep_unit_other1 | Specify other | NA 
+427 | decimal | lh_prep_hours_unit1 | HOURS per UNIT | NA 
+428 | decimal | lh_prep_ppl_season1 | PERSONS | NA 
+429 | decimal | lh_prep_units_season1 | UNITS in a SEASON per PERSON | NA 
+430 | note | lh_plant1 | **************************************************
+ <big> PLANTING </big> | NA 
+431 | select_one unit | lh_plant_unit1 | UNIT | NA 
+432 | text | lh_plant_unit_other1 | Specify other | NA 
+433 | decimal | lh_plant_hours_unit1 | HOURS per UNIT | NA 
+434 | decimal | lh_plant_ppl_season1 | PERSONS | NA 
+435 | decimal | lh_plant_units_season1 | UNITS in a SEASON per PERSON | NA 
+436 | note | lh_weed1 | **************************************************
+ <big> WEEDING AFTER PLANTING </big> | NA 
+437 | select_one unit | lh_weed_unit1 | UNIT | NA 
+438 | text | lh_weed_unit_other1 | Specify other | NA 
+439 | decimal | lh_weed_hours_unit1 | HOURS per UNIT | NA 
+440 | decimal | lh_weed_ppl_season1 | PERSONS | NA 
+441 | decimal | lh_weed_units_season1 | UNITS in a SEASON per PERSON | NA 
+442 | note | lh_spray1 | **************************************************
+ <big> SPRAYING PESTICIDE/FERTILIZER/BOOSTER </big> | NA 
+443 | select_one unit | lh_spray_unit1 | UNIT | NA 
+444 | text | lh_spray_unit_other1 | Specify other | NA 
+445 | decimal | lh_spray_hours_unit1 | HOURS per UNIT | NA 
+446 | decimal | lh_spray_ppl_season1 | PERSONS | NA 
+447 | decimal | lh_spray_units_season1 | UNITS in a SEASON per PERSON | NA 
+448 | note | lh_harv1 | **************************************************
+ <big> HARVESTING </big> | NA 
+449 | select_one unit | lh_harv_unit1 | UNIT | NA 
+450 | text | lh_harv_unit_other1 | Specify other | NA 
+451 | decimal | lh_harv_hours_unit1 | HOURS per UNIT | NA 
+452 | decimal | lh_harv_ppl_season1 | PERSONS | NA 
+453 | decimal | lh_harv_units_season1 | UNITS in a SEASON per PERSON | NA 
+455 | calculate | lh_prep_hours_season1i | TOTAL HOURS/SEASON for PLOUGHING, WEEDING, DIGGING or other PRE PLANTING ACTIVITIES, | if(${lh_prep_units_season1}!='' and ${lh_prep_hours_unit1}!='' and ${lh_prep_ppl_season1}!='' , ${lh_prep_units_season1}*${lh_prep_hours_unit1}*${lh_prep_ppl_season1}, 0) 
+456 | calculate | lh_plant_hours_season1i | TOTAL HOURS/SEASON for PLANTING | if(${lh_plant_units_season1}!='' and ${lh_plant_hours_unit1}!='' and ${lh_plant_ppl_season1}!='' , ${lh_plant_units_season1}*${lh_plant_hours_unit1}*${lh_plant_ppl_season1}, 0) 
+457 | calculate | lh_weed_hours_season1i | TOTAL HOURS/SEASON for WEEDING AFTER PLANTING | if(${lh_weed_units_season1}!='' and ${lh_weed_hours_unit1}!='' and ${lh_weed_ppl_season1}!='' , ${lh_weed_units_season1}*${lh_weed_hours_unit1}*${lh_weed_ppl_season1}, 0) 
+458 | calculate | lh_spray_hours_season1i | SPRAYING PESTICIDE/FERTILIZER/BOOSTER | if(${lh_spray_units_season1}!='' and ${lh_spray_hours_unit1}!='' and ${lh_spray_ppl_season1}!='' , ${lh_spray_units_season1}*${lh_spray_hours_unit1}*${lh_spray_ppl_season1}, 0) 
+459 | calculate | lh_harv_hours_season1i | HARVESTING | if(${lh_harv_units_season1}!='' and ${lh_harv_hours_unit1}!='' and ${lh_harv_ppl_season1}!='' , ${lh_harv_units_season1}*${lh_harv_hours_unit1}*${lh_harv_ppl_season1}, 0) 
+460 | calculate | lh_tot_hours_season1i | TOTAL LABOUR hourS | ${lh_prep_hours_season1i}+${lh_plant_hours_season1i}+${lh_weed_hours_season1i}+${lh_spray_hours_season1i}+${lh_harv_hours_season1i} 
+461 | begin group | lh_tot1 | Total UNPAID LABOUR hours in plot ${plot_name_1} in the whole season | NA 
+462 | decimal | lh_prep_hours_season1 | TOTAL HOURS/SEASON for PLOUGHING, WEEDING, DIGGING or other PRE PLANTING ACTIVITIES, | ${lh_prep_hours_season1i} 
+463 | decimal | lh_plant_hours_season1 | PLANTING | ${lh_plant_hours_season1i} 
+464 | decimal | lh_weed_hours_season1 | WEEDING AFTER PLANTING | ${lh_weed_hours_season1i} 
+465 | decimal | lh_spray_hours_season1 | SPRAYING PESTICIDE/FERTILIZER/BOOSTER | ${lh_spray_hours_season1i} 
+466 | decimal | lh_harv_hours_season1 | HARVESTING | ${lh_harv_hours_season1i} 
+467 | decimal | lh_tot_hours_season1 | TOTAL LABOUR hourS | ${lh_tot_hours_season1i} 
+469 | begin group | lhs_form2 | Please fill in the hours OF UNPAID LABOUR worked in plot ${plot_name_2} in the whole season
+ 
+ IF YOU WOULD LIKE TO ENTER THE TOTAL AMOUNT OF HOURS WO | NA 
+470 | note | lh_prep2 | <big> PLOUGHING, WEEDING, DIGGING or other PRE PLANTING ACTIVITIES, </big> | NA 
+471 | select_one unit | lh_prep_unit2 | UNIT | NA 
+472 | text | lh_prep_unit_other2 | Specify other | NA 
+473 | decimal | lh_prep_hours_unit2 | HOURS per UNIT | NA 
+474 | decimal | lh_prep_ppl_season2 | PERSONS | NA 
+475 | decimal | lh_prep_units_season2 | UNITS in a SEASON per PERSON | NA 
+476 | note | lh_plant2 | **************************************************
+ <big> PLANTING </big> | NA 
+477 | select_one unit | lh_plant_unit2 | UNIT | NA 
+478 | text | lh_plant_unit_other2 | Specify other | NA 
+479 | decimal | lh_plant_hours_unit2 | HOURS per UNIT | NA 
+480 | decimal | lh_plant_ppl_season2 | PERSONS | NA 
+481 | decimal | lh_plant_units_season2 | UNITS in a SEASON per PERSON | NA 
+482 | note | lh_weed2 | **************************************************
+ <big> WEEDING AFTER PLANTING </big> | NA 
+483 | select_one unit | lh_weed_unit2 | UNIT | NA 
+484 | text | lh_weed_unit_other2 | Specify other | NA 
+485 | decimal | lh_weed_hours_unit2 | HOURS per UNIT | NA 
+486 | decimal | lh_weed_ppl_season2 | PERSONS | NA 
+487 | decimal | lh_weed_units_season2 | UNITS in a SEASON per PERSON | NA 
+488 | note | lh_spray2 | **************************************************
+ <big> SPRAYING PESTICIDE/FERTILIZER/BOOSTER </big> | NA 
+489 | select_one unit | lh_spray_unit2 | UNIT | NA 
+490 | text | lh_spray_unit_other2 | Specify other | NA 
+491 | decimal | lh_spray_hours_unit2 | HOURS per UNIT | NA 
+492 | decimal | lh_spray_ppl_season2 | PERSONS | NA 
+493 | decimal | lh_spray_units_season2 | UNITS in a SEASON per PERSON | NA 
+494 | note | lh_harv2 | **************************************************
+ <big> HARVESTING </big> | NA 
+495 | select_one unit | lh_harv_unit2 | UNIT | NA 
+496 | text | lh_harv_unit_other2 | Specify other | NA 
+497 | decimal | lh_harv_hours_unit2 | HOURS per UNIT | NA 
+498 | decimal | lh_harv_ppl_season2 | PERSONS | NA 
+499 | decimal | lh_harv_units_season2 | UNITS in a SEASON per PERSON | NA 
+501 | calculate | lh_prep_hours_season2i | TOTAL HOURS/SEASON for PLOUGHING, WEEDING, DIGGING or other PRE PLANTING ACTIVITIES, | if(${lh_prep_units_season2}!='' and ${lh_prep_hours_unit2}!='' and ${lh_prep_ppl_season2}!='' , ${lh_prep_units_season2}*${lh_prep_hours_unit2}*${lh_prep_ppl_season2}, 0) 
+502 | calculate | lh_plant_hours_season2i | TOTAL HOURS/SEASON for PLANTING | if(${lh_plant_units_season2}!='' and ${lh_plant_hours_unit2}!='' and ${lh_plant_ppl_season2}!='' , ${lh_plant_units_season2}*${lh_plant_hours_unit2}*${lh_plant_ppl_season2}, 0) 
+503 | calculate | lh_weed_hours_season2i | TOTAL HOURS/SEASON for WEEDING AFTER PLANTING | if(${lh_weed_units_season2}!='' and ${lh_weed_hours_unit2}!='' and ${lh_weed_ppl_season2}!='' , ${lh_weed_units_season2}*${lh_weed_hours_unit2}*${lh_weed_ppl_season2}, 0) 
+504 | calculate | lh_spray_hours_season2i | SPRAYING PESTICIDE/FERTILIZER/BOOSTER | if(${lh_spray_units_season2}!='' and ${lh_spray_hours_unit2}!='' and ${lh_spray_ppl_season2}!='' , ${lh_spray_units_season2}*${lh_spray_hours_unit2}*${lh_spray_ppl_season2}, 0) 
+505 | calculate | lh_harv_hours_season2i | HARVESTING | if(${lh_harv_units_season2}!='' and ${lh_harv_hours_unit2}!='' and ${lh_harv_ppl_season2}!='' , ${lh_harv_units_season2}*${lh_harv_hours_unit2}*${lh_harv_ppl_season2}, 0) 
+506 | calculate | lh_tot_hours_season2i | TOTAL LABOUR hourS | ${lh_prep_hours_season2i} + ${lh_plant_hours_season2i} + ${lh_weed_hours_season2i} + ${lh_spray_hours_season2i} + ${lh_harv_hours_season2i} 
+507 | begin group | lh_tot2 | Total UNPAID LABOUR hours in plot ${plot_name_2} in the whole season | NA 
+508 | decimal | lh_prep_hours_season2 | TOTAL HOURS/SEASON for PLOUGHING, WEEDING, DIGGING or other PRE PLANTING ACTIVITIES, | ${lh_prep_hours_season2i} 
+509 | decimal | lh_plant_hours_season2 | TOTAL HOURS/SEASON for PLANTING | ${lh_plant_hours_season2i} 
+510 | decimal | lh_weed_hours_season2 | TOTAL HOURS/SEASON for WEEDING AFTER PLANTING | ${lh_weed_hours_season2i} 
+511 | decimal | lh_spray_hours_season2 | SPRAYING PESTICIDE/FERTILIZER/BOOSTER | ${lh_spray_hours_season2i} 
+512 | decimal | lh_harv_hours_season2 | HARVESTING | ${lh_harv_hours_season2i} 
+513 | decimal | lh_tot_hours_season2 | TOTAL LABOUR hourS | ${lh_tot_hours_season2i} 
+515 | begin group | lhs_form3 | Please fill in the hours OF UNPAID LABOUR worked in plot ${plot_name_3} in the whole season
+ 
+ 
+ IF YOU WOULD LIKE TO ENTER THE TOTAL AMOUNT OF HOURS  | NA 
+516 | note | lh_prep3 | <big> PLOUGHING, WEEDING, DIGGING or other PRE PLANTING ACTIVITIES, </big> | NA 
+517 | select_one unit | lh_prep_unit3 | UNIT | NA 
+518 | text | lh_prep_unit_other3 | Specify other | NA 
+519 | decimal | lh_prep_hours_unit3 | HOURS per UNIT | NA 
+520 | decimal | lh_prep_ppl_season3 | PERSONS | NA 
+521 | decimal | lh_prep_units_season3 | UNITS in a SEASON per PERSON | NA 
+522 | note | lh_plant3 | **************************************************
+ <big> PLANTING </big> | NA 
+523 | select_one unit | lh_plant_unit3 | UNIT | NA 
+524 | text | lh_plant_unit_other3 | Specify other | NA 
+525 | decimal | lh_plant_hours_unit3 | HOURS per UNIT | NA 
+526 | decimal | lh_plant_ppl_season3 | PERSONS | NA 
+527 | decimal | lh_plant_units_season3 | UNITS in a SEASON per PERSON | NA 
+528 | note | lh_weed3 | **************************************************
+ <big> WEEDING AFTER PLANTING </big> | NA 
+529 | select_one unit | lh_weed_unit3 | UNIT | NA 
+530 | text | lh_weed_unit_other3 | Specify other | NA 
+531 | decimal | lh_weed_hours_unit3 | HOURS per UNIT | NA 
+532 | decimal | lh_weed_ppl_season3 | PERSONS | NA 
+533 | decimal | lh_weed_units_season3 | UNITS in a SEASON per PERSON | NA 
+534 | note | lh_spray3 | **************************************************
+ <big> SPRAYING PESTICIDE/FERTILIZER/BOOSTER </big> | NA 
+535 | select_one unit | lh_spray_unit3 | UNIT | NA 
+536 | text | lh_spray_unit_other3 | Specify other | NA 
+537 | decimal | lh_spray_hours_unit3 | HOURS per UNIT | NA 
+538 | decimal | lh_spray_ppl_season3 | PERSONS | NA 
+539 | decimal | lh_spray_units_season3 | UNITS in a SEASON per PERSON | NA 
+540 | note | lh_harv3 | **************************************************
+ <big> HARVESTING </big> | NA 
+541 | select_one unit | lh_harv_unit3 | UNIT | NA 
+542 | text | lh_harv_unit_other3 | Specify other | NA 
+543 | decimal | lh_harv_hours_unit3 | HOURS per UNIT | NA 
+544 | decimal | lh_harv_ppl_season3 | PERSONS | NA 
+545 | decimal | lh_harv_units_season3 | UNITS in a SEASON per PERSON | NA 
+547 | calculate | lh_prep_hours_season3i | TOTAL HOURS/SEASON for PLOUGHING, WEEDING, DIGGING or other PRE PLANTING ACTIVITIES, | if(${lh_prep_units_season3}!='' and ${lh_prep_hours_unit3}!='' and ${lh_prep_ppl_season3}!='' , ${lh_prep_units_season3}*${lh_prep_hours_unit3}*${lh_prep_ppl_season3}, 0) 
+548 | calculate | lh_plant_hours_season3i | TOTAL HOURS/SEASON for PLANTING | if(${lh_plant_units_season3}!='' and ${lh_plant_hours_unit3}!='' and ${lh_plant_ppl_season3}!='' , ${lh_plant_units_season3}*${lh_plant_hours_unit3}*${lh_plant_ppl_season3}, 0) 
+549 | calculate | lh_weed_hours_season3i | TOTAL HOURS/SEASON for WEEDING AFTER PLANTING | if(${lh_weed_units_season3}!='' and ${lh_weed_hours_unit3}!='' and ${lh_weed_ppl_season3}!='' , ${lh_weed_units_season3}*${lh_weed_hours_unit3}*${lh_weed_ppl_season3}, 0) 
+550 | calculate | lh_spray_hours_season3i | SPRAYING PESTICIDE/FERTILIZER/BOOSTER | if(${lh_spray_units_season3}!='' and ${lh_spray_hours_unit3}!='' and ${lh_spray_ppl_season3}!='' , ${lh_spray_units_season3}*${lh_spray_hours_unit3}*${lh_spray_ppl_season3}, 0) 
+551 | calculate | lh_harv_hours_season3i | HARVESTING | if(${lh_harv_units_season3}!='' and ${lh_harv_hours_unit3}!='' and ${lh_harv_ppl_season3}!='' , ${lh_harv_units_season3}*${lh_harv_hours_unit3}*${lh_harv_ppl_season3}, 0) 
+552 | calculate | lh_tot_hours_season3i | TOTAL LABOUR hourS | ${lh_prep_hours_season3i} + ${lh_plant_hours_season3i} + ${lh_weed_hours_season3i} + ${lh_spray_hours_season3i} + ${lh_harv_hours_season3i} 
+553 | begin group | lh_tot3 | Total UNPAID LABOUR hours in plot ${plot_name_3} in the whole season | NA 
+554 | decimal | lh_prep_hours_season3 | TOTAL HOURS/SEASON for PLOUGHING, WEEDING, DIGGING or other PRE PLANTING ACTIVITIES, | ${lh_prep_hours_season3i} 
+555 | decimal | lh_plant_hours_season3 | TOTAL HOURS/SEASON for PLANTING | ${lh_plant_hours_season3i} 
+556 | decimal | lh_weed_hours_season3 | TOTAL HOURS/SEASON for WEEDING AFTER PLANTING | ${lh_weed_hours_season3i} 
+557 | decimal | lh_spray_hours_season3 | SPRAYING PESTICIDE/FERTILIZER/BOOSTER | ${lh_spray_hours_season3i} 
+558 | decimal | lh_harv_hours_season3 | HARVESTING | ${lh_harv_hours_season3i} 
+559 | decimal | lh_tot_hours_season3 | TOTAL LABOUR hourS | ${lh_tot_hours_season3i} 
+561 | begin group | lhs_form4 | Please fill in the hours OF UNPAID LABOUR worked in plot ${plot_name_4} in the whole season
+ 
+ 
+ IF YOU WOULD LIKE TO ENTER THE TOTAL AMOUNT OF HOURS  | NA 
+562 | note | lh_prep4 | <big> PLOUGHING, WEEDING, DIGGING or other PRE PLANTING ACTIVITIES, </big> | NA 
+563 | select_one unit | lh_prep_unit4 | UNIT | NA 
+564 | text | lh_prep_unit_other4 | Specify other | NA 
+565 | decimal | lh_prep_hours_unit4 | HOURS per UNIT | NA 
+566 | decimal | lh_prep_ppl_season4 | PERSONS | NA 
+567 | decimal | lh_prep_units_season4 | UNITS in a SEASON per PERSON | NA 
+568 | note | lh_plant4 | **************************************************
+ <big> PLANTING </big> | NA 
+569 | select_one unit | lh_plant_unit4 | UNIT | NA 
+570 | text | lh_plant_unit_other4 | Specify other | NA 
+571 | decimal | lh_plant_hours_unit4 | HOURS per UNIT | NA 
+572 | decimal | lh_plant_ppl_season4 | PERSONS | NA 
+573 | decimal | lh_plant_units_season4 | UNITS in a SEASON per PERSON | NA 
+574 | note | lh_weed4 | **************************************************
+ <big> WEEDING AFTER PLANTING </big> | NA 
+575 | select_one unit | lh_weed_unit4 | UNIT | NA 
+576 | text | lh_weed_unit_other4 | Specify other | NA 
+577 | decimal | lh_weed_hours_unit4 | HOURS per UNIT | NA 
+578 | decimal | lh_weed_ppl_season4 | PERSONS | NA 
+579 | decimal | lh_weed_units_season4 | UNITS in a SEASON per PERSON | NA 
+580 | note | lh_spray4 | **************************************************
+ <big> SPRAYING PESTICIDE/FERTILIZER/BOOSTER </big> | NA 
+581 | select_one unit | lh_spray_unit4 | UNIT | NA 
+582 | text | lh_spray_unit_other4 | Specify other | NA 
+583 | decimal | lh_spray_hours_unit4 | HOURS per UNIT | NA 
+584 | decimal | lh_spray_ppl_season4 | PERSONS | NA 
+585 | decimal | lh_spray_units_season4 | UNITS in a SEASON per PERSON | NA 
+586 | note | lh_harv4 | **************************************************
+ <big> HARVESTING </big> | NA 
+587 | select_one unit | lh_harv_unit4 | UNIT | NA 
+588 | text | lh_harv_unit_other4 | Specify other | NA 
+589 | decimal | lh_harv_hours_unit4 | HOURS per UNIT | NA 
+590 | decimal | lh_harv_ppl_season4 | PERSONS | NA 
+591 | decimal | lh_harv_units_season4 | UNITS in a SEASON per PERSON | NA 
+593 | calculate | lh_prep_hours_season4i | TOTAL HOURS/SEASON for PLOUGHING, WEEDING, DIGGING or other PRE PLANTING ACTIVITIES, | if(${lh_prep_units_season4}!='' and ${lh_prep_hours_unit4}!='' and ${lh_prep_ppl_season4}!='' , ${lh_prep_units_season4}*${lh_prep_hours_unit4}*${lh_prep_ppl_season4}, 0) 
+594 | calculate | lh_plant_hours_season4i | TOTAL HOURS/SEASON for PLANTING | if(${lh_plant_units_season4}!='' and ${lh_plant_hours_unit4}!='' and ${lh_plant_ppl_season4}!='' , ${lh_plant_units_season4}*${lh_plant_hours_unit4}*${lh_plant_ppl_season4}, 0) 
+595 | calculate | lh_weed_hours_season4i | TOTAL HOURS/SEASON for WEEDING AFTER PLANTING | if(${lh_weed_units_season4}!='' and ${lh_weed_hours_unit4}!='' and ${lh_weed_ppl_season4}!='' , ${lh_weed_units_season4}*${lh_weed_hours_unit4}*${lh_weed_ppl_season4}, 0) 
+596 | calculate | lh_spray_hours_season4i | SPRAYING PESTICIDE/FERTILIZER/BOOSTER | if(${lh_spray_units_season4}!='' and ${lh_spray_hours_unit4}!='' and ${lh_spray_ppl_season4}!='' , ${lh_spray_units_season4}*${lh_spray_hours_unit4}*${lh_spray_ppl_season4}, 0) 
+597 | calculate | lh_harv_hours_season4i | HARVESTING | if(${lh_harv_units_season4}!='' and ${lh_harv_hours_unit4}!='' and ${lh_harv_ppl_season4}!='' , ${lh_harv_units_season4}*${lh_harv_hours_unit4}*${lh_harv_ppl_season4}, 0) 
+598 | calculate | lh_tot_hours_season4i | TOTAL LABOUR hourS | ${lh_prep_hours_season4i} + ${lh_plant_hours_season4i} + ${lh_weed_hours_season4i} + ${lh_spray_hours_season4i} + ${lh_harv_hours_season4i} 
+599 | begin group | lh_tot4 | Total UNPAID LABOUR hours in plot ${plot_name_4} in the whole season | NA 
+600 | decimal | lh_prep_hours_season4 | TOTAL HOURS/SEASON for PLOUGHING, WEEDING, DIGGING or other PRE PLANTING ACTIVITIES, | ${lh_prep_hours_season4i} 
+601 | decimal | lh_plant_hours_season4 | TOTAL HOURS/SEASON for PLANTING | ${lh_plant_hours_season4i} 
+602 | decimal | lh_weed_hours_season4 | TOTAL HOURS/SEASON for WEEDING AFTER PLANTING | ${lh_weed_hours_season4i} 
+603 | decimal | lh_spray_hours_season4 | SPRAYING PESTICIDE/FERTILIZER/BOOSTER | ${lh_spray_hours_season4i} 
+604 | decimal | lh_harv_hours_season4 | HARVESTING | ${lh_harv_hours_season4i} 
+605 | decimal | lh_tot_hours_season4 | TOTAL LABOUR hourS | ${lh_tot_hours_season4i} 
+607 | begin group | lhs_form5 | Please fill in the hours OF UNPAID LABOUR worked in plot ${plot_name_5} in the whole season
+ 
+ IF YOU WOULD LIKE TO ENTER THE TOTAL AMOUNT OF HOURS WO | NA 
+608 | note | lh_prep5 | <big> PLOUGHING, WEEDING, DIGGING or other PRE PLANTING ACTIVITIES, </big> | NA 
+609 | select_one unit | lh_prep_unit5 | UNIT | NA 
+610 | text | lh_prep_unit_other5 | Specify other | NA 
+611 | decimal | lh_prep_hours_unit5 | HOURS per UNIT | NA 
+612 | decimal | lh_prep_ppl_season5 | PERSONS | NA 
+613 | decimal | lh_prep_units_season5 | UNITS in a SEASON per PERSON | NA 
+614 | note | lh_plant5 | **************************************************
+ <big> PLANTING </big> | NA 
+615 | select_one unit | lh_plant_unit5 | UNIT | NA 
+616 | text | lh_plant_unit_other5 | Specify other | NA 
+617 | decimal | lh_plant_hours_unit5 | HOURS per UNIT | NA 
+618 | decimal | lh_plant_ppl_season5 | PERSONS | NA 
+619 | decimal | lh_plant_units_season5 | UNITS in a SEASON per PERSON | NA 
+620 | note | lh_weed5 | **************************************************
+ <big> WEEDING AFTER PLANTING </big> | NA 
+621 | select_one unit | lh_weed_unit5 | UNIT | NA 
+622 | text | lh_weed_unit_other5 | Specify other | NA 
+623 | decimal | lh_weed_hours_unit5 | HOURS per UNIT | NA 
+624 | decimal | lh_weed_ppl_season5 | PERSONS | NA 
+625 | decimal | lh_weed_units_season5 | UNITS in a SEASON per PERSON | NA 
+626 | note | lh_spray5 | **************************************************
+ <big> SPRAYING PESTICIDE/FERTILIZER/BOOSTER </big> | NA 
+627 | select_one unit | lh_spray_unit5 | UNIT | NA 
+628 | text | lh_spray_unit_other5 | Specify other | NA 
+629 | decimal | lh_spray_hours_unit5 | HOURS per UNIT | NA 
+630 | decimal | lh_spray_ppl_season5 | PERSONS | NA 
+631 | decimal | lh_spray_units_season5 | UNITS in a SEASON per PERSON | NA 
+632 | note | lh_harv5 | **************************************************
+ <big> HARVESTING </big> | NA 
+633 | select_one unit | lh_harv_unit5 | UNIT | NA 
+634 | text | lh_harv_unit_other5 | Specify other | NA 
+635 | decimal | lh_harv_hours_unit5 | HOURS per UNIT | NA 
+636 | decimal | lh_harv_ppl_season5 | PERSONS | NA 
+637 | decimal | lh_harv_units_season5 | UNITS in a SEASON per PERSON | NA 
+639 | calculate | lh_prep_hours_season5i | TOTAL HOURS/SEASON for PLOUGHING, WEEDING, DIGGING or other PRE PLANTING ACTIVITIES, | if(${lh_prep_units_season5}!='' and ${lh_prep_hours_unit5}!='' and ${lh_prep_ppl_season5}!='' , ${lh_prep_units_season5}*${lh_prep_hours_unit5}*${lh_prep_ppl_season5}, 0) 
+640 | calculate | lh_plant_hours_season5i | TOTAL HOURS/SEASON for PLANTING | if(${lh_plant_units_season5}!='' and ${lh_plant_hours_unit5}!='' and ${lh_plant_ppl_season5}!='' , ${lh_plant_units_season5}*${lh_plant_hours_unit5}*${lh_plant_ppl_season5}, 0) 
+641 | calculate | lh_weed_hours_season5i | TOTAL HOURS/SEASON for WEEDING AFTER PLANTING | if(${lh_weed_units_season5}!='' and ${lh_weed_hours_unit5}!='' and ${lh_weed_ppl_season5}!='' , ${lh_weed_units_season5}*${lh_weed_hours_unit5}*${lh_weed_ppl_season5}, 0) 
+642 | calculate | lh_spray_hours_season5i | SPRAYING PESTICIDE/FERTILIZER/BOOSTER | if(${lh_spray_units_season5}!='' and ${lh_spray_hours_unit5}!='' and ${lh_spray_ppl_season5}!='' , ${lh_spray_units_season5}*${lh_spray_hours_unit5}*${lh_spray_ppl_season5}, 0) 
+643 | calculate | lh_harv_hours_season5i | HARVESTING | if(${lh_harv_units_season5}!='' and ${lh_harv_hours_unit5}!='' and ${lh_harv_ppl_season5}!='' , ${lh_harv_units_season5}*${lh_harv_hours_unit5}*${lh_harv_ppl_season5}, 0) 
+644 | calculate | lh_tot_hours_season5i | TOTAL LABOUR hourS | ${lh_prep_hours_season5i} + ${lh_plant_hours_season5i} + ${lh_weed_hours_season5i} + ${lh_spray_hours_season5i} + ${lh_harv_hours_season5i} 
+645 | begin group | lh_tot5 | Total UNPAID LABOUR hours in plot ${plot_name_5} in the whole season | NA 
+646 | decimal | lh_prep_hours_season5 | TOTAL HOURS/SEASON for PLOUGHING, WEEDING, DIGGING or other PRE PLANTING ACTIVITIES, | ${lh_prep_hours_season5i} 
+647 | decimal | lh_plant_hours_season5 | TOTAL HOURS/SEASON for PLANTING | ${lh_plant_hours_season5i} 
+648 | decimal | lh_weed_hours_season5 | TOTAL HOURS/SEASON for WEEDING AFTER PLANTING | ${lh_weed_hours_season5i} 
+649 | decimal | lh_spray_hours_season5 | SPRAYING PESTICIDE/FERTILIZER/BOOSTER | ${lh_spray_hours_season5i} 
+650 | decimal | lh_harv_hours_season5 | HARVESTING | ${lh_harv_hours_season5i} 
+651 | decimal | lh_tot_hours_season5 | TOTAL LABOUR hourS | ${lh_tot_hours_season5i} 
+653 | begin group | lhs_form6 | Please fill in the hours OF UNPAID LABOUR worked in plot ${plot_name_6} in the whole season
+ 
+ IF YOU WOULD LIKE TO ENTER THE TOTAL AMOUNT OF HOURS WO | NA 
+654 | note | lh_prep6 | <big> PLOUGHING, WEEDING, DIGGING or other PRE PLANTING ACTIVITIES, </big> | NA 
+655 | select_one unit | lh_prep_unit6 | UNIT | NA 
+656 | text | lh_prep_unit_other6 | Specify other | NA 
+657 | decimal | lh_prep_hours_unit6 | HOURS per UNIT | NA 
+658 | decimal | lh_prep_ppl_season6 | PERSONS | NA 
+659 | decimal | lh_prep_units_season6 | UNITS in a SEASON per PERSON | NA 
+660 | note | lh_plant6 | **************************************************
+ <big> PLANTING </big> | NA 
+661 | select_one unit | lh_plant_unit6 | UNIT | NA 
+662 | text | lh_plant_unit_other6 | Specify other | NA 
+663 | decimal | lh_plant_hours_unit6 | HOURS per UNIT | NA 
+664 | decimal | lh_plant_ppl_season6 | PERSONS | NA 
+665 | decimal | lh_plant_units_season6 | UNITS in a SEASON per PERSON | NA 
+666 | note | lh_weed6 | **************************************************
+ <big> WEEDING AFTER PLANTING </big> | NA 
+667 | select_one unit | lh_weed_unit6 | UNIT | NA 
+668 | text | lh_weed_unit_other6 | Specify other | NA 
+669 | decimal | lh_weed_hours_unit6 | HOURS per UNIT | NA 
+670 | decimal | lh_weed_ppl_season6 | PERSONS | NA 
+671 | decimal | lh_weed_units_season6 | UNITS in a SEASON per PERSON | NA 
+672 | note | lh_spray6 | **************************************************
+ <big> SPRAYING PESTICIDE/FERTILIZER/BOOSTER </big> | NA 
+673 | select_one unit | lh_spray_unit6 | UNIT | NA 
+674 | text | lh_spray_unit_other6 | Specify other | NA 
+675 | decimal | lh_spray_hours_unit6 | HOURS per UNIT | NA 
+676 | decimal | lh_spray_ppl_season6 | PERSONS | NA 
+677 | decimal | lh_spray_units_season6 | UNITS in a SEASON per PERSON | NA 
+678 | note | lh_harv6 | **************************************************
+ <big> HARVESTING </big> | NA 
+679 | select_one unit | lh_harv_unit6 | UNIT | NA 
+680 | text | lh_harv_unit_other6 | Specify other | NA 
+681 | decimal | lh_harv_hours_unit6 | HOURS per UNIT | NA 
+682 | decimal | lh_harv_ppl_season6 | PERSONS | NA 
+683 | decimal | lh_harv_units_season6 | UNITS in a SEASON per PERSON | NA 
+685 | calculate | lh_prep_hours_season6i | TOTAL HOURS/SEASON for PLOUGHING, WEEDING, DIGGING or other PRE PLANTING ACTIVITIES, | if(${lh_prep_units_season6}!='' and ${lh_prep_hours_unit6}!='' and ${lh_prep_ppl_season6}!='' , ${lh_prep_units_season6}*${lh_prep_hours_unit6}*${lh_prep_ppl_season6}, 0) 
+686 | calculate | lh_plant_hours_season6i | TOTAL HOURS/SEASON for PLANTING | if(${lh_plant_units_season6}!='' and ${lh_plant_hours_unit6}!='' and ${lh_plant_ppl_season6}!='' , ${lh_plant_units_season6}*${lh_plant_hours_unit6}*${lh_plant_ppl_season6}, 0) 
+687 | calculate | lh_weed_hours_season6i | TOTAL HOURS/SEASON for WEEDING AFTER PLANTING | if(${lh_weed_units_season6}!='' and ${lh_weed_hours_unit6}!='' and ${lh_weed_ppl_season6}!='' , ${lh_weed_units_season6}*${lh_weed_hours_unit6}*${lh_weed_ppl_season6}, 0) 
+688 | calculate | lh_spray_hours_season6i | SPRAYING PESTICIDE/FERTILIZER/BOOSTER | if(${lh_spray_units_season6}!='' and ${lh_spray_hours_unit6}!='' and ${lh_spray_ppl_season6}!='' , ${lh_spray_units_season6}*${lh_spray_hours_unit6}*${lh_spray_ppl_season6}, 0) 
+689 | calculate | lh_harv_hours_season6i | HARVESTING | if(${lh_harv_units_season6}!='' and ${lh_harv_hours_unit6}!='' and ${lh_harv_ppl_season6}!='' , ${lh_harv_units_season6}*${lh_harv_hours_unit6}*${lh_harv_ppl_season6}, 0) 
+690 | calculate | lh_tot_hours_season6i | TOTAL LABOUR hourS | ${lh_prep_hours_season6i} + ${lh_plant_hours_season6i} + ${lh_weed_hours_season6i} + ${lh_spray_hours_season6i} + ${lh_harv_hours_season6i} 
+691 | begin group | lh_tot6 | Total UNPAID LABOUR hours in plot ${plot_name_6} in the whole season | NA 
+692 | decimal | lh_prep_hours_season6 | TOTAL HOURS/SEASON for PLOUGHING, WEEDING, DIGGING or other PRE PLANTING ACTIVITIES, | ${lh_prep_hours_season6i} 
+693 | decimal | lh_plant_hours_season6 | TOTAL HOURS/SEASON for PLANTING | ${lh_plant_hours_season6i} 
+694 | decimal | lh_weed_hours_season6 | TOTAL HOURS/SEASON for WEEDING AFTER PLANTING | ${lh_weed_hours_season6i} 
+695 | decimal | lh_spray_hours_season6 | SPRAYING PESTICIDE/FERTILIZER/BOOSTER | ${lh_spray_hours_season6i} 
+696 | decimal | lh_harv_hours_season6 | HARVESTING | ${lh_harv_hours_season6i} 
+697 | decimal | lh_tot_hours_season6 | TOTAL LABOUR hourS | ${lh_tot_hours_season6i} 
+699 | begin group | lab_hours | Labour hours - UNPAID LABOUR | NA 
+700 | note | hour_labour_note | Please report total labour HOURS on each plot for last season (planting ${last_season}) : LABOUR for PLOUGHING, WEEDING, DIGGING or other PRE PLANTING | NA 
+701 | decimal | tot_lab_hours_1 | ********************************
+ ${plot_name_1} | ${lh_tot_hours_season1} 
+702 | select_one dk_ra | tot_lab_hours_1dk | Why no answer: | NA 
+703 | decimal | tot_lab_hours_2 | ********************************
+ ${plot_name_2} | ${lh_tot_hours_season2} 
+704 | select_one dk_ra | tot_lab_hours_2dk | Why no answer: | NA 
+705 | decimal | tot_lab_hours_3 | ********************************
+ ${plot_name_3} | ${lh_tot_hours_season3} 
+706 | select_one dk_ra | tot_lab_hours_3dk | Why no answer: | NA 
+707 | decimal | tot_lab_hours_4 | ********************************
+ ${plot_name_4} | ${lh_tot_hours_season4} 
+708 | select_one dk_ra | tot_lab_hours_4dk | Why no answer: | NA 
+709 | decimal | tot_lab_hours_5 | ********************************
+ ${plot_name_5} | ${lh_tot_hours_season5} 
+710 | select_one dk_ra | tot_lab_hours_5dk | Why no answer: | NA 
+711 | decimal | tot_lab_hours_6 | ********************************
+ ${plot_name_6} | ${lh_tot_hours_season6} 
+712 | select_one dk_ra | tot_lab_hours_6dk | Why no answer: | NA 
+714 | calculate | tot_lab_hours | NA | if(${tot_lab_hours_1}>=0 , ${tot_lab_hours_1} , 0) + if(${tot_lab_hours_2}>=0 , ${tot_lab_hours_2} , 0) + if(${tot_lab_hours_3}>=0 , ${tot_lab_hours_3} , 0) + if(${tot_lab_hours_4}>=0 , ${tot_lab_hour 
+715 | note | tot_lab_hours_note | TOTAL LABOUR HOURS by HOUSEHOLD MEMBERS or OTHER FAMILY MEMBERS IN MAIZE FARMING IN THE WHOLE SEASON: (INCLUDED HOURS OF UNPAID EXCHANGE LABOUR IF ANY | ${tot_lab_hours} 
+717 | note | lc_prep1 | <big> PLOUGHING, WEEDING, DIGGING or other PRE PLANTING ACTIVITIES, </big> | NA 
+718 | select_one unit | lc_prep_unit1 | UNIT | NA 
+719 | text | lc_prep_unit_other1 | Specify other | NA 
+720 | decimal | lc_prep_costs_unit1 | costs per UNIT | NA 
+721 | decimal | lc_prep_ppl_season1 | PERSONS | NA 
+722 | decimal | lc_prep_units_season1 | UNITS in a SEASON per PERSON | NA 
+723 | note | lc_plant1 | **************************************************
+ <big> PLANTING </big> | NA 
+724 | select_one unit | lc_plant_unit1 | UNIT | NA 
+725 | text | lc_plant_unit_other1 | Specify other | NA 
+726 | decimal | lc_plant_costs_unit1 | costs per UNIT | NA 
+727 | decimal | lc_plant_ppl_season1 | PERSONS | NA 
+728 | decimal | lc_plant_units_season1 | UNITS in a SEASON per PERSON | NA 
+729 | note | lc_weed1 | **************************************************
+ <big> WEEDING AFTER PLANTING </big> | NA 
+730 | select_one unit | lc_weed_unit1 | UNIT | NA 
+731 | text | lc_weed_unit_other1 | Specify other | NA 
+732 | decimal | lc_weed_costs_unit1 | costs per UNIT | NA 
+733 | decimal | lc_weed_ppl_season1 | PERSONS | NA 
+734 | decimal | lc_weed_units_season1 | UNITS in a SEASON per PERSON | NA 
+735 | note | lc_spray1 | **************************************************
+ <big> SPRAYING PESTICIDE/FERTILIZER/BOOSTER </big> | NA 
+736 | select_one unit | lc_spray_unit1 | UNIT | NA 
+737 | text | lc_spray_unit_other1 | Specify other | NA 
+738 | decimal | lc_spray_costs_unit1 | costs per UNIT | NA 
+739 | decimal | lc_spray_ppl_season1 | PERSONS | NA 
+740 | decimal | lc_spray_units_season1 | UNITS in a SEASON per PERSON | NA 
+741 | note | lc_harv1 | **************************************************
+ <big> HARVESTING </big> | NA 
+742 | select_one unit | lc_harv_unit1 | UNIT | NA 
+743 | text | lc_harv_unit_other1 | Specify other | NA 
+744 | decimal | lc_harv_costs_unit1 | costs per UNIT | NA 
+745 | decimal | lc_harv_ppl_season1 | PERSONS | NA 
+746 | decimal | lc_harv_units_season1 | UNITS in a SEASON per PERSON | NA 
+748 | calculate | lc_prep_costs_season1i | TOTAL costs/SEASON for PLOUGHING, WEEDING, DIGGING or other PRE PLANTING ACTIVITIES, | if(${lc_prep_units_season1}!='' and ${lc_prep_costs_unit1}!='' and ${lc_prep_ppl_season1}!='' , ${lc_prep_units_season1}*${lc_prep_costs_unit1}*${lc_prep_ppl_season1}, 0) 
+749 | calculate | lc_plant_costs_season1i | TOTAL costs/SEASON for PLANTING | if(${lc_plant_units_season1}!='' and ${lc_plant_costs_unit1}!='' and ${lc_plant_ppl_season1}!='' , ${lc_plant_units_season1}*${lc_plant_costs_unit1}*${lc_plant_ppl_season1}, 0) 
+750 | calculate | lc_weed_costs_season1i | TOTAL costs/SEASON for WEEDING AFTER PLANTING | if(${lc_weed_units_season1}!='' and ${lc_weed_costs_unit1}!='' and ${lc_weed_ppl_season1}!='' , ${lc_weed_units_season1}*${lc_weed_costs_unit1}*${lc_weed_ppl_season1}, 0) 
+751 | calculate | lc_spray_costs_season1i | SPRAYING PESTICIDE/FERTILIZER/BOOSTER | if(${lc_spray_units_season1}!='' and ${lc_spray_costs_unit1}!='' and ${lc_spray_ppl_season1}!='' , ${lc_spray_units_season1}*${lc_spray_costs_unit1}*${lc_spray_ppl_season1}, 0) 
+752 | calculate | lc_harv_costs_season1i | HARVESTING | if(${lc_harv_units_season1}!='' and ${lc_harv_costs_unit1}!='' and ${lc_harv_ppl_season1}!='' , ${lc_harv_units_season1}*${lc_harv_costs_unit1}*${lc_harv_ppl_season1}, 0) 
+753 | calculate | lc_tot_costs_season1i | TOTAL LABOUR costs | ${lc_prep_costs_season1i} + ${lc_plant_costs_season1i} + ${lc_weed_costs_season1i} + ${lc_spray_costs_season1i} + ${lc_harv_costs_season1i} 
+754 | begin group | lc_tot1 | Total PAID LABOUR costs in plot ${plot_name_1} in the whole season | NA 
+755 | decimal | lc_prep_costs_season1 | TOTAL costs/SEASON for PLOUGHING, WEEDING, DIGGING or other PRE PLANTING ACTIVITIES, | ${lc_prep_costs_season1i} 
+756 | decimal | lc_plant_costs_season1 | TOTAL costs/SEASON for PLANTING | ${lc_plant_costs_season1i} 
+757 | decimal | lc_weed_costs_season1 | TOTAL costs/SEASON for WEEDING AFTER PLANTING | ${lc_weed_costs_season1i} 
+758 | decimal | lc_spray_costs_season1 | SPRAYING PESTICIDE/FERTILIZER/BOOSTER | ${lc_spray_costs_season1i} 
+759 | decimal | lc_harv_costs_season1 | HARVESTING | ${lc_harv_costs_season1i} 
+760 | decimal | lc_tot_costs_season1 | TOTAL LABOUR costs | ${lc_tot_costs_season1i} 
+763 | note | lc_prep2 | <big> PLOUGHING, WEEDING, DIGGING or other PRE PLANTING ACTIVITIES, </big> | NA 
+764 | select_one unit | lc_prep_unit2 | UNIT | NA 
+765 | text | lc_prep_unit_other2 | Specify other | NA 
+766 | decimal | lc_prep_costs_unit2 | costs per UNIT | NA 
+767 | decimal | lc_prep_ppl_season2 | PERSONS | NA 
+768 | decimal | lc_prep_units_season2 | UNITS in a SEASON per PERSON | NA 
+769 | note | lc_plant2 | **************************************************
+ <big> PLANTING </big> | NA 
+770 | select_one unit | lc_plant_unit2 | UNIT | NA 
+771 | text | lc_plant_unit_other2 | Specify other | NA 
+772 | decimal | lc_plant_costs_unit2 | costs per UNIT | NA 
+773 | decimal | lc_plant_ppl_season2 | PERSONS | NA 
+774 | decimal | lc_plant_units_season2 | UNITS in a SEASON per PERSON | NA 
+775 | note | lc_weed2 | **************************************************
+ <big> WEEDING AFTER PLANTING </big> | NA 
+776 | select_one unit | lc_weed_unit2 | UNIT | NA 
+777 | text | lc_weed_unit_other2 | Specify other | NA 
+778 | decimal | lc_weed_costs_unit2 | costs per UNIT | NA 
+779 | decimal | lc_weed_ppl_season2 | PERSONS | NA 
+780 | decimal | lc_weed_units_season2 | UNITS in a SEASON per PERSON | NA 
+781 | note | lc_spray2 | **************************************************
+ <big> SPRAYING PESTICIDE/FERTILIZER/BOOSTER </big> | NA 
+782 | select_one unit | lc_spray_unit2 | UNIT | NA 
+783 | text | lc_spray_unit_other2 | Specify other | NA 
+784 | decimal | lc_spray_costs_unit2 | costs per UNIT | NA 
+785 | decimal | lc_spray_ppl_season2 | PERSONS | NA 
+786 | decimal | lc_spray_units_season2 | UNITS in a SEASON per PERSON | NA 
+787 | note | lc_harv2 | **************************************************
+ <big> HARVESTING </big> | NA 
+788 | select_one unit | lc_harv_unit2 | UNIT | NA 
+789 | text | lc_harv_unit_other2 | Specify other | NA 
+790 | decimal | lc_harv_costs_unit2 | costs per UNIT | NA 
+791 | decimal | lc_harv_ppl_season2 | PERSONS | NA 
+792 | decimal | lc_harv_units_season2 | UNITS in a SEASON per PERSON | NA 
+794 | calculate | lc_prep_costs_season2i | TOTAL costs/SEASON for PLOUGHING, WEEDING, DIGGING or other PRE PLANTING ACTIVITIES, | if(${lc_prep_units_season2}!='' and ${lc_prep_costs_unit2}!='' and ${lc_prep_ppl_season2}!='' , ${lc_prep_units_season2}*${lc_prep_costs_unit2}*${lc_prep_ppl_season2}, 0) 
+795 | calculate | lc_plant_costs_season2i | TOTAL costs/SEASON for PLANTING | if(${lc_plant_units_season2}!='' and ${lc_plant_costs_unit2}!='' and ${lc_plant_ppl_season2}!='' , ${lc_plant_units_season2}*${lc_plant_costs_unit2}*${lc_plant_ppl_season2}, 0) 
+796 | calculate | lc_weed_costs_season2i | TOTAL costs/SEASON for WEEDING AFTER PLANTING | if(${lc_weed_units_season2}!='' and ${lc_weed_costs_unit2}!='' and ${lc_weed_ppl_season2}!='' , ${lc_weed_units_season2}*${lc_weed_costs_unit2}*${lc_weed_ppl_season2}, 0) 
+797 | calculate | lc_spray_costs_season2i | SPRAYING PESTICIDE/FERTILIZER/BOOSTER | if(${lc_spray_units_season2}!='' and ${lc_spray_costs_unit2}!='' and ${lc_spray_ppl_season2}!='' , ${lc_spray_units_season2}*${lc_spray_costs_unit2}*${lc_spray_ppl_season2}, 0) 
+798 | calculate | lc_harv_costs_season2i | HARVESTING | if(${lc_harv_units_season2}!='' and ${lc_harv_costs_unit2}!='' and ${lc_harv_ppl_season2}!='' , ${lc_harv_units_season2}*${lc_harv_costs_unit2}*${lc_harv_ppl_season2}, 0) 
+799 | calculate | lc_tot_costs_season2i | TOTAL LABOUR costs | ${lc_prep_costs_season2i} + ${lc_plant_costs_season2i} + ${lc_weed_costs_season2i} + ${lc_spray_costs_season2i} + ${lc_harv_costs_season2i} 
+800 | begin group | lc_tot2 | Total PAID LABOUR costs in plot ${plot_name_2} in the whole season | NA 
+801 | decimal | lc_prep_costs_season2 | TOTAL costs/SEASON for PLOUGHING, WEEDING, DIGGING or other PRE PLANTING ACTIVITIES, | ${lc_prep_costs_season2i} 
+802 | decimal | lc_plant_costs_season2 | TOTAL costs/SEASON for PLANTING | ${lc_plant_costs_season2i} 
+803 | decimal | lc_weed_costs_season2 | TOTAL costs/SEASON for WEEDING AFTER PLANTING | ${lc_weed_costs_season2i} 
+804 | decimal | lc_spray_costs_season2 | SPRAYING PESTICIDE/FERTILIZER/BOOSTER | ${lc_spray_costs_season2i} 
+805 | decimal | lc_harv_costs_season2 | HARVESTING | ${lc_harv_costs_season2i} 
+806 | decimal | lc_tot_costs_season2 | TOTAL LABOUR costs | ${lc_tot_costs_season2i} 
+809 | note | lc_prep3 | <big> PLOUGHING, WEEDING, DIGGING or other PRE PLANTING ACTIVITIES, </big> | NA 
+810 | select_one unit | lc_prep_unit3 | UNIT | NA 
+811 | text | lc_prep_unit_other3 | Specify other | NA 
+812 | decimal | lc_prep_costs_unit3 | costs per UNIT | NA 
+813 | decimal | lc_prep_ppl_season3 | PERSONS | NA 
+814 | decimal | lc_prep_units_season3 | UNITS in a SEASON per PERSON | NA 
+815 | note | lc_plant3 | **************************************************
+ <big> PLANTING </big> | NA 
+816 | select_one unit | lc_plant_unit3 | UNIT | NA 
+817 | text | lc_plant_unit_other3 | Specify other | NA 
+818 | decimal | lc_plant_costs_unit3 | costs per UNIT | NA 
+819 | decimal | lc_plant_ppl_season3 | PERSONS | NA 
+820 | decimal | lc_plant_units_season3 | UNITS in a SEASON per PERSON | NA 
+821 | note | lc_weed3 | **************************************************
+ <big> WEEDING AFTER PLANTING </big> | NA 
+822 | select_one unit | lc_weed_unit3 | UNIT | NA 
+823 | text | lc_weed_unit_other3 | Specify other | NA 
+824 | decimal | lc_weed_costs_unit3 | costs per UNIT | NA 
+825 | decimal | lc_weed_ppl_season3 | PERSONS | NA 
+826 | decimal | lc_weed_units_season3 | UNITS in a SEASON per PERSON | NA 
+827 | note | lc_spray3 | **************************************************
+ <big> SPRAYING PESTICIDE/FERTILIZER/BOOSTER </big> | NA 
+828 | select_one unit | lc_spray_unit3 | UNIT | NA 
+829 | text | lc_spray_unit_other3 | Specify other | NA 
+830 | decimal | lc_spray_costs_unit3 | costs per UNIT | NA 
+831 | decimal | lc_spray_ppl_season3 | PERSONS | NA 
+832 | decimal | lc_spray_units_season3 | UNITS in a SEASON per PERSON | NA 
+833 | note | lc_harv3 | **************************************************
+ <big> HARVESTING </big> | NA 
+834 | select_one unit | lc_harv_unit3 | UNIT | NA 
+835 | text | lc_harv_unit_other3 | Specify other | NA 
+836 | decimal | lc_harv_costs_unit3 | costs per UNIT | NA 
+837 | decimal | lc_harv_ppl_season3 | PERSONS | NA 
+838 | decimal | lc_harv_units_season3 | UNITS in a SEASON per PERSON | NA 
+840 | calculate | lc_prep_costs_season3i | TOTAL costs/SEASON for PLOUGHING, WEEDING, DIGGING or other PRE PLANTING ACTIVITIES, | if(${lc_prep_units_season3}!='' and ${lc_prep_costs_unit3}!='' and ${lc_prep_ppl_season3}!='' , ${lc_prep_units_season3}*${lc_prep_costs_unit3}*${lc_prep_ppl_season3}, 0) 
+841 | calculate | lc_plant_costs_season3i | TOTAL costs/SEASON for PLANTING | if(${lc_plant_units_season3}!='' and ${lc_plant_costs_unit3}!='' and ${lc_plant_ppl_season3}!='' , ${lc_plant_units_season3}*${lc_plant_costs_unit3}*${lc_plant_ppl_season3}, 0) 
+842 | calculate | lc_weed_costs_season3i | TOTAL costs/SEASON for WEEDING AFTER PLANTING | if(${lc_weed_units_season3}!='' and ${lc_weed_costs_unit3}!='' and ${lc_weed_ppl_season3}!='' , ${lc_weed_units_season3}*${lc_weed_costs_unit3}*${lc_weed_ppl_season3}, 0) 
+843 | calculate | lc_spray_costs_season3i | SPRAYING PESTICIDE/FERTILIZER/BOOSTER | if(${lc_spray_units_season3}!='' and ${lc_spray_costs_unit3}!='' and ${lc_spray_ppl_season3}!='' , ${lc_spray_units_season3}*${lc_spray_costs_unit3}*${lc_spray_ppl_season3}, 0) 
+844 | calculate | lc_harv_costs_season3i | HARVESTING | if(${lc_harv_units_season3}!='' and ${lc_harv_costs_unit3}!='' and ${lc_harv_ppl_season3}!='' , ${lc_harv_units_season3}*${lc_harv_costs_unit3}*${lc_harv_ppl_season3}, 0) 
+845 | calculate | lc_tot_costs_season3i | TOTAL LABOUR costs | ${lc_prep_costs_season3i} + ${lc_plant_costs_season3i} + ${lc_weed_costs_season3i} + ${lc_spray_costs_season3i} + ${lc_harv_costs_season3i} 
+846 | begin group | lc_tot3 | Total PAID LABOUR costs in plot ${plot_name_3} in the whole season | NA 
+847 | decimal | lc_prep_costs_season3 | TOTAL costs/SEASON for PLOUGHING, WEEDING, DIGGING or other PRE PLANTING ACTIVITIES, | ${lc_prep_costs_season3i} 
+848 | decimal | lc_plant_costs_season3 | TOTAL costs/SEASON for PLANTING | ${lc_plant_costs_season3i} 
+849 | decimal | lc_weed_costs_season3 | TOTAL costs/SEASON for WEEDING AFTER PLANTING | ${lc_weed_costs_season3i} 
+850 | decimal | lc_spray_costs_season3 | SPRAYING PESTICIDE/FERTILIZER/BOOSTER | ${lc_spray_costs_season3i} 
+851 | decimal | lc_harv_costs_season3 | HARVESTING | ${lc_harv_costs_season3i} 
+852 | decimal | lc_tot_costs_season3 | TOTAL LABOUR costs | ${lc_tot_costs_season3i} 
+855 | note | lc_prep4 | <big> PLOUGHING, WEEDING, DIGGING or other PRE PLANTING ACTIVITIES, </big> | NA 
+856 | select_one unit | lc_prep_unit4 | UNIT | NA 
+857 | text | lc_prep_unit_other4 | Specify other | NA 
+858 | decimal | lc_prep_costs_unit4 | costs per UNIT | NA 
+859 | decimal | lc_prep_ppl_season4 | PERSONS | NA 
+860 | decimal | lc_prep_units_season4 | UNITS in a SEASON per PERSON | NA 
+861 | note | lc_plant4 | **************************************************
+ <big> PLANTING </big> | NA 
+862 | select_one unit | lc_plant_unit4 | UNIT | NA 
+863 | text | lc_plant_unit_other4 | Specify other | NA 
+864 | decimal | lc_plant_costs_unit4 | costs per UNIT | NA 
+865 | decimal | lc_plant_ppl_season4 | PERSONS | NA 
+866 | decimal | lc_plant_units_season4 | UNITS in a SEASON per PERSON | NA 
+867 | note | lc_weed4 | **************************************************
+ <big> WEEDING AFTER PLANTING </big> | NA 
+868 | select_one unit | lc_weed_unit4 | UNIT | NA 
+869 | text | lc_weed_unit_other4 | Specify other | NA 
+870 | decimal | lc_weed_costs_unit4 | costs per UNIT | NA 
+871 | decimal | lc_weed_ppl_season4 | PERSONS | NA 
+872 | decimal | lc_weed_units_season4 | UNITS in a SEASON per PERSON | NA 
+873 | note | lc_spray4 | **************************************************
+ <big> SPRAYING PESTICIDE/FERTILIZER/BOOSTER </big> | NA 
+874 | select_one unit | lc_spray_unit4 | UNIT | NA 
+875 | text | lc_spray_unit_other4 | Specify other | NA 
+876 | decimal | lc_spray_costs_unit4 | costs per UNIT | NA 
+877 | decimal | lc_spray_ppl_season4 | PERSONS | NA 
+878 | decimal | lc_spray_units_season4 | UNITS in a SEASON per PERSON | NA 
+879 | note | lc_harv4 | **************************************************
+ <big> HARVESTING </big> | NA 
+880 | select_one unit | lc_harv_unit4 | UNIT | NA 
+881 | text | lc_harv_unit_other4 | Specify other | NA 
+882 | decimal | lc_harv_costs_unit4 | costs per UNIT | NA 
+883 | decimal | lc_harv_ppl_season4 | PERSONS | NA 
+884 | decimal | lc_harv_units_season4 | UNITS in a SEASON per PERSON | NA 
+886 | calculate | lc_prep_costs_season4i | TOTAL costs/SEASON for PLOUGHING, WEEDING, DIGGING or other PRE PLANTING ACTIVITIES, | if(${lc_prep_units_season4}!='' and ${lc_prep_costs_unit4}!='' and ${lc_prep_ppl_season4}!='' , ${lc_prep_units_season4}*${lc_prep_costs_unit4}*${lc_prep_ppl_season4}, 0) 
+887 | calculate | lc_plant_costs_season4i | TOTAL costs/SEASON for PLANTING | if(${lc_plant_units_season4}!='' and ${lc_plant_costs_unit4}!='' and ${lc_plant_ppl_season4}!='' , ${lc_plant_units_season4}*${lc_plant_costs_unit4}*${lc_plant_ppl_season4}, 0) 
+888 | calculate | lc_weed_costs_season4i | TOTAL costs/SEASON for WEEDING AFTER PLANTING | if(${lc_weed_units_season4}!='' and ${lc_weed_costs_unit4}!='' and ${lc_weed_ppl_season4}!='' , ${lc_weed_units_season4}*${lc_weed_costs_unit4}*${lc_weed_ppl_season4}, 0) 
+889 | calculate | lc_spray_costs_season4i | SPRAYING PESTICIDE/FERTILIZER/BOOSTER | if(${lc_spray_units_season4}!='' and ${lc_spray_costs_unit4}!='' and ${lc_spray_ppl_season4}!='' , ${lc_spray_units_season4}*${lc_spray_costs_unit4}*${lc_spray_ppl_season4}, 0) 
+890 | calculate | lc_harv_costs_season4i | HARVESTING | if(${lc_harv_units_season4}!='' and ${lc_harv_costs_unit4}!='' and ${lc_harv_ppl_season4}!='' , ${lc_harv_units_season4}*${lc_harv_costs_unit4}*${lc_harv_ppl_season4}, 0) 
+891 | calculate | lc_tot_costs_season4i | TOTAL LABOUR costs | ${lc_prep_costs_season4i} + ${lc_plant_costs_season4i} + ${lc_weed_costs_season4i} + ${lc_spray_costs_season4i} + ${lc_harv_costs_season4i} 
+892 | begin group | lc_tot4 | Total PAID LABOUR costs in plot ${plot_name_4} in the whole season | NA 
+893 | decimal | lc_prep_costs_season4 | TOTAL costs/SEASON for PLOUGHING, WEEDING, DIGGING or other PRE PLANTING ACTIVITIES, | ${lc_prep_costs_season4i} 
+894 | decimal | lc_plant_costs_season4 | TOTAL costs/SEASON for PLANTING | ${lc_plant_costs_season4i} 
+895 | decimal | lc_weed_costs_season4 | TOTAL costs/SEASON for WEEDING AFTER PLANTING | ${lc_weed_costs_season4i} 
+896 | decimal | lc_spray_costs_season4 | SPRAYING PESTICIDE/FERTILIZER/BOOSTER | ${lc_spray_costs_season4i} 
+897 | decimal | lc_harv_costs_season4 | HARVESTING | ${lc_harv_costs_season4i} 
+898 | decimal | lc_tot_costs_season4 | TOTAL LABOUR costs | ${lc_tot_costs_season4i} 
+901 | note | lc_prep5 | <big> PLOUGHING, WEEDING, DIGGING or other PRE PLANTING ACTIVITIES, </big> | NA 
+902 | select_one unit | lc_prep_unit5 | UNIT | NA 
+903 | text | lc_prep_unit_other5 | Specify other | NA 
+904 | decimal | lc_prep_costs_unit5 | costs per UNIT | NA 
+905 | decimal | lc_prep_ppl_season5 | PERSONS | NA 
+906 | decimal | lc_prep_units_season5 | UNITS in a SEASON per PERSON | NA 
+907 | note | lc_plant5 | **************************************************
+ <big> PLANTING </big> | NA 
+908 | select_one unit | lc_plant_unit5 | UNIT | NA 
+909 | text | lc_plant_unit_other5 | Specify other | NA 
+910 | decimal | lc_plant_costs_unit5 | costs per UNIT | NA 
+911 | decimal | lc_plant_ppl_season5 | PERSONS | NA 
+912 | decimal | lc_plant_units_season5 | UNITS in a SEASON per PERSON | NA 
+913 | note | lc_weed5 | **************************************************
+ <big> WEEDING AFTER PLANTING </big> | NA 
+914 | select_one unit | lc_weed_unit5 | UNIT | NA 
+915 | text | lc_weed_unit_other5 | Specify other | NA 
+916 | decimal | lc_weed_costs_unit5 | costs per UNIT | NA 
+917 | decimal | lc_weed_ppl_season5 | PERSONS | NA 
+918 | decimal | lc_weed_units_season5 | UNITS in a SEASON per PERSON | NA 
+919 | note | lc_spray5 | **************************************************
+ <big> SPRAYING PESTICIDE/FERTILIZER/BOOSTER </big> | NA 
+920 | select_one unit | lc_spray_unit5 | UNIT | NA 
+921 | text | lc_spray_unit_other5 | Specify other | NA 
+922 | decimal | lc_spray_costs_unit5 | costs per UNIT | NA 
+923 | decimal | lc_spray_ppl_season5 | PERSONS | NA 
+924 | decimal | lc_spray_units_season5 | UNITS in a SEASON per PERSON | NA 
+925 | note | lc_harv5 | **************************************************
+ <big> HARVESTING </big> | NA 
+926 | select_one unit | lc_harv_unit5 | UNIT | NA 
+927 | text | lc_harv_unit_other5 | Specify other | NA 
+928 | decimal | lc_harv_costs_unit5 | costs per UNIT | NA 
+929 | decimal | lc_harv_ppl_season5 | PERSONS | NA 
+930 | decimal | lc_harv_units_season5 | UNITS in a SEASON per PERSON | NA 
+932 | calculate | lc_prep_costs_season5i | TOTAL costs/SEASON for PLOUGHING, WEEDING, DIGGING or other PRE PLANTING ACTIVITIES, | if(${lc_prep_units_season5}!='' and ${lc_prep_costs_unit5}!='' and ${lc_prep_ppl_season5}!='' , ${lc_prep_units_season5}*${lc_prep_costs_unit5}*${lc_prep_ppl_season5}, 0) 
+933 | calculate | lc_plant_costs_season5i | TOTAL costs/SEASON for PLANTING | if(${lc_plant_units_season5}!='' and ${lc_plant_costs_unit5}!='' and ${lc_plant_ppl_season5}!='' , ${lc_plant_units_season5}*${lc_plant_costs_unit5}*${lc_plant_ppl_season5}, 0) 
+934 | calculate | lc_weed_costs_season5i | TOTAL costs/SEASON for WEEDING AFTER PLANTING | if(${lc_weed_units_season5}!='' and ${lc_weed_costs_unit5}!='' and ${lc_weed_ppl_season5}!='' , ${lc_weed_units_season5}*${lc_weed_costs_unit5}*${lc_weed_ppl_season5}, 0) 
+935 | calculate | lc_spray_costs_season5i | SPRAYING PESTICIDE/FERTILIZER/BOOSTER | if(${lc_spray_units_season5}!='' and ${lc_spray_costs_unit5}!='' and ${lc_spray_ppl_season5}!='' , ${lc_spray_units_season5}*${lc_spray_costs_unit5}*${lc_spray_ppl_season5}, 0) 
+936 | calculate | lc_harv_costs_season5i | HARVESTING | if(${lc_harv_units_season5}!='' and ${lc_harv_costs_unit5}!='' and ${lc_harv_ppl_season5}!='' , ${lc_harv_units_season5}*${lc_harv_costs_unit5}*${lc_harv_ppl_season5}, 0) 
+937 | calculate | lc_tot_costs_season5i | TOTAL LABOUR costs | ${lc_prep_costs_season5i} + ${lc_plant_costs_season5i} + ${lc_weed_costs_season5i} + ${lc_spray_costs_season5i} + ${lc_harv_costs_season5i} 
+938 | begin group | lc_tot5 | Total PAID LABOUR costs in plot ${plot_name_5} in the whole season | NA 
+939 | decimal | lc_prep_costs_season5 | TOTAL costs/SEASON for PLOUGHING, WEEDING, DIGGING or other PRE PLANTING ACTIVITIES, | ${lc_prep_costs_season5i} 
+940 | decimal | lc_plant_costs_season5 | TOTAL costs/SEASON for PLANTING | ${lc_plant_costs_season5i} 
+941 | decimal | lc_weed_costs_season5 | TOTAL costs/SEASON for WEEDING AFTER PLANTING | ${lc_weed_costs_season5i} 
+942 | decimal | lc_spray_costs_season5 | SPRAYING PESTICIDE/FERTILIZER/BOOSTER | ${lc_spray_costs_season5i} 
+943 | decimal | lc_harv_costs_season5 | HARVESTING | ${lc_harv_costs_season5i} 
+944 | decimal | lc_tot_costs_season5 | TOTAL LABOUR costs | ${lc_tot_costs_season5i} 
+947 | note | lc_prep6 | <big> PLOUGHING, WEEDING, DIGGING or other PRE PLANTING ACTIVITIES, </big> | NA 
+948 | select_one unit | lc_prep_unit6 | UNIT | NA 
+949 | text | lc_prep_unit_other6 | Specify other | NA 
+950 | decimal | lc_prep_costs_unit6 | costs per UNIT | NA 
+951 | decimal | lc_prep_ppl_season6 | PERSONS | NA 
+952 | decimal | lc_prep_units_season6 | UNITS in a SEASON per PERSON | NA 
+953 | note | lc_plant6 | **************************************************
+ <big> PLANTING </big> | NA 
+954 | select_one unit | lc_plant_unit6 | UNIT | NA 
+955 | text | lc_plant_unit_other6 | Specify other | NA 
+956 | decimal | lc_plant_costs_unit6 | costs per UNIT | NA 
+957 | decimal | lc_plant_ppl_season6 | PERSONS | NA 
+958 | decimal | lc_plant_units_season6 | UNITS in a SEASON per PERSON | NA 
+959 | note | lc_weed6 | **************************************************
+ <big> WEEDING AFTER PLANTING </big> | NA 
+960 | select_one unit | lc_weed_unit6 | UNIT | NA 
+961 | text | lc_weed_unit_other6 | Specify other | NA 
+962 | decimal | lc_weed_costs_unit6 | costs per UNIT | NA 
+963 | decimal | lc_weed_ppl_season6 | PERSONS | NA 
+964 | decimal | lc_weed_units_season6 | UNITS in a SEASON per PERSON | NA 
+965 | note | lc_spray6 | **************************************************
+ <big> SPRAYING PESTICIDE/FERTILIZER/BOOSTER </big> | NA 
+966 | select_one unit | lc_spray_unit6 | UNIT | NA 
+967 | text | lc_spray_unit_other6 | Specify other | NA 
+968 | decimal | lc_spray_costs_unit6 | costs per UNIT | NA 
+969 | decimal | lc_spray_ppl_season6 | PERSONS | NA 
+970 | decimal | lc_spray_units_season6 | UNITS in a SEASON per PERSON | NA 
+971 | note | lc_harv6 | **************************************************
+ <big> HARVESTING </big> | NA 
+972 | select_one unit | lc_harv_unit6 | UNIT | NA 
+973 | text | lc_harv_unit_other6 | Specify other | NA 
+974 | decimal | lc_harv_costs_unit6 | costs per UNIT | NA 
+975 | decimal | lc_harv_ppl_season6 | PERSONS | NA 
+976 | decimal | lc_harv_units_season6 | UNITS in a SEASON per PERSON | NA 
+978 | calculate | lc_prep_costs_season6i | TOTAL costs/SEASON for PLOUGHING, WEEDING, DIGGING or other PRE PLANTING ACTIVITIES, | if(${lc_prep_units_season6}!='' and ${lc_prep_costs_unit6}!='' and ${lc_prep_ppl_season6}!='' , ${lc_prep_units_season6}*${lc_prep_costs_unit6}*${lc_prep_ppl_season6}, 0) 
+979 | calculate | lc_plant_costs_season6i | TOTAL costs/SEASON for PLANTING | if(${lc_plant_units_season6}!='' and ${lc_plant_costs_unit6}!='' and ${lc_plant_ppl_season6}!='' , ${lc_plant_units_season6}*${lc_plant_costs_unit6}*${lc_plant_ppl_season6}, 0) 
+980 | calculate | lc_weed_costs_season6i | TOTAL costs/SEASON for WEEDING AFTER PLANTING | if(${lc_weed_units_season6}!='' and ${lc_weed_costs_unit6}!='' and ${lc_weed_ppl_season6}!='' , ${lc_weed_units_season6}*${lc_weed_costs_unit6}*${lc_weed_ppl_season6}, 0) 
+981 | calculate | lc_spray_costs_season6i | SPRAYING PESTICIDE/FERTILIZER/BOOSTER | if(${lc_spray_units_season6}!='' and ${lc_spray_costs_unit6}!='' and ${lc_spray_ppl_season6}!='' , ${lc_spray_units_season6}*${lc_spray_costs_unit6}*${lc_spray_ppl_season6}, 0) 
+982 | calculate | lc_harv_costs_season6i | HARVESTING | if(${lc_harv_units_season6}!='' and ${lc_harv_costs_unit6}!='' and ${lc_harv_ppl_season6}!='' , ${lc_harv_units_season6}*${lc_harv_costs_unit6}*${lc_harv_ppl_season6}, 0) 
+983 | calculate | lc_tot_costs_season6i | TOTAL LABOUR costs | ${lc_prep_costs_season6i} + ${lc_plant_costs_season6i} + ${lc_weed_costs_season6i} + ${lc_spray_costs_season6i} + ${lc_harv_costs_season6i} 
+984 | begin group | lc_tot6 | Total PAID LABOUR costs in plot ${plot_name_6} in the whole season | NA 
+985 | decimal | lc_prep_costs_season6 | TOTAL costs/SEASON for PLOUGHING, WEEDING, DIGGING or other PRE PLANTING ACTIVITIES, | ${lc_prep_costs_season6i} 
+986 | decimal | lc_plant_costs_season6 | TOTAL costs/SEASON for PLANTING | ${lc_plant_costs_season6i} 
+987 | decimal | lc_weed_costs_season6 | TOTAL costs/SEASON for WEEDING AFTER PLANTING | ${lc_weed_costs_season6i} 
+988 | decimal | lc_spray_costs_season6 | SPRAYING PESTICIDE/FERTILIZER/BOOSTER | ${lc_spray_costs_season6i} 
+989 | decimal | lc_harv_costs_season6 | HARVESTING | ${lc_harv_costs_season6i} 
+990 | decimal | lc_tot_costs_season6 | TOTAL LABOUR costs | ${lc_tot_costs_season6i} 
+994 | decimal | tot_lab_costs_check_1 | ********************************
+ ${plot_name_1} | ${lc_tot_costs_season1} 
+995 | select_one dk_ra | tot_lab_costs_check_1dk | Why no answer: | NA 
+996 | decimal | tot_lab_costs_check_2 | ********************************
+ ${plot_name_2} | ${lc_tot_costs_season2} 
+997 | select_one dk_ra | tot_lab_costs_check_2dk | Why no answer: | NA 
+998 | decimal | tot_lab_costs_check_3 | ********************************
+ ${plot_name_3} | ${lc_tot_costs_season3} 
+999 | select_one dk_ra | tot_lab_costs_check_3dk | Why no answer: | NA 
+1000 | decimal | tot_lab_costs_check_4 | ********************************
+ ${plot_name_4} | ${lc_tot_costs_season4} 
+1001 | select_one dk_ra | tot_lab_costs_check_4dk | Why no answer: | NA 
+1002 | decimal | tot_lab_costs_check_5 | ********************************
+ ${plot_name_5} | ${lc_tot_costs_season5} 
+1003 | select_one dk_ra | tot_lab_costs_check_5dk | Why no answer: | NA 
+1004 | decimal | tot_lab_costs_check_6 | ********************************
+ ${plot_name_6} | ${lc_tot_costs_season6} 
+1005 | select_one dk_ra | tot_lab_costs_check_6dk | Why no answer: | NA 
+1007 | calculate | tot_lab_costs_check | NA | if(${tot_lab_costs_check_1}>=0 , ${tot_lab_costs_check_1} , 0) + if(${tot_lab_costs_check_2}>=0 , ${tot_lab_costs_check_2} , 0) + if(${tot_lab_costs_check_3}>=0 , ${tot_lab_costs_check_3} , 0) + if(${ 
+1008 | note | tot_lab_costs_check_note | TOTAL LABOUR FOR HIRED LABOUR FOR MAIZE FARMING IN THE WHOLE SEASON: | ${tot_lab_costs_check} 
+1011 | decimal | tot_lab_costs_1 | ********************************
+ ${plot_name_1} | NA 
+1012 | select_one dk_ra | tot_lab_costs_1dk | Why no answer: | NA 
+1013 | decimal | tot_lab_costs_2 | ********************************
+ ${plot_name_2} | NA 
+1014 | select_one dk_ra | tot_lab_costs_2dk | Why no answer: | NA 
+1015 | decimal | tot_lab_costs_3 | ********************************
+ ${plot_name_3} | NA 
+1016 | select_one dk_ra | tot_lab_costs_3dk | Why no answer: | NA 
+1017 | decimal | tot_lab_costs_4 | ********************************
+ ${plot_name_4} | NA 
+1018 | select_one dk_ra | tot_lab_costs_4dk | Why no answer: | NA 
+1019 | decimal | tot_lab_costs_5 | ********************************
+ ${plot_name_5} | NA 
+1020 | select_one dk_ra | tot_lab_costs_5dk | Why no answer: | NA 
+1021 | decimal | tot_lab_costs_6 | ********************************
+ ${plot_name_6} | NA 
+1022 | select_one dk_ra | tot_lab_costs_6dk | Why no answer: | NA 
+1024 | calculate | tot_lab_costs_check2 | NA | if(${tot_lab_costs_1}>=0 , ${tot_lab_costs_1} , 0) + if(${tot_lab_costs_2}>=0 , ${tot_lab_costs_2} , 0) + if(${tot_lab_costs_3}>=0 , ${tot_lab_costs_3} , 0) + if(${tot_lab_costs_4}>=0 , ${tot_lab_cost 
+1025 | note | tot_lab_costs_check2_note | TOTAL LABOUR FOR HIRED LABOUR FOR MAIZE FARMING IN THE WHOLE SEASON: | ${tot_lab_costs_check2} 
+1058 | calculate | harvest_kg_1i | NA | ${harvest_meas_1}*${kgs_measure_resp} 
+1059 | calculate | harvest_kg_2i | NA | ${harvest_meas_2}*${kgs_measure_resp} 
+1060 | calculate | harvest_kg_3i | NA | ${harvest_meas_3}*${kgs_measure_resp} 
+1061 | calculate | harvest_kg_4i | NA | ${harvest_meas_4}*${kgs_measure_resp} 
+1062 | calculate | harvest_kg_5i | NA | ${harvest_meas_5}*${kgs_measure_resp} 
+1063 | calculate | harvest_kg_6i | NA | ${harvest_meas_6}*${kgs_measure_resp} 
+1064 | begin group | harvest_kg_g | Harvest in kgs | NA 
+1065 | note | harvest_kg_note | Harvest in kgs - please correct if the amounts are wrong. | NA 
+1066 | note | harvest_kg_note2 | How many kgs of maize you and your household harvested during the last season (planting ${last_season}) in this plot:
+ 
+ At first you reported you har | NA 
+1067 | decimal | harvest_kg_1 | ********************************
+ ${plot_name_1} | ${harvest_kg_1i} 
+1068 | select_one dk_ra | harvest_kg_1dk | Why no answer: | NA 
+1070 | decimal | harvest_kg_2 | ********************************
+ ${plot_name_2} | ${harvest_kg_2i} 
+1071 | select_one dk_ra | harvest_kg_2dk | Why no answer: | NA 
+1073 | decimal | harvest_kg_3 | ********************************
+ ${plot_name_3} | ${harvest_kg_3i} 
+1074 | select_one dk_ra | harvest_kg_3dk | Why no answer: | NA 
+1076 | decimal | harvest_kg_4 | ********************************
+ ${plot_name_4} | ${harvest_kg_4i} 
+1077 | select_one dk_ra | harvest_kg_4dk | Why no answer: | NA 
+1079 | decimal | harvest_kg_5 | ********************************
+ ${plot_name_5} | ${harvest_kg_5i} 
+1080 | select_one dk_ra | harvest_kg_5dk | Why no answer: | NA 
+1082 | decimal | harvest_kg_6 | ********************************
+ ${plot_name_6} | ${harvest_kg_6i} 
+1083 | select_one dk_ra | harvest_kg_6dk | Why no answer: | NA 
+1086 | calculate | harvest_kg_tot | NA | if(${maize_tot_plotn}>5, ${harvest_kg_1}+${harvest_kg_2}+${harvest_kg_3}+${harvest_kg_4}+${harvest_kg_5}+${harvest_kg_6}, if(${maize_tot_plotn}>4, ${harvest_kg_1}+${harvest_kg_2}+${harvest_kg_3}+${har 
+1087 | note | harvest_kg_tot_note | At first you reported you harvested ${harvest_kg_tot_1st} kgs of maize, but the sum of what you just reported is ${harvest_kg_tot} kgs. 
+ 
+ Correct ei | NA 
+1128 | decimal | lh_decob_hours | *******************************************
+ TOTAL hours of UNPAID LABOUR for decobbing. | NA 
+1129 | select_one dk_ra | lh_decob_hoursdk | Why no answer: | NA 
+1130 | decimal | lc_decob_labour_costs | *******************************************
+ TOTAL cost of PAID LABOUR for decobbing. In Shillings. | NA 
+1131 | select_one dk_ra | lc_decob_labour_costsdk | Why no answer: | NA 
+1132 | decimal | lc_decob_labmaize_costs | *******************************************
+ TOTAL cost of PAID LABOUR for decobbing. In ${crop_measure_resp} of maize. | NA 
+1133 | select_one dk_ra | lc_decob_labmaize_costsdk | Why no answer: | NA 
+1134 | decimal | lc_decob_price | What was the price per KG of maize when you paid such costs? | NA 
+1135 | select_one dk_ra | lc_decob_pricedk | Why no answer: | NA 
+1136 | decimal | lc_decob_other_costs | *******************************************
+ Other COSTS for decobbing (e.g. equipment…). In Shillings. | NA 
+1137 | select_one dk_ra | lc_decob_other_costsdk | Why no answer: | NA 
+1143 | calculate | lc_decob_labour_costs_tot | NA | if(${lc_decob_labour_costs}>0, ${lc_decob_labour_costs}, 0) + if(${lc_decob_price}>0 and ${lc_decob_labmaize_costs}>0 , ${lc_decob_price}*${lc_decob_labmaize_costs}, 0) 
+1148 | decimal | lh_winnow_hours | *******************************************
+ TOTAL hours of UNPAID LABOUR for winnowing. | NA 
+1149 | select_one dk_ra | lh_winnow_hoursdk | Why no answer: | NA 
+1150 | decimal | lc_winnow_labour_costs | *******************************************
+ TOTAL cost of PAID LABOUR for winnowing. In Shillings. | NA 
+1151 | select_one dk_ra | lc_winnow_labour_costsdk | Why no answer: | NA 
+1152 | decimal | lc_winnow_labmaize_costs | *******************************************
+ TOTAL cost of PAID LABOUR for winnowing. In ${crop_measure_resp} of maize. | NA 
+1153 | select_one dk_ra | lc_winnow_labmaize_costsdk | Why no answer: | NA 
+1154 | decimal | lc_winnow_price | What was the price per KG of maize when you paid such costs? | NA 
+1155 | select_one dk_ra | lc_winnow_pricedk | Why no answer: | NA 
+1156 | decimal | lc_winnow_other_costs | *******************************************
+ Other COSTS for winnowing (e.g. equipment…). In Shillings. | NA 
+1157 | select_one dk_ra | lc_winnow_other_costsdk | Why no answer: | NA 
+1161 | calculate | lc_winnow_labour_costs_tot | NA | if(${lc_winnow_labour_costs}>0, ${lc_winnow_labour_costs}, 0) + if(${lc_winnow_price}>0 and ${lc_winnow_labmaize_costs}>0 , ${lc_winnow_price}*${lc_winnow_labmaize_costs}, 0) 
+1166 | decimal | lh_sort_hours | *******************************************
+ TOTAL hours of UNPAID LABOUR for sorting. | NA 
+1167 | select_one dk_ra | lh_sort_hoursdk | Why no answer: | NA 
+1168 | decimal | lc_sort_labour_costs | *******************************************
+ TOTAL cost of PAID LABOUR for sorting. In Shillings. | NA 
+1169 | select_one dk_ra | lc_sort_labour_costsdk | Why no answer: | NA 
+1170 | decimal | lc_sort_labmaize_costs | *******************************************
+ TOTAL cost of PAID LABOUR for sorting. In ${crop_measure_resp} of maize. | NA 
+1171 | select_one dk_ra | lc_sort_labmaize_costsdk | Why no answer: | NA 
+1172 | decimal | lc_sort_price | What was the price per KG of maize when you paid such costs? | NA 
+1173 | select_one dk_ra | lc_sort_pricedk | Why no answer: | NA 
+1174 | decimal | lc_sort_other_costs | *******************************************
+ Other COSTS for sorting (e.g. equipment…). In Shillings. | NA 
+1175 | select_one dk_ra | lc_sort_other_costsdk | Why no answer: | NA 
+1179 | calculate | lc_sort_labour_costs_tot | NA | if(${lc_sort_labour_costs}>0, ${lc_sort_labour_costs}, 0) + if(${lc_sort_price}>0 and ${lc_sort_labmaize_costs}>0 , ${lc_sort_price}*${lc_sort_labmaize_costs}, 0) 
+1183 | decimal | lh_bag_hours | *******************************************
+ TOTAL hours of UNPAID LABOUR for bagging. | NA 
+1184 | select_one dk_ra | lh_bag_hoursdk | Why no answer: | NA 
+1185 | decimal | lc_bag_labour_costs | *******************************************
+ TOTAL cost of PAID LABOUR for bagging. In Shillings. | NA 
+1186 | select_one dk_ra | lc_bag_labour_costsdk | Why no answer: | NA 
+1187 | decimal | lc_bag_labmaize_costs | *******************************************
+ TOTAL cost of PAID LABOUR for bagging. In ${crop_measure_resp} of maize. | NA 
+1188 | select_one dk_ra | lc_bag_labmaize_costsdk | Why no answer: | NA 
+1189 | decimal | lc_bag_price | What was the price per KG of maize when you paid such costs? | NA 
+1190 | select_one dk_ra | lc_bag_pricedk | Why no answer: | NA 
+1191 | decimal | lc_bag_other_costs | *******************************************
+ Other COSTS for bagging (e.g. equipment…). In Shillings. | NA 
+1192 | select_one dk_ra | lc_bag_other_costsdk | Why no answer: | NA 
+1196 | calculate | lc_bag_labour_costs_tot | NA | if(${lc_bag_labour_costs}>0, ${lc_bag_labour_costs}, 0) + if(${lc_bag_price}>0 and ${lc_bag_labmaize_costs}>0 , ${lc_bag_price}*${lc_bag_labmaize_costs}, 0) 
+1207 | calculate | sold_kg | NA | if(not(selected(${crop_measure}, 'kgs')),${sold_crop_kg_corr}, ${sold_crop_kg}) 
+1209 | note | sold_kg_note | In the first questions you reported to us that you sold ${sold_kg_1st} but you said now you sold ${sold_kg}. Please go back and change your answer. | NA 
+1233 | calculate | sold_kg_p | NA | if(not(selected(${crop_measure}, 'kgs')),${sold_qty}*${kgs_measure_resp}, ${sold_qty}) 
+1234 | calculate | sold_kg_ded | NA | ${sold_kg_p}-${deduction_moist} 
+1235 | decimal | sold_kg_ded_rep | You sold ${sold_qty} ${crop_measure_resp} of maize to ${this_buyer_label_resp} during the last season (planting ${last_season}),
+ 
+  which equals ${so | ${sold_kg_ded} 
+1236 | calculate | sold_kg_part | NA | ${sold_kg_ded_rep}+${deduction_moist} 
+1251 | begin group | pk | Price and revenue for sale to ${this_buyer_label_resp} during the last season (planting ${last_season}) | NA 
+1252 | select_one yes_ra | ppk_tell | RESPONDENT CAN ANSWER: 
+ How much money has your household received from the sale of maize PER KILOGRAM ON AVERAGE? | NA 
+1253 | decimal | ppk_told | How much money has your household received from the maize sold to ${this_buyer_label_resp} in PER KILOGRAM? | NA 
+1254 | select_one yes_ra | tot_rev_tell | RESPONDENT CAN ANSWER: 
+ How much money did you get IN TOTAL for this sale to ${this_buyer_label_resp} during the last season (planting ${last_season} | NA 
+1255 | decimal | tot_rev_told | How much money did you get in total for this sale in ${this_buyer_label_resp} during the last season (planting ${last_season})? In shilling | NA 
+1257 | calculate | tot_rev_calc | NA | ${ppk_told} * ${sold_kg_ded_rep} 
+1258 | calculate | ppk_calc | NA | ${tot_rev_told} div ${sold_kg_ded_rep} 
+1259 | note | match | The total revenue as reported is: ${tot_rev_tell} but the calculation using the repoted price would yield ${tot_rev_calc}. Please slide back and corre | NA 
+1260 | calculate | ppk | NA | if(${ppk_tell}='yes', ${ppk_told}, ${ppk_calc}) 
+1261 | calculate | tot_rev_part | NA | if(${tot_rev_tell}='yes', ${tot_rev_told}, ${tot_rev_calc}) 
+1264 | calculate | price_week_near_max | NA | pulldata('maize_prices', ${big_tc_max}, 'days_from_1jan1970', decimal-date-time(${sold_when_e})) 
+1265 | calculate | price_week_near_min | NA | pulldata('maize_prices', ${big_tc_min}, 'days_from_1jan1970', decimal-date-time(${sold_when_e})) 
+1266 | select_one yes_no_only | match_price | The price reported is: ${ppk_tell} but the minimum price in the nearest trading center in the week you sold is ${price_week_near_min} and the maximum  | NA 
+1274 | calculate | sold_kg_tot | NA | sum(${sold_kg_p}) 
+1275 | calculate | sold_kg_ded_tot | NA | sum(${sold_kg_part}) 
+1276 | calculate | tot_rev_tot | NA | sum(${tot_rev_part}) 
+1280 | note | final_revenue | The total amount of maize you sold in the past season (planting ${last_season}) is ${sold_kg_tot} kgs (${sold_kg_ded_tot} kgs if we deduct content). 
+ | NA 
+1315 | note | pro_sh18 | TOTAL HOURS WORKED ON THE MAIZE PLOT BY THE HOUSEHOLD:
+ ${tot_lab_hours} | NA 
+===== add4_measuring_bags.xlsx type name label::english hint::english constraint constraint_message::english required appearance default relevant read_only calculation repeat_count choice_filter media::image::english 
+1 | start | start | Start Time | NA 
+2 | end | end | End Time | NA 
+3 | today | today | Date of Survey | NA 
+4 | deviceid | deviceid | Phone Serial Number | NA 
+5 | text audit | text_audit | NA | NA 
+6 | subscriberid | subscriberid | Subscriber Identifier | NA 
+7 | imei | imei | SIM serial | NA 
+8 | phonenumber | phonenumber | Phone number | NA 
+9 | calculate | random | NA | once(random()) 
+10 | integer | price | What price will we buy for today? | NA 
+11 | begin group | start_group | MEASURING AND TESTING BAGS | NA 
+12 | select_one enumerator_name | enumerator_name | Enumerator name | NA 
+13 | select_one ea | ea_code | Enumeration area name | NA 
+15 | calculate | ea_name | NA | pulldata('listing_addint_jan2019', 'ea_name', 'ea_code', ${ea_code}) 
+16 | calculate | district_name | NA | pulldata('listing_addint_jan2019', 'district_name', 'ea_code', ${ea_code}) 
+17 | calculate | buy_time | NA | 'January 2019' 
+18 | calculate | this_season | NA | 'January 2019' 
+19 | calculate | last_season | NA | 'August 2018' 
+20 | calculate | beforelast_season | NA | 'January 2018' 
+21 | select_one hhh | hhh1 | What is the FIRST AND LAST name of the household head you are contacting? | NA 
+22 | calculate | hhh | NA | if(${hhh1}=99, ${hhh2}, ${hhh1}) 
+23 | calculate | phone_number_old | NA | pulldata('listing_addint_jan2019', 'phone_number', 'hhh', ${hhh}) 
+24 | calculate | N | NA | pulldata('listing_addint_jan2019', 'N', 'hhh', ${hhh}) 
+25 | calculate | sl_hhh | NA | pulldata('listing_addint_jan2019', 'serial_number', 'hhh', ${hhh}) 
+26 | calculate | treatment | NA | pulldata('listing_addint_jan2019', 'treatment ', 'hhh', ${hhh}) 
+27 | calculate | treatment_info | NA | pulldata('listing_addint_jan2019', 'treatment_info', 'hhh', ${hhh}) 
+28 | calculate | treatment_quality | NA | pulldata('listing_addint_jan2019', 'treatment_quality', 'hhh', ${hhh}) 
+29 | calculate | maize_tot_plotn_newR | NA | pulldata('listing_addint_jan2019', 'maize_tot_plotn_new', 'hhh', ${hhh}) 
+30 | calculate | tot_kg_newR | NA | pulldata('listing_addint_jan2019', 'tot_kg_new', 'hhh', ${hhh}) 
+31 | calculate | tot_acres_new_traceR | NA | pulldata('listing_addint_jan2019', 'tot_acres_new_trace', 'hhh', ${hhh}) 
+32 | calculate | tot_acres_newR | NA | pulldata('listing_addint_jan2019', 'tot_acres_new', 'hhh', ${hhh}) 
+33 | calculate | decob_new_when_eR | NA | pulldata('listing_addint_jan2019', 'decob_new_when_e', 'hhh', ${hhh}) 
+34 | calculate | harvest_new_when_eR | NA | pulldata('listing_addint_jan2019', 'harvest_new_when_e', 'hhh', ${hhh}) 
+35 | calculate | dry_new_when_eR | NA | pulldata('listing_addint_jan2019', 'dry_new_when_e', 'hhh', ${hhh}) 
+36 | calculate | bag_new_when_eR | NA | pulldata('listing_addint_jan2019', 'bag_new_when_e', 'hhh', ${hhh}) 
+37 | calculate | sell_new_when_eR | NA | pulldata('listing_addint_jan2019', 'sell_new_when_e', 'hhh', ${hhh}) 
+38 | select_one yes_no_locate | adult | Did you locate the household and found the person you interviewed? | NA 
+39 | text | household_head | Is this the correct and complete name of the household head? Please change it if it is not correct or complete. | if(${hhh1}=99, ${hhh2}, pulldata('listing_addint_jan2019', 'hhh_name', 'hhh', ${hhh1})) 
+40 | calculate | household_head_hhh | NA | concat(${household_head}, ', ', ${hhh}) 
+41 | select_one yes_no_only | moved | Has the household moved permanently? | NA 
+42 | select_one yes_no_only | come_back | Please try to contact the household of ${household_head}. The phone number is:${phone_number_old}.
+ 
+ Make an appointment with them for when | NA 
+43 | note | come_back_note | 
+ TAP SAVE. This form will be saved as  "Followup ${household_head_hhh}". Please write it down and use this form when you meet with the hous | NA 
+44 | select_one yes_no_only | check_hhh | Is this the household of ${household_head}? | NA 
+45 | note | wrong_hh | Please look for the household of  ${household_head}. In case you cannot find it, slide back to "Can you locate this household" and answer "n | NA 
+46 | begin group | int | Survey | NA 
+47 | note | introduction | Hello! My name is ${enumerator_name}. You enrolled in a research study run by Stockholm University. We are here to monitor that you are comp | NA 
+48 | select_one stage | stage | At what stage are you? | NA 
+49 | note | intro_T | REMINDER:
+ 
+ The focus of the study is to test the extent to which one can improve the quality maize through various post-harvest practices. | NA 
+50 | note | intro_end | After you have harvested and let us weigh and assess each bag of maize you will be given an information card where you have to record the we | NA 
+51 | select_one yes_no_only | adress | Have I addressed all the questions the respondent has on this study? | NA 
+52 | select_one yes_no_only | consent | Does the respondent consent to proceed? | NA 
+54 | select_one yes_no_only | exclude_tot | Would you like to be excluded from now on from all of this project activities AND from the opportunity to sell to Golden Growth?
+ 
+ Please n | NA 
+55 | note | interview_end | Thank the respondent and end the interview. | NA 
+56 | begin group | con | Consent | NA 
+57 | select_one yes_no_only | phone_number_old_yn | Is this your phone number: ${phone_number_old}. | NA 
+58 | select_one yes_no_only | phone_number_yn | We would like to ask for the phone number of ${household_head}. The main reason is that we would like to be able to contact you in the futur | NA 
+59 | begin group | phone | Phone number | NA 
+60 | string | phone_number | Mobile phone number of  ${household_head}. | NA 
+61 | string | phone_number_check | Please enter again the mobile phone number of  ${household_head}. | NA 
+62 | calculate | phone_number_E164 | NA | concat('+256',${phone_number}) 
+63 | select_multiple language | lang_sms | In which language can you receive text messages? | NA 
+64 | text | lang_sms_other | Please specify other | NA 
+66 | geopoint | household_location | Collect the coordinates of the household. | NA 
+67 | begin group | gps_m | manual location | NA 
+68 | text | manual_gps_lat_hh | If you can get the GPS location in any other way, please do. Please enter the latitude (Y) of the location. | NA 
+69 | text | manual_gps_lon_hh | If you can get the GPS location in any other way, please do. Please enter the longitude (X) of the location. | NA 
+71 | begin group | conf | CONFIRM | NA 
+72 | decimal | maize_tot_plotn_new | Please confirm 
+ 
+ 1. the number of maize plots you have: | ${maize_tot_plotn_newR} 
+73 | decimal | tot_acres_new_trace | 2. the correct amount of acres to harvest | ${tot_acres_new_traceR} 
+74 | decimal | tot_acres_new | 2. the estimated amount of acres to harvest | ${tot_acres_newR} 
+75 | decimal | tot_kg_new | 3. the KGs of maize you will be getting from harvest (Estimate) | ${tot_kg_newR} 
+77 | select_one yes_no_only | leaflet | Does the household still have the leaflet? | NA 
+78 | select_one yes_no_only | tarpaulin | Did the household receive the tarpaulin? | NA 
+79 | text | tarpaulin_whynot | PLEASE GIVE THE HOUSEHOLD A TARPAULIN, SLIDE BACK AND SELECT 'Yes'. 
+ 
+ If not possible:
+ Why didn't the household receive the tarpaulin? | NA 
+80 | select_one date_frame_ra | harvested_when_tell | Can you tell me When did you harvest this  maize? Please tell me either one date or a time-frame. | NA 
+81 | begin group | wrn | When harvest | NA 
+82 | date | harvested_when_e | When did you harvest this  maize? (EARLIEST or SPECIFIC DAY) | NA 
+83 | date | harvested_when_l | When did you harvest this  maize?  (LATEST) | NA 
+85 | integer | bag_number | How many bags do you have? We will weigh and measure purity and moisture content for each bag. | NA 
+86 | begin repeat | measure | MEASURE | NA 
+87 | calculate | TN | NA | if(${treatment_info}=1, 1, 2) 
+88 | begin group | info | INFORMATION CARD ${TN} | NA 
+89 | note | info_number | Please write the following information on the INFORMATION CARD ${TN}: 
+ 
+ "
+ DATE: ${today}
+ DISTRICT: ${district_name}
+ ENUMERATION AREA: $ | NA 
+90 | note | info_checkT | 
+ Explain to the respondent you will write the weight of the bag AS FROM THE WEIGHING SCALE in the column KG (GG)
+ 
+  | NA 
+91 | note | weight_note_t2 | ***DO NOT READ*** 
+ 
+ MAKE SURE THE RESPONDENT SEES YOU WHILE YOU WEIGHT THE MAIZE AND TELL HIM HOW MUCH THE BAG WEIGHS!! | NA 
+92 | note | weight_note_c2 | ***DO NOT READ*** 
+ 
+ MAKE SURE THE RESPONDENT DOES NOT SEE YOU WHILE YOU WEIGHT THE MAIZE AND DO NOT TELL HIM HOW MUCH THE BAG WEIGHS!! | NA 
+94 | calculate | bag_no | NA | position(..) 
+95 | note | bag_no_note | Please take a bag and mark it with the number ${bag_no} with the big marker. | NA 
+96 | begin group | pract | Practices | NA 
+97 | select_multiple seeds | seeds | What type of seeds did you plant to make this bag? | NA 
+98 | select_multiple chemical | chemical | What type of chemicals did you use to make this bag? | NA 
+100 | begin group | quality | Quality - assess the quality of the maize  in bag number ${bag_no} | NA 
+101 | select_one yes_no_examine | smell | Does the maize in bag number ${bag_no} have a natural smell? | NA 
+102 | select_one color | color | What is the color of maize in bag number ${bag_no} ? | NA 
+103 | select_one yes_no_examine | dirty | Is the maize in bag number ${bag_no} dirty/muddy (e.g. as if it was not dried/decobbed on a tarpaulin)? | NA 
+104 | select_one yes_no_examine | cobs | Does the maize  in bag number ${bag_no} have cobs or cob fragments? | NA 
+105 | select_one yes_no_examine | stones | Does the maize  in bag number ${bag_no} have stones? | NA 
+106 | select_one yes_no_examine | dust | Does the maize  in bag number ${bag_no} have dust? | NA 
+107 | select_one yes_no_examine | broken | Does the maize  in bag number ${bag_no} have broken grains (e.g. as if it was decobbed badly or wet)? | NA 
+108 | select_one yes_no_examine | immature | Does the maize  in bag number ${bag_no} have immature grains (e.g. as if it was harvested too early)? | NA 
+109 | select_one yes_no_examine | damage | Is the maize in bag number ${bag_no} Insect or vermin damaged - or did weevil bored holes in grain? | NA 
+110 | select_one yes_no_examine | rot | Is the maize in bag number ${bag_no} rotten and diseased? | NA 
+111 | select_one yes_no_examine | insect | Does the maize  in bag number ${bag_no} have dead insects? | NA 
+112 | select_one yes_no_examine | insect_live | Does the maize  in bag number ${bag_no} have live insects? | NA 
+113 | select_one yes_no_examine | mould | Does the maize  in bag number ${bag_no} have mould? | NA 
+114 | decimal | moisture | Please input the moisture content of the maize  in bag number ${bag_no} | NA 
+116 | calculate | ok_buy | NA | if(${smell}='yes' and ${dirty}='no' and ${cobs}='no' and ${dust}='no' and ${broken}='no' and ${immature}='no' and ${damage}='no' and ${rot}='no' and $ 
+117 | begin group | quality2 | Quality - assess the quality of the maize  in bag number ${bag_no} | NA 
+118 | note | sumup_quality | This maize:
+ 
+ Has natural smell: ${smell} (Should be Yes)
+ Color: ${color} (Should be White)
+ Is dirty: ${dirty} (Should be No)
+ Has cobs o | NA 
+119 | note | advice_yes | Please report to the respondent that the maize is OF GOOD QUALITY STANDARD! | NA 
+120 | note | advice_no | Please report to the respondent that the maize is NOT OF GOOD QUALITY STANDARD! | NA 
+122 | begin group | W | Weight | NA 
+123 | integer | weight_est | DO NOT WEIGH THE MAIZE YET
+ 
+ Please ask the respondent to estimate the weight of  bag number ${bag_no}. | NA 
+124 | note | weight_note_t1 | ***DO NOT READ*** 
+ 
+ MAKE SURE THE RESPONDENT SEES YOU WHILE YOU WEIGHT THE MAIZE AND TELL HIM HOW MUCH THE BAG WEIGHS!! | NA 
+125 | note | weight_note_c1 | ***DO NOT READ*** 
+ 
+ MAKE SURE THE RESPONDENT DOES NOT SEE YOU WHILE YOU WEIGHT THE MAIZE AND DO NOT TELL HIM HOW MUCH THE BAG WEIGHS!! | NA 
+126 | integer | weight | WEIGH THE MAIZE 
+ 
+ Please input the TRUE weight of the maize in bag number ${bag_no} from the scale. | NA 
+127 | note | weight_note_t | In the SECOND COLUMN KG (GG) of the INFORMATION CARD ${TN} in the row of bag number ${bag_no} write "${weight} KG". | NA 
+130 | calculate | num_bags | NA | count(${measure}) 
+131 | note | check_num_bags | You said you would measure ${bag_number} bags but you measured ${num_bags} bags. 
+ 
+ If ${num_bags} is the correct number of bags, please sl | NA 
+132 | calculate | tot_weight | NA | sum(${weight}) 
+133 | calculate | tot_weight_est | NA | sum(${weight_est}) 
+134 | begin group | sumup_gr | Sumup | NA 
+135 | note | sumup_tot_note | DO NOT DISCLOSE THIS INFORMATION TO THE RESPONDENT!!! This is to check your weighing! | NA 
+136 | integer | sumup_tot | The TRUE total weight of the ${num_bags} bags is: | ${tot_weight} 
+137 | note | sumup_each0 | The following are the weights of each bag reported in the INFORMATION CARD ${TN}  - | NA 
+138 | note | sumup_each1 | Bag # 1 | indexed-repeat(${weight}, ${measure}, 1) 
+139 | note | sumup_each2 | Bag # 2 | indexed-repeat(${weight}, ${measure}, 2) 
+140 | note | sumup_each3 | Bag # 3 | indexed-repeat(${weight}, ${measure}, 3) 
+141 | note | sumup_each4 | Bag # 4 | indexed-repeat(${weight}, ${measure}, 4) 
+142 | note | sumup_each5 | Bag # 5 | indexed-repeat(${weight}, ${measure}, 5) 
+143 | note | sumup_each6 | Bag # 6 | indexed-repeat(${weight}, ${measure}, 6) 
+144 | note | sumup_each7 | Bag # 7 | indexed-repeat(${weight}, ${measure}, 7) 
+145 | note | sumup_each8 | Bag # 8 | indexed-repeat(${weight}, ${measure}, 8) 
+146 | note | sumup_each9 | Bag # 9 | indexed-repeat(${weight}, ${measure}, 9) 
+147 | note | sumup_each10 | Bag # 10 | indexed-repeat(${weight}, ${measure}, 10) 
+148 | note | sumup_each11 | Bag # 11 | indexed-repeat(${weight}, ${measure}, 11) 
+149 | note | sumup_each12 | Bag # 12 | indexed-repeat(${weight}, ${measure}, 12) 
+150 | note | sumup_each13 | Bag # 13 | indexed-repeat(${weight}, ${measure}, 13) 
+151 | note | sumup_each14 | Bag # 14 | indexed-repeat(${weight}, ${measure}, 14) 
+152 | note | sumup_each15 | Bag # 15 | indexed-repeat(${weight}, ${measure}, 15) 
+153 | note | sumup_each16 | Bag # 16 | indexed-repeat(${weight}, ${measure}, 16) 
+154 | note | sumup_each17 | Bag # 17 | indexed-repeat(${weight}, ${measure}, 17) 
+155 | note | sumup_each18 | Bag # 18 | indexed-repeat(${weight}, ${measure}, 18) 
+156 | note | sumup_each19 | Bag # 19 | indexed-repeat(${weight}, ${measure}, 19) 
+157 | note | sumup_each20 | Bag # 20 | indexed-repeat(${weight}, ${measure}, 20) 
+158 | select_one yes_no_only | sumup_check | Please check 'yes' if it is correct. | NA 
+160 | image | info_photo | Please take a photo of the INFORMATION CARD ${TN} you handed the respondent. | NA 
+161 | calculate | image_name | NA | if(${treatment_info}=1, 'info_card_example.jpg', 'info0_card_example.jpg') 
+162 | select_one yes_no_only | info_explain | Please explain to the respondent that they have to  fill in the INFORMATION CARD ${TN}  as soon as they sell each bag. They also have to cal | ${image_name} 
+163 | select_one yes_no_only | info_explainT | Please explain to the respondent that they have to  fill in the INFORMATION CARD ${TN}  as soon as they sell each bag. They also have to cal | NA 
+164 | date | sale_timing | When you think you will have sold all the ${bag_number} bags of  maize? | NA 
+165 | calculate | random_bag | NA | int(${random}*${bag_number})+1 
+166 | calculate | random_bag_weight | NA | indexed-repeat(${weight}, ${measure}, ${random_bag}) 
+167 | begin group | buy_bag | NA | NA 
+168 | note | note_buying | We would like to buy your bag number ${random_bag}, we will pay you ${price} UGX per kg. | NA 
+169 | select_one yes_no_only | reweight_yn | According to our scale, the bag weighs ${random_bag_weight}. Would you like us to reweigh the bag? | NA 
+170 | integer | reweight_buybag | Please reweight the bag and enter the weight. | NA 
+171 | calculate | weight_buybag | NA | if(${reweight_buybag}!='', ${reweight_buybag}, ${random_bag_weight}) 
+172 | calculate | totprice_buybag | NA | ${price}*${weight_buybag} 
+173 | select_one yes_no_only | want_to_sell | Given the price:
+  ${price} UGX per kg 
+ and the weight of the bag:
+ ${weight_buybag} kg
+ 
+ we are going to pay you for bag number ${random_ | NA 
+174 | select_one yes_no_only | write_name | Please write the name of the household and the household number on the bag number ${random_bag}:
+ 
+ ${household_head_hhh} | NA 
+175 | select_one yes_no_only | receipt | Please write the following information on the receipt: 
+ 
+ DATE: ${today}
+ DISTRICT: ${district_name}
+ ENUMERATION AREA: ${ea_name}
+ HOUSEHO | NA 
+176 | image | receipt_photo | Please take a photo of the receipt you handed the respondent. | NA 
+178 | select_one yes_no_only | compensation_C | Since you called us before bagging and let us measure and check your maize we will not only give you free bags but also 20,000 UGX for your  | NA 
+179 | select_one yes_no_only | compensation_all | Once you have sold the bags of maize you should contact us so we can come and collect the data on prices and revenue from you.
+ 
+ You will r | NA 
+181 | note | thank_you | Thank the respondent and end the interview | NA 
+182 | calculate | endquestionnaire | NA | once(now()) 
+183 | select_one enumerator_name | quality_check | Who did the quality check on this questionnaire? | NA 
+===== add5_bags_sales.xlsx type name label::english hint::english constraint constraint_message::english required appearance default relevant read_only calculation repeat_count choice_filter media::image::english read-only ...17 ...18 ...19 
+1 | calculate | compensation | NA | 10000 
+2 | calculate | random | NA | once(random()) 
+3 | start | start | Start Time | NA 
+4 | end | end | End Time | NA 
+5 | today | today | Date of Survey | NA 
+6 | deviceid | deviceid | Phone Serial Number | NA 
+7 | text audit | text_audit | NA | NA 
+8 | subscriberid | subscriberid | Subscriber Identifier | NA 
+9 | imei | imei | SIM serial | NA 
+10 | phonenumber | phonenumber | Phone number | NA 
+11 | begin group | start_group | COLLECTING SALES DATA | NA 
+12 | select_one enumerator_name | enumerator_name | Enumerator name | NA 
+13 | select_one ea | ea_code | Enumeration area name | NA 
+15 | calculate | ea_name | NA | pulldata('listing_addint_followup', 'ea_name', 'ea_code', ${ea_code}) 
+16 | calculate | district_name | NA | pulldata('listing_addint_followup', 'district_name', 'ea_code', ${ea_code}) 
+17 | calculate | this_season | NA | 'August 2018' 
+18 | calculate | last_season | NA | 'January 2018' 
+19 | select_one hhh | hhh1 | What is the FIRST AND LAST name of the household head you are contacting? | NA 
+20 | calculate | hhh | NA | if(${hhh1}=99, ${hhh2}, ${hhh1}) 
+21 | calculate | phone_number_old | NA | pulldata('listing_addint_jan2019', 'phone_number', 'hhh', ${hhh}) 
+22 | calculate | N | NA | pulldata('listing_addint_jan2019', 'N', 'hhh', ${hhh}) 
+23 | calculate | sl_hhh | NA | pulldata('listing_addint_jan2019', 'serial_number', 'hhh', ${hhh}) 
+24 | calculate | treatment | NA | pulldata('listing_addint_jan2019', 'treatment ', 'hhh', ${hhh}) 
+25 | calculate | treatment_quality | NA | pulldata('listing_addint_jan2019', 'treatment_quality', 'hhh', ${hhh}) 
+26 | calculate | maize_tot_plotn_newR | NA | pulldata('listing_addint_jan2019', 'maize_tot_plotn_new', 'hhh', ${hhh}) 
+27 | calculate | tot_kg_newR | NA | pulldata('listing_addint_jan2019', 'tot_kg_new', 'hhh', ${hhh}) 
+28 | calculate | tot_acres_new_traceR | NA | pulldata('listing_addint_jan2019', 'tot_acres_new_trace', 'hhh', ${hhh}) 
+29 | calculate | tot_acres_newR | NA | pulldata('listing_addint_jan2019', 'tot_acres_new', 'hhh', ${hhh}) 
+30 | calculate | decob_new_when_eR | NA | pulldata('listing_addint_jan2019', 'decob_new_when_e', 'hhh', ${hhh}) 
+31 | calculate | harvest_new_when_eR | NA | pulldata('listing_addint_jan2019', 'harvest_new_when_e', 'hhh', ${hhh}) 
+32 | calculate | dry_new_when_eR | NA | pulldata('listing_addint_jan2019', 'dry_new_when_e', 'hhh', ${hhh}) 
+33 | calculate | bag_new_when_eR | NA | pulldata('listing_addint_jan2019', 'bag_new_when_e', 'hhh', ${hhh}) 
+34 | calculate | sell_new_when_eR | NA | pulldata('listing_addint_jan2019', 'sell_new_when_e', 'hhh', ${hhh}) 
+35 | select_one yes_no_locate | adult | Did you locate the household and found the person you interviewed? | NA 
+36 | text | household_head | Is this the correct and complete name of the household head? Please change it if it is not correct or complete. | if(${hhh1}=99, ${hhh2}, pulldata('listing_addint_jan2019', 'hhh_name', 'hhh', ${hhh1})) 
+37 | calculate | household_head_hhh | NA | concat(${household_head}, ', ', ${hhh}) 
+38 | select_one yes_no_only | moved | Has the household moved permanently? | NA 
+39 | select_one yes_no_only | come_back | Please try to contact the household of ${household_head}. The phone number is:${phone_number_old}.
+ 
+ Make an appointment with them for when | NA 
+40 | note | come_back_note | 
+ TAP SAVE. This form will be saved as  "Followup ${household_head_hhh}". Please write it down and use this form when you meet with the hous | NA 
+41 | select_one yes_no_only | check_hhh | Is this the household of ${household_head}? | NA 
+42 | note | wrong_hh | Please look for the household of  ${household_head}. In case you cannot find it, slide back to "Can you locate this household" and answer "n | NA 
+43 | select_one yes_no_only | sold_maize | Did you sell at least part of the  bags of maize we marked when we visited last time? | NA 
+44 | note | introduction | Hello! My name is ${enumerator_name}. You enrolled in a research study run by Stockholm University. We are here to monitor that you are comp | NA 
+45 | select_one yes_no_only | adress | Have I addressed all the questions the respondent has on this study? | NA 
+46 | select_one yes_no_only | consent | Does the respondent consent to proceed? | NA 
+47 | note | interview_end | Thank the respondent and end the interview. | NA 
+48 | integer | bag_number | Enter the TOTAL number of bags below: | NA 
+49 | begin group | info | INFORMATION CARD | NA 
+50 | select_one yes_no_only | info_has | Can the respondent show the INFORMATION CARD? | NA 
+51 | image | info_photo | Please take a photo of the INFORMATION CARD. | NA 
+53 | note | buyer_note | Now we are going to ask information about each single sale the farmer made to any buyer. 
+ 
+ Please ask the seller to think about WHEN and T | NA 
+54 | begin repeat | buyer | Buyers | NA 
+55 | select_one  where_sold | this_buyer_resp | Who did you sell this maize to? | NA 
+56 | text | this_buyer_name | Can you please tell me the name of the buyer or of the company? | NA 
+57 | calculate | this_buyer_label_resp | NA | if(${this_buyer_resp}='trader' or ${this_buyer_resp}='other', ${this_buyer_name} , jr:choice-name(${this_buyer_resp}, '${this_buyer_resp}')) 
+58 | select_one date_frame_ra | sold_when_tell | Can you tell me when did you GIVE the maize to ${this_buyer_label_resp} ? Please tell me either one date or a time-frame. | NA 
+59 | begin group | w | When did you GIVE THE MAIZE to ${this_buyer_label_resp} . | NA 
+60 | date | sold_when_e | When did you GIVE the  maize to ${this_buyer_label_resp} ? (EARLIEST or SPECIFIC DAY) | NA 
+61 | date | sold_when_l | When did you GIVE the  maize to ${this_buyer_label_resp} ? (LATEST) | NA 
+63 | select_multiple bags | bags_sold | Which bags did you sell to ${this_buyer_label_resp}? | bag_number<=${bag_number} 
+64 | integer | tot_weight | Total weight of bags sold to ${this_buyer_label_resp} according to the buyer:
+ BEFORE any deduction! | NA 
+65 | select_one yes_no_only | ind_weight_yn | Can you tell me the individual weight of AT LEAST SOME bag according to the buyer?
+ BEFORE any deduction! | NA 
+66 | begin group | ind_weight | Weight of each bag | NA 
+67 | note | ind_weight_ent | Please enter the individual weight of each bag according to the buyer below. 
+ BEFORE any deduction! | NA 
+68 | integer | ind_weight1 | Bag # 1 | NA 
+69 | integer | ind_weight2 | Bag # 2 | NA 
+70 | integer | ind_weight3 | Bag # 3 | NA 
+71 | integer | ind_weight4 | Bag # 4 | NA 
+72 | integer | ind_weight5 | Bag # 5 | NA 
+73 | integer | ind_weight6 | Bag # 6 | NA 
+74 | integer | ind_weight7 | Bag # 7 | NA 
+75 | integer | ind_weight8 | Bag # 8 | NA 
+76 | integer | ind_weight9 | Bag # 9 | NA 
+77 | integer | ind_weight10 | Bag # 10 | NA 
+78 | integer | ind_weight11 | Bag # 11 | NA 
+79 | integer | ind_weight12 | Bag # 12 | NA 
+80 | integer | ind_weight13 | Bag # 13 | NA 
+81 | integer | ind_weight14 | Bag # 14 | NA 
+82 | integer | ind_weight15 | Bag # 15 | NA 
+83 | integer | ind_weight16 | Bag # 16 | NA 
+84 | integer | ind_weight17 | Bag # 17 | NA 
+85 | integer | ind_weight18 | Bag # 18 | NA 
+86 | integer | ind_weight19 | Bag # 19 | NA 
+87 | integer | ind_weight20 | Bag # 20 | NA 
+89 | calculate | ind_weight_tot | NA | if(${ind_weight1}!='', ${ind_weight1}, 0)+if(${ind_weight2}!='', ${ind_weight2}, 0)+if(${ind_weight3}!='', ${ind_weight3}, 0)+if(${ind_weight4}!='', $ 
+90 | select_one yes_no_only | tot_weight_check | The sum of the weights of the bags according to the buyer (${ind_weight_tot} kgs) is NOT equal to the total weight according to the buyer as | NA 
+91 | select_one yes_no_only | tot_weight_diff | Is the difference due to not knowing the weight of some of the bags? | NA 
+92 | text | tot_weight_other | Why is there a difference? | NA 
+93 | integer | tot_deduction | How many kgs were DEDUCTED from the total amount of ${tot_weight} kgs by the buyer? | NA 
+94 | select_one yes_no_only | ind_deduction_yn | Can you tell me the individual DEDUCTION for each bag according to the buyer?
+  | NA 
+95 | begin group | ind_deduction | DEDUCTION of each bag | NA 
+96 | note | ind_deduction_ent0 | We will consider the individual DEDUCTION for each bag as below. 
+  | NA 
+97 | note | ind_deduction_ent | Please enter the individual DEDUCTION for each bag below. 
+  | NA 
+98 | integer | ind_deduction1 | Bag # 1 | if(${ind_deduction_yn}='yes', '', ${tot_deduction} div count-selected(${bags_sold})) 
+99 | integer | ind_deduction2 | Bag # 2 | if(${ind_deduction_yn}='yes', '', ${tot_deduction} div count-selected(${bags_sold})) 
+100 | integer | ind_deduction3 | Bag # 3 | if(${ind_deduction_yn}='yes', '', ${tot_deduction} div count-selected(${bags_sold})) 
+101 | integer | ind_deduction4 | Bag # 4 | if(${ind_deduction_yn}='yes', '', ${tot_deduction} div count-selected(${bags_sold})) 
+102 | integer | ind_deduction5 | Bag # 5 | if(${ind_deduction_yn}='yes', '', ${tot_deduction} div count-selected(${bags_sold})) 
+103 | integer | ind_deduction6 | Bag # 6 | if(${ind_deduction_yn}='yes', '', ${tot_deduction} div count-selected(${bags_sold})) 
+104 | integer | ind_deduction7 | Bag # 7 | if(${ind_deduction_yn}='yes', '', ${tot_deduction} div count-selected(${bags_sold})) 
+105 | integer | ind_deduction8 | Bag # 8 | if(${ind_deduction_yn}='yes', '', ${tot_deduction} div count-selected(${bags_sold})) 
+106 | integer | ind_deduction9 | Bag # 9 | if(${ind_deduction_yn}='yes', '', ${tot_deduction} div count-selected(${bags_sold})) 
+107 | integer | ind_deduction10 | Bag # 10 | if(${ind_deduction_yn}='yes', '', ${tot_deduction} div count-selected(${bags_sold})) 
+108 | integer | ind_deduction11 | Bag # 11 | if(${ind_deduction_yn}='yes', '', ${tot_deduction} div count-selected(${bags_sold})) 
+109 | integer | ind_deduction12 | Bag # 12 | if(${ind_deduction_yn}='yes', '', ${tot_deduction} div count-selected(${bags_sold})) 
+110 | integer | ind_deduction13 | Bag # 13 | if(${ind_deduction_yn}='yes', '', ${tot_deduction} div count-selected(${bags_sold})) 
+111 | integer | ind_deduction14 | Bag # 14 | if(${ind_deduction_yn}='yes', '', ${tot_deduction} div count-selected(${bags_sold})) 
+112 | integer | ind_deduction15 | Bag # 15 | if(${ind_deduction_yn}='yes', '', ${tot_deduction} div count-selected(${bags_sold})) 
+113 | integer | ind_deduction16 | Bag # 16 | if(${ind_deduction_yn}='yes', '', ${tot_deduction} div count-selected(${bags_sold})) 
+114 | integer | ind_deduction17 | Bag # 17 | if(${ind_deduction_yn}='yes', '', ${tot_deduction} div count-selected(${bags_sold})) 
+115 | integer | ind_deduction18 | Bag # 18 | if(${ind_deduction_yn}='yes', '', ${tot_deduction} div count-selected(${bags_sold})) 
+116 | integer | ind_deduction19 | Bag # 19 | if(${ind_deduction_yn}='yes', '', ${tot_deduction} div count-selected(${bags_sold})) 
+117 | integer | ind_deduction20 | Bag # 20 | if(${ind_deduction_yn}='yes', '', ${tot_deduction} div count-selected(${bags_sold})) 
+119 | calculate | ind_deduction_tot | NA | if(${ind_deduction1}!='', ${ind_deduction1}, 0)+if(${ind_deduction2}!='', ${ind_deduction2}, 0)+if(${ind_deduction3}!='', ${ind_deduction3}, 0)+if(${i 
+120 | select_one yes_no_only | tot_deduction_check | The sum of the deductions of the bags (${ind_deduction_tot} kgs) is NOT equal to the total deduction (${tot_deduction} kgs). 
+ 
+ Is ${tot_de | NA 
+121 | select_one yes_no_only | tot_deduction_diff | Is the difference due to not knowing the deduction of some of the bags? | NA 
+122 | text | tot_deduction_other | Why is there a difference? | NA 
+123 | calculate | tot_ded_weight | NA | ${tot_weight}-${tot_deduction} 
+124 | select_one yes_no_only | tot_ded_weight_check | The total amount the respondent was paid for was: ${tot_weight} - ${tot_deduction} = ${tot_ded_weight}
+ 
+ Is it correct? | NA 
+125 | begin group | ind_ded_weight | Final weight | NA 
+126 | note | ind_ded_weight_note | Please check below the weight of each bag according to the buyer  AFTER THE DEDUCTION. Slide back and change your answers if anything is not | NA 
+127 | integer | ind_ded_weight1 | Bag # 1: ${ind_weight1} - ${ind_deduction1} | ${ind_weight1} - ${ind_deduction1} 
+128 | integer | ind_ded_weight2 | Bag # 2: ${ind_weight2} - ${ind_deduction2} | ${ind_weight2} - ${ind_deduction2} 
+129 | integer | ind_ded_weight3 | Bag # 3: ${ind_weight3} - ${ind_deduction3} | ${ind_weight3} - ${ind_deduction3} 
+130 | integer | ind_ded_weight4 | Bag # 4: ${ind_weight4} - ${ind_deduction4} | ${ind_weight4} - ${ind_deduction4} 
+131 | integer | ind_ded_weight5 | Bag # 5: ${ind_weight5} - ${ind_deduction5} | ${ind_weight5} - ${ind_deduction5} 
+132 | integer | ind_ded_weight6 | Bag # 6: ${ind_weight6} - ${ind_deduction6} | ${ind_weight6} - ${ind_deduction6} 
+133 | integer | ind_ded_weight7 | Bag # 7: ${ind_weight7} - ${ind_deduction7} | ${ind_weight7} - ${ind_deduction7} 
+134 | integer | ind_ded_weight8 | Bag # 8: ${ind_weight8} - ${ind_deduction8} | if( ${ind_deduction8}!='',  ${ind_weight8} - ${ind_deduction8},  ${ind_weight8}) 
+135 | integer | ind_ded_weight9 | Bag # 9: ${ind_weight9} - ${ind_deduction9} | if( ${ind_deduction9}!='',  ${ind_weight9} - ${ind_deduction9},  ${ind_weight9}) 
+136 | integer | ind_ded_weight10 | Bag # 10: ${ind_weight10} - ${ind_deduction10} | if( ${ind_deduction10}!='',  ${ind_weight10} - ${ind_deduction10},  ${ind_weight10}) 
+137 | integer | ind_ded_weight11 | Bag # 11: ${ind_weight11} - ${ind_deduction11} | if( ${ind_deduction11}!='',  ${ind_weight11} - ${ind_deduction11},  ${ind_weight11}) 
+138 | integer | ind_ded_weight12 | Bag # 12: ${ind_weight12} - ${ind_deduction12} | if( ${ind_deduction12}!='',  ${ind_weight12} - ${ind_deduction12},  ${ind_weight12}) 
+139 | integer | ind_ded_weight13 | Bag # 13: ${ind_weight13} - ${ind_deduction13} | if( ${ind_deduction13}!='',  ${ind_weight13} - ${ind_deduction13},  ${ind_weight13}) 
+140 | integer | ind_ded_weight14 | Bag # 14: ${ind_weight14} - ${ind_deduction14} | if( ${ind_deduction14}!='',  ${ind_weight14} - ${ind_deduction14},  ${ind_weight14}) 
+141 | integer | ind_ded_weight15 | Bag # 15: ${ind_weight15} - ${ind_deduction15} | if( ${ind_deduction15}!='',  ${ind_weight15} - ${ind_deduction15},  ${ind_weight15}) 
+142 | integer | ind_ded_weight16 | Bag # 16: ${ind_weight16} - ${ind_deduction16} | if( ${ind_deduction16}!='',  ${ind_weight16} - ${ind_deduction16},  ${ind_weight16}) 
+143 | integer | ind_ded_weight17 | Bag # 17: ${ind_weight17} - ${ind_deduction17} | if( ${ind_deduction17}!='',  ${ind_weight17} - ${ind_deduction17},  ${ind_weight17}) 
+144 | integer | ind_ded_weight18 | Bag # 18: ${ind_weight18} - ${ind_deduction18} | if( ${ind_deduction18}!='',  ${ind_weight18} - ${ind_deduction18},  ${ind_weight18}) 
+145 | integer | ind_ded_weight19 | Bag # 19: ${ind_weight19} - ${ind_deduction19} | if( ${ind_deduction19}!='',  ${ind_weight19} - ${ind_deduction19},  ${ind_weight19}) 
+146 | integer | ind_ded_weight20 | Bag # 20: ${ind_weight20} - ${ind_deduction20} | if( ${ind_deduction20}!='',  ${ind_weight20} - ${ind_deduction20},  ${ind_weight20}) 
+148 | select_multiple deduction | deduction_why | Why were these kgs deducted? | NA 
+149 | text | deduction_why_other | Please specify other | NA 
+150 | select_one yes_dk_ra | ppk_tell | Can you tell me the price per kg ${this_buyer_label_resp} paid you? | NA 
+151 | integer | ppk | Price per kg (shillings). | NA 
+152 | calculate | tot_rev_buyer_calc | NA | ${ppk}*${tot_ded_weight} 
+153 | integer | tot_rev_buyer_told | What is the total amount the buyer paid you? 
+ It should be ${tot_rev_buyer_calc}. | ${tot_rev_buyer_calc} 
+154 | text | tot_rev_why | Why is there a difference between the revenue calculated by the form as price ${ppk}* total weight${tot_ded_weight} kgs and the revenue you  | NA 
+155 | begin group | rev_pb | REVENUE of each bag | NA 
+156 | note | ind_rev_ent | Please check the individual REVENUE for each bag below. 
+ 
+ If something is not right, slide back and change your answers. 
+  | NA 
+157 | integer | ind_rev1 | Bag # 1: price ${ppk} * ${ind_ded_weight1} kgs | ${ppk}*${ind_ded_weight1} 
+158 | integer | ind_rev2 | Bag # 2: price ${ppk} * ${ind_ded_weight2} kgs | ${ppk}*${ind_ded_weight2} 
+159 | integer | ind_rev3 | Bag # 3: price ${ppk} * ${ind_ded_weight3} kgs | ${ppk}*${ind_ded_weight3} 
+160 | integer | ind_rev4 | Bag # 4: price ${ppk} * ${ind_ded_weight4} kgs | ${ppk}*${ind_ded_weight4} 
+161 | integer | ind_rev5 | Bag # 5: price ${ppk} * ${ind_ded_weight5} kgs | ${ppk}*${ind_ded_weight5} 
+162 | integer | ind_rev6 | Bag # 6: price ${ppk} * ${ind_ded_weight6} kgs | ${ppk}*${ind_ded_weight6} 
+163 | integer | ind_rev7 | Bag # 7: price ${ppk} * ${ind_ded_weight7} kgs | ${ppk}*${ind_ded_weight7} 
+164 | integer | ind_rev8 | Bag # 8: price ${ppk} * ${ind_ded_weight8} kgs | ${ppk}*${ind_ded_weight8} 
+165 | integer | ind_rev9 | Bag # 9: price ${ppk} * ${ind_ded_weight9} kgs | ${ppk}*${ind_ded_weight9} 
+166 | integer | ind_rev10 | Bag # 10: price ${ppk} * ${ind_ded_weight10} kgs | ${ppk}*${ind_ded_weight10} 
+167 | integer | ind_rev11 | Bag # 11: price ${ppk} * ${ind_ded_weight11} kgs | ${ppk}*${ind_ded_weight11} 
+168 | integer | ind_rev12 | Bag # 12: price ${ppk} * ${ind_ded_weight12} kgs | ${ppk}*${ind_ded_weight12} 
+169 | integer | ind_rev13 | Bag # 13: price ${ppk} * ${ind_ded_weight13} kgs | ${ppk}*${ind_ded_weight13} 
+170 | integer | ind_rev14 | Bag # 14: price ${ppk} * ${ind_ded_weight14} kgs | ${ppk}*${ind_ded_weight14} 
+171 | integer | ind_rev15 | Bag # 15: price ${ppk} * ${ind_ded_weight15} kgs | ${ppk}*${ind_ded_weight15} 
+172 | integer | ind_rev16 | Bag # 16: price ${ppk} * ${ind_ded_weight16} kgs | ${ppk}*${ind_ded_weight16} 
+173 | integer | ind_rev17 | Bag # 17: price ${ppk} * ${ind_ded_weight17} kgs | ${ppk}*${ind_ded_weight17} 
+174 | integer | ind_rev18 | Bag # 18: price ${ppk} * ${ind_ded_weight18} kgs | ${ppk}*${ind_ded_weight18} 
+175 | integer | ind_rev19 | Bag # 19: price ${ppk} * ${ind_ded_weight19} kgs | ${ppk}*${ind_ded_weight19} 
+176 | integer | ind_rev20 | Bag # 20: price ${ppk} * ${ind_ded_weight20} kgs | ${ppk}*${ind_ded_weight20} 
+178 | calculate | ind_rev_buyer_tot | NA | if( ${ind_weight_yn}='yes', if(${ind_rev1}!='', ${ind_rev1}, 0)+if(${ind_rev2}!='', ${ind_rev2}, 0)+if(${ind_rev3}!='', ${ind_rev3}, 0)+if(${ind_rev4} 
+179 | note | end_note | Thank the respondent and end the interview. | NA 
+season x treat
+   
+      0   1
+  1  75 103
+  2  77 109
+  3  76 104
+  4  75 101
+  5  69  97
+  6  69  98
+  7  73  95
+                                
+                                   1   2   3   4   5   6   7
+  ANEW_baseline                  178   0   0   0   0   0   0
+  ANEW_baseline_Vaspecial_WIDE     0  11   0   0   0   0   0
+  ANEW_followup_sep2017            0 175   0   0   0   0   0
+  Market_Survey_fall2019           0   0   0   0   0 167   0
+  Market_Survey_mar2018            0   0 180   0   0   0   0
+  Market_Survey_mar2019            0   0   0   0 166   0   0
+  Market_Survey_oct2018            0   0   0 176   0   0   0
+  Market_Survey_spring2020         0   0   0   0   0   0 149
+  Phone_Market_Survey_spring2020   0   0   0   0   0   0  19
+        
+           1   2   3   4   5   6   7
+         178 186 180 165  11  11  24
+  days     0   0   0   6 129 137 125
+  hours    0   0   0   5  17  11  17
+  season   0   0   0   0   9   8   2
+        
+           1   2   3   4   5   6   7
+         178 186 180 167  58  59  65
+  days     0   0   0   0  21  29  14
+  hours    0   0   0   1   9   0   1
+  season   0   0   0   8  78  79  88
+        
+           1   2   3   4   5   6   7
+         178 186 180 165  10   7  21
+  days     0   0   0   9 141 144 126
+  hours    0   0   0   2  13  12  16
+  season   0   0   0   0   2   4   5
+        
+           1   2   3   4   5   6   7
+         178 186 180 169  67  67  68
+  days     0   0   0   6  27  30  32
+  hours    0   0   0   0  10   0   0
+  season   0   0   0   1  62  70  68
+dups hh-season: 0 
+   ea_code survey_season buy_treatment sold_kg_p_   hhh_id sold_kg_tot name     price
+1  EA10078             2             1        840 10078006         840   NA 1000.0000
+2  EA10078             3             1       2940 10078006        3220  999  600.0000
+3  EA10078             3             1        280 10078006        3220    4  471.4286
+4  EA10078             1             1        910 10078013         910   NA 1000.0000
+5  EA10078             2             1        675 10078013         675   NA  674.0741
+6  EA10078             3             1        260 10078013         260  999  500.0000
+7  EA10078             4             1        840 10078013         840    2  246.4286
+8  EA10078             7             1        280 10078013         856    2  690.0000
+9  EA10078             7             1        576 10078013         856  555  850.0000
+10 EA10078             1             1       1485 10078018        1485   NA 1050.0000
+11 EA10078             2             1       1960 10078018        1960   NA  836.9898
+12 EA10078             3             1        910 10078018        1105  999  551.3846
+13 EA10078             3             1        195 10078018        1105    4  600.0000
+14 EA10078             4             1       1245 10078018        1245  555  360.0000
+15 EA10078             5             1        476 10078018         476  555  700.0000
+16 EA10078             6             1        442 10078018         864  555  810.0000
+17 EA10078             6             1        422 10078018         864  555  980.0000
+18 EA10078             7             1        434 10078018         434  555  850.0000
+19 EA10078             2             1       2250 10078024        2250   NA  870.0000
+20 EA10078             3             1       1625 10078024        1625    4  600.0000
+
+  1   2   3   4   5   6   7 
+146 179 220 192 193 248 211 
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+    0.0   500.0   670.0   653.9   800.0  1570.0 
+       1        2        3        4        5        6        7 
+900.0000 750.0000 553.8228 281.5952 600.0000 759.7115 749.4667 
+n bags per hh:
+nb
+ 2  3  4  5  6  7  8  9 10 11 12 13 14 15 17 18 19 20 
+17 14 13  9  6  6  4  7  6  3  4  2  3  1  1  1  1  1 
+total 644 
+sale 1 ppk nonNA 95 date nonNA NA bagweights any 95 
+sale 2 ppk nonNA 94 date nonNA NA bagweights any 94 
+sale 3 ppk nonNA 16 date nonNA NA bagweights any 16 
+sale 4 ppk nonNA 6 date nonNA NA bagweights any 6 
+
+ 1  2  3  4  5  6  8  9 10 12 16 18 
+24 19 18  6 11  6  5  4  3  1  1  1 
+   treatment ea_code add5_ppk_1 add5_sold_when_e_1 add5_ppk_2 add5_sold_when_e_2 add5_ppk_3 add5_ppk_4
+1          0 EA10358        830         2019-03-29       1030         2019-04-10         NA         NA
+2          0 EA10358        820         2019-03-30        800         2019-04-07         NA         NA
+3          0 EA10358        930         2019-04-06       1000         2019-04-18         NA         NA
+4          1 EA10197        680         2019-03-07        640         2019-03-23         NA         NA
+5          0 EA10358        800         2019-03-30        800         2019-04-01        980       1020
+6          1 EA10179        600         2019-02-06        550         2019-02-07         NA         NA
+7          0 EA10179        600         2019-02-02        550         2019-02-10         NA         NA
+8          0 EA10358        930         2019-04-06       1060         2019-04-18         NA         NA
+9          0 EA10095        680         2019-03-07        850         2019-04-05         NA         NA
+10         0 EA10358        830         2019-03-29       1000         2019-05-25         NA         NA
+11         0 EA10095        670         2019-02-14        670         2019-02-17         NA         NA
+12         1 EA10095        670         2019-02-14        970         2019-04-10         NA         NA
+13         1 EA10095        680         2019-03-05        600         2019-03-16         NA         NA
+14         1 EA10095        670         2019-02-13        620         2019-02-15        630        600
+15         0 EA10095        650         2019-03-09        600         2019-03-24         NA         NA
+16         1 EA10095        670         2019-02-14        600         2019-02-22         NA         NA
+17         1 EA10095        720         2019-02-19        620         2019-03-01         NA         NA
+18         1 EA10149        600         2019-02-04        500         2019-02-10         NA         NA
+19         0 EA10149        720         2019-02-16        650         2019-02-17         NA         NA
+20         1 EA10149        600         2019-02-04        500         2019-02-20         NA         NA
+21         0 EA10149        720         2019-02-16        700         2019-03-11         NA         NA
+22         0 EA10178        600         2019-02-03        550         2019-02-10         NA         NA
+23         0 EA10178        600         2019-01-27        550         2019-01-28         NA         NA
+24         1 EA10178        600         2019-02-10        600         2019-02-11        500        750
+25         0 EA10178        600         2019-01-30        600         2019-01-31         NA         NA
+26         0 EA10178        600         2019-02-07        570         2019-02-08         NA         NA
+27         1 EA10178        600         2019-01-31        550         2019-02-02         NA         NA
+28         1 EA10178        600         2019-01-29        550         2019-01-31         NA         NA
+29         0 EA10179        600         2019-01-27        540         2019-01-29         NA         NA
+30         1 EA10179        600         2019-02-03        570         2019-02-03         NA         NA

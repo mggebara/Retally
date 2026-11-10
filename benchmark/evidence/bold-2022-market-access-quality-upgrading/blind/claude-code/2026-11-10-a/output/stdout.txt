@@ -1,0 +1,80 @@
+Col1: N bags = 644  control mean = 2.333333 
+           Estimate Std. Error   t value     Pr(>|t|)
+treatment -2.073289  0.2098131 -9.881599 2.187115e-16
+attr(,"vcov_type")
+[1] "Clustered (hhh_id)"
+Col2: N = 82  control mean = 0.3227308 
+            Estimate Std. Error   t value     Pr(>|t|)
+treatment -0.1977983 0.05366591 -3.685735 0.0004387281
+attr(,"vcov_type")
+[1] "Heteroskedasticity-robust"
+Sales: 116  households: 94  missing date: 0  missing y: 0 
+          Estimate Std. Error   t value  Pr(>|t|)
+treatment 8.817752   9.011331 0.9785182 0.3303567
+attr(,"vcov_type")
+[1] "Clustered (hhh_id)"
+N = 116 
+           Estimate Std. Error  t value  Pr(>|t|)
+treatment 0.2292368  0.5460036 0.419845 0.6755671
+attr(,"vcov_type")
+[1] "Clustered (hhh_id)"
+N = 116 
+          Estimate Std. Error   t value  Pr(>|t|)
+treatment 6.552947    9.39437 0.6975397 0.4872053
+attr(,"vcov_type")
+[1] "Clustered (hhh_id)"
+N = 116 
+control means: price 731.25  ded 3.730245  net 704.5267 
+Hourly wage (UGX): 833.3333  = median daily hired wage 5000 / median hours per day 6 
+
+== price_usd  N = 623  control mean = 0.1491945 
+                Estimate  Std. Error  t value    Pr(>|t|)
+buy_treatment 0.01574266 0.004435012 3.549631 0.002140033
+P             0.19346125 0.064642002 2.992810 0.007479824
+
+== harvest  N = 658  control mean = 1887.522 
+                Estimate   Std. Error   t value     Pr(>|t|)
+buy_treatment 50.3954497 221.12018607 0.2279098 8.221511e-01
+P              0.4080457   0.05485098 7.4391683 4.848001e-07
+
+== yield  N = 658  control mean = 799.1625 
+                Estimate  Std. Error  t value   Pr(>|t|)
+buy_treatment 93.0464656 48.94926648 1.900876 0.07259741
+P              0.1427113  0.04819543 2.961097 0.00802298
+
+== hv  N = 658  control mean = 286.5764 
+                Estimate  Std. Error  t value     Pr(>|t|)
+buy_treatment 49.5131635 47.89088269 1.033875 3.141758e-01
+P              0.3171329  0.04770398 6.647934 2.331655e-06
+
+== expenses  N = 640  control mean = 106.4515 
+                Estimate  Std. Error   t value     Pr(>|t|)
+buy_treatment 15.8014171 19.02029970 0.8307659 4.164238e-01
+P              0.6529117  0.06618463 9.8650049 6.548226e-09
+
+== profit_m  N = 640  control mean = 177.3566 
+                Estimate  Std. Error  t value    Pr(>|t|)
+buy_treatment 46.1739270 40.98365986 1.126642 0.273922610
+P              0.1442454  0.04924412 2.929190 0.008607796
+
+== profit_own  N = 464  control mean = 120.8522 
+                Estimate Std. Error  t value   Pr(>|t|)
+buy_treatment 75.9920283 54.1280585 1.403930 0.17647425
+P              0.1736165  0.0614964 2.823198 0.01086014
+N harvest / yield / harvest value: 658 658 658 
+DEVIATION: UGX converted to USD at a constant 3700 UGX/USD (rate not provided in data or paper).
+DEVIATION: own labor valued at hourly wage = median daily hired-labor wage / median reported hours per day; own hours available seasons 5-7 only, so col 8 uses pretreatment monetary profit as the lagged control.
+DEVIATION: missing pretreatment values set to 0 with a missing-indicator in ANCOVA.
+RESULT:treatment_defects_visual_table2_col1=-2.073289
+RESULT:treatment_defects_lab_table2_col2=-0.197798
+RESULT:treatment_price_table2_col3=8.817752
+RESULT:treatment_deductions_table2_col4=0.229237
+RESULT:treatment_net_price_table2_col5=6.552947
+RESULT:n_obs_table2_col1_bags=644.000000
+RESULT:n_obs_table2_cols3_5_sales=116.000000
+RESULT:market_access_price_table6_panelA_col1=0.015743
+RESULT:market_access_yield_table6_panelA_col4=93.046466
+RESULT:market_access_harvest_value_table6_panelA_col5=49.513163
+RESULT:market_access_profit_monetary_table6_panelA_col7=46.173927
+RESULT:market_access_profit_incl_own_hours_table6_panelA_col8=75.992028
+RESULT:n_obs_table6_panelA_cols3_5=658.000000

@@ -1,0 +1,731 @@
+{
+  "how": "recomputed: ResultComparator().compare_all(catalog claims, RESULT lines of output/stdout.txt, mode) - the comparator and claim conversion benchmark.runner.score_reproduction uses; row: the results row's claim_details entry as written by the run (tolerance, tolerance_source and rel_err come from there unchanged).",
+  "claims": [
+    {
+      "name": "treatment_defects_visual_table2_col1",
+      "ground_truth": {
+        "value": -2.16,
+        "standard_error": 0.212,
+        "unit": "number of visually verified defect types per bag (out of ten)",
+        "claim_type": "coefficient",
+        "location": "Table 2, column (1) Defects (visually verifiable), Treatment",
+        "context": "Table 2 (\"Returns to Quality: Treatment Effects\"), column (1).  Returns to quality experiment: maize-farming households randomly assigned to a free harvest and postharvest service package (treatment) or not (control).  OLS of the number of defect types (out of ten) that trained enumerators visually verified in a bag the household was about to sell, on the treatment indicator with village fixed effects.  Unit of observation: a bag (all bags inspected).  Standard errors clustered by household.\n",
+        "decimals": 2,
+        "sample_size": null
+      },
+      "i4r": {
+        "reproduced_value": -2.16,
+        "outcome": "matches",
+        "notes": "DP72 Table 1 col 1 \"Original\" -2.16 (0.212), N 622; DB rows are variants, e.g. below-median sample -1.41 (0.114).",
+        "reproduced_within_band": true
+      },
+      "rule": {
+        "mode": "blind",
+        "type_relative_tolerance": 0.02,
+        "se_multiplier": 1.0,
+        "se_band_relative": 0.09814814814814814,
+        "printed_half_unit": 0.005
+      },
+      "row": {
+        "description": "treatment_defects_visual_table2_col1",
+        "claim_type": "coefficient",
+        "claimed": -2.16,
+        "reproduced": -2.073289262,
+        "tolerance": 0.09814814814814814,
+        "rel_err": 0.040143860185185315,
+        "passed": true,
+        "passed_first_attempt": false,
+        "passed_first_scored": true,
+        "tolerance_source": "se_band"
+      },
+      "recomputed": {
+        "result_name": "treatment_defects_visual_table2_col1",
+        "reproduced": -2.073289262,
+        "band_source": "se_band",
+        "band_relative": 0.09814814814814814,
+        "band_absolute": 0.212,
+        "abs_err": 0.08671073800000029,
+        "rel_err": 0.040143860185185315,
+        "margin": 0.409012915094341,
+        "passed": true,
+        "notes": ""
+      },
+      "agrees_with_row": true,
+      "verdict": "PASS"
+    },
+    {
+      "name": "treatment_defects_lab_table2_col2",
+      "ground_truth": {
+        "value": -0.2,
+        "standard_error": 0.054,
+        "unit": "share of defective grain and waste in the lab sample",
+        "claim_type": "coefficient",
+        "location": "Table 2, column (2) Defects (lab), Treatment",
+        "context": "Table 2, column (2): OLS of laboratory-measured defects (defective grain and waste in the lab sample, which the table notes describe as grams of defects per 200 g of maize; the text reads the coefficient as a percentage-point difference in the share of the content) on the treatment indicator with village fixed effects.  Unit of observation: one randomly selected bag bought from each household for lab testing.  Robust (heteroskedasticity-consistent) standard errors.\n",
+        "decimals": 2,
+        "sample_size": null
+      },
+      "i4r": {
+        "reproduced_value": -0.2,
+        "outcome": "matches",
+        "notes": "DP72 blanket verdict; DP Table 2 \"Original\" col prints -0.20 (0.011) with 1640 obs (a different setup); DB rows are quantile variants, e.g. median -0.03 (0.003).",
+        "reproduced_within_band": true
+      },
+      "rule": {
+        "mode": "blind",
+        "type_relative_tolerance": 0.02,
+        "se_multiplier": 1.0,
+        "se_band_relative": 0.26999999999999996,
+        "printed_half_unit": 0.005
+      },
+      "row": {
+        "description": "treatment_defects_lab_table2_col2",
+        "claim_type": "coefficient",
+        "claimed": -0.2,
+        "reproduced": -0.1977983136,
+        "tolerance": 0.26999999999999996,
+        "rel_err": 0.011008432000000068,
+        "passed": true,
+        "passed_first_attempt": false,
+        "passed_first_scored": true,
+        "tolerance_source": "se_band"
+      },
+      "recomputed": {
+        "result_name": "treatment_defects_lab_table2_col2",
+        "reproduced": -0.1977983136,
+        "band_source": "se_band",
+        "band_relative": 0.26999999999999996,
+        "band_absolute": 0.05399999999999999,
+        "abs_err": 0.0022016864000000136,
+        "rel_err": 0.011008432000000068,
+        "margin": 0.04077197037037063,
+        "passed": true,
+        "notes": ""
+      },
+      "agrees_with_row": true,
+      "verdict": "PASS"
+    },
+    {
+      "name": "treatment_price_table2_col3",
+      "ground_truth": {
+        "value": 2.95,
+        "standard_error": 9.87,
+        "unit": "Ugandan shillings per kilogram",
+        "claim_type": "coefficient",
+        "location": "Table 2, column (3) Price, Treatment",
+        "context": "Table 2, column (3): OLS of the price received (Ugandan shillings per kilogram) on the treatment indicator, with village and week-of-sale fixed effects.  Unit of observation: a maize sale reported in the final household visit.  Standard errors clustered by household.  The paper reads it as essentially zero: no return to quality.\n",
+        "decimals": 2,
+        "sample_size": null
+      },
+      "i4r": {
+        "reproduced_value": 2.95,
+        "outcome": "matches",
+        "notes": "DP72 blanket verdict; no DB row for this column.",
+        "reproduced_within_band": true
+      },
+      "rule": {
+        "mode": "blind",
+        "type_relative_tolerance": 0.02,
+        "se_multiplier": 1.0,
+        "se_band_relative": 3.345762711864406,
+        "printed_half_unit": 0.005
+      },
+      "row": {
+        "description": "treatment_price_table2_col3",
+        "claim_type": "coefficient",
+        "claimed": 2.95,
+        "reproduced": 2.9494082,
+        "tolerance": 3.345762711864406,
+        "rel_err": 0.00020061016949153598,
+        "passed": true,
+        "passed_first_attempt": false,
+        "passed_first_scored": true,
+        "tolerance_source": "se_band"
+      },
+      "recomputed": {
+        "result_name": "treatment_price_table2_col3",
+        "reproduced": 2.9494082,
+        "band_source": "se_band",
+        "band_relative": 3.345762711864406,
+        "band_absolute": 9.87,
+        "abs_err": 0.0005918000000000312,
+        "rel_err": 0.00020061016949153598,
+        "margin": 5.995947315096568e-05,
+        "passed": true,
+        "notes": ""
+      },
+      "agrees_with_row": true,
+      "verdict": "PASS"
+    },
+    {
+      "name": "treatment_deductions_table2_col4",
+      "ground_truth": {
+        "value": 0.18,
+        "standard_error": 0.633,
+        "unit": "percent of the measured weight",
+        "claim_type": "coefficient",
+        "location": "Table 2, column (4) Deductions, Treatment",
+        "context": "Table 2, column (4): OLS of weight deductions, (y - z)/y in percent, where y is the weight of maize sold as measured by enumerators and z the agreed sales volume, on the treatment indicator with village and week-of-sale fixed effects.  Unit of observation: a maize sale. Standard errors clustered by household.\n",
+        "decimals": 2,
+        "sample_size": null
+      },
+      "i4r": {
+        "reproduced_value": 0.18,
+        "outcome": "matches",
+        "notes": "DP72 Table 3 col 1 \"Original\" 0.18 (0.633), N 116; the DB row is the sign-flipped net-sales outcome -0.18 (0.633).",
+        "reproduced_within_band": true
+      },
+      "rule": {
+        "mode": "blind",
+        "type_relative_tolerance": 0.02,
+        "se_multiplier": 1.0,
+        "se_band_relative": 3.516666666666667,
+        "printed_half_unit": 0.005
+      },
+      "row": {
+        "description": "treatment_deductions_table2_col4",
+        "claim_type": "coefficient",
+        "claimed": 0.18,
+        "reproduced": 0.1773208069,
+        "tolerance": 3.516666666666667,
+        "rel_err": 0.014884406111111137,
+        "passed": true,
+        "passed_first_attempt": false,
+        "passed_first_scored": true,
+        "tolerance_source": "se_band"
+      },
+      "recomputed": {
+        "result_name": "treatment_deductions_table2_col4",
+        "reproduced": 0.1773208069,
+        "band_source": "se_band",
+        "band_relative": 3.516666666666667,
+        "band_absolute": 0.633,
+        "abs_err": 0.0026791931000000047,
+        "rel_err": 0.014884406111111137,
+        "margin": 0.004232532543443925,
+        "passed": true,
+        "notes": ""
+      },
+      "agrees_with_row": true,
+      "verdict": "PASS"
+    },
+    {
+      "name": "treatment_net_price_table2_col5",
+      "ground_truth": {
+        "value": 0.98,
+        "standard_error": 10.621,
+        "unit": "Ugandan shillings per kilogram",
+        "claim_type": "coefficient",
+        "location": "Table 2, column (5) Net price, Treatment",
+        "context": "Table 2, column (5): OLS of the net price (price net of any weight deductions, Ugandan shillings per kilogram) on the treatment indicator with village and week-of-sale fixed effects.  Unit of observation: a maize sale.  Standard errors clustered by household.\n",
+        "decimals": 2,
+        "sample_size": null
+      },
+      "i4r": {
+        "reproduced_value": 0.98,
+        "outcome": "matches",
+        "notes": "DP72 blanket verdict; no DB row for this column.",
+        "reproduced_within_band": true
+      },
+      "rule": {
+        "mode": "blind",
+        "type_relative_tolerance": 0.02,
+        "se_multiplier": 1.0,
+        "se_band_relative": 10.837755102040816,
+        "printed_half_unit": 0.005
+      },
+      "row": {
+        "description": "treatment_net_price_table2_col5",
+        "claim_type": "coefficient",
+        "claimed": 0.98,
+        "reproduced": 1.331701711,
+        "tolerance": 10.837755102040816,
+        "rel_err": 0.35887929693877557,
+        "passed": true,
+        "passed_first_attempt": false,
+        "passed_first_scored": true,
+        "tolerance_source": "se_band"
+      },
+      "recomputed": {
+        "result_name": "treatment_net_price_table2_col5",
+        "reproduced": 1.331701711,
+        "band_source": "se_band",
+        "band_relative": 10.837755102040816,
+        "band_absolute": 10.621,
+        "abs_err": 0.35170171100000003,
+        "rel_err": 0.35887929693877557,
+        "margin": 0.03311380387910743,
+        "passed": true,
+        "notes": ""
+      },
+      "agrees_with_row": true,
+      "verdict": "PASS"
+    },
+    {
+      "name": "n_obs_table2_col1_bags",
+      "ground_truth": {
+        "value": 622.0,
+        "standard_error": null,
+        "unit": "bags",
+        "claim_type": "count",
+        "location": "Table 2, Observations, column (1)",
+        "context": "Number of observations in Table 2, column (1): the bags visually inspected by enumerators across all households in the returns to quality experiment.\n",
+        "decimals": 0,
+        "sample_size": null
+      },
+      "i4r": {
+        "reproduced_value": 622.0,
+        "outcome": "matches",
+        "notes": "DP72 Table 1 col 1 \"Original\" Observations 622.",
+        "reproduced_within_band": true
+      },
+      "rule": {
+        "mode": "blind",
+        "type_relative_tolerance": 0.05,
+        "se_multiplier": 1.0,
+        "se_band_relative": null,
+        "printed_half_unit": 0.5
+      },
+      "row": {
+        "description": "n_obs_table2_col1_bags",
+        "claim_type": "count",
+        "claimed": 622.0,
+        "reproduced": 644.0,
+        "tolerance": 0.05,
+        "rel_err": 0.03536977491961415,
+        "passed": true,
+        "passed_first_attempt": false,
+        "passed_first_scored": true,
+        "tolerance_source": "relative"
+      },
+      "recomputed": {
+        "result_name": "n_obs_table2_col1_bags",
+        "reproduced": 644.0,
+        "band_source": "relative",
+        "band_relative": 0.05,
+        "band_absolute": 31.1,
+        "abs_err": 22.0,
+        "rel_err": 0.03536977491961415,
+        "margin": 0.7073954983922829,
+        "passed": true,
+        "notes": ""
+      },
+      "agrees_with_row": true,
+      "verdict": "PASS"
+    },
+    {
+      "name": "n_obs_table2_cols3_5_sales",
+      "ground_truth": {
+        "value": 116.0,
+        "standard_error": null,
+        "unit": "sales",
+        "claim_type": "count",
+        "location": "Table 2, Observations, columns (3)-(5)",
+        "context": "Number of observations in Table 2, columns (3) to (5): the maize sales recorded in the final visit to the returns to quality households.\n",
+        "decimals": 0,
+        "sample_size": null
+      },
+      "i4r": {
+        "reproduced_value": 116.0,
+        "outcome": "matches",
+        "notes": "DP72 Table 3 col 1 \"Original\" Observations 116.",
+        "reproduced_within_band": true
+      },
+      "rule": {
+        "mode": "blind",
+        "type_relative_tolerance": 0.05,
+        "se_multiplier": 1.0,
+        "se_band_relative": null,
+        "printed_half_unit": 0.5
+      },
+      "row": {
+        "description": "n_obs_table2_cols3_5_sales",
+        "claim_type": "count",
+        "claimed": 116.0,
+        "reproduced": 116.0,
+        "tolerance": 0.05,
+        "rel_err": 0.0,
+        "passed": true,
+        "passed_first_attempt": false,
+        "passed_first_scored": true,
+        "tolerance_source": "relative"
+      },
+      "recomputed": {
+        "result_name": "n_obs_table2_cols3_5_sales",
+        "reproduced": 116.0,
+        "band_source": "relative",
+        "band_relative": 0.05,
+        "band_absolute": 5.800000000000001,
+        "abs_err": 0.0,
+        "rel_err": 0.0,
+        "margin": 0.0,
+        "passed": true,
+        "notes": ""
+      },
+      "agrees_with_row": true,
+      "verdict": "PASS"
+    },
+    {
+      "name": "market_access_price_table6_panelA_col1",
+      "ground_truth": {
+        "value": 0.017,
+        "standard_error": null,
+        "unit": "US dollars per kilogram",
+        "claim_type": "coefficient",
+        "location": "Table 6, Panel A (Market access experiment), column (1) Price, Access to a market for quality maize",
+        "context": "Table 6 (\"Impact on Productivity and Income\"), Panel A, column (1). Market access experiment: villages randomly assigned to access to an agricultural trading company that buys maize of sufficient quality at a premium (with extension service), or to control; households surveyed over three baseline and four follow-up seasons.  ANCOVA regression on follow-up seasons only: the outcome on the treatment indicator, season dummies and the household's pretreatment value of the outcome.  Outcome: average price per kilogram of maize sold, in US dollars.  Standard errors clustered by village (the table prints p-values, not standard errors, in parentheses).\n",
+        "decimals": 3,
+        "sample_size": null
+      },
+      "i4r": {
+        "reproduced_value": 0.017,
+        "outcome": "matches",
+        "notes": "DP72 blanket verdict; DB row is a permutation-seed check of the bracketed p-value (DP Table 9, mean 0.0036 vs [0.004]).",
+        "reproduced_within_band": false
+      },
+      "rule": {
+        "mode": "blind",
+        "type_relative_tolerance": 0.02,
+        "se_multiplier": 1.0,
+        "se_band_relative": null,
+        "printed_half_unit": 0.0005
+      },
+      "row": {
+        "description": "market_access_price_table6_panelA_col1",
+        "claim_type": "coefficient",
+        "claimed": 0.017,
+        "reproduced": 0.01574265662,
+        "tolerance": 0.029411764705882353,
+        "rel_err": 0.07396137529411771,
+        "passed": false,
+        "passed_first_attempt": false,
+        "passed_first_scored": false,
+        "tolerance_source": "printed_precision"
+      },
+      "recomputed": {
+        "result_name": "market_access_price_table6_panelA_col1",
+        "reproduced": 0.01574265662,
+        "band_source": "printed_precision",
+        "band_relative": 0.029411764705882353,
+        "band_absolute": 0.0005,
+        "abs_err": 0.0012573433800000013,
+        "rel_err": 0.07396137529411771,
+        "margin": 2.5146867600000027,
+        "passed": false,
+        "notes": "Outside tolerance: reproduced=0.01574265662 vs claimed=0.017 (relative error 7.40%, tolerance 2.94%, half a unit in the printed place (3 decimals: ±0.0005))."
+      },
+      "agrees_with_row": true,
+      "verdict": "FAIL"
+    },
+    {
+      "name": "market_access_yield_table6_panelA_col4",
+      "ground_truth": {
+        "value": 108.9,
+        "standard_error": null,
+        "unit": "kilograms per acre",
+        "claim_type": "coefficient",
+        "location": "Table 6, Panel A (Market access experiment), column (4) Yield, Access to a market for quality maize",
+        "context": "Table 6, Panel A, column (4): the same ANCOVA (treatment, season dummies, pretreatment value of the outcome; follow-up seasons; village-clustered inference) with yield, the maize harvest in kilograms per acre of cultivated land, as the outcome.\n",
+        "decimals": 1,
+        "sample_size": null
+      },
+      "i4r": {
+        "reproduced_value": 108.9,
+        "outcome": "matches",
+        "notes": "DP72 blanket verdict; DB row is a permutation-seed check (DP Table 9, mean 0.0449 vs [0.049]).",
+        "reproduced_within_band": false
+      },
+      "rule": {
+        "mode": "blind",
+        "type_relative_tolerance": 0.02,
+        "se_multiplier": 1.0,
+        "se_band_relative": null,
+        "printed_half_unit": 0.05
+      },
+      "row": {
+        "description": "market_access_yield_table6_panelA_col4",
+        "claim_type": "coefficient",
+        "claimed": 108.9,
+        "reproduced": 93.04646562,
+        "tolerance": 0.02,
+        "rel_err": 0.14557882809917355,
+        "passed": false,
+        "passed_first_attempt": false,
+        "passed_first_scored": false,
+        "tolerance_source": "relative"
+      },
+      "recomputed": {
+        "result_name": "market_access_yield_table6_panelA_col4",
+        "reproduced": 93.04646562,
+        "band_source": "relative",
+        "band_relative": 0.02,
+        "band_absolute": 2.1780000000000004,
+        "abs_err": 15.85353438,
+        "rel_err": 0.14557882809917355,
+        "margin": 7.278941404958676,
+        "passed": false,
+        "notes": "Outside tolerance: reproduced=93.04646562 vs claimed=108.9 (relative error 14.56%, tolerance 2.00%)."
+      },
+      "agrees_with_row": true,
+      "verdict": "FAIL"
+    },
+    {
+      "name": "market_access_harvest_value_table6_panelA_col5",
+      "ground_truth": {
+        "value": 78.9,
+        "standard_error": null,
+        "unit": "US dollars per season",
+        "claim_type": "coefficient",
+        "location": "Table 6, Panel A (Market access experiment), column (5) Harvest value, Access to a market for quality maize",
+        "context": "Table 6, Panel A, column (5): the same ANCOVA with the harvest value in US dollars as the outcome; harvest value includes own-produced consumption, valued at the community-specific market price.\n",
+        "decimals": 1,
+        "sample_size": null
+      },
+      "i4r": {
+        "reproduced_value": 78.9,
+        "outcome": "matches",
+        "notes": "DP72 blanket verdict; DB row is a permutation-seed check (DP Table 9, mean 0.1019 vs [0.102]).",
+        "reproduced_within_band": false
+      },
+      "rule": {
+        "mode": "blind",
+        "type_relative_tolerance": 0.02,
+        "se_multiplier": 1.0,
+        "se_band_relative": null,
+        "printed_half_unit": 0.05
+      },
+      "row": {
+        "description": "market_access_harvest_value_table6_panelA_col5",
+        "claim_type": "coefficient",
+        "claimed": 78.9,
+        "reproduced": 45.956443,
+        "tolerance": 0.02,
+        "rel_err": 0.417535576679341,
+        "passed": false,
+        "passed_first_attempt": false,
+        "passed_first_scored": false,
+        "tolerance_source": "relative"
+      },
+      "recomputed": {
+        "result_name": "market_access_harvest_value_table6_panelA_col5",
+        "reproduced": 45.956443,
+        "band_source": "relative",
+        "band_relative": 0.02,
+        "band_absolute": 1.578,
+        "abs_err": 32.943557000000006,
+        "rel_err": 0.417535576679341,
+        "margin": 20.876778833967048,
+        "passed": false,
+        "notes": "Outside tolerance: reproduced=45.956443 vs claimed=78.9 (relative error 41.75%, tolerance 2.00%)."
+      },
+      "agrees_with_row": true,
+      "verdict": "FAIL"
+    },
+    {
+      "name": "market_access_profit_monetary_table6_panelA_col7",
+      "ground_truth": {
+        "value": 63.1,
+        "standard_error": null,
+        "unit": "US dollars per season",
+        "claim_type": "coefficient",
+        "location": "Table 6, Panel A (Market access experiment), column (7) Profit (monetary expenses), Access to a market for quality maize",
+        "context": "Table 6, Panel A, column (7): the same ANCOVA with profit (monetary expenses) as the outcome: harvest value minus expenses on inputs, equipment, transport and hired labor, in US dollars.\n",
+        "decimals": 1,
+        "sample_size": null
+      },
+      "i4r": {
+        "reproduced_value": 63.1,
+        "outcome": "matches",
+        "notes": "DP72 blanket verdict; DB row is a permutation-seed check (DP Table 9, mean 0.0778 vs [0.079]).",
+        "reproduced_within_band": false
+      },
+      "rule": {
+        "mode": "blind",
+        "type_relative_tolerance": 0.02,
+        "se_multiplier": 1.0,
+        "se_band_relative": null,
+        "printed_half_unit": 0.05
+      },
+      "row": {
+        "description": "market_access_profit_monetary_table6_panelA_col7",
+        "claim_type": "coefficient",
+        "claimed": 63.1,
+        "reproduced": 42.22428648,
+        "tolerance": 0.02,
+        "rel_err": 0.33083539651347066,
+        "passed": false,
+        "passed_first_attempt": false,
+        "passed_first_scored": false,
+        "tolerance_source": "relative"
+      },
+      "recomputed": {
+        "result_name": "market_access_profit_monetary_table6_panelA_col7",
+        "reproduced": 42.22428648,
+        "band_source": "relative",
+        "band_relative": 0.02,
+        "band_absolute": 1.262,
+        "abs_err": 20.875713519999998,
+        "rel_err": 0.33083539651347066,
+        "margin": 16.541769825673533,
+        "passed": false,
+        "notes": "Outside tolerance: reproduced=42.22428648 vs claimed=63.1 (relative error 33.08%, tolerance 2.00%)."
+      },
+      "agrees_with_row": true,
+      "verdict": "FAIL"
+    },
+    {
+      "name": "market_access_profit_incl_own_hours_table6_panelA_col8",
+      "ground_truth": {
+        "value": 97.6,
+        "standard_error": null,
+        "unit": "US dollars per season",
+        "claim_type": "coefficient",
+        "location": "Table 6, Panel A (Market access experiment), column (8) Profit (incl. own hours), Access to a market for quality maize",
+        "context": "Table 6, Panel A, column (8): the same ANCOVA with profit including own hours as the outcome: harvest value minus monetary expenses and the cost of the household's own labor valued at market wages, in US dollars.\n",
+        "decimals": 1,
+        "sample_size": null
+      },
+      "i4r": {
+        "reproduced_value": 97.6,
+        "outcome": "matches",
+        "notes": "DP72 blanket verdict; DB row is a permutation-seed check (DP Table 9, mean 0.0285 vs [0.031]).",
+        "reproduced_within_band": false
+      },
+      "rule": {
+        "mode": "blind",
+        "type_relative_tolerance": 0.02,
+        "se_multiplier": 1.0,
+        "se_band_relative": null,
+        "printed_half_unit": 0.05
+      },
+      "row": {
+        "description": "market_access_profit_incl_own_hours_table6_panelA_col8",
+        "claim_type": "coefficient",
+        "claimed": 97.6,
+        "reproduced": 94.08886714,
+        "tolerance": 0.02,
+        "rel_err": 0.0359747219262294,
+        "passed": false,
+        "passed_first_attempt": false,
+        "passed_first_scored": false,
+        "tolerance_source": "relative"
+      },
+      "recomputed": {
+        "result_name": "market_access_profit_incl_own_hours_table6_panelA_col8",
+        "reproduced": 94.08886714,
+        "band_source": "relative",
+        "band_relative": 0.02,
+        "band_absolute": 1.952,
+        "abs_err": 3.5111328599999894,
+        "rel_err": 0.0359747219262294,
+        "margin": 1.79873609631147,
+        "passed": false,
+        "notes": "Outside tolerance: reproduced=94.08886714 vs claimed=97.6 (relative error 3.60%, tolerance 2.00%)."
+      },
+      "agrees_with_row": true,
+      "verdict": "FAIL"
+    },
+    {
+      "name": "n_obs_table6_panelA_cols3_5",
+      "ground_truth": {
+        "value": 658.0,
+        "standard_error": null,
+        "unit": "household-seasons",
+        "claim_type": "count",
+        "location": "Table 6, Panel A, Observations, columns (3)-(5)",
+        "context": "Number of observations in Table 6, Panel A, columns (3) to (5) (harvest, yield, harvest value): household-season observations in the follow-up seasons of the market access experiment.\n",
+        "decimals": 0,
+        "sample_size": null
+      },
+      "i4r": {
+        "reproduced_value": 658.0,
+        "outcome": "matches",
+        "notes": "DP72 blanket verdict; the DP does not reprint Table 6 Observations.",
+        "reproduced_within_band": true
+      },
+      "rule": {
+        "mode": "blind",
+        "type_relative_tolerance": 0.05,
+        "se_multiplier": 1.0,
+        "se_band_relative": null,
+        "printed_half_unit": 0.5
+      },
+      "row": {
+        "description": "n_obs_table6_panelA_cols3_5",
+        "claim_type": "count",
+        "claimed": 658.0,
+        "reproduced": 658.0,
+        "tolerance": 0.05,
+        "rel_err": 0.0,
+        "passed": true,
+        "passed_first_attempt": false,
+        "passed_first_scored": true,
+        "tolerance_source": "relative"
+      },
+      "recomputed": {
+        "result_name": "n_obs_table6_panelA_cols3_5",
+        "reproduced": 658.0,
+        "band_source": "relative",
+        "band_relative": 0.05,
+        "band_absolute": 32.9,
+        "abs_err": 0.0,
+        "rel_err": 0.0,
+        "margin": 0.0,
+        "passed": true,
+        "notes": ""
+      },
+      "agrees_with_row": true,
+      "verdict": "PASS"
+    }
+  ],
+  "row_only_claims": [],
+  "summary": {
+    "n_claims": 13,
+    "row_passed": 8,
+    "recomputed_passed": 8,
+    "disagreements": []
+  },
+  "cell": {
+    "entry_id": "bold-2022-market-access-quality-upgrading",
+    "mode": "blind",
+    "reproducer": "claude-code",
+    "label": "claude-code",
+    "model": null,
+    "oracle": false,
+    "run": "2026-11-10-d",
+    "results_file": "claude-code-run4-1paper-bold-indep-blind-2026-11-10.json",
+    "also_in": [],
+    "artifacts_dir": "benchmark/results/artifacts/bold-2022-market-access-quality-upgrading/blind/claude-code/20261110T145110Z",
+    "run_dir": "benchmark/reproductions/bold-2022-market-access-quality-upgrading/blind/2026-11-10-d",
+    "date": "2026-11-10T14:50:30Z",
+    "data_access": "manual",
+    "retally_ran": true,
+    "error": null,
+    "n_claims": 13,
+    "final": 8,
+    "first_scored": 8,
+    "first_scored_index": 5,
+    "first_attempt": 0,
+    "n_refinements": 0,
+    "n_error_refinements": 0,
+    "n_claim_refinements": 0,
+    "n_executions": 6,
+    "n_files_stripped": 38,
+    "agrees_with_i4r": false,
+    "deviations_manifest": [
+      "No exchange rate in the data: UGX converted to US dollars at a fixed 3700 UGX/USD (approximate 2017-2020 average), applied to all Table 6 monetary outcomes.",
+      "Pretreatment value in the ANCOVA = household mean of the outcome over baseline seasons 1-3 (seasons 2-3 for expenses/profit, since hired labour was not collected in season 1); missing pretreatment values set to 0 with a missing indicator. Own-hours profit has no baseline (family hours collected only from season 5), so column 8 is regressed on treatment and season dummies only.",
+      "Harvest value = sales revenue (seller_data) + unsold harvest valued at the village-season kg-weighted mean price of sales to buyers other than code 555 (taken to be the quality buyer); season mean where the village has no sale.",
+      "Monetary expenses = seeds, fertilizer, booster, manure, chemicals, equipment/harvest/decobbing costs, drying, storage, other post-harvest costs, hired labour (plot tot_lab_costs + labor_cost_ph) and transport (tot_transport_cost, else pre+post transport); defined only for in-person interviews with the plot module.",
+      "Own labour valued at a data-derived hourly wage: median hired daily wage (5000 UGX) / median family working day (6 h) = 833 UGX/h; own hours = plot-level family hours for all activities + post-harvest family hours (decob, winnow, sort, bag).",
+      "Table 2 sales: add5 sale 1 is the research team's purchase of the random lab bag (its bag matches add4_random_bag for 93 of 95), so sales 2-4 are the trader sales. Deduction uses the enumerator-measured bag weight (add4_weight) as y and the post-deduction agreed weight as z; week-of-sale = Stata-style week of year of the sale date. Singleton fixed-effect cells kept (fixef.rm='none') so N counts all 116 sales; the point estimates are the same either way.",
+      "Visual defects: 10 types (dirty, cobs, stones, dust, dead-or-live insects, broken, immature, insect/vermin damage, rotten, mould); a bag counts if the enumerator recorded its weight; unanswered items counted as no defect. Lab defects = (foreign + inorganic + broken + pest-damaged + rotten + discoloured + immature grams)/sample weight, as a share."
+    ],
+    "deviations_stdout": [],
+    "notes": "Independent blind reproduction from the paper text and raw .dta files. Table 2: village FE (plus week-of-sale FE for cols 3-5); household-clustered SEs (robust for col 2). Table 6 panel A: ANCOVA on follow-up seasons 4-7 with season dummies and pretreatment outcome, village-clustered SEs (fixest). Randomization-inference p-values not computed (they are not among the quantities). Attempts 1-4 were data inspection; attempt 2 crashed on a haven-labelled comparison and was fixed by zap_labels (exploratory, no RESULT expected). Attempt 5 was a full dry run printing DIAG instead of RESULT; after it, two flag variables were fixed (empty strings were treated as non-missing, which wrongly included season-4 and phone rows in the expense and own-hours samples) and singletons were kept. Sample sizes from my own constructions: price 623, acreage 676, harvest/yield/harvest value 658, expenses/profit 640, own-hours profit 464. No run hung.",
+    "files_read_outside_mount": [],
+    "paper_text": "paper.blind.txt",
+    "complete": true,
+    "missing": []
+  }
+}
