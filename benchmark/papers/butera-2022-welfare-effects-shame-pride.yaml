@@ -1,0 +1,466 @@
+# Original paper: Butera, L., Metcalfe, R., Morrison, W., & Taubinsky, D.
+#   (2022). "Measuring the Welfare Effects of Shame and Pride." American
+#   Economic Review, 112(1), 122-168.  doi:10.1257/aer.20190433 (January
+#   2022 issue; Crossref created 2021-12-28, issued 2022-01-01).  The I4R
+#   wanted list and meta-database word the title "... of Pride and Shame";
+#   the published title is used here.
+#
+# Reproduction report: Fries, T. (2023).  "Replication Report: The Welfare
+#   Effects of Pride and Shame."  I4R Discussion Paper No. 64 (September
+#   2023, report dated July 26, 2023; EconStor hdl:10419/276252; found by
+#   web search 2026-11-09, the candidates file lists no DP).  I4R First
+#   Meta Database: 51 rows under the paper title (48 with values, entered
+#   2023-09-21, replication team 53).  Verdict: reproducible -- DP Sec. 2:
+#   "I can computationally reproduce all results reported in the paper
+#   using the paper's replication package" (Stata 17; the README says 15,
+#   but the code uses Stata 16 syntax).  The DB's best_describe_compreprod
+#   agrees ("Analysis and cleaning code produce the same output as
+#   presented in the paper"); perfect_reproduction is "No" with
+#   why_not_perfect_repro "Two minor coding errors in the replication
+#   package".  Those two errors are what every paired DB row records: all
+#   48 rows with values are "Correcting Coding Error" variants (r_coeff_dbl is the
+#   CORRECTED estimate, not a recomputation), two are specification-curve
+#   rows without values, one is empty; result_same is blank on all but the
+#   two specification-curve rows.  (1) The round-order dummies of Table 5
+#   are mis-coded for four of the six round orders (DP Appendix A); fixing
+#   them moves the BU estimates by about 12 percent (DP Table 1) and,
+#   through the structural model, the Table 7 values that use them (DP
+#   Table 4).  (2) The curvature-times-SD statistic of Table 6 divides by
+#   the linear coefficient instead of the slope at the population average
+#   (DP Appendix B; Prolific 0.245 becomes 0.394).  The DP's Table 1
+#   "Original" columns are a same-specification recomputation of Table 5
+#   with the authors' code; they are recorded in i4r_replicator_findings.
+#
+# Why this paper:
+#   1. A within-subject real-effort experiment (three rounds per
+#      participant: anonymous, publicly recognized, paid) in three samples,
+#      with an incentive-compatible WTP-for-recognition elicitation over 18
+#      performance intervals, plus a closed-form structural model of social
+#      signaling identified from the reduced-form estimates: new to the
+#      catalog.
+#   2. The package ships only RAW Qualtrics exports (.csv), so every number
+#      needs the cleaning chain: the attention-check and "coherent
+#      preferences" exclusions, signing the WTP answers, reshaping to the
+#      participant-round and participant-interval level.
+#   3. A manually placed openICPSR package (data_access: manual), 8 MB
+#      zipped / 31 MB unpacked, with no shipped results files.
+#
+# What original_claims pins: Table 5 columns (1)-(3) (Prolific, Berkeley,
+#   BU), the public recognition and financial incentive coefficients with
+#   SEs and each column's number of observations; Table 7 for the Berkeley
+#   sample: the action-signaling model's linear PRU parameter, reference
+#   standard and cost parameter (panel a), and the model's predicted effect
+#   of the financial incentive (panel c).  13 claims, values exactly as
+#   printed in the open text (2 decimals).  Three are count claims.
+#
+# Paper text: the published article is paywalled and no open copy of it
+#   was found (AEA, CBS research portal, author pages; Morrison's 2023
+#   Berkeley dissertation on eScholarship answers 403 to scripts and was
+#   not opened).  The source is NBER Working Paper 25637 as revised July
+#   2021 (title page "March 2019, Revised July 2021"; PDF CreationDate
+#   2021-07-15), the version current five months before publication.  Cell
+#   check against the meta-database (which transcribes DP64's output of the
+#   authors' code at Stata's default 4 significant digits, e.g. 185.7):
+#   Table 5's 13 coefficient cells and 13 SEs agree (the WP prints the
+#   package's own esttab format, 2 decimals: 185.74 rounds to 185.7; every
+#   SE is identical), and all 32 Table 7 rows (Prolific, Berkeley, BU;
+#   bootstrapped CIs converted to SEs in the DB) equal the WP's printed
+#   point estimates.  Table 6 does NOT match in two of its three DB cells:
+#   the curvature-times-SD statistic is 0.114 / -0.085 in the WP for
+#   Berkeley / BU against 0.110 / -0.077 in the DB and in DP64's "Original"
+#   column (its CIs and the Berkeley -R''/R' also differ: WP 0.027, DP
+#   0.026), so the WP's Table 6 predates the package's final run.  Because
+#   of that, only cells the I4R record covers are pinned: Table 5's
+#   coefficients and SEs (DB rows), Table 5's Observations row (DP64 Table
+#   1 prints it under "Original"), and Table 7 (DB rows).  Nothing from
+#   Tables 1-4 (YMCA, no I4R row), Table 6, 8 or 9 is pinned.
+
+id: butera-2022-welfare-effects-shame-pride
+i4r_report_url: https://www.econstor.eu/bitstream/10419/276252/1/I4R-DP064.pdf
+# Target language for regeneration (the original is Stata 15/16 with
+# estout, binscatter and cdfplot; Retally generates R and reads the .csv
+# files).
+language: r
+outcome_label: reproducible
+# Pipeline tuning is frozen; this is an evaluation paper.
+split: holdout
+# Contamination bookkeeping.  publication_date is the FIRST public
+# version: NBER Working Paper 25637, March 2019 (title page "March 2019,
+# Revised July 2021"; it was "previously circulated under the title 'The
+# Deadweight Loss of Social Recognition'", presented as a seminar in March
+# 2019, web search 2026-11-09).  The journal version: Crossref issued
+# 2022-01-01 (created 2021-12-28).  package_release_date is the DataCite
+# registration of doi:10.3886/E145141V1 (registered 2021-12-27T14:07:14Z,
+# DataCite API 2026-11-09); the openICPSR page itself needs a login.  The
+# package README.pdf is dated 2021-12-24 (PDF CreationDate).
+publication_date: "2019-03"
+package_release_date: "2021-12-27"
+
+paper:
+  # NBER Working Paper 25637, revised July 2021, open PDF; checked
+  # 2026-11-09: 200 application/pdf, 1,187,290 bytes, 104 pp. (paper,
+  # main tables pp. 49-57, appendices).  PDF CreationDate 2021-07-15.
+  source: http://www.nber.org/papers/w25637.pdf
+  title: "Measuring the Welfare Effects of Shame and Pride"
+  authors:
+    - Luigi Butera
+    - Robert Metcalfe
+    - William Morrison
+    - Dmitry Taubinsky
+
+dataset:
+  source: benchmark/manual-packages/T53/145141-V1.zip
+  data_access: manual
+  access_notes: >
+    AEA Data and Code Repository on openICPSR, project 145141, version V1
+    (doi:10.3886/E145141V1); login and terms-of-use click-through required,
+    so the zip was downloaded by hand (2026-11-09) and placed unchanged at
+    benchmark/manual-packages/T53/145141-V1.zip (8,033,487 bytes, md5
+    e4a630521216084283fab7fd3b471cef; SOURCE.txt beside it).  V1 is the
+    only version.  42 zip entries (33 files, 9 directories), 31,154,441
+    bytes uncompressed, all under Packet/, no nested archives.  Contents:
+    README.pdf (5 pp., dated 2021-12-24) and README.docx (its Word source;
+    data provenance, run order, a table-to-program map, no estimates);
+    "data dictionary.xlsx" (variable lists of the raw files, no numbers);
+    Raw Data/ with eight .csv files: the four charity real-effort Qualtrics
+    exports (prolific_survey_data.csv 1,017 participants,
+    berkeley_survey_data.csv 407, bu_qm222_survey_data.csv 121 (the BU
+    sample), bu_qm221_survey_data.csv 57 (a BU class not used in the main
+    tables)), the YMCA survey, treatment assignment and membership files,
+    and ymca_scans.csv (21 MB, 733,556 check-ins); Build/ with 7 Stata
+    do-files and Analysis/Code/ with 8 (plus master_file.do); "QSF files
+    and scripts/" with five Qualtrics .qsf survey definitions and
+    "Experiment details appendix.pdf" (31 pp., LaTeX, 2021-07-13: survey
+    questions and instructions, no results); empty Analysis/Output/,
+    "Prepped Data/" and temp/ directories.  No log, table or figure output
+    ships.  The script-free copy (independent / blind) withholds the 16
+    .do files by suffix (benchmark.strip_rule.classify_tree on the
+    extracted package, 2026-11-09) and nothing else: neither PDF, the docx
+    nor the xlsx prints a pinned value (grepped at printed precision and
+    rounded).  Project page:
+    https://www.openicpsr.org/openicpsr/project/145141/version/V1/view
+
+original_claims:
+  # ---- Table 5: effects of public recognition and financial incentives on points ----
+  - description: public_recognition_points_prolific_table5_col1
+    value: 105.01
+    claim_type: coefficient
+    standard_error: 12.25
+    unit: points scored in the round
+    location: "Table 5, Public recognition, column (1) Prolific"
+    context: >
+      Table 5 ("The effect of public recognition and financial incentives
+      on performance in the charitable contribution experiments"), column
+      (1).  OLS of points scored in a round of the button-pressing task on
+      indicators for the Publicly-Shared Effort Round (public recognition)
+      and the round with performance-based pay for the participant
+      (financial incentives), the Anonymous Effort Round being the omitted
+      round, with dummies for the order in which the round appeared to the
+      participant (first, second, third).  One observation per participant
+      and round.  Sample: the Prolific experiment after the paper's two
+      preregistered exclusions (participants failing the attention check,
+      and participants with "incoherent" preferences for public
+      recognition).  Standard errors clustered at the participant level.
+      The entry is the public recognition coefficient.
+  - description: financial_incentives_points_prolific_table5_col1
+    value: 185.74
+    claim_type: coefficient
+    standard_error: 12.56
+    unit: points scored in the round
+    location: "Table 5, Financial incentives, column (1) Prolific"
+    context: >
+      Table 5, column (1): the same regression of points scored on the
+      public recognition and financial incentive round indicators with
+      round-order dummies in the Prolific sample; the entry is the
+      financial incentives coefficient (Prolific incentive: two cents for every
+      ten points, paid to the participant).  Participant-clustered standard errors.
+  - description: public_recognition_points_berkeley_table5_col2
+    value: 134.41
+    claim_type: coefficient
+    standard_error: 22.56
+    unit: points scored in the round
+    location: "Table 5, Public recognition, column (2) Berkeley"
+    context: >
+      Table 5, column (2): the column (1) regression (points on the public
+      recognition and financial incentive round indicators, round-order
+      dummies) in the Berkeley experiment, after the attention-check and
+      incoherent-preference exclusions.  Participant-clustered standard
+      errors.  The entry is the public recognition coefficient.
+  - description: financial_incentives_points_berkeley_table5_col2
+    value: 177.76
+    claim_type: coefficient
+    standard_error: 22.04
+    unit: points scored in the round
+    location: "Table 5, Financial incentives, column (2) Berkeley"
+    context: >
+      Table 5, column (2), Berkeley sample: the financial incentives
+      coefficient (incentive five cents for every ten points).  Same regression,
+      exclusions and participant-clustered standard errors.
+  - description: public_recognition_points_bu_table5_col3
+    value: 103.61
+    claim_type: coefficient
+    standard_error: 45.25
+    unit: points scored in the round
+    location: "Table 5, Public recognition, column (3) BU"
+    context: >
+      Table 5, column (3): the column (1) regression in the BU (Boston
+      University classroom) experiment, after the attention-check and
+      incoherent-preference exclusions.  Participant-clustered standard
+      errors.  The entry is the public recognition coefficient.
+  - description: financial_incentives_points_bu_table5_col3
+    value: 118.33
+    claim_type: coefficient
+    standard_error: 39.62
+    unit: points scored in the round
+    location: "Table 5, Financial incentives, column (3) BU"
+    context: >
+      Table 5, column (3), BU sample: the financial incentives coefficient
+      (incentive five cents for every ten points).  Same regression, exclusions and
+      participant-clustered standard errors.
+  - description: n_obs_prolific_table5_col1
+    value: 2904
+    claim_type: count
+    unit: participant-rounds
+    location: "Table 5, Observations, column (1) Prolific"
+    context: >
+      Number of observations in Table 5, column (1): participant-round
+      observations (three rounds per participant) of the Prolific
+      experiment's final sample.
+  - description: n_obs_berkeley_table5_col2
+    value: 1152
+    claim_type: count
+    unit: participant-rounds
+    location: "Table 5, Observations, column (2) Berkeley"
+    context: >
+      Number of observations in Table 5, column (2): participant-round
+      observations of the Berkeley experiment's final sample.
+  - description: n_obs_bu_table5_col3
+    value: 354
+    claim_type: count
+    unit: participant-rounds
+    location: "Table 5, Observations, column (3) BU"
+    context: >
+      Number of observations in Table 5, column (3): participant-round
+      observations of the BU experiment's final sample.
+
+  # ---- Table 7: structural estimates, Berkeley sample ----
+  - description: action_signaling_gamma1_berkeley_table7_panelA
+    value: 0.30
+    claim_type: coefficient
+    unit: WTP in dollars per hundred points (structural PRU, linear term)
+    location: "Table 7, panel (a) Action-signaling model parameter estimates, Berkeley, gamma_1^a"
+    context: >
+      Table 7 ("Structural estimates and tests of consistency"), panel (a),
+      Berkeley row, first column: the linear coefficient of the quadratic
+      structural public recognition utility of the action-signaling model,
+      gamma_1 (a - rho abar) + gamma_2 (a - rho abar)^2 (Section 7.1,
+      equation 5), with effort a in hundreds of points.  The structural
+      parameters are functions of the reduced-form quadratic PRU r0 + r1 a
+      + r2 a^2 estimated in Table 6, column (4) (OLS of stated WTP on the
+      interval midpoint in hundreds of points and its square, the 1700+
+      interval excluded, Berkeley final sample), with the comparison
+      population being the experimental sample's performance under public
+      recognition (Section 7.1, Appendix F).  The table prints the
+      full-sample point estimate with a bootstrapped percentile confidence
+      interval (1,000 replications clustered by participant).
+  - description: action_signaling_rho_berkeley_table7_panelA
+    value: 0.87
+    claim_type: coefficient
+    unit: multiple of average performance (reference standard rho)
+    location: "Table 7, panel (a) Action-signaling model parameter estimates, Berkeley, rho^a"
+    context: >
+      Table 7, panel (a), Berkeley row: the action-signaling model's
+      reference-standard parameter rho (image payoffs turn from negative
+      to positive at rho times average performance), recovered from the
+      Table 6 column (4) reduced-form quadratic PRU and the average points
+      (in hundreds) scored with public recognition in the Berkeley sample
+      (anonymous-round mean plus the Table 5 column (2) public recognition
+      effect).  Full-sample point estimate; bootstrapped percentile
+      confidence interval in the table.
+  - description: cost_parameter_c_berkeley_table7_panelA
+    value: 0.21
+    claim_type: coefficient
+    unit: dollars per hundred points squared (effort cost curvature c)
+    location: "Table 7, panel (a) Action-signaling model parameter estimates, Berkeley, c"
+    context: >
+      Table 7, panel (a), Berkeley row, last column: the cost-of-effort
+      parameter c of the quadratic material utility theta a - c a^2 / 2,
+      identified by equating the model's predicted effect of public
+      recognition (equations 7-8, from the Table 6 column (4) reduced-form
+      PRU) with the public recognition treatment effect estimated in Table
+      5, column (2), effort in hundreds of points.  Full-sample point
+      estimate; bootstrapped percentile confidence interval in the table.
+  - description: predicted_financial_incentive_effect_berkeley_table7_panelC
+    value: 2.33
+    claim_type: other
+    unit: hundreds of points
+    location: "Table 7, panel (c) Predicted and actual effects of financial incentives, Berkeley, Model prediction"
+    context: >
+      Table 7, panel (c), Berkeley row, "Model prediction": the structural
+      model's predicted effect of the financial incentive on points scored
+      (in hundreds of points), p / c, where p is the incentive of 5 cents
+      for every ten points expressed per hundred points and c is the panel (a)
+      cost parameter (Section 7.1, "Consistency with financial incentive
+      effects").  Compared in the table with the directly estimated effect
+      from Table 5.  Full-sample point estimate; bootstrapped percentile
+      confidence interval in the table.
+
+# DP64 Table 1 prints the authors' code's output for Table 5 ("Original",
+# Stata's default 4 significant digits) beside the corrected order coding;
+# the "Original" column is a same-specification recomputation and is
+# recorded for claims 0-8.  The meta-database rows for Table 5 and Table 7
+# are the CORRECTED (order-dummy) variants, not recomputations; for Table 7,
+# whose originals DP64 does not reprint, each finding records the paper's
+# value under the DP's blanket verdict ("I can computationally reproduce all
+# results reported in the paper"), as in lopez-2022, and quotes the corrected
+# value in the note.
+i4r_replicator_findings:
+  - claim_id: 0
+    reproduced_value: 105.0
+    outcome: matches
+    notes: DP64 Table 1 col (1) Original 105.0 (12.25); corrected order dummies 104.0 (12.27).
+  - claim_id: 1
+    reproduced_value: 185.7
+    outcome: matches
+    notes: DP64 Table 1 col (1) Original 185.7 (12.56); corrected order dummies 186.4 (12.65).
+  - claim_id: 2
+    reproduced_value: 134.4
+    outcome: matches
+    notes: DP64 Table 1 col (2) Original 134.4 (22.56); corrected order dummies 134.7 (22.53).
+  - claim_id: 3
+    reproduced_value: 177.8
+    outcome: matches
+    notes: DP64 Table 1 col (2) Original 177.8 (22.04); corrected order dummies 177.1 (22.02).
+  - claim_id: 4
+    reproduced_value: 103.6
+    outcome: matches
+    notes: DP64 Table 1 col (3) Original 103.6 (45.25); corrected order dummies 115.8 (43.93).
+  - claim_id: 5
+    reproduced_value: 118.3
+    outcome: matches
+    notes: DP64 Table 1 col (3) Original 118.3 (39.62); corrected order dummies 132.3 (39.15).
+  - claim_id: 6
+    reproduced_value: 2904
+    outcome: matches
+    notes: DP64 Table 1 col (1) Observations, Original and Corrected.
+  - claim_id: 7
+    reproduced_value: 1152
+    outcome: matches
+    notes: DP64 Table 1 col (2) Observations, Original and Corrected.
+  - claim_id: 8
+    reproduced_value: 354
+    outcome: matches
+    notes: DP64 Table 1 col (3) Observations, Original and Corrected.
+  - claim_id: 9
+    reproduced_value: 0.30
+    outcome: matches
+    notes: DP64 Sec. 2 blanket verdict; corrected order dummies (DB row, DP64 Table 4) also 0.30.
+  - claim_id: 10
+    reproduced_value: 0.87
+    outcome: matches
+    notes: DP64 Sec. 2 blanket verdict; corrected order dummies (DB row, DP64 Table 4) also 0.87.
+  - claim_id: 11
+    reproduced_value: 0.21
+    outcome: matches
+    notes: DP64 Sec. 2 blanket verdict; corrected order dummies (DB row, DP64 Table 4) also 0.21.
+  - claim_id: 12
+    reproduced_value: 2.33
+    outcome: matches
+    notes: DP64 Sec. 2 blanket verdict; corrected order dummies (DB row, DP64 Table 4) 2.34.
+notes: >
+  Headline findings (Table 5): public recognition raises points scored by
+  105.01 (12.25) in the Prolific sample, 134.41 (22.56) at Berkeley and
+  103.61 (45.25) at BU; the financial incentive by 185.74 (12.56), 177.76
+  (22.04) and 118.33 (39.62); N 2904, 1152 and 354 participant-rounds (968,
+  384 and 118 participants).  Table 7 Berkeley, action-signaling model:
+  gamma_1 0.30, rho 0.87, c 0.21; predicted financial incentive effect
+  2.33 hundred points against an actual 1.78.
+
+  Paper text and how it was verified.  The published article was not read
+  (paywalled).  The source is NBER WP 25637 revised July 2021.  Table 5:
+  every one of the 13 meta-database "table 5" rows (o_coeff_dbl /
+  o_std_err_dbl) equals the WP cell of the same row and column after
+  rounding the WP's 2-decimal print to the DB's 4 significant digits
+  (105.01 -> 105.0, 185.74 -> 185.7, 134.41 -> 134.4, 177.76 -> 177.8,
+  103.61 -> 103.6, 118.33 -> 118.3, 106.70 -> 106.7, 191.96 -> 192.0,
+  -3.12 vs -3.117, -3.21 vs -3.213, -3.27 vs -3.270; 20.61 and -18.85
+  exact) and every SE is identical.  The DB transcribes DP64 Table 1's
+  "Original" column (Stata default format); the package's own Table 5
+  code exports b(%8.2f) se(%8.2f), the WP's format.  Table 7: all 32 DB
+  rows equal WP point estimates (the DB's SEs are the printed percentile
+  CIs divided by 3.92, e.g. 0.34 [0.16, 1.47] -> 0.3342; c is printed in
+  panels a and b, so each sample's c has two rows).  Table 6: the DB's three rows are the
+  curvature-times-SD statistic, 0.245 (Prolific, equals the WP), 0.110
+  (Berkeley; WP 0.114) and -0.077 (BU; WP -0.085); DP64 Table 2's
+  "Original" column agrees with the DB, so the WP's Table 6 is an earlier
+  computation and nothing from Table 6 is pinned.  No DB value disagrees
+  with DP64; no DB typo was found.
+
+  Independent cross-check (2026-11-09, Python on the raw CSVs, not
+  Stata): applying the package's build logic (attention check failed if
+  attention_check is non-missing; coherent = preference switches 0 times,
+  once from no to yes, or twice starting from no; drop participants with
+  more than 3000 points in any round; the package's order coding) gives
+  Table 5 columns (1)-(3) exactly: 105.01 (12.25), 185.74 (12.56), N 2904,
+  968 participants; 134.41 (22.56), 177.76 (22.04), 1152, 384; 103.61
+  (45.25), 118.33 (39.62), 354, 118.  The Table 7 point estimates for all
+  three samples also come out as printed (Prolific 0.12, -0.004, 0.58,
+  0.08, prediction 2.41, actual 1.82; Berkeley 0.30, -0.004, 0.87, 0.21,
+  2.33, 1.78; BU 0.38, 0.002, 1.61, 0.34, 1.48, 1.18).
+
+  Curation pass (2026-11-09).  13 claims.  Why Berkeley only in Table 7:
+  the structural code (welfare_estimates.do) does NOT drop the
+  more-than-3000-points participants that Table 5 drops, so its Prolific
+  sample has 970 participants instead of the paper's 968 and its Prolific
+  "actual" effect is 1.82 although Table 5 prints 185.74 points; a
+  reproduction that follows the paper's stated final sample would miss
+  the Prolific Table 7 values by about 2 percent.  BU's Table 7 values
+  move with the order-dummy coding error (c 0.34 -> 0.30, prediction 1.48
+  -> 1.65).  Berkeley is affected by neither (no high-point participant;
+  the corrected coding leaves its values unchanged but the prediction,
+  2.33 -> 2.34).  The order-dummy error moves the BU Table 5 estimates by
+  about a third of an SE (DP64 Table 1), inside the SE-aware band.  Left
+  out: Table 5 column (4) (group-size interactions), the order-dummy
+  F-tests and control means, Tables 1-4 and 9 (YMCA; no I4R row, and the
+  WP's Table 6 mismatch rules out pinning uncovered cells), Table 6 (WP
+  differs from the package output), Table 8, panel (b) of Table 7 and the
+  other Table 7 columns, the appendix.
+
+  Package-only facts (never in contexts).  Raw columns (Stata lowercases
+  them): attention_check, preference_0 ... preference_1700 (yes/no
+  public), pref_anom_<j>_1 / pref_rec_<j>_1 (WTP sliders; WTP is minus the
+  anonymous slider, else the recognition slider), condition (round order
+  string such as AER), anompts / recogpts / earnpts, badgegroupsize.
+  Label_Rounds.do assigns order 1-3 per round and condition (mis-coded
+  for AER, EAR, RAE and REA, DP64 Appendix A); Table 5 regresses pts on
+  SR ownpay o1 o2, clus(id); the Table 6 / 7 WTP regression uses interval
+  midpoints (interval + 0.5, in hundreds of points) for intervals 0-16.
+  Table 7: gamma2 = r2, gamma1 = sqrt(r1^2 - 4 r2 r0), rho = (gamma1 -
+  r1) / (2 gamma2 abar_PR), c = (r1 + 2 r2 abar_PR) / tau, prediction =
+  p / c with p = 0.5 (Berkeley, BU) or 0.2 (Prolific) dollars per hundred
+  points, where abar_PR = anonymous-round mean + tau, all in hundreds of
+  points; the printed value is the bootstrap's e(b), i.e. the full-sample
+  estimate.  bu_qm221_survey_data.csv is a separate BU class not in the
+  main tables.
+
+  Blind-mode exposure (step 6, 2026-11-09).  Both modes reached
+  llm_answer_pending at the methodology-summary prompt.  Neither prompt
+  states a pinned value or SE at printed precision or rounded to 1-3
+  significant figures (the only hit, "2.3", is the section number "2.3
+  Structural Versus Reduced-Form"), and neither carries do-file text.
+  The paper text in the prompt runs from the title page into Section 4
+  (YMCA), so none of Tables 5-7 is in it.  The paper parser takes the NBER
+  cover line ("NBER WORKING PAPER SERIES") as the title.
+
+  What was read.  NBER WP 25637 (July 2021) pp. 1-33 and Tables 1-9; DP64
+  in full; the 51 meta-database rows; README.pdf / README.docx; the Table
+  5 and Table 7 parts of charity_reduced_form_analysis.do and
+  welfare_estimates.do, the build do-files; text of Experiment details
+  appendix.pdf; the strip-rule classification of the extracted package.
+
+  What could not be verified.  The published article itself was not read,
+  so the published Table 5 / Table 7 print format is inferred from the
+  package's export code and the WP; the authors' Stata code was not run
+  (no Stata here); the cross-check above is Python, not R.
+
+  Original analysis in Stata 15/16; language: r is the reproduction target.
