@@ -1,0 +1,20 @@
+{
+  "schema": 1,
+  "entry_id": "goni-2022-assortative-matching-london-season",
+  "mode": "independent",
+  "run_id": "2026-11-10-b",
+  "reproducer": "claude-code",
+  "language": "r",
+  "final": {"script": "script.R", "stdout": "stdout.txt", "stderr": "stderr.txt", "exit_code": 0},
+  "attempts": [
+    {"dir": "attempt-1", "exit_code": 0, "kind": ""},
+    {"dir": "attempt-2", "exit_code": 0, "kind": ""}
+  ],
+  "deviations": [
+    "Probit marginal effects are average marginal effects (Stata margins default) computed by hand from glm probit; SEs (diagnostic only) via delta method with sandwich::vcovCL HC1 clustered by birth year. Bootstrap-t p-values were not reproduced."
+  ],
+  "notes": "Used data/final-data.dta only. Samples from the prepared flags base_sample (N=644) and marital_rates_sample (N=765); outcomes cOut, mheir, fmissmatch, fmissmatch2, fdown, celibacy (never married); treatment syntheticT; controls pr4 (duke/marquess/earl daughter), hengpee (English peerage), biorder (birth order excl. heirs); Panel B adds distlondon (complete cases: N=484 / 260 / 565). OLS for landholdings differences, probit AMEs for binary outcomes, SEs clustered by byear. attempt-1 listed variables; attempt-2 ran all models with no RESULT lines (diagnostic). Estimates, Ns, SEs, means of dependent variable and percent-correct all match Table 2 Panels A and B to reported precision. No claim or error attempts were needed. started_at is approximate. No run hung.",
+  "files_read_outside_mount": [],
+  "started_at": "2026-11-10T05:12:00Z",
+  "finished_at": "2026-11-10T05:29:00Z"
+}

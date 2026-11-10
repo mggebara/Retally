@@ -1,0 +1,22 @@
+{
+  "schema": 1,
+  "entry_id": "goni-2022-assortative-matching-london-season",
+  "mode": "blind",
+  "run_id": "2026-11-10-d",
+  "reproducer": "claude-code",
+  "language": "r",
+  "final": {"script": "script.R", "stdout": "stdout.txt", "stderr": "stderr.txt", "exit_code": 0},
+  "attempts": [
+    {"dir": "attempt-1", "exit_code": 0, "kind": ""},
+    {"dir": "attempt-2", "exit_code": 0, "kind": ""}
+  ],
+  "deviations": [
+    "Probit marginal effects are average marginal effects (Stata margins dydx default); the paper does not say whether effects are averaged or evaluated at means.",
+    "Used the dataset's pre-built sample flags (base_sample, marital_rates_sample), treatment (syntheticT), outcomes (cOut, mheir, fmissmatch, fmissmatch2, fdown) and controls (pr4, hengpee, biorder, distlondon) from data/final-data.dta; never married = nthismarriage == 0 in the marital-rates sample. A diagnostic rebuild of the synthetic probability from the 1815-1830 benchmark cohort correlates 0.9998 with syntheticT (small level differences from the exact exclusion rule).",
+    "Standard errors (not scored) clustered by birth year (byear); probit AME SEs by delta method with CR0 cluster vcov. Bootstrap-t p-values not computed."
+  ],
+  "notes": "Two exploratory runs (variable listing; sample sizes and treatment by age) printed no RESULT lines, then one final run. Samples: baseline 644 married peers' daughters aged 15-35 in 1861; landholdings sample 324 (base with both spouses' Bateman landholdings); marital-rates sample 765. Panel B (distance to London) samples are 484 / 260 / 565, matching the Panel B observation counts printed in the paper text. Controls: duke/marquess/earl daughter indicator, English peerage indicator, birth order excluding heirs; Panel B adds distance from family seat to London. Probits via glm(probit), OLS via fixest. No script, log, table or README files from the package were opened. No runs hung.",
+  "files_read_outside_mount": [],
+  "started_at": "2026-11-10T05:30:36Z",
+  "finished_at": "2026-11-10T05:34:00Z"
+}

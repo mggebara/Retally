@@ -1,0 +1,25 @@
+{
+  "schema": 1,
+  "entry_id": "greenstone-2022-china-pollution-monitoring-automation",
+  "mode": "blind",
+  "run_id": "2026-11-10-d",
+  "reproducer": "claude-code",
+  "language": "r",
+  "final": {"script": "script.R", "stdout": "stdout.txt", "stderr": "stderr.txt", "exit_code": 0},
+  "attempts": [
+    {"dir": "attempt-1", "exit_code": 0, "kind": ""},
+    {"dir": "attempt-2", "exit_code": 0, "kind": ""},
+    {"dir": "attempt-3", "exit_code": 1, "kind": "error"}
+  ],
+  "deviations": [
+    "Matched event-study sample keeps one copy of each Wave-2 control per treated station it is matched to (with replacement), giving 231,990 obs; the paper reports 186,499, so their pairing/deduplication evidently differs.",
+    "Deadline sample defined at station level as automation date equal to 2013-01-01 or 2014-01-01 (242 + 123 stations, matching the paper's station counts; 73 cities vs the paper's 84).",
+    "For the city-level search RD, cities with more than one station automation date (14) use the modal station date (earliest on ties).",
+    "Monthly running variable = calendar-month difference from the automation month (the automation month = 0, treated). Weather for AOD and searches is the station-month and city-month mean of the daily weather.",
+    "Residualization is run once on the full sample (station or city FE + month-of-year FE + 4 weather controls; singletons dropped). Subsample RDs use those residuals. rdrobust uses p=1, a triangular kernel, mserd bandwidth, cr1 clustering by city and default mass-points handling; the conventional estimate is reported."
+  ],
+  "notes": "Attempts 1-2 explored the data (structure, sample counts, an rdrobust timing check on raw NO2); they printed no RESULT lines. Attempt 3 crashed because fixest dropped 19 singleton station-months in the AOD residualization; it was fixed with resid(na.rm=FALSE). Daily RD sample = 1,049,325 station-days with PM10 and full weather. The search city-month counts (8,661 mask, 8,590 filter) came out equal to the paper's stated pre-bandwidth counts without any tuning. The event-study window is 2012-01-01 to 2013-12-31. Treated = stations automated 2013-01-01. Reference = Nov-Dec 2012. Log PM10 drops 82 zero readings. README.pdf (in the mount) was read for data descriptions only. No runs hung.",
+  "files_read_outside_mount": [],
+  "started_at": "2026-11-10T06:02:06Z",
+  "finished_at": "2026-11-10T06:06:37Z"
+}

@@ -1,0 +1,17 @@
+{
+  "schema": 1,
+  "entry_id": "goni-2022-assortative-matching-london-season",
+  "mode": "independent",
+  "run_id": "2026-11-10-d",
+  "reproducer": "claude-code",
+  "language": "r",
+  "final": {"script": "script.R", "stdout": "stdout.txt", "stderr": "stderr.txt", "exit_code": 0},
+  "attempts": [
+    {"dir": "attempt-1", "exit_code": 0, "kind": ""}
+  ],
+  "deviations": [],
+  "notes": "attempt-1 was exploratory: it printed variable labels and summaries of data/final-data.dta and no RESULT lines. The final script uses the prepared flags base_sample (644) and marital_rates_sample (765), syntheticT as the treatment, and these outcomes: cOut, mheir, fmissmatch (absolute difference), fmissmatch2 (husband minus wife), fdown, and never married (nthismarriage==0, which is identical to celibacy). Controls are pr4 (duke/marquess/earl daughter), hengpee (English peerage) and biorder (birth order excluding heirs). Panel B adds distlondon. Probit columns report the average marginal effect of syntheticT, with delta-method SEs from a vcovCL birth-year cluster. OLS columns use feols with SEs clustered by byear. All claimed coefficients and Ns match on the first scored run, and the clustered SEs also match Table 2. No claim comparison or repair was needed. The bootstrap-t p-values were not computed because they were not claimed. No runs hung.",
+  "files_read_outside_mount": [],
+  "started_at": "2026-11-10T05:30:37Z",
+  "finished_at": "2026-11-10T05:45:00Z"
+}

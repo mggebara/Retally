@@ -1,0 +1,141 @@
+pollution_1116 1433568 : station_n code_city date pm10 no2 so2 
+  station_n code_city  date pm10 no2 so2
+1        46    440300 18628   NA  NA  NA
+2        46    440300 18629   NA  NA  NA
+3        46    440300 18630   NA  NA  NA
+weather_1116 1433568 : station_n date wind_speed rain temp rh 
+  station_n  date wind_speed        rain      temp       rh
+1        46 18628   2.573261 0.000000000 14.381263 50.31115
+2        46 18629   2.760001 0.007967923 13.609482 54.14326
+3        46 18630   2.985742 0.671218097  9.860863 75.62115
+station_list 654 : pm10_n code_city phase auto_date station_lon station_lat 
+  pm10_n code_city phase auto_date station_lon station_lat
+1    175    110100     1     19264    116.2834    39.84415
+2    322    110100     1     19264    116.3634    39.86415
+3    323    110100     1     19264    116.4234    39.94415
+mask_filter_search 712088 : code_city date filter pmmask 
+  code_city  date filter pmmask
+1    110100 18628    102      0
+2    110100 18629    140      0
+3    110100 18630    157      0
+aod_month 47088 : pm10_n year month aod 
+  pm10_n year month aod
+1     46 2011     1  NA
+2     46 2011     2  NA
+3     46 2011     3  NA
+city_info 123 : code_city city_en phase 
+  code_city      city_en phase
+1    110100      Beijing     1
+2    120100      Tianjin     1
+3    130100 Shijiazhuang     1
+read time 4.71925 secs 
+rdrobust version 4.1.1 
+    vce = "nn", cluster = NULL, nnmatch = 3, level = 95, scalepar = 1, 
+            c("y", "x", "covs", "cluster", "fuzzy", "weights", 
+        cluster <- .vars$cluster
+    .rdrobust_check_length(cluster, "cluster", n_orig)
+    if (!is.null(cluster)) {
+            cluster <- cluster[subset]
+        if (length(cluster) != length(x)) 
+            stop("cluster must have the same length as y and x.")
+        na.ok <- na.ok & complete.cases(cluster)
+    if (!is.null(cluster)) 
+        cluster = as.matrix(cluster[na.ok])
+        if (!is.null(cluster)) 
+            cluster = cluster[order_x, , drop = FALSE]
+    if (!is.null(cluster)) {
+        C_l = cluster[ind_l, , drop = FALSE]
+        C_r = cluster[ind_r, , drop = FALSE]
+    if (!is.null(cluster)) {
+            warning(paste0("vce='", vce, "' is not a cluster option. Switching to vce='cr1'."))
+            warning("vce='hc2' is not a cluster option. Switching to vce='cr2'.")
+            warning("vce='hc3' is not a cluster option. Switching to vce='cr3'.")
+            warning(paste0("vce='", vce, "' is not a valid cluster option. Switching to vce='cr1'."))
+            warning("vce='cr1' requires a cluster variable. Falling back to vce='hc1'.")
+            warning("vce='cr2' requires a cluster variable. Falling back to vce='hc2'.")
+            warning("vce='cr3' requires a cluster variable. Falling back to vce='hc3'.")
+    vce_type = "NN"
+        vce_type = "HC0"
+        vce_type = "HC1"
+        vce_type = "HC2"
+        vce_type = "HC3"
+        vce_type = "CR1"
+        vce_type = "CR2"
+        vce_type = "CR3"
+    crv3 = (vce == "crv3") & !is.null(cluster)
+    crv2 = (vce == "crv2") & !is.null(cluster)
+        if (!is.null(cluster)) 
+    if (!is.null(cluster)) {
+            warning(sprintf(paste0("Only %d (left) and %d (right) clusters within the bandwidth. ", 
+                "With p+1 = %d or fewer clusters on a side, cluster-robust inference ", 
+            warning(sprintf(paste0("Only %d (left) and %d (right) clusters within the bandwidth. ", 
+                "Cluster-robust standard errors are unreliable with fewer than 10 clusters on a side."), 
+    if (!is.null(cluster)) {
+        cidx_l = .rdrobust_cluster_idx(eC_l)
+        cidx_r = .rdrobust_cluster_idx(eC_r)
+        crv2 = crv2, has_cluster = !is.null(cluster))
+        crv2 = crv2, has_cluster = !is.null(cluster))
+            crv3 = crv3, crv2 = crv2, has_cluster = !is.null(cluster))
+            crv3 = crv3, crv2 = crv2, has_cluster = !is.null(cluster))
+        W_h_l), res_h_l, eC_l, cluster_idx = cidx_l, invG = crv_invG_l, 
+        W_h_r), res_h_r, eC_r, cluster_idx = cidx_r, invG = crv_invG_r, 
+            W_h_l), res_b_l, eC_l, cluster_idx = cidx_l, invG = invG_q_l, 
+            W_h_r), res_b_r, eC_r, cluster_idx = cidx_r, invG = invG_q_r, 
+    else if (hb_match & !is.null(cluster)) {
+            W_h_l), res_b_l, eC_l, cluster_idx = cidx_l, invG = NULL, 
+            W_h_r), res_b_r, eC_r, cluster_idx = cidx_r, invG = NULL, 
+        M_rb_l = .rdrobust_vce_qq_cluster(Q_q_l, R_q_l, W_b_l, 
+            invG_q_l, res_b_l, eC_l, cluster_idx = cidx_l, crv2 = crv2, 
+        M_rb_r = .rdrobust_vce_qq_cluster(Q_q_r, R_q_r, W_b_r, 
+            invG_q_r, res_b_r, eC_r, cluster_idx = cidx_r, crv2 = crv2, 
+            res_b_l, eC_l, cluster_idx = cidx_l, invG = NULL, 
+            res_b_r, eC_r, cluster_idx = cidx_r, invG = NULL, 
+  code_city.x          date            sdt               sdr         
+ Min.   :110100   Min.   :18628   Min.   : 0.0000   Min.   :  0.000  
+ 1st Qu.:320300   1st Qu.:19176   1st Qu.: 0.0000   1st Qu.:  0.000  
+ Median :371100   Median :19724   Median : 0.0000   Median :  0.000  
+ Mean   :380522   Mean   :19724   Mean   : 0.1878   Mean   :  0.474  
+ 3rd Qu.:450300   3rd Qu.:20271   3rd Qu.: 0.0000   3rd Qu.:  0.000  
+ Max.   :650200   Max.   :20819   Max.   :12.6275   Max.   :128.500  
+                                  NAs    :8437      NAs    :8165     
+   station_n           date        code_city.x          pm10        
+ Min.   :  46.0   Min.   :18628   Min.   :110100   Min.   :   0.00  
+ 1st Qu.: 474.0   1st Qu.:19176   1st Qu.:230100   1st Qu.:  49.50  
+ Median : 845.5   Median :19724   Median :370300   Median :  77.70  
+ Mean   : 896.8   Mean   :19724   Mean   :358314   Mean   :  95.05  
+ 3rd Qu.:1313.0   3rd Qu.:20271   3rd Qu.:441200   3rd Qu.: 120.25  
+ Max.   :1837.0   Max.   :20819   Max.   :650200   Max.   :1000.00  
+                                                   NAs    :365743   
+      no2              so2             wind_speed          rain       
+ Min.   :  0.00   Min.   :  0.0318   Min.   : 0.000   Min.   :  0.00  
+ 1st Qu.: 11.50   1st Qu.:  4.4240   1st Qu.: 1.632   1st Qu.:  0.00  
+ Median : 18.17   Median :  8.4605   Median : 2.286   Median :  0.00  
+ Mean   : 20.54   Mean   : 12.9317   Mean   : 2.594   Mean   :  3.39  
+ 3rd Qu.: 26.87   3rd Qu.: 15.9669   3rd Qu.: 3.182   3rd Qu.:  1.60  
+ Max.   :401.43   Max.   :437.6053   Max.   :25.143   Max.   :290.00  
+ NAs    :311504   NAs    :307909     NAs    :10323    NAs    :13107   
+      temp               rh           code_city.y         phase      
+ Min.   :-29.538   Min.   :  4.982   Min.   :110100   Min.   :1.000  
+ 1st Qu.:  7.667   1st Qu.: 52.967   1st Qu.:230100   1st Qu.:1.000  
+ Median : 17.272   Median : 68.125   Median :370300   Median :1.000  
+ Mean   : 15.189   Mean   : 65.483   Mean   :358314   Mean   :1.393  
+ 3rd Qu.: 24.000   3rd Qu.: 79.945   3rd Qu.:441200   3rd Qu.:2.000  
+ Max.   : 37.417   Max.   :110.717   Max.   :650200   Max.   :2.000  
+ NAs    :13494     NAs    :13410                                     
+   auto_date      station_lon      station_lat   
+ Min.   :19060   Min.   : 84.12   Min.   :19.94  
+ 1st Qu.:19347   1st Qu.:111.48   1st Qu.:28.25  
+ Median :19359   Median :114.40   Median :32.09  
+ Mean   :19448   Mean   :114.49   Mean   :32.86  
+ 3rd Qu.:19632   3rd Qu.:119.36   3rd Qu.:37.99  
+ Max.   :19724   Max.   :129.64   Max.   :47.37  
+                                                 
+   
+    FALSE
+  1   397
+  2   257
+[1] "numeric"
+[1] 18628 20759
+feols time 0.8642304 secs 1049325 
+rd time 1.414121 secs 
+31.48504 346.6013 135745 176397 

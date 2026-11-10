@@ -1,0 +1,22 @@
+{
+  "schema": 1,
+  "entry_id": "goni-2022-assortative-matching-london-season",
+  "mode": "blind",
+  "run_id": "2026-11-10-a",
+  "reproducer": "claude-code",
+  "language": "r",
+  "final": {"script": "script.R", "stdout": "stdout.txt", "stderr": "stderr.txt", "exit_code": 0},
+  "attempts": [
+    {"dir": "attempt-1", "exit_code": 0, "kind": ""},
+    {"dir": "attempt-2", "exit_code": 0, "kind": ""}
+  ],
+  "deviations": [
+    "Probit columns report the average marginal effect (dP/dT averaged over the estimation sample) of the synthetic probability; the paper does not say whether its marginal effects are averaged or evaluated at the means.",
+    "Samples and the treatment use the flags/variables shipped in data/final-data.dta (base_sample, marital_rates_sample, syntheticT, cOut, mheir, fmissmatch, fmissmatch2, fdown, celibacy, distlondon); the synthetic probability was not rebuilt from the 1815-1830 benchmark cohort. Sample sizes with a family seat (484, 260, 565) and SD of T (7.3) agree with figures stated in the paper text.",
+    "Standard errors (printed for information only, not scored) are clustered by birth year (byear), which has 22 distinct values in the data versus G = 21 stated in the paper; bootstrap-t p-values were not computed."
+  ],
+  "notes": "Blind independent reproduction of Goni (2022) Table 2, Panels A and B. Controls: duke/marquess/earl daughter (pr4), English peerage (hengpee), birth order excluding heirs (biorder); Panel B adds distlondon. Probit (glm probit link) for married a commoner, married an heir, married down, never married; OLS (fixest) for absolute and husband-minus-wife landholdings percentile-rank differences. Landholdings sample = baseline women with non-missing fmissmatch (324; 260 with a seat). Never-married outcome = celibacy in the marital-rates sample (765). attempt-1 and attempt-2 were exploratory (variable listing, sample checks); they print no RESULT lines. No author scripts or result files were opened (none appeared in the mount besides .mxd map files, which were not read).",
+  "files_read_outside_mount": [],
+  "started_at": "2026-11-10T05:25:43Z",
+  "finished_at": "2026-11-10T05:29:30Z"
+}
