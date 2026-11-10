@@ -1,0 +1,108 @@
+You are reproducing results from an econometrics paper for validation purposes.
+Write R code (not Python) — the paper's reference implementation is in R.
+
+## Paper Information
+Title: DISCUSSION PAPER SERIES
+Abstract (first 500 chars): IZA DP No. 14281
+APRIL 2021
+Mental Health Costs of Lockdowns: 
+Evidence from Age-Specific Curfews in 
+Turkey*
+Using a strict, age-specific lockdown order for adults aged 65 and older in Turkey, 
+we examine the mental health consequences of an extended period of tight mobility 
+restrictions on senior adults. Adopting a regression discontinuity design, we find that 
+the curfew-induced decline in mobility substantially worsened mental health outcomes, 
+including somatic and nonsomatic symptoms of m
+Methodology Summary: - **Design and data:** The study is a sharp reduced-form regression discontinuity (RD) design built around Turkey's age-specific COVID-19 curfew for people aged 65+, which started on March 21, 2020. The data come from an original KONDA phone survey run May 29 to July 4, 2020. Respondents were drawn from KONDA's existing respondent database and limited to urban residents in 26 regions, aged 59–70 (born 1950–1961). That gives 6 treated and 6 control birth-year cohorts. The analysis sample has at most 1,909 individuals. There is no train/test split or cross-validation; this is a causal-inference design.
+- **Treatment and running variable:** The treatment indicator z_i = 1 if the respondent was born before January 1956, i.e. in or before December 1955. This cutoff was chosen by a simulation over every birth year-month threshold, keeping the one with the largest jump in self-reported curfew exposure (Fig. A2). The forcing variable x_i is the number of months the respondent is older than the threshold index month. Birth dates were read from national ID cards.
+- **Estimating equation (Eq. 1):** y_i = α + β z_i + f(x_i) + ε_i for x_i ∈ (c − h, c + h). f(·) is a local linear function fit separately on each side of the cutoff. The paper uses a uniform kernel; a triangular kernel and a quadratic control function are robustness checks (Table A8). β is reported as a reduced-form / first-stage level effect. Footnote 38 also gives Wald/2SLS-style rescalings by curfew status and by days outside.
+- **Controls and fixed effects:** All specifications add month-of-birth fixed effects, province fixed effects and surveyor (interviewer) fixed effects. They also include indicator variables for education level, ethnicity and gender.
+- **Bandwidth:** The headline bandwidth is chosen with the Imbens–Kalyanaraman (2012) optimal-bandwidth procedure. For days spent outside last week it is 45 months, and that bandwidth is used to interpret magnitudes. Main tables also report the Calonico–Cattaneo–Titiunik (2014) optimal bandwidth (17 months) and fixed bandwidths of 30 and 60 months.
+- **Outcomes:**
+  - *Mobility (first stage, Table 3):* days went outside in the previous week; self-reported being subject to the curfew; never left home.
+  - *Mental health (Table 4):* items from the WHO SRQ-20 (20 binary items). Following Anderson (2008), three indices are built by averaging z-scores of their items and then standardising each index to mean 0, SD 1, with higher values meaning more distress:
+    - a mental distress index (all 20 items);
+    - a somatic index (4 items);
+    - a nonsomatic index (16 items).
+    A fourth measure is the raw SRQ-20 count of "yes" answers, with no clinical cutoff applied.
+  - *Channels (Table 5):*
+    - Panel A, labor/income: worked for pay; worked paid or unpaid; has a job they could not attend; enough money for usual needs; worried about spending.
+    - Panel B, isolation: limited social interaction and limited physical activity, each a dummy for "extremely/very limited" in the last month versus pre-COVID.
+    - Panel C, household: current household size; conflict with a household member.
+  - *Beliefs (Table 6 / A7):* curfew support, satisfaction with the government's COVID policy, and religiosity.
+- **Inference:** Standard errors are clustered by month-year of birth (Lee and Card 2008). To correct for multiple testing, Anderson (2008) / Benjamini–Krieger–Yekutieli (2006) sharpened FDR q-values are computed within domains: each table, or each panel within a table (following Field et al. 2021).
+- **Validity checks:**
+  - McCrary (2008) density test at the 45-month bandwidth (Fig. A4).
+  - Covariate balance on predetermined characteristics: high school completion, illiteracy, female, married, widowed/separated, non-Turkish ethnicity, ever received psychological support, chronic disease, pre-COVID household size. Shown in Fig. 1 and Table A2, with a SUR joint test across bandwidths.
+  - Test for a break in survey nonresponse at the cutoff (Fig. A3).
+  - Graphs plot one-month-bin local averages with local linear fits; mental-health outcomes are residualized on the fixed effects and controls (Fig. 3; unresidualized versions in Fig. A6).
+
+
+## Quantities to Compute
+Compute each quantity below and print it under the given name.  The paper's reported values are deliberately not shown.
+1. days_outside_last_week_table3_col3 [type: coefficient; unit: days per week]
+   Location: Table 3, Days outside last week, Born before 1955, column (3) +/-45
+   Context: Table 3 ("Effects of Curfew on Mobility Outcomes"), column (3). Regression discontinuity estimate of the effect of being born before December 1955 (the cohorts subject to Turkey's 65+ curfew) on the number of days the respondent went outside last week. OLS of the outcome on the treatment indicator and a linear function of the running variable (months between the respondent's month-year of birth and the December 1955 threshold) fit separately on each side of the threshold, uniform kernel, sample restricted to respondents born within 45 months of the threshold (the Imbens- Kalyanaraman optimal b…
+2. under_curfew_table3_col3 [type: coefficient; unit: change in the probability of reporting being under curfew]
+   Location: Table 3, Under curfew, Born before 1955, column (3) +/-45
+   Context: Table 3, column (3): the same RD specification (linear in the running variable on each side, uniform kernel, 45-month bandwidth, month of birth, province and surveyor fixed effects, education, ethnicity and gender indicators, SEs clustered by month-year of birth) for a dummy equal to one if the respondent reported being subject to the curfew within the last month. The entry is the "Born before 1955" coefficient.
+3. never_goes_out_table3_col3 [type: coefficient; unit: change in the probability of never going outside]
+   Location: Table 3, Never goes out, Born before 1955, column (3) +/-45
+   Context: Table 3, column (3): the same RD specification for a dummy equal to one if the respondent reported his or her current frequency of going outside as "never going outside". The entry is the "Born before 1955" coefficient; SEs clustered by month-year of birth.
+4. n_obs_days_outside_table3_col3 [type: count; unit: respondents]
+   Location: Table 3, Days outside last week, Observations, column (3)
+   Context: Number of observations in Table 3, column (3), for days outside last week: survey respondents born within 45 months of the threshold with the outcome and all controls observed (survey non-respondents excluded).
+5. n_obs_under_curfew_table3_col3 [type: count; unit: respondents]
+   Location: Table 3, Under curfew, Observations, column (3)
+   Context: Number of observations in Table 3, column (3), for the under-curfew outcome: respondents born within 45 months of the threshold with the outcome and all controls observed.
+6. mental_distress_index_table4_col3 [type: coefficient; unit: standard deviations of the mental distress index]
+   Location: Table 4, Mental distress index, Born before 1955, column (3) +/-45
+   Context: Table 4 ("Effects of Curfew on Mental Health Outcomes"), column (3). Reduced-form RD estimate of the effect of being born before December 1955 on the mental distress index, with the Table 3 specification (linear in the running variable on each side, uniform kernel, 45-month bandwidth, month of birth, province and surveyor fixed effects, education, ethnicity and gender indicators, SEs clustered by month-year of birth). The index follows Anderson (2008) over all 20 SRQ-20 items (binary symptoms within the last four weeks): each item is demeaned and divided by the control group's (born after the …
+7. somatic_symptoms_index_table4_col3 [type: coefficient; unit: standard deviations of the somatic symptoms index]
+   Location: Table 4, Somatic symptoms of distress index, Born before 1955, column (3) +/-45
+   Context: Table 4, column (3): the same RD specification for the somatic symptoms of distress index, the Anderson (2008) index over the four somatic SRQ-20 items (frequent headaches, shaking hands, poor digestion, uncomfortable feelings in the stomach). The entry is the "Born before 1955" coefficient.
+8. nonsomatic_symptoms_index_table4_col3 [type: coefficient; unit: standard deviations of the nonsomatic symptoms index]
+   Location: Table 4, Nonsomatic symptoms of distress index, Born before 1955, column (3) +/-45
+   Context: Table 4, column (3): the same RD specification for the nonsomatic symptoms of distress index, the Anderson (2008) index over the other 16 SRQ-20 items (poor appetite, sleeping badly, easily frightened, nervous or worried, trouble thinking clearly, unhappy, crying more, difficulty enjoying daily activities, difficulty making decisions, daily work suffered, unable to play a useful part in life, lost interest, feeling worthless, thoughts of suicide, tired all the time, tired easily). The entry is the "Born before 1955" coefficient.
+9. sum_srq20_yes_answers_table4_col3 [type: coefficient; unit: number of "yes" answers (0-20)]
+   Location: Table 4, Sum of "yes" answers in SRQ-20, Born before 1955, column (3) +/-45
+   Context: Table 4, column (3): the same RD specification for the sum of "yes" answers to the 20 SRQ-20 questions (respondents with every item answered). The entry is the "Born before 1955" coefficient.
+10. n_obs_mental_distress_index_table4_col3 [type: count; unit: respondents]
+   Location: Table 4, Mental distress index, Observations, column (3)
+   Context: Number of observations in Table 4, column (3), for the mental distress index (the same sample as the SRQ-20 sum): respondents born within 45 months of the threshold who answered all 20 SRQ-20 items and have all controls observed.
+
+## Dataset Information
+Name: altindag-2022-mental-health-costs-lockdowns
+Local path: <repo>/.cache/datasets/altindag_2022_mental_health_costs_lockdowns.script-free
+File format: csv
+Files in the dataset directory (paths relative to the local path above):
+- ICPSR_183165-V1.1/konda_data_for_analysis.dta (1.2 MB) — 2175 rows, 146 columns: female, education, year, month, outside_month, outside_week, shaking, nervous, unhappy, worthless, chronic_disease, conflict, ethnicity, poor_physical_health, poor_mental_health, married, widowed_separated, money_as_usual, before1955, under_curfew, limited_physical_act, lim_social_interaction, gov_support_d, never_out, pre_covid_hhsize, poor_overall_health, non_turk, survey_taker_id, hh_size, marital_status, paid_employment, money_distressed, mal_appetite, indigestion, uninte…
+- ICPSR_183165-V1.1/read me .pdf (135.8 KB)
+- metadata.json (247 B)
+
+## Required Output Convention
+Emit each reproduced metric on its own line to stdout using EXACTLY this format:
+    RESULT:<metric_name>=<numeric_value>
+For example:  cat('RESULT:beta=0.342\n')
+Use snake_case metric names matching the claim descriptions.
+
+## Code Requirements
+Write a complete, self-contained R script that runs under Rscript.
+The dataset is a directory tree at '<repo>/.cache/datasets/altindag_2022_mental_health_costs_lockdowns.script-free' — see the file listing under Dataset Information.  Load the actual data file(s) by the exact paths listed there (readr::read_csv() for .csv, haven::read_dta() for Stata .dta, load() for .RData/.rda, which creates the objects listed for the file under exactly those names: use them, do not guess others; readRDS() for .rds).
+Installed packages (no network; nothing else can be installed): jsonlite, fixest, lfe, AER, ivreg, plm, estimatr, lme4, quantreg, car, sandwich, lmtest, clubSandwich, multiwayvcov, marginaleffects, MatchIt, optmatch, CBPS, WeightIt, cobalt, did, rdrobust, rddensity, Synth, modelsummary, stargazer, texreg, broom, tidyverse, dplyr, tidyr, readr, stringr, lubridate, data.table, haven, readxl, janitor, zoo, ggplot2, ggridges, ggrepel, gridExtra, cowplot, gtable, extrafont, sf, MASS, nnet, survival, splines, Matrix, boot, stats, utils.
+Prefer fixest for fixed effects, IV and clustered SEs; use the other installed packages where the paper's method calls for them.
+Set a deterministic seed with ``set.seed(42)`` for any randomness.
+Do NOT access the internet; the container runs with --network none.
+Do NOT shell out via system() / system2().
+Emit RESULT:<name>=<value> lines to stdout at the end via cat().
+
+## Algorithm Hints
+This paper reports regression coefficients with standard errors. Default to fixest::feols() for OLS with fixed effects; switch to AER::ivreg() for instrumental variables and plm::plm() for panel data.  Use the cluster argument or cluster_var argument in feols() / vcovCL() from sandwich for cluster-robust standard errors.  Extract each coefficient via ``coef(model)['varname']`` and each SE via ``sqrt(diag(vcov(model)))['varname']`` so they can be emitted as separate RESULT: lines.
+
+## Independent Reproduction
+This is an INDEPENDENT reproduction: reconstruct the analysis from the paper's description alone.  The authors' own analysis code is deliberately withheld.  Do NOT open, read, source, or execute any script files that may appear in the dataset directory listing (.do, .ado, .R, .Rmd, .py, .sas, .sps, .m, and similar) — load data files only.  Derive the estimating equation, sample restrictions, fixed effects, and standard-error clustering from the paper information and claims above.
+
+## Blind Reproduction
+This reproduction is also BLIND: the paper's reported values for the quantities above are deliberately withheld, and you will not be told how close your numbers are.  Compute each quantity as the paper's method defines it; do not tune the specification toward any number you expect.  Do NOT read result tables, logs, or output files that may appear in the dataset directory (.tex, .log, .pdf, .html, and similar) to recover the paper's numbers — compute everything from the data files.  Print a RESULT: line for every quantity listed, using its name exactly.
+
+Now write the complete R script. Output ONLY the code — no explanation, no markdown fences.

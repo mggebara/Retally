@@ -1,0 +1,21 @@
+{
+  "schema": 1,
+  "entry_id": "saccardo-2023-demand-moral-commitment",
+  "mode": "blind",
+  "run_id": "2026-11-10-c",
+  "reproducer": "claude-code",
+  "language": "r",
+  "final": {"script": "script.R", "stdout": "stdout.txt", "stderr": "stderr.txt", "exit_code": 0},
+  "attempts": [
+    {"dir": "attempt-1", "exit_code": 0, "kind": ""},
+    {"dir": "attempt-2", "exit_code": 0, "kind": ""}
+  ],
+  "deviations": [
+    "Selfishness uses the dataset's prebuilt stdalpha (alphavaluefinal standardized over all advisors with a consistent MPL, incl. High Stakes rows) rather than re-standardizing within the estimation sample; the two mean/sd differ only in the 3rd decimal.",
+    "'Whether incentives were probabilistic' is coded with probabilistic_incentive (1 for professionals and the AMT wave-2 probabilistic subsample); 'position of products' with incentiveleft; their interaction as the product. The professionals wave dummy is collinear with the Professionals indicator and is dropped by lm."
+  ],
+  "notes": "Data: Data/Clean Data/choice_experiments.dta only. Sample = four main Choice treatments: dropped High Stakes x10/x100 rows; AMT advisors kept only with non-missing MPL moral-cost measure (consistent responders, the paper's preregistered exclusion); all 712 professionals kept. This reproduces Table 1's Ns exactly (712/2574/1562/1067 = 5915); 7 rows drop for missing age in regressions (N=5908; AMT-only 5196). OLS LPMs with controls female, age, wave dummies (AMT-1 base), probabilistic incentive, incentive-on-left, and their interaction; HC3 SEs via sandwich. Table 2: DV choicebefore (prefer to see incentive first). Table 3: DV recommendincentive; col1 getyourchoice==1, col2 getyourchoice==0, col3 pooled with notgetyourchoice and its interactions with preference and noconflict. Attempts 1-2 were exploratory (variable listing, sample cross-tabs), no RESULT lines. One final scored run; no error repairs, no claim comparisons.",
+  "files_read_outside_mount": [],
+  "started_at": "2026-11-10T11:24:48Z",
+  "finished_at": "2026-11-10T11:27:30Z"
+}

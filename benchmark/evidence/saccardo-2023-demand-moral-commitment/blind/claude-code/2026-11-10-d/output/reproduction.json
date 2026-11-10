@@ -1,0 +1,19 @@
+{
+  "schema": 1,
+  "entry_id": "saccardo-2023-demand-moral-commitment",
+  "mode": "blind",
+  "run_id": "2026-11-10-d",
+  "reproducer": "claude-code",
+  "language": "r",
+  "final": {"script": "script.R", "stdout": "stdout.txt", "stderr": "stderr.txt", "exit_code": 0},
+  "attempts": [
+    {"dir": "attempt-1", "exit_code": 0, "kind": ""},
+    {"dir": "attempt-2", "exit_code": 0, "kind": ""},
+    {"dir": "attempt-3", "exit_code": 0, "kind": ""}
+  ],
+  "deviations": [],
+  "notes": "Data: Data/Clean Data/choice_experiments.dta. Attempts 1-3 were exploratory (variable inspection, sample counts; no RESULT lines). Sample: four main Choice treatments (High-Stakes x10/x100 arms dropped); AMT advisors with inconsistent MPL responses (missing alphavaluefinal/stdalpha) excluded per the paper's preregistered rule, professionals (no MPL) kept; this reproduces the Table 1 Ns exactly (2574/712/1562/1067). 7 further observations drop for missing age. Table 2: OLS of choicebefore on seeincentivecostly, seequalitycostly, professionalsfree (col 1) or stdalpha (cols 2-3, AMT only; plus interactions in col 3), controls female, age, wave2, wave3 (wave1 base; professionals have no AMT wave), probabilistic_incentive, incentiveleft, incentiveshigh_incentiveleft; HC3 SEs. Table 3: OLS of recommendincentive on choicebefore, noconflict, choicebefore x noconflict, treatment dummies, incentiveB and the same controls, split by getyourchoice (cols 1-2) and pooled with notgetyourchoice and its interactions with choicebefore and noconflict (col 3); HC3. Selfishness uses the dataset's stdalpha (standardized alphavaluefinal). No hangs; each sandbox run took ~2 s.",
+  "files_read_outside_mount": [],
+  "started_at": "2026-11-10T11:24:47Z",
+  "finished_at": "2026-11-10T11:27:30Z"
+}

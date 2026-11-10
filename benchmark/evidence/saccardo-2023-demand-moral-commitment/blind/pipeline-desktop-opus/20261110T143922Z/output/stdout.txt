@@ -1,0 +1,270 @@
+Rows: 6976  Cols: 94 
+Columns: id, startdate, enddate, age, condition, shortid, attentionpassed, incentiveB, incentiveA, commission, choicebefore, recommendincentive, beliefbin, belief, signalblue, conflict, getbefore, incentivecostly, study, choice, incentiveshigh, flippedorder, incentiveleft, Highx10, Highx100, chooseblindness, sample, alphavaluefinal, stdalpha, selfish, female, beliefcorrect, jobtitle, industry, explanationchoice, qualitycostly, professionals, prolific, cloudresearch, professionalscloudresearch, mturkwave, wave1, wave2, wave3, probabilistic_incentive, locatedus, wave, incentivedesign, year, treatment, selfishseeincentivecostly, selfishseequalitycostly, committ, professionalsfree, seeincentivecostly, seequalitycostly, incentiveshigh_incentiveleft, avoid_incentiveinfo, choiceafter, getyourchoice, choicebefore_getyourchoice, getbeforenoconflict, noconflict, choicebeforenoconflict, choicebefore_getbefore, choicebefore_getbefore_nocon, notgetyourchoice, notgetyourchoicenoconflict, choicebeforenotgetyourchoice, choicebeforegetbefore, logsignalhigh, logsignallow, logitbelief, good, bad, goodchoicebefore, badchoicebefore, goodgetyourchoice, badgetyourchoice, goodnotgetyourchoice, badnotgetyourchoice, goodchoicebeforenotgetyourchoice, badchoicebeforenotgetyourchoice, bayesianposterior, badsignal, updatecorrect, updatedirection, updatewrong, beliefdistance, relbeliefdistance, correctdirbin, beliefinbin, belief_prior, belief_prior_continuos 
+
+== table of treatment ==
+
+   0    1    2    3 
+3353  712 1741 1170 
+
+== table of condition ==
+
+              ChoiceFree ChoiceFree_Professionals                 PayAfter 
+                    3353                      712                     1170 
+               PayBefore 
+                    1741 
+
+== table of sample ==
+
+CloudResearch         MTurk      Prolific 
+          216          6264           496 
+
+== table of wave ==
+
+                 AMT-1                  AMT-2                  AMT-3 
+                  2951                   1255                   2058 
+Prolific/CloudResearch 
+                   712 
+
+== table of professionals ==
+
+   0    1 
+6264  712 
+
+== table of choice ==
+
+       Choice Professionals 
+         6264           712 
+
+== table of getyourchoice ==
+
+   0    1 
+1733 5243 
+
+== table of choicebefore ==
+
+   0    1 
+3227 3749 
+
+== table of incentiveshigh ==
+
+   0    1 
+6323  653 
+
+== table of probabilistic_incentive ==
+
+   0    1 
+5611 1365 
+
+== table of seequalitycostly ==
+
+   0    1 
+5806 1170 
+
+== table of qualitycostly ==
+
+   0    1 
+5806 1170 
+
+== table of commission ==
+
+            commissionA commissionB 
+        712        3138        3126 
+
+== table of conflict ==
+
+   0    1 
+2095 4881 
+
+== table of female ==
+
+   0    1 
+3214 3762 
+
+Arm counts (main):
+, , qcost = 0
+
+    incost
+prof    0    1
+   0 3353 1741
+   1  712    0
+
+, , qcost = 1
+
+    incost
+prof    0    1
+   0 1170    0
+   1    0    0
+
+
+Preference variable: choicebefore 
+
+   0    1 
+3227 3749 
+Age NA: 11 
+
+wave_f levels:
+
+                 AMT-1                  AMT-2                  AMT-3 
+                  2951                   1255                   2058 
+Prolific/CloudResearch 
+                   712 
+
+gender_f levels:
+
+   0    1 
+3214 3762 
+OLS estimation, Dep. Var.: pref
+Observations: 6,965
+Standard-errors: Heteroskedasticity-robust 
+             Estimate Std. Error   t value   Pr(>|t|)    
+(Intercept)  0.694930   0.022287 31.181197  < 2.2e-16 ***
+prof        -0.037807   0.044605 -0.847580 3.9670e-01    
+incost      -0.146593   0.016288 -8.999840  < 2.2e-16 ***
+qcost        0.110218   0.022250  4.953652 7.4553e-07 ***
+gender_f1   -0.033381   0.011860 -2.814621 4.8972e-03 ** 
+age_n       -0.002707   0.000485 -5.586518 2.4043e-08 ***
+wave_fAMT-2  0.058265   0.030223  1.927838 5.3916e-02 .  
+wave_fAMT-3 -0.061173   0.019203 -3.185655 1.4507e-03 ** 
+prob_c      -0.059713   0.038598 -1.547031 1.2190e-01    
+left_c       0.051076   0.038507  1.326406 1.8475e-01    
+ihl_c       -0.020496   0.054370 -0.376964 7.0621e-01    
+... 3 variables were removed because of collinearity
+(wave_fProlific/CloudResearch, ihigh_c and probleft_c)
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+RMSE: 0.490117   Adj. R2: 0.032261
+OLS estimation, Dep. Var.: pref
+Observations: 5,581
+Standard-errors: Heteroskedasticity-robust 
+             Estimate Std. Error   t value   Pr(>|t|)    
+(Intercept)  0.667151   0.024370 27.376135  < 2.2e-16 ***
+incost      -0.152128   0.017027 -8.934428  < 2.2e-16 ***
+qcost        0.101190   0.023126  4.375576 1.2332e-05 ***
+selfz        0.057532   0.006500  8.851475  < 2.2e-16 ***
+gender_f1   -0.021845   0.013182 -1.657103 9.7555e-02 .  
+age_n       -0.002309   0.000531 -4.347549 1.4012e-05 ***
+wave_fAMT-2  0.025528   0.032607  0.782905 4.3372e-01    
+wave_fAMT-3 -0.045060   0.019952 -2.258394 2.3960e-02 *  
+prob_c      -0.059857   0.042120 -1.421109 1.5534e-01    
+left_c       0.059090   0.042073  1.404487 1.6023e-01    
+ihl_c       -0.002299   0.059525 -0.038620 9.6919e-01    
+... 2 variables were removed because of collinearity (ihigh_c and
+probleft_c)
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+RMSE: 0.486952   Adj. R2: 0.045451
+OLS estimation, Dep. Var.: pref
+Observations: 5,581
+Standard-errors: Heteroskedasticity-robust 
+             Estimate Std. Error   t value   Pr(>|t|)    
+(Intercept)  0.667308   0.024321 27.437712  < 2.2e-16 ***
+incost      -0.152710   0.017002 -8.981885  < 2.2e-16 ***
+qcost        0.100382   0.023097  4.346121 1.4103e-05 ***
+selfz        0.078184   0.008791  8.893912  < 2.2e-16 ***
+self_incost -0.045376   0.015277 -2.970160 2.9892e-03 ** 
+self_qcost  -0.042390   0.017070 -2.483259 1.3048e-02 *  
+gender_f1   -0.021134   0.013179 -1.603614 1.0886e-01    
+age_n       -0.002311   0.000530 -4.361304 1.3162e-05 ***
+wave_fAMT-2  0.023866   0.032571  0.732742 4.6375e-01    
+wave_fAMT-3 -0.045096   0.019930 -2.262678 2.3694e-02 *  
+prob_c      -0.059182   0.042100 -1.405758 1.5985e-01    
+left_c       0.057615   0.042104  1.368402 1.7124e-01    
+ihl_c       -0.001212   0.059569 -0.020354 9.8376e-01    
+... 2 variables were removed because of collinearity (ihigh_c and
+probleft_c)
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+RMSE: 0.486453   Adj. R2: 0.047065
+
+Incentive for B:
+
+   0    1 
+3496 3480 
+OLS estimation, Dep. Var.: rec
+Observations: 5,238
+Standard-errors: Heteroskedasticity-robust 
+               Estimate Std. Error    t value   Pr(>|t|)    
+(Intercept)    0.733090   0.025332  28.938963  < 2.2e-16 ***
+pref           0.186804   0.014913  12.526077  < 2.2e-16 ***
+noconf         0.250833   0.018607  13.480649  < 2.2e-16 ***
+pref_x_noconf -0.132757   0.023440  -5.663798 1.5597e-08 ***
+prof          -0.001433   0.044968  -0.031865 9.7458e-01    
+incost         0.014266   0.016113   0.885385 3.7599e-01    
+qcost         -0.061659   0.021317  -2.892444 3.8384e-03 ** 
+incB          -0.162793   0.011767 -13.835163  < 2.2e-16 ***
+gender_f1      0.006969   0.011572   0.602184 5.4708e-01    
+age_n         -0.001732   0.000490  -3.530660 4.1810e-04 ***
+wave_fAMT-2   -0.018668   0.032373  -0.576663 5.6419e-01    
+wave_fAMT-3    0.028723   0.018295   1.570008 1.1647e-01    
+prob_c         0.002356   0.039578   0.059527 9.5253e-01    
+left_c        -0.000239   0.040500  -0.005907 9.9529e-01    
+ihl_c          0.057757   0.054167   1.066280 2.8635e-01    
+... 3 variables were removed because of collinearity
+(wave_fProlific/CloudResearch, ihigh_c and probleft_c)
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+RMSE: 0.413995   Adj. R2: 0.091952
+OLS estimation, Dep. Var.: rec
+Observations: 1,727
+Standard-errors: Heteroskedasticity-robust 
+               Estimate Std. Error   t value   Pr(>|t|)    
+(Intercept)    0.898856   0.044500 20.198951  < 2.2e-16 ***
+pref          -0.007785   0.026379 -0.295131 7.6793e-01    
+noconf         0.189806   0.031041  6.114599 1.1965e-09 ***
+pref_x_noconf  0.029095   0.041066  0.708489 4.7874e-01    
+prof           0.021337   0.079488  0.268436 7.8840e-01    
+incost        -0.005049   0.028948 -0.174428 8.6155e-01    
+qcost          0.015039   0.039205  0.383598 7.0132e-01    
+incB          -0.185758   0.020919 -8.879845  < 2.2e-16 ***
+gender_f1     -0.033358   0.020604 -1.619009 1.0563e-01    
+age_n         -0.003032   0.000854 -3.551497 3.9341e-04 ***
+wave_fAMT-2   -0.030129   0.051540 -0.584585 5.5890e-01    
+wave_fAMT-3   -0.011738   0.033888 -0.346375 7.2910e-01    
+prob_c         0.004158   0.070108  0.059312 9.5271e-01    
+left_c         0.042796   0.067676  0.632362 5.2723e-01    
+ihl_c          0.024311   0.096708  0.251382 8.0155e-01    
+... 3 variables were removed because of collinearity
+(wave_fProlific/CloudResearch, ihigh_c and probleft_c)
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+RMSE: 0.424733   Adj. R2: 0.073117
+OLS estimation, Dep. Var.: rec
+Observations: 6,965
+Standard-errors: Heteroskedasticity-robust 
+                      Estimate Std. Error    t value   Pr(>|t|)    
+(Intercept)           0.761433   0.022828  33.354669  < 2.2e-16 ***
+pref                  0.172121   0.014176  12.141322  < 2.2e-16 ***
+noconf                0.230899   0.017175  13.443941  < 2.2e-16 ***
+pref_x_noconf        -0.092530   0.020369  -4.542658 5.6488e-06 ***
+prof                  0.001699   0.039032   0.043521 9.6529e-01    
+incost                0.008419   0.014089   0.597536 5.5017e-01    
+qcost                -0.042562   0.018819  -2.261673 2.3748e-02 *  
+incB                 -0.168810   0.010262 -16.449857  < 2.2e-16 ***
+gender_f1            -0.003549   0.010095  -0.351575 7.2517e-01    
+age_n                -0.002042   0.000425  -4.801951 1.6042e-06 ***
+wave_fAMT-2          -0.022552   0.027365  -0.824111 4.0990e-01    
+wave_fAMT-3           0.018178   0.016200   1.122046 2.6188e-01    
+prob_c                0.005217   0.034332   0.151954 8.7923e-01    
+left_c                0.012133   0.034718   0.349470 7.2675e-01    
+ihl_c                 0.046997   0.047237   0.994924 3.1981e-01    
+notassigned           0.053526   0.019837   2.698277 6.9868e-03 ** 
+pref_x_notassigned   -0.137848   0.023706  -5.814920 6.3354e-09 ***
+noconf_x_notassigned  0.022702   0.023463   0.967553 3.3330e-01    
+... 3 variables were removed because of collinearity
+(wave_fProlific/CloudResearch, ihigh_c and probleft_c)
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+RMSE: 0.417311   Adj. R2: 0.086096
+RESULT:see_incentive_first_costly_table2_col1=-0.146593
+RESULT:assess_quality_first_costly_table2_col1=0.110218
+RESULT:choice_free_professionals_table2_col1=-0.037807
+RESULT:selfishness_table2_col2=0.057532
+RESULT:selfishness_table2_col3=0.078184
+RESULT:see_incentive_first_costly_x_selfishness_table2_col3=-0.045376
+RESULT:see_quality_first_costly_x_selfishness_table2_col3=-0.042390
+RESULT:n_obs_table2_col1=6965
+RESULT:n_obs_table2_cols2_3=5581
+RESULT:prefer_see_incentive_first_assigned_table3_col1=0.186804
+RESULT:prefer_see_incentive_first_not_assigned_table3_col2=-0.007785
+RESULT:prefer_see_incentive_first_x_not_assigned_table3_col3=-0.137848
+RESULT:n_obs_table3_col1=5238

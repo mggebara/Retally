@@ -1,0 +1,23 @@
+{
+  "schema": 1,
+  "entry_id": "saccardo-2023-demand-moral-commitment",
+  "mode": "independent",
+  "run_id": "2026-11-10-a",
+  "reproducer": "claude-code",
+  "language": "r",
+  "final": {"script": "script.R", "stdout": "stdout.txt", "stderr": "stderr.txt", "exit_code": 0},
+  "attempts": [
+    {"dir": "attempt-1", "exit_code": 0, "kind": ""},
+    {"dir": "attempt-2", "exit_code": 0, "kind": ""},
+    {"dir": "attempt-3", "exit_code": 0, "kind": "claim"},
+    {"dir": "attempt-4", "exit_code": 0, "kind": "claim"},
+    {"dir": "attempt-5", "exit_code": 0, "kind": "error"}
+  ],
+  "deviations": [
+    "Probabilistic-incentive control entered as incentiveshigh (probabilistic incentives randomized within AMT wave 2) rather than probabilistic_incentive (which also equals 1 for every professional). Using probabilistic_incentive makes the Choice Free--Professionals indicator nearly collinear with it (prof coef -0.022, SE 0.048); the chosen coding gives -0.084 (SE 0.023), closer to the paper's -0.095 (0.026). Other coefficients are identical under both codings."
+  ],
+  "notes": "Data: Data/Clean Data/choice_experiments.dta. Sample: the four main Choice treatments (Choice Free--Professionals; Choice Free AMT = studies 2, 4, 6 without the High Stakes x10/x100 arms; Incentive First Costly; Quality First Costly), keeping AMT advisors with a consistent MPL (non-missing selfishness, stdalpha) and non-missing age, giving N=5908 / 5196 / 4448 exactly as in the paper. OLS with HC3 SEs; controls female, age, wave dummies, probabilistic incentives, incentivized product on left, and their interaction. Outcome Table 2: choicebefore; Table 3: recommendincentive, split by getyourchoice. All claims match to 3 decimals except Choice Free--Professionals in Table 2 col 1 (-0.084 vs -0.095), which depends on how the professional sample's design controls are coded; no tried variant (year dummies, no probabilistic control, etc.) gave -0.095. attempt-1/2 exploratory (variable inspection); attempt-3 first estimate (prof -0.022); attempt-4 same estimate plus diagnostic variants of the prof coefficient; attempt-5 an invalid run where script.R had not been written on the host so Docker mounted an empty directory (no output), fixed by writing the file. Paper text and the dataset's README.pdf were not read beyond paper.txt; no author scripts opened.",
+  "files_read_outside_mount": [],
+  "started_at": "2026-11-10T07:02:00Z",
+  "finished_at": "2026-11-10T11:22:30Z"
+}

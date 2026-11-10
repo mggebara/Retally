@@ -1,0 +1,10 @@
+check_attempt output: All claims within tolerance.
+Own comparison (made before running check_attempt), acted on:
+n_obs_days_outside_table3_col3: reproduced 1199, claimed 1214
+n_obs_under_curfew_table3_col3: reproduced 1207, claimed 1222
+n_obs_mental_distress_index_table4_col3: reproduced 1117, claimed 1133
+mental_distress_index_table4_col3: reproduced 0.157113, claimed 0.205
+somatic_symptoms_index_table4_col3: reproduced 0.111989, claimed 0.175
+nonsomatic_symptoms_index_table4_col3: reproduced 0.151908, claimed 0.158
+Change made: keep fixed-effect singletons (fixest fixef.rm = "none"), since the claimed N counts every respondent in the
+bandwidth with outcome and controls observed. Index construction left unchanged (no tuning toward claimed values).

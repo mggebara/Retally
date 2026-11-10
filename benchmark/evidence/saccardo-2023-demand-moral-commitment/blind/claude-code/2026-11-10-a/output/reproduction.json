@@ -1,0 +1,18 @@
+{
+  "schema": 1,
+  "entry_id": "saccardo-2023-demand-moral-commitment",
+  "mode": "blind",
+  "run_id": "2026-11-10-a",
+  "reproducer": "claude-code",
+  "language": "r",
+  "final": {"script": "script.R", "stdout": "stdout.txt", "stderr": "stderr.txt", "exit_code": 0},
+  "attempts": [
+    {"dir": "attempt-1", "exit_code": 0, "kind": ""},
+    {"dir": "attempt-2", "exit_code": 0, "kind": ""}
+  ],
+  "deviations": [],
+  "notes": "Independent blind reproduction from Data/Clean Data/choice_experiments.dta only. Attempts 1-2 were exploratory (variable listing, cross-tabs of treatments/waves/sample flags), no RESULT lines. Main Choice sample: drop the High Stakes (10-fold, 100-fold) robustness treatments and, for AMT advisors, those without a consistent MPL selfishness score (multiple switchers; preregistered restriction described in the paper); this yields exactly the Table 1 counts (Choice Free 2574, Professionals 712, Incentive First Costly 1562, Quality First Costly 1067 = 5915). Regressions dropping 7 advisors with missing age. LPMs by OLS with HC3 SEs (sandwich). Outcome Table 2: choicebefore (prefer to see incentive first); regressors professionalsfree, seeincentivecostly, seequalitycostly; Selfishness = stdalpha (standardized MPL count, as provided), interactions = indicator x stdalpha. Controls in all models: female, age, wave dummies (AMT-2, AMT-3; AMT-1 omitted, professionals' wave collinear with the Professionals indicator), probabilistic_incentive, incentiveleft (product position), probabilistic x incentiveleft. Table 3: outcome recommendincentive; regressors choicebefore, noconflict, choicebefore x noconflict, treatment indicators, incentiveB, controls; col 1 getyourchoice==1, col 2 getyourchoice==0, col 3 pooled adding notgetyourchoice and its interactions with choicebefore and noconflict. README.pdf was not read. No run hung.",
+  "files_read_outside_mount": [],
+  "started_at": "2026-11-10T07:01:59Z",
+  "finished_at": "2026-11-10T07:04:30Z"
+}

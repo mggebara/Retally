@@ -62,6 +62,30 @@ Built by `python -m benchmark.evidence`; see `benchmark/README.md` ("Evidence bu
 - [blind · pipeline-desktop-opus-run3 · 20261103T004800Z](adams-2023-women-mps-affective-polarization/blind/pipeline-desktop-opus-run3/20261103T004800Z/CELL.md) — 8/11
 - [blind · pipeline-desktop-opus-run4 · 20261108T013503Z](adams-2023-women-mps-affective-polarization/blind/pipeline-desktop-opus-run4/20261108T013503Z/CELL.md) — 7/11
 
+## [altindag-2022-mental-health-costs-lockdowns](altindag-2022-mental-health-costs-lockdowns/REPORT.md)
+
+- [seeded · claude-code · 2026-11-10-a](altindag-2022-mental-health-costs-lockdowns/seeded/claude-code/2026-11-10-a/CELL.md) — 8/10
+- [seeded · claude-code · 2026-11-10-b](altindag-2022-mental-health-costs-lockdowns/seeded/claude-code/2026-11-10-b/CELL.md) — 10/10
+- [seeded · pipeline-desktop-opus · 20261110T162835Z](altindag-2022-mental-health-costs-lockdowns/seeded/pipeline-desktop-opus/20261110T162835Z/CELL.md) — 8/10
+- [seeded · pipeline-desktop-opus-run2 · 20261110T163624Z](altindag-2022-mental-health-costs-lockdowns/seeded/pipeline-desktop-opus-run2/20261110T163624Z/CELL.md) — 7/10
+- [seeded · pipeline-desktop-opus-run3 · 20261110T163637Z](altindag-2022-mental-health-costs-lockdowns/seeded/pipeline-desktop-opus-run3/20261110T163637Z/CELL.md) — 6/10
+- [independent · claude-code · 2026-11-10-a](altindag-2022-mental-health-costs-lockdowns/independent/claude-code/2026-11-10-a/CELL.md) — 10/10
+- [independent · claude-code · 2026-11-10-b](altindag-2022-mental-health-costs-lockdowns/independent/claude-code/2026-11-10-b/CELL.md) — 10/10
+- [independent · claude-code · 2026-11-10-c](altindag-2022-mental-health-costs-lockdowns/independent/claude-code/2026-11-10-c/CELL.md) — 10/10
+- [independent · claude-code · 2026-11-10-d](altindag-2022-mental-health-costs-lockdowns/independent/claude-code/2026-11-10-d/CELL.md) — 10/10
+- [independent · pipeline-desktop-opus · 20261110T144524Z](altindag-2022-mental-health-costs-lockdowns/independent/pipeline-desktop-opus/20261110T144524Z/CELL.md) — 10/10
+- [independent · pipeline-desktop-opus-run2 · 20261110T163226Z](altindag-2022-mental-health-costs-lockdowns/independent/pipeline-desktop-opus-run2/20261110T163226Z/CELL.md) — 10/10
+- [independent · pipeline-desktop-opus-run3 · 20261110T145201Z](altindag-2022-mental-health-costs-lockdowns/independent/pipeline-desktop-opus-run3/20261110T145201Z/CELL.md) — 10/10
+- [independent · pipeline-desktop-opus-run4 · 20261110T163302Z](altindag-2022-mental-health-costs-lockdowns/independent/pipeline-desktop-opus-run4/20261110T163302Z/CELL.md) — 10/10
+- [blind · claude-code · 2026-11-10-a](altindag-2022-mental-health-costs-lockdowns/blind/claude-code/2026-11-10-a/CELL.md) — 9/10
+- [blind · claude-code · 2026-11-10-b](altindag-2022-mental-health-costs-lockdowns/blind/claude-code/2026-11-10-b/CELL.md) — 9/10
+- [blind · claude-code · 2026-11-10-c](altindag-2022-mental-health-costs-lockdowns/blind/claude-code/2026-11-10-c/CELL.md) — 9/10
+- [blind · claude-code · 2026-11-10-d](altindag-2022-mental-health-costs-lockdowns/blind/claude-code/2026-11-10-d/CELL.md) — 9/10
+- [blind · pipeline-desktop-opus · 20261110T143542Z](altindag-2022-mental-health-costs-lockdowns/blind/pipeline-desktop-opus/20261110T143542Z/CELL.md) — 10/10
+- [blind · pipeline-desktop-opus-run2 · 20261110T145151Z](altindag-2022-mental-health-costs-lockdowns/blind/pipeline-desktop-opus-run2/20261110T145151Z/CELL.md) — 9/10
+- [blind · pipeline-desktop-opus-run3 · 20261110T145201Z](altindag-2022-mental-health-costs-lockdowns/blind/pipeline-desktop-opus-run3/20261110T145201Z/CELL.md) — 9/10
+- [blind · pipeline-desktop-opus-run4 · 20261110T145215Z](altindag-2022-mental-health-costs-lockdowns/blind/pipeline-desktop-opus-run4/20261110T145215Z/CELL.md) — 10/10
+
 ## [altmann-2022-cognitive-spillovers](altmann-2022-cognitive-spillovers/REPORT.md)
 
 - [seeded · claude-code · 2026-10-22-a](altmann-2022-cognitive-spillovers/seeded/claude-code/2026-10-22-a/CELL.md) — 13/13
@@ -794,6 +818,30 @@ Built by `python -m benchmark.evidence`; see `benchmark/README.md` ("Evidence bu
 - [blind · pipeline-desktop-opus-run2 · 20261023T151837Z](montero-2022-cooperative-property-rights/blind/pipeline-desktop-opus-run2/20261023T151837Z/CELL.md) — 3/10
 - [blind · pipeline-desktop-opus-run3 · 20261103T010557Z](montero-2022-cooperative-property-rights/blind/pipeline-desktop-opus-run3/20261103T010557Z/CELL.md) — 0/10
 - [blind · pipeline-desktop-opus-run4 · 20261108T013503Z](montero-2022-cooperative-property-rights/blind/pipeline-desktop-opus-run4/20261108T013503Z/CELL.md) — 1/10
+
+## [saccardo-2023-demand-moral-commitment](saccardo-2023-demand-moral-commitment/REPORT.md)
+
+- [seeded · claude-code · 2026-11-10-a](saccardo-2023-demand-moral-commitment/seeded/claude-code/2026-11-10-a/CELL.md) — 13/13
+- [seeded · claude-code · 2026-11-10-b](saccardo-2023-demand-moral-commitment/seeded/claude-code/2026-11-10-b/CELL.md) — 13/13
+- [seeded · pipeline-desktop-opus · 20261110T143922Z](saccardo-2023-demand-moral-commitment/seeded/pipeline-desktop-opus/20261110T143922Z/CELL.md) — 13/13
+- [seeded · pipeline-desktop-opus-run2 · 20261110T145131Z](saccardo-2023-demand-moral-commitment/seeded/pipeline-desktop-opus-run2/20261110T145131Z/CELL.md) — 13/13
+- [seeded · pipeline-desktop-opus-run3 · 20261110T162852Z](saccardo-2023-demand-moral-commitment/seeded/pipeline-desktop-opus-run3/20261110T162852Z/CELL.md) — 13/13
+- [independent · claude-code · 2026-11-10-a](saccardo-2023-demand-moral-commitment/independent/claude-code/2026-11-10-a/CELL.md) — 13/13
+- [independent · claude-code · 2026-11-10-b](saccardo-2023-demand-moral-commitment/independent/claude-code/2026-11-10-b/CELL.md) — 13/13
+- [independent · claude-code · 2026-11-10-c](saccardo-2023-demand-moral-commitment/independent/claude-code/2026-11-10-c/CELL.md) — 13/13
+- [independent · claude-code · 2026-11-10-d](saccardo-2023-demand-moral-commitment/independent/claude-code/2026-11-10-d/CELL.md) — 13/13
+- [independent · pipeline-desktop-opus · 20261110T145111Z](saccardo-2023-demand-moral-commitment/independent/pipeline-desktop-opus/20261110T145111Z/CELL.md) — 12/13
+- [independent · pipeline-desktop-opus-run2 · 20261110T163544Z](saccardo-2023-demand-moral-commitment/independent/pipeline-desktop-opus-run2/20261110T163544Z/CELL.md) — 13/13
+- [independent · pipeline-desktop-opus-run3 · 20261110T163558Z](saccardo-2023-demand-moral-commitment/independent/pipeline-desktop-opus-run3/20261110T163558Z/CELL.md) — 8/13
+- [independent · pipeline-desktop-opus-run4 · 20261110T164051Z](saccardo-2023-demand-moral-commitment/independent/pipeline-desktop-opus-run4/20261110T164051Z/CELL.md) — 12/13
+- [blind · claude-code · 2026-11-10-a](saccardo-2023-demand-moral-commitment/blind/claude-code/2026-11-10-a/CELL.md) — 12/13
+- [blind · claude-code · 2026-11-10-b](saccardo-2023-demand-moral-commitment/blind/claude-code/2026-11-10-b/CELL.md) — 12/13
+- [blind · claude-code · 2026-11-10-c](saccardo-2023-demand-moral-commitment/blind/claude-code/2026-11-10-c/CELL.md) — 12/13
+- [blind · claude-code · 2026-11-10-d](saccardo-2023-demand-moral-commitment/blind/claude-code/2026-11-10-d/CELL.md) — 12/13
+- [blind · pipeline-desktop-opus · 20261110T143922Z](saccardo-2023-demand-moral-commitment/blind/pipeline-desktop-opus/20261110T143922Z/CELL.md) — 4/13
+- [blind · pipeline-desktop-opus-run2 · 20261110T145131Z](saccardo-2023-demand-moral-commitment/blind/pipeline-desktop-opus-run2/20261110T145131Z/CELL.md) — 4/13
+- [blind · pipeline-desktop-opus-run3 · 20261110T162210Z](saccardo-2023-demand-moral-commitment/blind/pipeline-desktop-opus-run3/20261110T162210Z/CELL.md) — 4/13
+- [blind · pipeline-desktop-opus-run4 · 20261110T144548Z](saccardo-2023-demand-moral-commitment/blind/pipeline-desktop-opus-run4/20261110T144548Z/CELL.md) — 5/13
 
 ## [settele-2022-gender-wage-gap-beliefs-policy](settele-2022-gender-wage-gap-beliefs-policy/REPORT.md)
 

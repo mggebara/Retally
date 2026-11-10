@@ -1,0 +1,5315 @@
+# Retally reproduction task: altindag-2022-mental-health-costs-lockdowns (seeded, run 2026-11-10-b)
+
+You are reproducing quantitative results from an econometrics paper for the
+Retally benchmark.  You will write R code, run it in a network-less Docker
+sandbox, and record what you did as files.  The files are what gets scored.
+
+- Benchmark cell: entry `altindag-2022-mental-health-costs-lockdowns`, mode `seeded`, run `2026-11-10-b`
+- Paper: Mental Health Costs of Lockdowns: Evidence from Age-Specific Curfews in Turkey
+- Paper text (extracted from the PDF; tables may be garbled): `<repo>/benchmark/.cache/claude-code/altindag-2022-mental-health-costs-lockdowns/seeded/2026-11-10-b/paper.txt`
+- Data (the ONLY data you get): `<repo>/benchmark/.cache/claude-code/altindag-2022-mental-health-costs-lockdowns/seeded/2026-11-10-b/mount/altindag_2022_mental_health_costs_lockdowns`
+- Output directory (the ONLY place you write): `<repo>/benchmark/reproductions/altindag-2022-mental-health-costs-lockdowns/seeded/2026-11-10-b`
+
+## Mode rules
+
+These apply in every mode:
+
+- Write R only.  Run it only inside the sandbox, with the command under
+  "How to run a script"; never run R on the host.
+- No network: do not download anything, do not look the paper or its
+  replication package up online.
+- Use only the files under `<repo>/benchmark/.cache/claude-code/altindag-2022-mental-health-costs-lockdowns/seeded/2026-11-10-b/mount/altindag_2022_mental_health_costs_lockdowns` as data, and `<repo>/benchmark/.cache/claude-code/altindag-2022-mental-health-costs-lockdowns/seeded/2026-11-10-b/paper.txt` as
+  the paper.
+- Do not read anything else in this repository or on this machine: not the
+  catalog YAMLs under `benchmark/papers/`, not `.cache/datasets/`, not
+  `benchmark/results/`, not other reproductions under `benchmark/reproductions/`,
+  not other task directories.  If you nevertheless read any other file, list
+  it in `files_read_outside_mount` in `reproduction.json`, with why.
+- Seeded mode: the authors' own analysis scripts are on disk under the data
+  directory and reproduced below under "Original Replication Scripts".  You
+  may follow them:
+
+  The replication package (the dataset directory) ships the authors' own analysis scripts,
+  reproduced below.  These are the GROUND TRUTH for the exact estimating equation, variable names,
+  sample restrictions, fixed effects, and standard-error clustering — follow them over anything
+  reconstructed from the methodology summary, and prefer them over the paper's text where the two
+  disagree.  Your job is to write R code that implements the SAME SPECIFICATION: translate what the
+  scripts estimate, do not transliterate their syntax line by line (a Stata .do file's regression,
+  e.g. `reghdfe y x controls, absorb(fe) cluster(cl)`, becomes the equivalent fixest::feols() call
+  in R).  Keep only the parts that produce the specific claims being reproduced; skip figure
+  construction and unrelated robustness checks.  The scripts' data-file paths refer to the package's
+  internal layout — resolve them against the dataset directory listed under Dataset Information.
+- You may compare your `RESULT:` values with the claimed values yourself.
+  Every time you do that and then change the script, record the run you
+  compared as an attempt with `kind: "claim"`, and write the comparison you
+  made to that attempt's `feedback.txt`, one line per off-target claim in
+  the form `<name>: reproduced <v>, claimed <c>`.  Produce it with:
+
+      cd <repo> && uv run python -m benchmark.reproducers.check_attempt --run-dir <repo>/benchmark/reproductions/altindag-2022-mental-health-costs-lockdowns/seeded/2026-11-10-b --stdout <that attempt's stdout.txt>
+
+  At most 3 `kind: "claim"` attempts.
+- At most 3 `kind: "error"` repairs (a run that crashed or
+  printed no `RESULT:` line, followed by a fix).
+
+## Claims to Reproduce
+1. days_outside_last_week_table3_col3: -1.09 (days per week) [type: coefficient]
+   Location: Table 3, Days outside last week, Born before 1955, column (3) +/-45
+   Context: Table 3 ("Effects of Curfew on Mobility Outcomes"), column (3). Regression discontinuity estimate of the effect of being born before December 1955 (the cohorts subject to Turkey's 65+ curfew) on the number of days the respondent went outside last week. OLS of the outcome on the treatment indicator and a linear function of the running variable (months between the respondent's month-year of birth and the December 1955 threshold) fit separately on each side of the threshold, uniform kernel, sample restricted to respondents born within 45 months of the threshold (the Imbens- Kalyanaraman optimal b…
+2. under_curfew_table3_col3: 0.708 (change in the probability of reporting being under curfew) [type: coefficient]
+   Location: Table 3, Under curfew, Born before 1955, column (3) +/-45
+   Context: Table 3, column (3): the same RD specification (linear in the running variable on each side, uniform kernel, 45-month bandwidth, month of birth, province and surveyor fixed effects, education, ethnicity and gender indicators, SEs clustered by month-year of birth) for a dummy equal to one if the respondent reported being subject to the curfew within the last month. The entry is the "Born before 1955" coefficient.
+3. never_goes_out_table3_col3: 0.297 (change in the probability of never going outside) [type: coefficient]
+   Location: Table 3, Never goes out, Born before 1955, column (3) +/-45
+   Context: Table 3, column (3): the same RD specification for a dummy equal to one if the respondent reported his or her current frequency of going outside as "never going outside". The entry is the "Born before 1955" coefficient; SEs clustered by month-year of birth.
+4. n_obs_days_outside_table3_col3: 1214.0 (respondents) [type: count]
+   Location: Table 3, Days outside last week, Observations, column (3)
+   Context: Number of observations in Table 3, column (3), for days outside last week: survey respondents born within 45 months of the threshold with the outcome and all controls observed (survey non-respondents excluded).
+5. n_obs_under_curfew_table3_col3: 1222.0 (respondents) [type: count]
+   Location: Table 3, Under curfew, Observations, column (3)
+   Context: Number of observations in Table 3, column (3), for the under-curfew outcome: respondents born within 45 months of the threshold with the outcome and all controls observed.
+6. mental_distress_index_table4_col3: 0.205 (standard deviations of the mental distress index) [type: coefficient]
+   Location: Table 4, Mental distress index, Born before 1955, column (3) +/-45
+   Context: Table 4 ("Effects of Curfew on Mental Health Outcomes"), column (3). Reduced-form RD estimate of the effect of being born before December 1955 on the mental distress index, with the Table 3 specification (linear in the running variable on each side, uniform kernel, 45-month bandwidth, month of birth, province and surveyor fixed effects, education, ethnicity and gender indicators, SEs clustered by month-year of birth). The index follows Anderson (2008) over all 20 SRQ-20 items (binary symptoms within the last four weeks): each item is demeaned and divided by the control group's (born after the …
+7. somatic_symptoms_index_table4_col3: 0.175 (standard deviations of the somatic symptoms index) [type: coefficient]
+   Location: Table 4, Somatic symptoms of distress index, Born before 1955, column (3) +/-45
+   Context: Table 4, column (3): the same RD specification for the somatic symptoms of distress index, the Anderson (2008) index over the four somatic SRQ-20 items (frequent headaches, shaking hands, poor digestion, uncomfortable feelings in the stomach). The entry is the "Born before 1955" coefficient.
+8. nonsomatic_symptoms_index_table4_col3: 0.158 (standard deviations of the nonsomatic symptoms index) [type: coefficient]
+   Location: Table 4, Nonsomatic symptoms of distress index, Born before 1955, column (3) +/-45
+   Context: Table 4, column (3): the same RD specification for the nonsomatic symptoms of distress index, the Anderson (2008) index over the other 16 SRQ-20 items (poor appetite, sleeping badly, easily frightened, nervous or worried, trouble thinking clearly, unhappy, crying more, difficulty enjoying daily activities, difficulty making decisions, daily work suffered, unable to play a useful part in life, lost interest, feeling worthless, thoughts of suicide, tired all the time, tired easily). The entry is the "Born before 1955" coefficient.
+9. sum_srq20_yes_answers_table4_col3: 0.734 (number of "yes" answers (0-20)) [type: coefficient]
+   Location: Table 4, Sum of "yes" answers in SRQ-20, Born before 1955, column (3) +/-45
+   Context: Table 4, column (3): the same RD specification for the sum of "yes" answers to the 20 SRQ-20 questions (respondents with every item answered). The entry is the "Born before 1955" coefficient.
+10. n_obs_mental_distress_index_table4_col3: 1133.0 (respondents) [type: count]
+   Location: Table 4, Mental distress index, Observations, column (3)
+   Context: Number of observations in Table 4, column (3), for the mental distress index (the same sample as the SRQ-20 sum): respondents born within 45 months of the threshold who answered all 20 SRQ-20 items and have all controls observed.
+
+## Dataset Information
+Name: altindag_2022_mental_health_costs_lockdowns
+Local path: <repo>/benchmark/.cache/claude-code/altindag-2022-mental-health-costs-lockdowns/seeded/2026-11-10-b/mount/altindag_2022_mental_health_costs_lockdowns
+File format: csv
+Files in the dataset directory (paths relative to the local path above):
+- ICPSR_183165-V1.1/konda_data_for_analysis.dta (1.2 MB) — 2175 rows, 146 columns: education, year, month, outside_month, outside_week, shaking, nervous, unhappy, worthless, ethnicity, poor_mental_health, before1955, never_out, poor_overall_health, survey_taker_id, money_distressed, mal_appetite, indigestion, uninterest, stomach_discomfort, daily_pray, poor_physical_health, under_curfew, usually_tired, quickly_tired, curfew_support_d, month_1, month_2, month_3, month_4, month_5, month_6, month_7, month_8, month_9, month_10, month_11, month_12, province_n, p…
+- ICPSR_183165-V1.1/1 Tables.do (33.8 KB)
+- ICPSR_183165-V1.1/2 Figures.do (26.4 KB)
+- ICPSR_183165-V1.1/3 Adjustment q main.do (11.9 KB)
+- ICPSR_183165-V1.1/4 Adjustment q appendix.do (13.1 KB)
+- ICPSR_183165-V1.1/5 Appendix Table A1 and Figure A1.R (6.0 KB)
+- ICPSR_183165-V1.1/6 Appendix Figure A2.R (2.8 KB)
+- ICPSR_183165-V1.1/7 Appendix Figure A4.R (3.3 KB)
+- ICPSR_183165-V1.1/Replication Analysis - 1 Table 4.do (9.9 KB)
+- ICPSR_183165-V1.1/Replication Analysis - 1 Table 5.do (19.3 KB)
+- ICPSR_183165-V1.1/Replication Analysis - 1 Tables 1-3,6.do (17.5 KB)
+- ICPSR_183165-V1.1/Replication Analysis - 2 Figures.do (8.9 KB)
+- ICPSR_183165-V1.1/Replication Analysis - 3 Adj q Table 6.do (9.3 KB)
+- ICPSR_183165-V1.1/Replication Analysis - 3 Adj q Tables 1-3.do (9.4 KB)
+- ICPSR_183165-V1.1/Replication Analysis - 3 Adj q Tables 4&5.do (22.3 KB)
+- ICPSR_183165-V1.1/fdr_sharpened_qvalues_v02.do (4.3 KB)
+- ICPSR_183165-V1.1/rd_an.do (6.5 KB)
+- ICPSR_183165-V1.1/rdprog_cols1_se2_connected.do (2.6 KB)
+- ICPSR_183165-V1.1/read me .pdf (135.8 KB)
+- metadata.json (247 B)
+
+## Required Output Convention
+Emit each reproduced metric on its own line to stdout using EXACTLY this format:
+    RESULT:<metric_name>=<numeric_value>
+For example:  cat('RESULT:beta=0.342\n')
+Use snake_case metric names matching the claim descriptions.
+
+## Code Requirements
+Write a complete, self-contained R script that runs under Rscript.
+The dataset is a directory tree at '<repo>/benchmark/.cache/claude-code/altindag-2022-mental-health-costs-lockdowns/seeded/2026-11-10-b/mount/altindag_2022_mental_health_costs_lockdowns' — see the file listing under Dataset Information.  Load the actual data file(s) by the exact paths listed there (readr::read_csv() for .csv, haven::read_dta() for Stata .dta, load() for .RData/.rda, which creates the objects listed for the file under exactly those names: use them, do not guess others; readRDS() for .rds).
+Installed packages (no network; nothing else can be installed): jsonlite, fixest, lfe, AER, ivreg, plm, estimatr, lme4, quantreg, car, sandwich, lmtest, clubSandwich, multiwayvcov, marginaleffects, MatchIt, optmatch, CBPS, WeightIt, cobalt, did, rdrobust, rddensity, Synth, modelsummary, stargazer, texreg, broom, tidyverse, dplyr, tidyr, readr, stringr, lubridate, data.table, haven, readxl, janitor, zoo, ggplot2, ggridges, ggrepel, gridExtra, cowplot, gtable, extrafont, sf, MASS, nnet, survival, splines, Matrix, boot, stats, utils.
+Prefer fixest for fixed effects, IV and clustered SEs; use the other installed packages where the paper's method calls for them.
+Set a deterministic seed with ``set.seed(42)`` for any randomness.
+Do NOT access the internet; the container runs with --network none.
+Do NOT shell out via system() / system2().
+Emit RESULT:<name>=<value> lines to stdout at the end via cat().
+
+## Original Replication Scripts
+The replication package (the dataset directory) ships the authors' own analysis scripts, reproduced below.  These are the GROUND TRUTH for the exact estimating equation, variable names, sample restrictions, fixed effects, and standard-error clustering — follow them over anything reconstructed from the methodology summary, and prefer them over the paper's text where the two disagree.  Your job is to write R code that implements the SAME SPECIFICATION: translate what the scripts estimate, do not transliterate their syntax line by line (a Stata .do file's regression, e.g. `reghdfe y x controls, absorb(fe) cluster(cl)`, becomes the equivalent fixest::feols() call in R).  Keep only the parts that produce the specific claims being reproduced; skip figure construction and unrelated robustness checks.  The scripts' data-file paths refer to the package's internal layout — resolve them against the dataset directory listed under Dataset Information.
+
+Stata-to-fixest sample matching: feols() drops fixed-effect singletons by default, but Stata's `reg y x i.fe` / `xi:` dummies keep them.  Pass `fixef.rm = "none"` to every feols() call that has fixed effects, otherwise the observation count and the robust SEs drift from the paper's.  Stata's `, r` / `vce(robust)` is `vcov = "hetero"`.
+
+### `ICPSR_183165-V1.1/1 Tables.do`
+```stata
+***Last Updated: 26/11/2022 using Stata17
+/*==========================================*
+Paper:			Mental Health Costs of Lockdowns: Evidence from Age-specific Curfews in Turkey *REPLICATION*
+
+Purpose:        Produce the results in Tables 1-6 and Appendix Tables A2-A8.
+
+To re-run our analysis, please install a folder "Mental Health". There should be 4 subfolders in order for do-files to run:
+
+"originals"
+"do files"
+"graphs"
+"output"
+
+Before you run this do file, please change the path of the working directory in line 24 and run all of the data cleaning do files.
+*==========================================*/
+
+**#the purpose of this do file is to generate the tables used for this paper. 
+clear
+set more off 
+set matsize 8000
+cap log close
+
+**#Set the working directory to the folder Mental health where the four sub-folders have been stored
+global dir= "\Mental Health"
+*global dir="XXX\Mental Health"
+cd "$dir"
+
+use "originals/konda_data_for_analysis.dta", clear
+
+**#the folllowing removes non responses and stores certain variables
+
+keep if non_response==0
+
+tab education, gen(education_)
+tab ethnicity, gen(ethnicity_)
+tab survey_taker_id, gen(survey_taker_id_)
+
+global contr="month_* province_n_* i.ethnicity i.education female i.survey_taker_id"
+global se "cluster modate"	
+global slvl "starlevels(* 0.10 ** 0.05 *** 0.01)"
+
+#delimit ;
+global list1 "head_ache mal_appetite sleeplessness scared shaking nervous 
+indigestion unfocused unhappy weepy unwillingness undecisiveness disrupted useless 
+uninterest worthless suicidal usually_tired stomach_discomfort quickly_tired";
+
+global list2 "head_ache shaking indigestion stomach_discomfort"; 
+
+global list3 "mal_appetite sleeplessness scared nervous unfocused 
+unhappy weepy unwillingness undecisiveness disrupted useless uninterest 
+worthless suicidal usually_tired quickly_tired";
+
+global list4 "religious daily_pray practice_the_book virus_god_sent";
+#delimit cr
+
+**#the following section generates and labels the indeces for the outcome variable which follows Anderson (2008). This section uses the ado file created by Asher and Novosad (2020). This ado file is accessible from icpsr. It should be inported and stored in Statas personal directory. For example, for Mac users it can be found in Application>Stata>Ado>Personal. For windows users c:\ado\personal. Use the "synsdir" command to find the personal ado directory.
+
+
+**Indices following Asher and Novasad, who follow Anderson:
+
+/* create reverse treatment dummy, where 1 = non-treated. this will be
+fed into the index creation program so non-treated villages are used
+as the normalizing standard deviation */
+gen controldummy = 0 
+replace controldummy = 1 if before1955 == 0 
+
+/* generate indices for main sample. NOTE - the egen function
+weightave2 function comes from _gweightave2.ado - the .ado file will
+be read into stata when it's in the working directory of the do file
+that calls it. however - it is better practice to put it in your
+personal ado path - which is ~/ado/personal. this function was sent
+from Bilal Siddiqi to Sam Asher, based on Anderson (2008): Multiple
+Inference and Gender Differences in the Effects of Early Intervention:
+A Reevaluation of the Abecedarian, Perry Preschool, and Early Training
+Projects. */
+
+**Note: These normalization makes sure that the control group mean is zero in the regressions.
+egen z_depression = weightave2($list1), normby(controldummy)
+egen z_somatic= weightave2($list2), normby(controldummy)
+egen z_nonsomatic = weightave2($list3), normby(controldummy)
+egen z_religion = weightave2($list4), normby(controldummy)
+
+egen sum_srq=rowtotal($list1)
+
+foreach x in $list1{
+replace z_depression = . if `x' == .
+}
+
+foreach x in $list2{
+replace z_somatic = . if `x' == .
+}
+
+foreach x in $list3{
+replace z_nonsomatic = . if `x' == .
+}
+
+foreach x in $list4{
+replace z_religion = . if `x' == .
+}
+
+foreach x in $list1{
+replace sum_srq = . if `x' == .
+}
+
+
+**# the following labes the different indeces and provides summary statistics
+label var z_depression "Mental distress index"
+label var z_nonsomatic "Nonsomatic symptoms of distress index"
+label var z_somatic "Somatic symptoms of distress index"
+label var sum_srq "Sum of yes answers in SRQ-20"
+
+
+********TABLE 1: SUMMARY STATISTICS
+label var highschool "Completed high school"
+label var illiterate "Illiterate"
+label var female "Female"
+label var married "Married"
+label var widowed_separated "Widowed or separated"
+label var non_turk "Non-Turkish"
+label var pre_covid_hhsize "Pre-Covid-19 household size"
+label var psych_support "Ever received psychological support"
+label var chronic_disease "Has a chronic disease"
+label var outside_week "Days outside last week"
+label var under_curfew "Under curfew"
+label var never_out "Never goes out"
+label var paid_employment "Paid employed"
+label var total_employment "Paid or unpaid employed"
+label var job_to_return "Has a job but could not attend last week"
+label var money_as_usual "Has money for usual needs"
+label var money_distressed "Worried about spending money"
+label var lim_social_interaction "Limited social interaction"
+label var limited_physical_act "Limited physical activity"
+label var hh_size "Current household size"
+label var conflict "Conflict with a household member"
+
+
+**#To ensure the eststo command is recognised install the estout package using the command "ssc install estout, replace"
+eststo clear
+
+**# the following provides summary statistics for the covariates (e.g., pre covid household size) and the outcome variables (e.g.,days outside)
+tabstat highschool illiterate female married widowed_separated non_turk pre_covid_hhsize psych_support ///
+		chronic_disease  outside_week under_curfew never_out paid_employment total_employment job_to_return money_as_usual ///
+		money_distressed lim_social_interaction limited_physical_act hh_size conflict, ///
+		stat(mean sd min max n) format(%9.2f) long col(stat)
+		
+fsum highschool illiterate female married widowed_separated non_turk pre_covid_hhsize psych_support ///
+		chronic_disease  outside_week under_curfew never_out paid_employment total_employment job_to_return money_as_usual ///
+		money_distressed lim_social_interaction limited_physical_act hh_size conflict, /// 
+		stat(mean sd min max n) label
+
+fsum highschool illiterate female married widowed_separated non_turk pre_covid_hhsize psych_support ///
+		chronic_disease  outside_week under_curfew never_out paid_employment total_employment job_to_return money_as_usual ///
+		money_distressed lim_social_interaction limited_physical_act hh_size conflict, /// 
+		stat(mean sd min max n) uselabel
+
+
+********TABLE 2: LIST OF SRQ-20 QUESTIONS AND THEIR SUMMARY STATISTICS
+
+label var head_ache "Have you often had headaches?"
+label var mal_appetite "Has your appetite been poor?"
+label var sleeplessness "Have you slept badly?"
+label var scared "Have you been easily frightened?"
+label var shaking "Have you had shaking hands?"
+label var nervous "Have you felt nervous, tense, or worried?"
+label var indigestion "Has your digestion been poor?"
+label var unfocused "Have you had trouble in thinking clearly?"
+label var unhappy "Have you felt unhappy?"
+label var weepy "Have you cried more often than usual?"
+label var unwillingness "Have you found it difficult to enjoy your daily activities?"
+label var undecisiveness "Have you found it difficult to make decisions?"
+label var disrupted "Has your daily work suffered?"
+label var useless "Have you been unable to play a useful part in life?"
+label var uninterest "Have you lost interest in things?"
+label var worthless "Have you felt that you are a worthless person?"
+label var suicidal "Has the thought of ending your life been on your mind?"
+label var usually_tired "Have you felt tired all the time?"
+label var stomach_discomfort "Have you had uncomfortable feelings in your stomach?"
+label var quickly_tired "Have you gotten tired easily?"
+
+
+eststo clear 
+
+**#to ensure fsum command is recognised, run command "ssc install fsum"
+
+tabstat head_ache mal_appetite sleeplessness scared shaking nervous indigestion  ///
+		unfocused unhappy weepy unwillingness undecisiveness disrupted useless  ///
+		uninterest worthless suicidal usually_tired stomach_discomfort quickly_tired,  ///
+		stat(mean sd min max n) format(%9.2f) long col(stat)
+			
+fsum head_ache mal_appetite sleeplessness scared shaking nervous indigestion  ///
+		unfocused unhappy weepy unwillingness undecisiveness disrupted useless  ///
+		uninterest worthless suicidal usually_tired stomach_discomfort quickly_tired,  ///
+		stat(mean sd min max n) label
+
+fsum head_ache mal_appetite sleeplessness scared shaking nervous indigestion  ///
+		unfocused unhappy weepy unwillingness undecisiveness disrupted useless  ///
+		uninterest worthless suicidal usually_tired stomach_discomfort quickly_tired,  ///
+		stat(mean sd min max n) uselabel		
+
+		
+**#the following generates the tables for the different causual claims of interest using different bandwidths (e.g., the effect of the curfew on mental health, mobility and channels etc)	
+		
+/*
+**Select optimal bandwidth for days outside last week using IK and CCT bandwidths:
+rdbwselect_2014 outside_week dif, bwselect(IK)
+
+rdbwselect_2014 outside_week dif, bwselect(CCT)
+*/
+********TABLE 3: EFFECTS OF CURFEW ON MOBILITY OUTCOMES
+*Linear 17 bandwidth
+local bw = 17
+eststo clear
+foreach x in outside_week under_curfew never_out{
+	xi: reg `x' before1955 di1* $contr  if inrange(dif,-`bw',`bw'), vce($se)
+	sum `x' if e(sample) & before1955 == 0
+    estadd scalar outcome_mean = r(mean)
+	eststo l1_`x'
+}
+
+*Linear 30 bandwith
+local bw = 30
+foreach x in outside_week under_curfew never_out{
+	xi: reg `x' before1955 di1* $contr  if inrange(dif,-`bw',`bw'), vce($se)
+	sum `x' if e(sample) & before1955 == 0
+    estadd scalar outcome_mean = r(mean)
+	eststo l2_`x'
+}
+
+*Linear 45 bandwidth
+local bw = 45
+foreach x in outside_week under_curfew never_out{
+	xi: reg `x' before1955 di1* $contr  if inrange(dif,-`bw',`bw'), vce($se)
+	sum `x' if e(sample) & before1955 == 0
+    estadd scalar outcome_mean = r(mean)
+	eststo l3_`x'
+}
+
+*Linear 60 bandwidth
+local bw = 60
+foreach x in outside_week under_curfew never_out{
+	xi: reg `x' before1955 di1* $contr  if inrange(dif,-`bw',`bw'), vce($se)
+	sum `x' if e(sample) & before1955 == 0
+    estadd scalar outcome_mean = r(mean)
+	eststo l4_`x'
+}
+
+
+**#to open the output, latex is required (for example Milktex is a free tex distrubution)
+foreach x in outside_week under_curfew never_out{
+	estout l1_`x' l2_`x' l3_`x' l4_`x'  using "output/table3_`x'.tex", ///
+			replace style(tex) collabels(, none) label varlabels(before1955 "Born before 1955") cells(b(star fmt(%9.3f)) se(par))  ///
+			keep(before1955) mlabels(, none) stats(N outcome_mean, fmt(%9.0g %9.2f) ///
+			labels("\hspace{0.5 cm} Observations" "\hspace{0.5 cm} Control group mean") ///
+			layout(@ @)) $slvl 
+}
+
+
+********TABLE 4: EFFECTS OF CURFEW ON MENTAL HEALTH OUTCOMES
+*Linear 17 bandwidth
+local bw = 17
+eststo clear
+foreach x in z_depression z_somatic z_nonsomatic sum_srq{
+	xi: reg `x' before1955 di1* $contr  if inrange(dif,-`bw',`bw'), vce($se)
+	sum `x' if e(sample) & before1955 == 0
+    estadd scalar outcome_mean = r(mean)
+	eststo l1_`x'
+}
+
+*Linear 30 bandwith
+local bw = 30
+foreach x in z_depression z_somatic z_nonsomatic sum_srq{
+	xi: reg `x' before1955 di1* $contr  if inrange(dif,-`bw',`bw'), vce($se)
+	sum `x' if e(sample) & before1955 == 0
+    estadd scalar outcome_mean = r(mean)
+	eststo l2_`x'
+}
+
+*Linear 45 bandwidth
+local bw = 45
+foreach x in z_depression z_somatic z_nonsomatic sum_srq{
+	xi: reg `x' before1955 di1* $contr  if inrange(dif,-`bw',`bw'), vce($se)
+	sum `x' if e(sample) & before1955 == 0
+    estadd scalar outcome_mean = r(mean)
+	eststo l3_`x'
+}
+
+*Linear 60 bandwidth
+local bw = 60
+foreach x in z_depression z_somatic z_nonsomatic sum_srq{
+	xi: reg `x' before1955 di1* $contr  if inrange(dif,-`bw',`bw'), vce($se)
+	sum `x' if e(sample) & before1955 == 0
+    estadd scalar outcome_mean = r(mean)
+	eststo l4_`x'
+}
+
+foreach x in z_depression z_somatic z_nonsomatic{
+	estout l1_`x' l2_`x' l3_`x' l4_`x' using "output/table4_`x'.tex", ///
+			replace style(tex) collabels(, none) label varlabels(before1955 "Born before 1955") cells(b(star fmt(%9.3f)) se(par))  ///
+			keep(before1955) mlabels(, none) stats(N , fmt(%9.0g ) ///
+			labels("\hspace{0.5 cm} Observations" ) ///
+			) $slvl 
+}
+
+foreach x in sum_srq{
+	estout l1_`x' l2_`x' l3_`x' l4_`x'  using "output/table4_`x'.tex", ///
+			replace style(tex) collabels(, none) label varlabels(before1955 "Born before 1955") cells(b(star fmt(%9.3f)) se(par))  ///
+			keep(before1955) mlabels(, none) stats(N outcome_mean, fmt(%9.0g %9.2f) ///
+			labels("\hspace{0.5 cm} Observations" "\hspace{0.5 cm} Control group mean") ///
+			layout(@ @)) $slvl 
+}
+
+
+********TABLE 5: EFFECTS OF CURFEW ON POTENTIAL CHANNELS
+*Linear 17 bandwidth
+local bw = 17
+eststo clear
+foreach x in paid_employment total_employment job_to_return money_as_usual money_distressed hh_size conflict limited_physical_act lim_social_interaction{
+	xi: reg `x' before1955 di1* $contr  if inrange(dif,-`bw',`bw'), vce($se)
+	sum `x' if e(sample) & before1955 == 0
+    estadd scalar outcome_mean = r(mean)
+	eststo l1_`x'
+}
+
+*Linear 30 bandwith
+local bw = 30
+foreach x in paid_employment total_employment job_to_return money_as_usual money_distressed hh_size conflict limited_physical_act lim_social_interaction{
+	xi: reg `x' before1955 di1* $contr  if inrange(dif,-`bw',`bw'), vce($se)
+	sum `x' if e(sample) & before1955 == 0
+    estadd scalar outcome_mean = r(mean)
+	eststo l2_`x'
+}
+
+*Linear 45 bandwidth
+local bw = 45
+foreach x in paid_employment total_employment job_to_return money_as_usual money_distressed hh_size conflict limited_physical_act lim_social_interaction{
+	xi: reg `x' before1955 di1* $contr  if inrange(dif,-`bw',`bw'), vce($se)
+	sum `x' if e(sample) & before1955 == 0
+    estadd scalar outcome_mean = r(mean)
+	eststo l3_`x'
+}
+
+*Linear 60 bandwidth
+local bw = 60
+foreach x in paid_employment total_employment job_to_return money_as_usual money_distressed hh_size conflict limited_physical_act lim_social_interaction{
+	xi: reg `x' before1955 di1* $contr  if inrange(dif,-`bw',`bw'), vce($se)
+	sum `x' if e(sample) & before1955 == 0
+    estadd scalar outcome_mean = r(mean)
+	eststo l4_`x'
+}
+
+foreach x in paid_employment total_employment job_to_return money_as_usual money_distressed hh_size conflict limited_physical_act lim_social_interaction{
+	estout l1_`x' l2_`x' l3_`x' l4_`x'  using "output/table5_`x'.tex", ///
+			replace style(tex) collabels(, none) label varlabels(before1955 "Born before 1955") cells(b(star fmt(%9.3f)) se(par))  ///
+			keep(before1955) mlabels(, none) stats(N outcome_mean, fmt(%9.0g %9.2f) ///
+			labels("\hspace{0.5 cm} Observations" "\hspace{0.5 cm} Control group mean") ///
+			layout(@ @)) $slvl 
+}
+
+
+********TABLE 6: EFFECTS OF CURFEW ON POLITICAL SUPPORT
+*Linear 17 bandwidth
+local bw = 17
+eststo clear
+foreach x in curfew_support_d gov_support_d{
+	xi: reg `x' before1955 di1* $contr  if inrange(dif,-`bw',`bw'), vce($se)
+	sum `x' if e(sample) & before1955 == 0
+    estadd scalar outcome_mean = r(mean)
+	eststo l1_`x'
+}
+
+*Linear 30 bandwith
+local bw = 30
+foreach x in curfew_support_d gov_support_d{
+	xi: reg `x' before1955 di1* $contr  if inrange(dif,-`bw',`bw'), vce($se)
+	sum `x' if e(sample) & before1955 == 0
+    estadd scalar outcome_mean = r(mean)
+	eststo l2_`x'
+}
+
+*Linear 45 bandwidth
+local bw = 45
+foreach x in curfew_support_d gov_support_d{
+	xi: reg `x' before1955 di1* $contr  if inrange(dif,-`bw',`bw'), vce($se)
+	sum `x' if e(sample) & before1955 == 0
+    estadd scalar outcome_mean = r(mean)
+	eststo l3_`x'
+}
+
+*Linear 60 bandwidth
+local bw = 60
+foreach x in curfew_support_d gov_support_d{
+	xi: reg `x' before1955 di1* $contr  if inrange(dif,-`bw',`bw'), vce($se)
+	sum `x' if e(sample) & before1955 == 0
+    estadd scalar outcome_mean = r(mean)
+	eststo l4_`x'
+}
+
+foreach x in curfew_support_d gov_support_d{
+	estout l1_`x' l2_`x' l3_`x' l4_`x'  using "output/table6_`x'.tex", ///
+			replace style(tex) collabels(, none) label varlabels(before1955 "Born before 1955") cells(b(star fmt(%9.3f)) se(par))  ///
+			keep(before1955) mlabels(, none) stats(N outcome_mean, fmt(%9.0g %9.2f) ///
+			labels("\hspace{0.5 cm} Observations" "\hspace{0.5 cm} Control group mean") ///
+			layout(@ @)) $slvl 
+}
+
+
+********TABLE A2: EFFECTS OF CURFEW ON PREDETERMINED COVARIATES
+*Linear 17 bandwidth
+local bw = 17
+eststo clear
+foreach x in highschool illiterate female married widowed_separated non_turk pre_covid_hhsize psych_support chronic_disease{
+	xi: reg `x' before1955 di1*  if inrange(dif,-`bw',`bw'), vce($se)
+	sum `x' if e(sample) & before1955 == 0
+    estadd scalar outcome_mean = r(mean)
+	eststo l1_`x'
+}
+
+*Linear 24 bandwidth
+local bw = 24
+foreach x in highschool illiterate female married widowed_separated non_turk pre_covid_hhsize psych_support chronic_disease{
+	xi: reg `x' before1955 di1*  if inrange(dif,-`bw',`bw'), vce($se)
+	sum `x' if e(sample) & before1955 == 0
+    estadd scalar outcome_mean = r(mean)
+	eststo l2_`x'
+}
+
+*Linear 30 bandwith
+local bw = 30
+foreach x in highschool illiterate female married widowed_separated non_turk pre_covid_hhsize psych_support chronic_disease{
+	xi: reg `x' before1955 di1*  if inrange(dif,-`bw',`bw'), vce($se)
+	sum `x' if e(sample) & before1955 == 0
+    estadd scalar outcome_mean = r(mean)
+	eststo l3_`x'
+}
+
+*Linear 36 bandwith
+local bw = 36
+foreach x in highschool illiterate female married widowed_separated non_turk pre_covid_hhsize psych_support chronic_disease{
+	xi: reg `x' before1955 di1*  if inrange(dif,-`bw',`bw'), vce($se)
+	sum `x' if e(sample) & before1955 == 0
+    estadd scalar outcome_mean = r(mean)
+	eststo l4_`x'
+}
+
+*Linear 45 bandwidth
+local bw = 45
+foreach x in highschool illiterate female married widowed_separated non_turk pre_covid_hhsize psych_support chronic_disease{
+	xi: reg `x' before1955 di1*  if inrange(dif,-`bw',`bw'), vce($se)
+	sum `x' if e(sample) & before1955 == 0
+    estadd scalar outcome_mean = r(mean)
+	eststo l5_`x'
+}
+
+*Linear 48 bandwidth
+local bw = 48
+foreach x in highschool illiterate female married widowed_separated non_turk pre_covid_hhsize psych_support chronic_disease{
+	xi: reg `x' before1955 di1*  if inrange(dif,-`bw',`bw'), vce($se)
+	sum `x' if e(sample) & before1955 == 0
+    estadd scalar outcome_mean = r(mean)
+	eststo l6_`x'
+}
+
+*Linear 60 bandwidth
+local bw = 60
+foreach x in highschool illiterate female married widowed_separated non_turk pre_covid_hhsize psych_support chronic_disease{
+	xi: reg `x' before1955 di1*  if inrange(dif,-`bw',`bw'), vce($se)
+	sum `x' if e(sample) & before1955 == 0
+    estadd scalar outcome_mean = r(mean)
+	eststo l7_`x'
+}
+
+*Linear 72 bandwidth
+local bw = 72
+foreach x in highschool illiterate female married widowed_separated non_turk pre_covid_hhsize psych_support chronic_disease{
+	xi: reg `x' before1955 di1*  if inrange(dif,-`bw',`bw'), vce($se)
+	sum `x' if e(sample) & before1955 == 0
+    estadd scalar outcome_mean = r(mean)
+	eststo l8_`x'
+}
+
+
+foreach x in highschool illiterate female married widowed_separated non_turk pre_covid_hhsize psych_support chronic_disease{
+	estout l1_`x' l2_`x' l3_`x' l4_`x' l5_`x' l6_`x' l7_`x' l8_`x' using "output/tableA2_`x'.tex", ///
+			replace style(tex) collabels(, none) label varlabels(before1955 "Born before 1955") cells(b(star fmt(%9.3f)) se(par))  ///
+			keep(before1955) mlabels(, none) stats(N outcome_mean, fmt(%9.0g %9.2f) ///
+			labels("\hspace{0.5 cm} Observations" "\hspace{0.5 cm} Control group mean") ///
+			layout(@ @)) $slvl 
+}
+
+**#the following tests whether the relevent covariates display any evidence of a change at the discontinuity around different bandwidths
+**joint significance
+local bw = 17
+sureg (highschool before1955 di1*) (illiterate before1955 di1*) (female before1955 di1*) (married before1955 di1*) ///
+	(widowed_separated before1955 di1*) (non_turk before1955 di1*)  (pre_covid_hhsize before1955 di1*)  (psych_support before1955 di1*) ///
+	(chronic_disease before1955 di1*) if inrange(dif,-`bw',`bw')
+test before1955
+
+local bw = 24
+sureg (highschool before1955 di1*) (illiterate before1955 di1*) (female before1955 di1*) (married before1955 di1*) ///
+	(widowed_separated before1955 di1*) (non_turk before1955 di1*)  (pre_covid_hhsize before1955 di1*)  (psych_support before1955 di1*) ///
+	(chronic_disease before1955 di1*) if inrange(dif,-`bw',`bw')
+test before1955
+
+local bw = 30
+sureg (highschool before1955 di1*) (illiterate before1955 di1*) (female before1955 di1*) (married before1955 di1*) ///
+	(widowed_separated before1955 di1*) (non_turk before1955 di1*)  (pre_covid_hhsize before1955 di1*)  (psych_support before1955 di1*) ///
+	(chronic_disease before1955 di1*) if inrange(dif,-`bw',`bw')
+test before1955
+
+local bw = 36
+sureg (highschool before1955 di1*) (illiterate before1955 di1*) (female before1955 di1*) (married before1955 di1*) ///
+	(widowed_separated before1955 di1*) (non_turk before1955 di1*)  (pre_covid_hhsize before1955 di1*)  (psych_support before1955 di1*) ///
+	(chronic_disease before1955 di1*) if inrange(dif,-`bw',`bw')
+test before1955
+
+local bw = 45
+sureg (highschool before1955 di1*) (illiterate before1955 di1*) (female before1955 di1*) (married before1955 di1*) ///
+	(widowed_separated before1955 di1*) (non_turk before1955 di1*)  (pre_covid_hhsize before1955 di1*)  (psych_support before1955 di1*) ///
+	(chronic_disease before1955 di1*) if inrange(dif,-`bw',`bw')
+test before1955
+
+local bw = 48
+sureg (highschool before1955 di1*) (illiterate before1955 di1*) (female before1955 di1*) (married before1955 di1*) ///
+	(widowed_separated before1955 di1*) (non_turk before1955 di1*)  (pre_covid_hhsize before1955 di1*)  (psych_support before1955 di1*) ///
+	(chronic_disease before1955 di1*) if inrange(dif,-`bw',`bw')
+test before1955
+
+local bw = 60
+sureg (highschool before1955 di1*) (illiterate before1955 di1*) (female before1955 di1*) (married before1955 di1*) ///
+	(widowed_separated before1955 di1*) (non_turk before1955 di1*)  (pre_covid_hhsize before1955 di1*)  (psych_support before1955 di1*) ///
+	(chronic_disease before1955 di1*) if inrange(dif,-`bw',`bw')
+test before1955
+
+local bw = 72
+sureg (highschool before1955 di1*) (illiterate before1955 di1*) (female before1955 di1*) (married before1955 di1*) ///
+	(widowed_separated before1955 di1*) (non_turk before1955 di1*)  (pre_covid_hhsize before1955 di1*)  (psych_support before1955 di1*) ///
+	(chronic_disease before1955 di1*) if inrange(dif,-`bw',`bw')
+test before1955
+
+
+********TABLE A3: EFFECTS OF CURFEW ON MOBILITY OUTCOMES ACROSS ALTERNATIVE BANDWIDTHS
+*Linear 24 bandwidth
+local bw = 24
+eststo clear
+foreach x in outside_week under_curfew never_out{
+	xi: reg `x' before1955 di1* $contr  if inrange(dif,-`bw',`bw'), vce($se)
+	sum `x' if e(sample) & before1955 == 0
+    estadd scalar outcome_mean = r(mean)
+	eststo l1_`x'
+}
+
+*Linear 36 bandwith
+local bw = 36
+foreach x in outside_week under_curfew never_out{
+	xi: reg `x' before1955 di1* $contr  if inrange(dif,-`bw',`bw'), vce($se)
+	sum `x' if e(sample) & before1955 == 0
+    estadd scalar outcome_mean = r(mean)
+	eststo l2_`x'
+}
+
+*Linear 48 bandwidth
+local bw = 48
+foreach x in outside_week under_curfew never_out{
+	xi: reg `x' before1955 di1* $contr  if inrange(dif,-`bw',`bw'), vce($se)
+	sum `x' if e(sample) & before1955 == 0
+    estadd scalar outcome_mean = r(mean)
+	eststo l3_`x'
+}
+
+*Linear 60 bandwidth
+local bw = 60
+foreach x in outside_week under_curfew never_out{
+	xi: reg `x' before1955 di1* $contr  if inrange(dif,-`bw',`bw'), vce($se)
+	sum `x' if e(sample) & before1955 == 0
+    estadd scalar outcome_mean = r(mean)
+	eststo l4_`x'
+}
+
+*Linear 72 bandwidth
+local bw = 72
+foreach x in outside_week under_curfew never_out{
+	xi: reg `x' before1955 di1* $contr  if inrange(dif,-`bw',`bw'), vce($se)
+	sum `x' if e(sample) & before1955 == 0
+    estadd scalar outcome_mean = r(mean)
+	eststo l5_`x'
+}
+
+foreach x in outside_week under_curfew never_out{
+	estout l1_`x' l2_`x' l3_`x' l4_`x' l5_`x' using "output/tableA3_`x'.tex", ///
+			replace style(tex) collabels(, none) label varlabels(before1955 "Born before 1955") cells(b(star fmt(%9.3f)) se(par))  ///
+			keep(before1955) mlabels(, none) stats(N outcome_mean, fmt(%9.0g %9.2f) ///
+			labels("\hspace{0.5 cm} Observations" "\hspace{0.5 cm} Control group mean") ///
+			layout(@ @)) $slvl 
+}
+
+
+
+********TABLE A4: EFFECTS OF CURFEW ON MENTAL HEALTH OUTCOMES USING ALTERNATIVE BANDWIDTHS
+*Linear 24 bandwidth
+local bw = 24
+eststo clear
+foreach x in  z_depression z_somatic z_nonsomatic sum_srq{
+	xi: reg `x' before1955 di1* $contr  if inrange(dif,-`bw',`bw'), vce($se)
+	sum `x' if e(sample) & before1955 == 0
+    estadd scalar outcome_mean = r(mean)
+	eststo l1_`x'
+}
+
+*Linear 36 bandwith
+local bw = 36
+foreach x in  z_depression z_somatic z_nonsomatic sum_srq{
+	xi: reg `x' before1955 di1* $contr  if inrange(dif,-`bw',`bw'), vce($se)
+	sum `x' if e(sample) & before1955 == 0
+    estadd scalar outcome_mean = r(mean)
+	eststo l2_`x'
+}
+
+*Linear 48 bandwidth
+local bw = 48
+foreach x in  z_depression z_somatic z_nonsomatic sum_srq{
+	xi: reg `x' before1955 di1* $contr  if inrange(dif,-`bw',`bw'), vce($se)
+	sum `x' if e(sample) & before1955 == 0
+    estadd scalar outcome_mean = r(mean)
+	eststo l3_`x'
+}
+
+*Linear 60 bandwidth
+local bw = 60
+foreach x in z_depression z_somatic z_nonsomatic sum_srq{
+	xi: reg `x' before1955 di1* $contr  if inrange(dif,-`bw',`bw'), vce($se)
+	sum `x' if e(sample) & before1955 == 0
+    estadd scalar outcome_mean = r(mean)
+	eststo l4_`x'
+}
+
+*Linear 72 bandwidth
+local bw = 72
+foreach x in z_depression z_somatic z_nonsomatic sum_srq{
+	xi: reg `x' before1955 di1* $contr  if inrange(dif,-`bw',`bw'), vce($se)
+	sum `x' if e(sample) & before1955 == 0
+    estadd scalar outcome_mean = r(mean)
+	eststo l5_`x'
+}
+
+
+foreach x in z_depression z_somatic z_nonsomatic{
+	estout l1_`x' l2_`x' l3_`x' l4_`x' l5_`x' using "output/tableA4_`x'.tex", ///
+			replace style(tex) collabels(, none) label varlabels(before1955 "Born before 1955") cells(b(star fmt(%9.3f)) se(par))  ///
+			keep(before1955) mlabels(, none) stats(N , fmt(%9.0g ) ///
+			labels("\hspace{0.5 cm} Observations" ) ///
+			) $slvl 
+}
+
+foreach x in sum_srq{
+	estout l1_`x' l2_`x' l3_`x' l4_`x' l5_`x'  using "output/tableA4_`x'.tex", ///
+			replace style(tex) collabels(, none) label varlabels(before1955 "Born before 1955") cells(b(star fmt(%9.3f)) se(par))  ///
+			keep(before1955) mlabels(, none) stats(N outcome_mean, fmt(%9.0g %9.2f) ///
+			labels("\hspace{0.5 cm} Observations" "\hspace{0.5 cm} Control group mean") ///
+			layout(@ @)) $slvl 
+}
+
+********TABLE A5: EFFECTS OF CURFEW ON SELF-REPORTED HEALTH AND LIFE SATISFACTION
+*Linear 17 bandwidth
+local bw = 17
+eststo clear
+foreach x in poor_physical_health poor_mental_health suffering{
+	xi: reg `x' before1955 di1* $contr  if inrange(dif,-`bw',`bw'), vce($se)
+	sum `x' if e(sample) & before1955 == 0
+    estadd scalar outcome_mean = r(mean)
+	eststo l1_`x'
+}
+
+*Linear 30 bandwith
+local bw = 30
+foreach x in poor_physical_health poor_mental_health suffering{
+	xi: reg `x' before1955 di1* $contr  if inrange(dif,-`bw',`bw'), vce($se)
+	sum `x' if e(sample) & before1955 == 0
+    estadd scalar outcome_mean = r(mean)
+	eststo l2_`x'
+}
+
+*Linear 45 bandwidth
+local bw = 45
+foreach x in poor_physical_health poor_mental_health suffering{
+	xi: reg `x' before1955 di1* $contr  if inrange(dif,-`bw',`bw'), vce($se)
+	sum `x' if e(sample) & before1955 == 0
+    estadd scalar outcome_mean = r(mean)
+	eststo l3_`x'
+}
+
+*Linear 60 bandwidth
+local bw = 60
+foreach x in poor_physical_health poor_mental_health suffering{
+	xi: reg `x' before1955 di1* $contr  if inrange(dif,-`bw',`bw'), vce($se)
+	sum `x' if e(sample) & before1955 == 0
+    estadd scalar outcome_mean = r(mean)
+	eststo l4_`x'
+}
+
+foreach x in poor_physical_health poor_mental_health suffering{
+	estout l1_`x' l2_`x' l3_`x' l4_`x'  using "output/TableA5_`x'.tex", ///
+			replace style(tex) collabels(, none) label varlabels(before1955 "Born before 1955") cells(b(star fmt(%9.3f)) se(par))  ///
+			keep(before1955) mlabels(, none) stats(N outcome_mean, fmt(%9.0g %9.2f) ///
+			labels("\hspace{0.5 cm} Observations" "\hspace{0.5 cm} Control group mean") ///
+			layout(@ @)) $slvl 
+}
+
+********TABLE A6: EFFECTS OF CURFEW ON POTENTIAL CHANNELS ACROSS ALTERNATIVE BANDWIDTHS
+*Linear 24 bandwidth
+local bw = 24
+eststo clear
+foreach x in paid_employment total_employment job_to_return money_as_usual money_distressed hh_size conflict limited_physical_act lim_social_interaction{
+	xi: reg `x' before1955 di1* $contr  if inrange(dif,-`bw',`bw'), vce($se)
+	sum `x' if e(sample) & before1955 == 0
+    estadd scalar outcome_mean = r(mean)
+	eststo l1_`x'
+}
+
+*Linear 36 bandwith
+local bw = 36
+foreach x in paid_employment total_employment job_to_return money_as_usual money_distressed hh_size conflict limited_physical_act lim_social_interaction{
+	xi: reg `x' before1955 di1* $contr  if inrange(dif,-`bw',`bw'), vce($se)
+	sum `x' if e(sample) & before1955 == 0
+    estadd scalar outcome_mean = r(mean)
+	eststo l2_`x'
+}
+
+*Linear 48 bandwidth
+local bw = 48
+foreach x in paid_employment total_employment job_to_return money_as_usual money_distressed hh_size conflict limited_physical_act lim_social_interaction{
+	xi: reg `x' before1955 di1* $contr  if inrange(dif,-`bw',`bw'), vce($se)
+	sum `x' if e(sample) & before1955 == 0
+    estadd scalar outcome_mean = r(mean)
+	eststo l3_`x'
+}
+
+*Linear 60 bandwidth
+local bw = 60
+foreach x in paid_employment total_employment job_to_return money_as_usual money_distressed hh_size conflict limited_physical_act lim_social_interaction{
+	xi: reg `x' before1955 di1* $contr  if inrange(dif,-`bw',`bw'), vce($se)
+	sum `x' if e(sample) & before1955 == 0
+    estadd scalar outcome_mean = r(mean)
+	eststo l4_`x'
+}
+
+*Linear 72 bandwidth
+local bw = 72
+foreach x in paid_employment total_employment job_to_return money_as_usual money_distressed hh_size conflict limited_physical_act lim_social_interaction{
+	xi: reg `x' before1955 di1* $contr  if inrange(dif,-`bw',`bw'), vce($se)
+	sum `x' if e(sample) & before1955 == 0
+    estadd scalar outcome_mean = r(mean)
+	eststo l5_`x'
+}
+
+foreach x in paid_employment total_employment job_to_return money_as_usual money_distressed hh_size conflict limited_physical_act lim_social_interaction{
+	estout l1_`x' l2_`x' l3_`x' l4_`x' l5_`x' using "output/tableA6_`x'.tex", ///
+			replace style(tex) collabels(, none) label varlabels(before1955 "Born before 1955") cells(b(star fmt(%9.3f)) se(par))  ///
+			keep(before1955) mlabels(, none) stats(N outcome_mean, fmt(%9.0g %9.2f) ///
+			labels("\hspace{0.5 cm} Observations" "\hspace{0.5 cm} Control group mean") ///
+			layout(@ @)) $slvl 
+}
+
+********TABLE A7: EFFECTS OF CURFEW ON RELIGIOSITY OUTCOMES
+*Linear 17 bandwidth
+local bw = 17
+eststo clear
+foreach x in religious daily_pray practice_the_book virus_god_sent z_religion{
+	xi: reg `x' before1955 di1* $contr  if inrange(dif,-`bw',`bw'), vce($se)
+	sum `x' if e(sample) & before1955 == 0
+    estadd scalar outcome_mean = r(mean)
+	eststo l1_`x'
+}
+
+*Linear 30 bandwith
+local bw = 30
+foreach x in religious daily_pray practice_the_book virus_god_sent z_religion{
+	xi: reg `x' before1955 di1* $contr  if inrange(dif,-`bw',`bw'), vce($se)
+	sum `x' if e(sample) & before1955 == 0
+    estadd scalar outcome_mean = r(mean)
+	eststo l2_`x'
+}
+
+*Linear 45 bandwidth
+local bw = 45
+foreach x in religious daily_pray practice_the_book virus_god_sent z_religion{
+	xi: reg `x' before1955 di1* $contr  if inrange(dif,-`bw',`bw'), vce($se)
+	sum `x' if e(sample) & before1955 == 0
+    estadd scalar outcome_mean = r(mean)
+	eststo l3_`x'
+}
+
+*Linear 60 bandwidth
+local bw = 60
+foreach x in religious daily_pray practice_the_book virus_god_sent z_religion{
+	xi: reg `x' before1955 di1* $contr  if inrange(dif,-`bw',`bw'), vce($se)
+	sum `x' if e(sample) & before1955 == 0
+    estadd scalar outcome_mean = r(mean)
+	eststo l4_`x'
+}
+
+foreach x in religious daily_pray practice_the_book virus_god_sent z_religion{
+	estout l1_`x' l2_`x' l3_`x' l4_`x'  using "output/tableA7_`x'.tex", ///
+			replace style(tex) collabels(, none) label varlabels(before1955 "Born before 1955") cells(b(star fmt(%9.3f)) se(par))  ///
+			keep(before1955) mlabels(, none) stats(N outcome_mean, fmt(%9.0g %9.2f) ///
+			labels("\hspace{0.5 cm} Observations" "\hspace{0.5 cm} Control group mean") ///
+			layout(@ @)) $slvl 
+}
+
+**#As a robustness test, the following adopts a quadratic control regression specification and tests the effect on the outcomes variables of interest. 
+
+********TABLE A8: EFFECTS OF CURFEW ON MAIN OUTCOMES USING A QUADRATIC CONTROL FUNCTION
+local bw = 45
+eststo clear
+foreach x in outside_week under_curfew never_out z_depression z_somatic z_nonsomatic sum_srq{
+	xi: reg `x' before1955 di1* di2* $contr if inrange(dif,-`bw',`bw'), vce($se)
+	sum `x' if e(sample) & before1955 == 0
+    estadd scalar outcome_mean = r(mean)
+	eststo l1_`x'
+}
+esttab using "output/tableA8a.tex", replace label keep(before1955) cells(b(star fmt(%9.3f)) se(par)) stats(N outcome_mean, fmt(%9.0g %9.2f) ///
+			labels("\hspace{0.5 cm} Observations" "\hspace{0.5 cm} Control group mean") ///
+			layout(@ @)) $slvl 
+			
+eststo clear
+foreach x in paid_employment total_employment job_to_return money_as_usual money_distressed limited_physical_act lim_social_interaction hh_size conflict {
+	xi: reg `x' before1955 di1* di2* $contr if inrange(dif,-`bw',`bw'), vce($se)
+	sum `x' if e(sample) & before1955 == 0
+    estadd scalar outcome_mean = r(mean)
+	eststo l1_`x'
+}
+esttab using "output/tableA8b.tex", append label keep(before1955) cells(b(star fmt(%9.3f)) se(par)) stats(N outcome_mean, fmt(%9.0g %9.2f) ///
+			labels("\hspace{0.5 cm} Observations" "\hspace{0.5 cm} Control group mean") ///
+			layout(@ @)) $slvl 
+
+
+```
+
+### `ICPSR_183165-V1.1/3 Adjustment q main.do`
+```stata
+***Last Updated: 26/11/2022 using Stata17
+/*==========================================*
+Paper:			Mental Health Costs of Lockdowns: Evidence from Age-specific Curfews in Turkey *REPLICATON*
+
+Purpose:        Multiple hypothesis adjustment for Tables 3-6
+
+To re-run our analysis, please install a folder "Mental Health". There should be 4 subfolders in order for do-files to run:
+
+"originals"
+"do files"
+"graphs"
+"output"
+
+Before you run this do file, please change the path of the working directory in line 21 and run all of the data cleaning do files.
+*==========================================*/
+
+**# The purpose of this do file is to generate the various q values for the paper, which are used to test for False Discovery Rate based off Anderson (2008) "Multiple Inference and Gender Differences in the Effects of Early Intervention: A Reevaluation of the Abecedarian, Perry Preschool, and Early Training Projects".
+
+clear
+set more off 
+set matsize 8000
+cap log close
+
+
+**# The following section imports the data file, and classifies certain variables.
+
+*global dir="XXX\Mental Health"
+cd "$dir"
+
+use "originals\konda_data_for_analysis.dta", clear
+
+tab education, gen(education_)
+tab ethnicity, gen(ethnicity_)
+tab survey_taker_id, gen(survey_taker_id_)
+
+global contr="month_* province_n_* i.ethnicity i.education female i.survey_taker_id"
+global se "cluster modate"	
+global slvl "starlevels(* 0.10 ** 0.05 *** 0.01)"
+
+#delimit ;
+global list1 "head_ache mal_appetite sleeplessness scared shaking nervous 
+indigestion unfocused unhappy weepy unwillingness undecisiveness disrupted useless 
+uninterest worthless suicidal usually_tired stomach_discomfort quickly_tired";
+
+global list2 "head_ache shaking indigestion stomach_discomfort"; 
+
+global list3 "mal_appetite sleeplessness scared nervous unfocused 
+unhappy weepy unwillingness undecisiveness disrupted useless uninterest 
+worthless suicidal usually_tired quickly_tired";
+
+global list4 "religious daily_pray practice_the_book virus_god_sent";
+#delimit cr
+
+
+**# The following section lays out the commands to create indeces for the outcome variables of the survey. The methodology and reasoning behind creating these indices is explained in Anderson (2008). The weightave2 function is based of the Anderson methodology, but is provided in the accesible data files of Asher and Novasad (2020). The ado file needs to be downloaded and added to the personal file collection of the computer the code is being run on.
+
+**Indices following Asher and Novasad, who follow Anderson:
+
+/* create reverse treatment dummy, where 1 = non-treated. this will be
+fed into the index creation program so non-treated villages are used
+as the normalizing standard deviation */
+gen controldummy = 0 
+replace controldummy = 1 if before1955 == 0 
+
+/* generate indices for main sample. NOTE - the egen function
+weightave2 function comes from _gweightave2.ado - the .ado file will
+be read into stata when it's in the working directory of the do file
+that calls it. however - it is better practice to put it in your
+personal ado path - which is ~/ado/personal. this function was sent
+from Bilal Siddiqi to Sam Asher, based on Anderson (2008): Multiple
+Inference and Gender Differences in the Effects of Early Intervention:
+A Reevaluation of the Abecedarian, Perry Preschool, and Early Training
+Projects. */
+
+**Note: These normalization makes sure that the control group mean is zero in the regressions.
+egen z_depression = weightave2($list1), normby(controldummy)
+egen z_somatic= weightave2($list2), normby(controldummy)
+egen z_nonsomatic = weightave2($list3), normby(controldummy)
+egen z_religion = weightave2($list4), normby(controldummy)
+
+egen sum_srq=rowtotal($list1)
+
+**# The following creates missing values in each of the indices if any value in the variables that make up that index are missing 
+
+foreach x in $list1{
+replace z_depression = . if `x' == .
+}
+
+foreach x in $list2{
+replace z_somatic = . if `x' == .
+}
+
+foreach x in $list3{
+replace z_nonsomatic = . if `x' == .
+}
+
+foreach x in $list4{
+replace z_religion = . if `x' == .
+}
+
+foreach x in $list1{
+replace sum_srq = . if `x' == .
+}
+
+
+********TABLE 1: SUMMARY STATISTICS
+label var highschool "Completed high school"
+label var illiterate "Illiterate"
+label var female "Female"
+label var married "Married"
+label var widowed_separated "Widowed or separated"
+label var non_turk "Non-Turkish"
+label var pre_covid_hhsize "Pre-Covid-19 household size"
+label var psych_support "Ever received psychological support"
+label var chronic_disease "Has a chronic disease"
+label var outside_week "Days outside last week"
+label var under_curfew "Under curfew"
+label var never_out "Never goes out"
+label var paid_employment "Paid employed"
+label var total_employment "Paid or unpaid employed"
+label var job_to_return "Has a job but could not attend last week"
+label var money_as_usual "Has money for usual needs"
+label var money_distressed "Worried about spending money"
+label var lim_social_interaction "Limited social interaction"
+label var limited_physical_act "Limited physical activity"
+label var hh_size "Current household size"
+label var conflict "Conflict with a household member"
+
+
+eststo clear
+
+tabstat highschool illiterate female married widowed_separated non_turk pre_covid_hhsize psych_support ///
+		chronic_disease  outside_week under_curfew never_out paid_employment total_employment job_to_return money_as_usual ///
+		money_distressed lim_social_interaction limited_physical_act hh_size conflict, ///
+		stat(mean sd min max n) format(%9.2f) long col(stat)
+		
+fsum highschool illiterate female married widowed_separated non_turk pre_covid_hhsize psych_support ///
+		chronic_disease  outside_week under_curfew never_out paid_employment total_employment job_to_return money_as_usual ///
+		money_distressed lim_social_interaction limited_physical_act hh_size conflict, /// 
+		stat(mean sd min max n) label
+
+fsum highschool illiterate female married widowed_separated non_turk pre_covid_hhsize psych_support ///
+		chronic_disease  outside_week under_curfew never_out paid_employment total_employment job_to_return money_as_usual ///
+		money_distressed lim_social_interaction limited_physical_act hh_size conflict, /// 
+		stat(mean sd min max n) uselabel
+
+
+********TABLE 2: LIST OF SRQ-20 QUESTIONS AND THEIR SUMMARY STATISTICS
+
+label var head_ache "Have you often had headaches?"
+label var mal_appetite "Has your appetite been poor?"
+label var sleeplessness "Have you slept badly?"
+label var scared "Have you been easily frightened?"
+label var shaking "Have you had shaking hands?"
+label var nervous "Have you felt nervous, tense, or worried?"
+label var indigestion "Has your digestion been poor?"
+label var unfocused "Have you had trouble in thinking clearly?"
+label var unhappy "Have you felt unhappy?"
+label var weepy "Have you cried more often than usual?"
+label var unwillingness "Have you found it difficult to enjoy your daily activities?"
+label var undecisiveness "Have you found it difficult to make decisions?"
+label var disrupted "Has your daily work suffered?"
+label var useless "Have you been unable to play a useful part in life?"
+label var uninterest "Have you lost interest in things?"
+label var worthless "Have you felt that you are a worthless person?"
+label var suicidal "Has the thought of ending your life been on your mind?"
+label var usually_tired "Have you felt tired all the time?"
+label var stomach_discomfort "Have you had uncomfortable feelings in your stomach?"
+label var quickly_tired "Have you gotten tired easily?"
+
+eststo clear
+
+tabstat head_ache mal_appetite sleeplessness scared shaking nervous indigestion  ///
+		unfocused unhappy weepy unwillingness undecisiveness disrupted useless  ///
+		uninterest worthless suicidal usually_tired stomach_discomfort quickly_tired,  ///
+		stat(mean sd min max n) format(%9.2f) long col(stat)
+			
+fsum head_ache mal_appetite sleeplessness scared shaking nervous indigestion  ///
+		unfocused unhappy weepy unwillingness undecisiveness disrupted useless  ///
+		uninterest worthless suicidal usually_tired stomach_discomfort quickly_tired,  ///
+		stat(mean sd min max n) label
+
+fsum head_ache mal_appetite sleeplessness scared shaking nervous indigestion  ///
+		unfocused unhappy weepy unwillingness undecisiveness disrupted useless  ///
+		uninterest worthless suicidal usually_tired stomach_discomfort quickly_tired,  ///
+		stat(mean sd min max n) uselabel		
+
+global outsetT3 "outside_week under_curfew never_out"
+global outsetT4 "z_depression z_somatic z_nonsomatic sum_srq"
+global outsetT5A "paid_employment total_employment job_to_return money_as_usual money_distressed" 
+global outsetT5B "limited_physical_act lim_social_interaction"
+global outsetT5C "hh_size conflict"
+global outsetT6 "curfew_support_d gov_support_d"
+
+
+
+
+**# The following code quietly runs all regression as the Table do file, and then proceeds to store the ouput of the regressions 
+ 
+eststo clear
+foreach x in $outsetT3 $outsetT4 $outsetT5A $outsetT5B $outsetT5C $outsetT6{
+foreach bw in 17 30 45 60{
+	xi: qui reg `x' before1955 di1* $contr  if inrange(dif,-`bw',`bw'), vce($se)
+	g N__`x'__`bw' = e(N)
+    test before1955
+	g b__`x'__`bw' = _b[before1955]
+	g se__`x'__`bw' = _se[before1955]
+	g p__`x'__`bw' = r(p)
+	sum `x' if e(sample) & before1955 == 0
+	g M__`x'__`bw' = r(mean)
+}
+}
+
+
+*The next section of code keeps only the output of the regression, and creates only 1 cross section. It then tranposes, renames splits and drops the data to create a datset that can be used with the imported do file.
+
+keep b__* se__* p__* N__* M__* 
+keep if _n==1 
+xpose, clear varname
+rename v1 v_scalar
+split _varname, p("__") 
+drop _varname
+rename _varname1 coef_name  
+rename _varname2 vname 
+rename _varname3 bw
+destring bw, replace 
+
+
+* The following creates a group variable that relates a number to each variable depending on which group of index variables the variable belongs to. It allows one to seperate the p values into their respective tables in the paper.
+
+g group = . 
+
+foreach x in $outsetT3{ 
+replace group = 1 if vname=="`x'"	
+}
+
+foreach x in $outsetT4{ 
+replace group = 2 if vname=="`x'"	
+}
+
+foreach x in $outsetT5A{ 
+replace group = 3 if vname=="`x'"	
+}
+
+foreach x in $outsetT5B{ 
+replace group = 4 if vname=="`x'"	
+}
+
+foreach x in $outsetT5C{ 
+replace group = 5 if vname=="`x'"	
+}
+
+foreach x in $outsetT6{ 
+replace group = 6 if vname=="`x'"	
+}
+
+
+
+
+**# The data has now been sorted and necessary values have been created. Then, the code uses the "fdr_sharpened_qvalues_v02" do file, which creates the respective q-values based on the methodology in Anderson (2008). No changes are needed to be made to the "fdr_sharpened_qvalues_v02" do file, just store it in your working directory.
+
+tempfile t1 
+save `t1' 
+
+foreach x in 1 2 3 4 5 6 { 
+foreach y in 17 30 45 60{ 
+use `t1', clear 
+keep if group==`x' & bw==`y' & coef_name=="p"
+g pval = v_scalar
+do "do files/fdr_sharpened_qvalues_v02.do" 
+tempfile t_`x'_`y'
+save `t_`x'_`y''
+}
+}
+
+clear all 
+
+
+**# The following section creates tables for the p and q values and exports the output. The q values can be found in the excel file under coef_name = q, with the value in the v_scalar column. "version 16" command is added before the bysort command in this do file, as bysort is no longer supported by Stata version 17.
+
+foreach x in 1 2 3 4 5 6 { 
+foreach y in 17 30 45 60{ 
+append using `t_`x'_`y''	
+}
+}
+
+rename bky06_qval q
+replace pval = round(pval, 0.001)
+
+
+*see the p and q-values in table order for TABLES 3-6
+version 16
+bysort group: table vname bw, c(mean pval mean q)
+
+
+
+
+***Rest of the code is to output the results into an Excel file*** 
+keep coef_name vname group bw q 
+replace coef_name = "q"
+rename q v_scalar
+
+append using `t1'
+
+sort coef_name vname group bw
+
+
+export excel using "output\MHC_sharpened_q_main.xlsx", firstrow(variables) replace
+
+```
+
+### `ICPSR_183165-V1.1/Replication Analysis - 1 Table 4.do`
+```stata
+***Last Updated: 07/12/2021 using Stata17
+/*==========================================*
+Paper:			Mental Health Costs of Lockdowns: Evidence from Age-specific Curfews in Turkey *REPLICATON*
+
+Purpose:        Produce the results in Table 4
+
+To re-run our analysis, please install a folder "Mental Health". There should be 4 subfolders in order for do-files to run:
+
+"originals"
+"do files"
+"graphs"
+"output"
+
+Before you run this do file, please change the path of the working directory in line 21 and run all of the data cleaning do files.
+*==========================================*/
+clear
+set more off 
+set matsize 8000
+cap log close
+
+global dir= "C:\Users\cianh\Documents\College\4th Year\Advanced Econometrics\Mental Health"
+*global dir="XXX\Mental Health"
+cd "$dir"
+
+use "originals/konda_data_for_analysis.dta", clear
+
+keep if non_response==0
+
+tab education, gen(education_)
+tab ethnicity, gen(ethnicity_)
+tab survey_taker_id, gen(survey_taker_id_)
+
+global contr="month_* province_n_* i.ethnicity i.education i.survey_taker_id"
+global se "cluster modate"	
+global slvl "starlevels(* 0.10 ** 0.05 *** 0.01)"
+
+#delimit ;
+global list1 "head_ache mal_appetite sleeplessness scared shaking nervous 
+indigestion unfocused unhappy weepy unwillingness undecisiveness disrupted useless 
+uninterest worthless suicidal usually_tired stomach_discomfort quickly_tired";
+
+global list2 "head_ache shaking indigestion stomach_discomfort"; 
+
+global list3 "mal_appetite sleeplessness scared nervous unfocused 
+unhappy weepy unwillingness undecisiveness disrupted useless uninterest 
+worthless suicidal usually_tired quickly_tired";
+
+global list4 "religious daily_pray practice_the_book virus_god_sent";
+#delimit cr
+
+**Indices following Asher and Novasad, who follow Anderson:
+
+/* create reverse treatment dummy, where 1 = non-treated. this will be
+fed into the index creation program so non-treated villages are used
+as the normalizing standard deviation */
+gen controldummy = 0 
+replace controldummy = 1 if before1955 == 0 
+
+/* generate indices for main sample. NOTE - the egen function
+weightave2 function comes from _gweightave2.ado - the .ado file will
+be read into stata when it's in the working directory of the do file
+that calls it. however - it is better practice to put it in your
+personal ado path - which is ~/ado/personal. this function was sent
+from Bilal Siddiqi to Sam Asher, based on Anderson (2008): Multiple
+Inference and Gender Differences in the Effects of Early Intervention:
+A Reevaluation of the Abecedarian, Perry Preschool, and Early Training
+Projects. */
+
+**Note: These normalization makes sure that the control group mean is zero in the regressions.
+egen z_depression = weightave2($list1), normby(controldummy)
+egen z_somatic= weightave2($list2), normby(controldummy)
+egen z_nonsomatic = weightave2($list3), normby(controldummy)
+egen z_religion = weightave2($list4), normby(controldummy)
+
+egen sum_srq=rowtotal($list1)
+
+foreach x in $list1{
+replace z_depression = . if `x' == .
+}
+
+foreach x in $list2{
+replace z_somatic = . if `x' == .
+}
+
+foreach x in $list3{
+replace z_nonsomatic = . if `x' == .
+}
+
+foreach x in $list4{
+replace z_religion = . if `x' == .
+}
+
+foreach x in $list1{
+replace sum_srq = . if `x' == .
+}
+
+label var z_depression "Mental distress index"
+label var z_nonsomatic "Nonsomatic symptoms of distress index"
+label var z_somatic "Somatic symptoms of distress index"
+label var sum_srq "Sum of yes answers in SRQ-20"
+
+
+********TABLE 1: SUMMARY STATISTICS
+label var highschool "Completed high school"
+label var illiterate "Illiterate"
+label var female "Female"
+label var married "Married"
+label var widowed_separated "Widowed or separated"
+label var non_turk "Non-Turkish"
+label var pre_covid_hhsize "Pre-Covid-19 household size"
+label var psych_support "Ever received psychological support"
+label var chronic_disease "Has a chronic disease"
+label var outside_week "Days outside last week"
+label var under_curfew "Under curfew"
+label var never_out "Never goes out"
+label var paid_employment "Paid employed"
+label var total_employment "Paid or unpaid employed"
+label var job_to_return "Has a job but could not attend last week"
+label var money_as_usual "Has money for usual needs"
+label var money_distressed "Worried about spending money"
+label var lim_social_interaction "Limited social interaction"
+label var limited_physical_act "Limited physical activity"
+label var hh_size "Current household size"
+label var conflict "Conflict with a household member"
+
+
+eststo clear
+
+tabstat highschool illiterate female married widowed_separated non_turk pre_covid_hhsize psych_support ///
+		chronic_disease  outside_week under_curfew never_out paid_employment total_employment job_to_return money_as_usual ///
+		money_distressed lim_social_interaction limited_physical_act hh_size conflict, ///
+		stat(mean sd min max n) format(%9.2f) long col(stat)
+		
+fsum highschool illiterate female married widowed_separated non_turk pre_covid_hhsize psych_support ///
+		chronic_disease  outside_week under_curfew never_out paid_employment total_employment job_to_return money_as_usual ///
+		money_distressed lim_social_interaction limited_physical_act hh_size conflict, /// 
+		stat(mean sd min max n) label
+
+fsum highschool illiterate female married widowed_separated non_turk pre_covid_hhsize psych_support ///
+		chronic_disease  outside_week under_curfew never_out paid_employment total_employment job_to_return money_as_usual ///
+		money_distressed lim_social_interaction limited_physical_act hh_size conflict, /// 
+		stat(mean sd min max n) uselabel
+
+
+********TABLE 2: LIST OF SRQ-20 QUESTIONS AND THEIR SUMMARY STATISTICS
+
+label var head_ache "Have you often had headaches?"
+label var mal_appetite "Has your appetite been poor?"
+label var sleeplessness "Have you slept badly?"
+label var scared "Have you been easily frightened?"
+label var shaking "Have you had shaking hands?"
+label var nervous "Have you felt nervous, tense, or worried?"
+label var indigestion "Has your digestion been poor?"
+label var unfocused "Have you had trouble in thinking clearly?"
+label var unhappy "Have you felt unhappy?"
+label var weepy "Have you cried more often than usual?"
+label var unwillingness "Have you found it difficult to enjoy your daily activities?"
+label var undecisiveness "Have you found it difficult to make decisions?"
+label var disrupted "Has your daily work suffered?"
+label var useless "Have you been unable to play a useful part in life?"
+label var uninterest "Have you lost interest in things?"
+label var worthless "Have you felt that you are a worthless person?"
+label var suicidal "Has the thought of ending your life been on your mind?"
+label var usually_tired "Have you felt tired all the time?"
+label var stomach_discomfort "Have you had uncomfortable feelings in your stomach?"
+label var quickly_tired "Have you gotten tired easily?"
+
+eststo clear
+
+tabstat head_ache mal_appetite sleeplessness scared shaking nervous indigestion  ///
+		unfocused unhappy weepy unwillingness undecisiveness disrupted useless  ///
+		uninterest worthless suicidal usually_tired stomach_discomfort quickly_tired,  ///
+		stat(mean sd min max n) format(%9.2f) long col(stat)
+			
+fsum head_ache mal_appetite sleeplessness scared shaking nervous indigestion  ///
+		unfocused unhappy weepy unwillingness undecisiveness disrupted useless  ///
+		uninterest worthless suicidal usually_tired stomach_discomfort quickly_tired,  ///
+		stat(mean sd min max n) label
+
+fsum head_ache mal_appetite sleeplessness scared shaking nervous indigestion  ///
+		unfocused unhappy weepy unwillingness undecisiveness disrupted useless  ///
+		uninterest worthless suicidal usually_tired stomach_discomfort quickly_tired,  ///
+		stat(mean sd min max n) uselabel		
+
+/*
+**Select optimal bandwidth for days outside last week using IK and CCT bandwidths:
+rdbwselect_2014 outside_week dif, bwselect(IK)
+
+rdbwselect_2014 outside_week dif, bwselect(CCT)
+*/
+
+
+
+********TABLE 4.1: EFFECTS OF CURFEW ON MENTAL HEALTH OUTCOMES (NO Gender control)
+*Linear 17 bandwidth
+local bw = 17
+eststo clear
+foreach x in z_depression z_somatic z_nonsomatic sum_srq{
+	xi: reg `x' before1955 di1* $contr  if inrange(dif,-`bw',`bw'), vce($se)
+	sum `x' if e(sample) & before1955 == 0
+    estadd scalar outcome_mean = r(mean)
+	eststo l1_`x'
+}
+
+*Linear 30 bandwith
+local bw = 30
+foreach x in z_depression z_somatic z_nonsomatic sum_srq{
+	xi: reg `x' before1955 di1* $contr  if inrange(dif,-`bw',`bw'), vce($se)
+	sum `x' if e(sample) & before1955 == 0
+    estadd scalar outcome_mean = r(mean)
+	eststo l2_`x'
+}
+
+*Linear 45 bandwidth
+local bw = 45
+foreach x in z_depression z_somatic z_nonsomatic sum_srq{
+	xi: reg `x' before1955 di1* $contr  if inrange(dif,-`bw',`bw'), vce($se)
+	sum `x' if e(sample) & before1955 == 0
+    estadd scalar outcome_mean = r(mean)
+	eststo l3_`x'
+}
+
+*Linear 60 bandwidth
+local bw = 60
+foreach x in z_depression z_somatic z_nonsomatic sum_srq{
+	xi: reg `x' before1955 di1* $contr  if inrange(dif,-`bw',`bw'), vce($se)
+	sum `x' if e(sample) & before1955 == 0
+    estadd scalar outcome_mean = r(mean)
+	eststo l4_`x'
+}
+
+foreach x in z_depression z_somatic z_nonsomatic{
+	estout l1_`x' l2_`x' l3_`x' l4_`x' using "output/REPtable4.1_`x'.tex", ///
+			replace style(tex) collabels(, none) label varlabels(before1955 "Born before 1955") cells(b(star fmt(%9.3f)) se(par))  ///
+			keep(before1955) mlabels(, none) stats(N , fmt(%9.0g ) ///
+			labels("\hspace{0.5 cm} Observations" ) ///
+			) $slvl 
+}
+
+foreach x in sum_srq{
+	estout l1_`x' l2_`x' l3_`x' l4_`x'  using "output/REPtable4.1_`x'.tex", ///
+			replace style(tex) collabels(, none) label varlabels(before1955 "Born before 1955") cells(b(star fmt(%9.3f)) se(par))  ///
+			keep(before1955) mlabels(, none) stats(N outcome_mean, fmt(%9.0g %9.2f) ///
+			labels("\hspace{0.5 cm} Observations" "\hspace{0.5 cm} Control group mean") ///
+			layout(@ @)) $slvl 
+}
+
+
+
+```
+
+### `ICPSR_183165-V1.1/Replication Analysis - 1 Table 5.do`
+```stata
+***Last Updated: 07/12/2021 using Stata17
+/*==========================================*
+Paper:			Mental Health Costs of Lockdowns: Evidence from Age-specific Curfews in Turkey *REPLICATON*
+
+Purpose:        Produce the results in Table 5
+
+To re-run our analysis, please install a folder "Mental Health". There should be 4 subfolders in order for do-files to run:
+
+"originals"
+"do files"
+"graphs"
+"output"
+
+Before you run this do file, please change the path of the working directory in line 21 and 264 and run all of the data cleaning do files.
+*==========================================*/
+clear
+set more off 
+set matsize 8000
+cap log close
+
+global dir= "C:\Users\cianh\Documents\College\4th Year\Advanced Econometrics\Mental Health"
+*global dir="XXX\Mental Health"
+cd "$dir"
+
+use "originals\konda_data_for_analysis.dta", clear
+
+keep if non_response==0
+
+drop if female==0
+
+
+tab education, gen(education_)
+tab ethnicity, gen(ethnicity_)
+tab survey_taker_id, gen(survey_taker_id_)
+
+global contr="month_* province_n_* i.ethnicity i.education i.survey_taker_id"
+global se "cluster modate"	
+global slvl "starlevels(* 0.10 ** 0.05 *** 0.01)"
+
+#delimit ;
+global list1 "head_ache mal_appetite sleeplessness scared shaking nervous 
+indigestion unfocused unhappy weepy unwillingness undecisiveness disrupted useless 
+uninterest worthless suicidal usually_tired stomach_discomfort quickly_tired";
+
+global list2 "head_ache shaking indigestion stomach_discomfort"; 
+
+global list3 "mal_appetite sleeplessness scared nervous unfocused 
+unhappy weepy unwillingness undecisiveness disrupted useless uninterest 
+worthless suicidal usually_tired quickly_tired";
+
+global list4 "religious daily_pray practice_the_book virus_god_sent";
+#delimit cr
+
+**Indices following Asher and Novasad, who follow Anderson:
+
+/* create reverse treatment dummy, where 1 = non-treated. this will be
+fed into the index creation program so non-treated villages are used
+as the normalizing standard deviation */
+gen controldummy = 0 
+replace controldummy = 1 if before1955 == 0 
+
+/* generate indices for main sample. NOTE - the egen function
+weightave2 function comes from _gweightave2.ado - the .ado file will
+be read into stata when it's in the working directory of the do file
+that calls it. however - it is better practice to put it in your
+personal ado path - which is ~/ado/personal. this function was sent
+from Bilal Siddiqi to Sam Asher, based on Anderson (2008): Multiple
+Inference and Gender Differences in the Effects of Early Intervention:
+A Reevaluation of the Abecedarian, Perry Preschool, and Early Training
+Projects. */
+
+**Note: These normalization makes sure that the control group mean is zero in the regressions.
+egen z_depression = weightave2($list1), normby(controldummy)
+egen z_somatic= weightave2($list2), normby(controldummy)
+egen z_nonsomatic = weightave2($list3), normby(controldummy)
+egen z_religion = weightave2($list4), normby(controldummy)
+
+egen sum_srq=rowtotal($list1)
+
+foreach x in $list1{
+replace z_depression = . if `x' == .
+}
+
+foreach x in $list2{
+replace z_somatic = . if `x' == .
+}
+
+foreach x in $list3{
+replace z_nonsomatic = . if `x' == .
+}
+
+foreach x in $list4{
+replace z_religion = . if `x' == .
+}
+
+foreach x in $list1{
+replace sum_srq = . if `x' == .
+}
+
+label var z_depression "Mental distress index"
+label var z_nonsomatic "Nonsomatic symptoms of distress index"
+label var z_somatic "Somatic symptoms of distress index"
+label var sum_srq "Sum of yes answers in SRQ-20"
+
+
+********TABLE 1: SUMMARY STATISTICS
+label var highschool "Completed high school"
+label var illiterate "Illiterate"
+label var female "Female"
+label var married "Married"
+label var widowed_separated "Widowed or separated"
+label var non_turk "Non-Turkish"
+label var pre_covid_hhsize "Pre-Covid-19 household size"
+label var psych_support "Ever received psychological support"
+label var chronic_disease "Has a chronic disease"
+label var outside_week "Days outside last week"
+label var under_curfew "Under curfew"
+label var never_out "Never goes out"
+label var paid_employment "Paid employed"
+label var total_employment "Paid or unpaid employed"
+label var job_to_return "Has a job but could not attend last week"
+label var money_as_usual "Has money for usual needs"
+label var money_distressed "Worried about spending money"
+label var lim_social_interaction "Limited social interaction"
+label var limited_physical_act "Limited physical activity"
+label var hh_size "Current household size"
+label var conflict "Conflict with a household member"
+
+eststo clear
+
+tabstat highschool illiterate female married widowed_separated non_turk pre_covid_hhsize psych_support ///
+		chronic_disease  outside_week under_curfew never_out paid_employment total_employment job_to_return money_as_usual ///
+		money_distressed lim_social_interaction limited_physical_act hh_size conflict, ///
+		stat(mean sd min max n) format(%9.2f) long col(stat)
+		
+fsum highschool illiterate female married widowed_separated non_turk pre_covid_hhsize psych_support ///
+		chronic_disease  outside_week under_curfew never_out paid_employment total_employment job_to_return money_as_usual ///
+		money_distressed lim_social_interaction limited_physical_act hh_size conflict, /// 
+		stat(mean sd min max n) label
+
+fsum highschool illiterate female married widowed_separated non_turk pre_covid_hhsize psych_support ///
+		chronic_disease  outside_week under_curfew never_out paid_employment total_employment job_to_return money_as_usual ///
+		money_distressed lim_social_interaction limited_physical_act hh_size conflict, /// 
+		stat(mean sd min max n) uselabel
+
+
+
+
+
+********TABLE 2: LIST OF SRQ-20 QUESTIONS AND THEIR SUMMARY STATISTICS
+
+label var head_ache "Have you often had headaches?"
+label var mal_appetite "Has your appetite been poor?"
+label var sleeplessness "Have you slept badly?"
+label var scared "Have you been easily frightened?"
+label var shaking "Have you had shaking hands?"
+label var nervous "Have you felt nervous, tense, or worried?"
+label var indigestion "Has your digestion been poor?"
+label var unfocused "Have you had trouble in thinking clearly?"
+label var unhappy "Have you felt unhappy?"
+label var weepy "Have you cried more often than usual?"
+label var unwillingness "Have you found it difficult to enjoy your daily activities?"
+label var undecisiveness "Have you found it difficult to make decisions?"
+label var disrupted "Has your daily work suffered?"
+label var useless "Have you been unable to play a useful part in life?"
+label var uninterest "Have you lost interest in things?"
+label var worthless "Have you felt that you are a worthless person?"
+label var suicidal "Has the thought of ending your life been on your mind?"
+label var usually_tired "Have you felt tired all the time?"
+label var stomach_discomfort "Have you had uncomfortable feelings in your stomach?"
+label var quickly_tired "Have you gotten tired easily?"
+
+eststo clear
+
+tabstat head_ache mal_appetite sleeplessness scared shaking nervous indigestion  ///
+		unfocused unhappy weepy unwillingness undecisiveness disrupted useless  ///
+		uninterest worthless suicidal usually_tired stomach_discomfort quickly_tired,  ///
+		stat(mean sd min max n) format(%9.2f) long col(stat)
+			
+fsum head_ache mal_appetite sleeplessness scared shaking nervous indigestion  ///
+		unfocused unhappy weepy unwillingness undecisiveness disrupted useless  ///
+		uninterest worthless suicidal usually_tired stomach_discomfort quickly_tired,  ///
+		stat(mean sd min max n) label
+
+fsum head_ache mal_appetite sleeplessness scared shaking nervous indigestion  ///
+		unfocused unhappy weepy unwillingness undecisiveness disrupted useless  ///
+		uninterest worthless suicidal usually_tired stomach_discomfort quickly_tired,  ///
+		stat(mean sd min max n) uselabel		
+
+
+
+/*
+**Select optimal bandwidth for days outside last week using IK and CCT bandwidths:
+rdbwselect_2014 outside_week dif, bwselect(IK)
+
+rdbwselect_2014 outside_week dif, bwselect(CCT)
+*/
+
+
+
+********TABLE 4.2: EFFECTS OF CURFEW ON MENTAL HEALTH OUTCOMES FEMALE
+*Linear 17 bandwidth
+local bw = 17
+eststo clear
+foreach x in z_depression z_somatic z_nonsomatic sum_srq{
+	xi: reg `x' before1955 di1* $contr  if inrange(dif,-`bw',`bw'), vce($se)
+	sum `x' if e(sample) & before1955 == 0
+    estadd scalar outcome_mean = r(mean)
+	eststo l1_`x'
+}
+
+*Linear 30 bandwith
+local bw = 30
+foreach x in z_depression z_somatic z_nonsomatic sum_srq{
+	xi: reg `x' before1955 di1* $contr  if inrange(dif,-`bw',`bw'), vce($se)
+	sum `x' if e(sample) & before1955 == 0
+    estadd scalar outcome_mean = r(mean)
+	eststo l2_`x'
+}
+
+*Linear 45 bandwidth
+local bw = 45
+foreach x in z_depression z_somatic z_nonsomatic sum_srq{
+	xi: reg `x' before1955 di1* $contr  if inrange(dif,-`bw',`bw'), vce($se)
+	sum `x' if e(sample) & before1955 == 0
+    estadd scalar outcome_mean = r(mean)
+	eststo l3_`x'
+}
+
+*Linear 60 bandwidth
+local bw = 60
+foreach x in z_depression z_somatic z_nonsomatic sum_srq{
+	xi: reg `x' before1955 di1* $contr  if inrange(dif,-`bw',`bw'), vce($se)
+	sum `x' if e(sample) & before1955 == 0
+    estadd scalar outcome_mean = r(mean)
+	eststo l4_`x'
+}
+
+foreach x in z_depression z_somatic z_nonsomatic{
+	estout l1_`x' l2_`x' l3_`x' l4_`x' using "output/REPtable4.2female_`x'.tex", ///
+			replace style(tex) collabels(, none) label varlabels(before1955 "Born before 1955") cells(b(star fmt(%9.3f)) se(par))  ///
+			keep(before1955) mlabels(, none) stats(N , fmt(%9.0g ) ///
+			labels("\hspace{0.5 cm} Observations" ) ///
+			) $slvl 
+}
+
+foreach x in sum_srq{
+	estout l1_`x' l2_`x' l3_`x' l4_`x'  using "output/REPtable4.2female_`x'.tex", ///
+			replace style(tex) collabels(, none) label varlabels(before1955 "Born before 1955") cells(b(star fmt(%9.3f)) se(par))  ///
+			keep(before1955) mlabels(, none) stats(N outcome_mean, fmt(%9.0g %9.2f) ///
+			labels("\hspace{0.5 cm} Observations" "\hspace{0.5 cm} Control group mean") ///
+			layout(@ @)) $slvl 
+}
+
+
+
+****************************************************
+
+
+clear
+set more off 
+set matsize 8000
+cap log close
+
+global dir= "C:\Users\cianh\Documents\College\4th Year\Advanced Econometrics\Mental Health"
+*global dir="XXX\Mental Health"
+cd "$dir"
+
+use "originals\konda_data_for_analysis.dta", clear
+
+keep if non_response==0
+
+drop if female==1
+
+tab education, gen(education_)
+tab ethnicity, gen(ethnicity_)
+tab survey_taker_id, gen(survey_taker_id_)
+
+global contr="month_* province_n_* i.ethnicity i.education i.survey_taker_id"
+global se "cluster modate"	
+global slvl "starlevels(* 0.10 ** 0.05 *** 0.01)"
+
+#delimit ;
+global list1 "head_ache mal_appetite sleeplessness scared shaking nervous 
+indigestion unfocused unhappy weepy unwillingness undecisiveness disrupted useless 
+uninterest worthless suicidal usually_tired stomach_discomfort quickly_tired";
+
+global list2 "head_ache shaking indigestion stomach_discomfort"; 
+
+global list3 "mal_appetite sleeplessness scared nervous unfocused 
+unhappy weepy unwillingness undecisiveness disrupted useless uninterest 
+worthless suicidal usually_tired quickly_tired";
+
+global list4 "religious daily_pray practice_the_book virus_god_sent";
+#delimit cr
+
+**Indices following Asher and Novasad, who follow Anderson:
+
+/* create reverse treatment dummy, where 1 = non-treated. this will be
+fed into the index creation program so non-treated villages are used
+as the normalizing standard deviation */
+gen controldummy = 0 
+replace controldummy = 1 if before1955 == 0 
+
+/* generate indices for main sample. NOTE - the egen function
+weightave2 function comes from _gweightave2.ado - the .ado file will
+be read into stata when it's in the working directory of the do file
+that calls it. however - it is better practice to put it in your
+personal ado path - which is ~/ado/personal. this function was sent
+from Bilal Siddiqi to Sam Asher, based on Anderson (2008): Multiple
+Inference and Gender Differences in the Effects of Early Intervention:
+A Reevaluation of the Abecedarian, Perry Preschool, and Early Training
+Projects. */
+
+**Note: These normalization makes sure that the control group mean is zero in the regressions.
+egen z_depression = weightave2($list1), normby(controldummy)
+egen z_somatic= weightave2($list2), normby(controldummy)
+egen z_nonsomatic = weightave2($list3), normby(controldummy)
+egen z_religion = weightave2($list4), normby(controldummy)
+
+egen sum_srq=rowtotal($list1)
+
+foreach x in $list1{
+replace z_depression = . if `x' == .
+}
+
+foreach x in $list2{
+replace z_somatic = . if `x' == .
+}
+
+foreach x in $list3{
+replace z_nonsomatic = . if `x' == .
+}
+
+foreach x in $list4{
+replace z_religion = . if `x' == .
+}
+
+foreach x in $list1{
+replace sum_srq = . if `x' == .
+}
+
+label var z_depression "Mental distress index"
+label var z_nonsomatic "Nonsomatic symptoms of distress index"
+label var z_somatic "Somatic symptoms of distress index"
+label var sum_srq "Sum of yes answers in SRQ-20"
+
+
+********TABLE 1: SUMMARY STATISTICS
+label var highschool "Completed high school"
+label var illiterate "Illiterate"
+label var female "Female"
+label var married "Married"
+label var widowed_separated "Widowed or separated"
+label var non_turk "Non-Turkish"
+label var pre_covid_hhsize "Pre-Covid-19 household size"
+label var psych_support "Ever received psychological support"
+label var chronic_disease "Has a chronic disease"
+label var outside_week "Days outside last week"
+label var under_curfew "Under curfew"
+label var never_out "Never goes out"
+label var paid_employment "Paid employed"
+label var total_employment "Paid or unpaid employed"
+label var job_to_return "Has a job but could not attend last week"
+label var money_as_usual "Has money for usual needs"
+label var money_distressed "Worried about spending money"
+label var lim_social_interaction "Limited social interaction"
+label var limited_physical_act "Limited physical activity"
+label var hh_size "Current household size"
+label var conflict "Conflict with a household member"
+
+eststo clear
+
+tabstat highschool illiterate female married widowed_separated non_turk pre_covid_hhsize psych_support ///
+		chronic_disease  outside_week under_curfew never_out paid_employment total_employment job_to_return money_as_usual ///
+		money_distressed lim_social_interaction limited_physical_act hh_size conflict, ///
+		stat(mean sd min max n) format(%9.2f) long col(stat)
+		
+fsum highschool illiterate female married widowed_separated non_turk pre_covid_hhsize psych_support ///
+		chronic_disease  outside_week under_curfew never_out paid_employment total_employment job_to_return money_as_usual ///
+		money_distressed lim_social_interaction limited_physical_act hh_size conflict, /// 
+		stat(mean sd min max n) label
+
+fsum highschool illiterate female married widowed_separated non_turk pre_covid_hhsize psych_support ///
+		chronic_disease  outside_week under_curfew never_out paid_employment total_employment job_to_return money_as_usual ///
+		money_distressed lim_social_interaction limited_physical_act hh_size conflict, /// 
+		stat(mean sd min max n) uselabel
+
+
+
+
+
+********TABLE 2: LIST OF SRQ-20 QUESTIONS AND THEIR SUMMARY STATISTICS
+
+label var head_ache "Have you often had headaches?"
+label var mal_appetite "Has your appetite been poor?"
+label var sleeplessness "Have you slept badly?"
+label var scared "Have you been easily frightened?"
+label var shaking "Have you had shaking hands?"
+label var nervous "Have you felt nervous, tense, or worried?"
+label var indigestion "Has your digestion been poor?"
+label var unfocused "Have you had trouble in thinking clearly?"
+label var unhappy "Have you felt unhappy?"
+label var weepy "Have you cried more often than usual?"
+label var unwillingness "Have you found it difficult to enjoy your daily activities?"
+label var undecisiveness "Have you found it difficult to make decisions?"
+label var disrupted "Has your daily work suffered?"
+label var useless "Have you been unable to play a useful part in life?"
+label var uninterest "Have you lost interest in things?"
+label var worthless "Have you felt that you are a worthless person?"
+label var suicidal "Has the thought of ending your life been on your mind?"
+label var usually_tired "Have you felt tired all the time?"
+label var stomach_discomfort "Have you had uncomfortable feelings in your stomach?"
+label var quickly_tired "Have you gotten tired easily?"
+
+eststo clear
+
+tabstat head_ache mal_appetite sleeplessness scared shaking nervous indigestion  ///
+		unfocused unhappy weepy unwillingness undecisiveness disrupted useless  ///
+		uninterest worthless suicidal usually_tired stomach_discomfort quickly_tired,  ///
+		stat(mean sd min max n) format(%9.2f) long col(stat)
+			
+fsum head_ache mal_appetite sleeplessness scared shaking nervous indigestion  ///
+		unfocused unhappy weepy unwillingness undecisiveness disrupted useless  ///
+		uninterest worthless suicidal usually_tired stomach_discomfort quickly_tired,  ///
+		stat(mean sd min max n) label
+
+fsum head_ache mal_appetite sleeplessness scared shaking nervous indigestion  ///
+		unfocused unhappy weepy unwillingness undecisiveness disrupted useless  ///
+		uninterest worthless suicidal usually_tired stomach_discomfort quickly_tired,  ///
+		stat(mean sd min max n) uselabel		
+
+
+/*
+**Select optimal bandwidth for days outside last week using IK and CCT bandwidths:
+rdbwselect_2014 outside_week dif, bwselect(IK)
+
+rdbwselect_2014 outside_week dif, bwselect(CCT)
+*/
+
+
+
+********TABLE 4.2: EFFECTS OF CURFEW ON MENTAL HEALTH OUTCOMES MALE
+*Linear 17 bandwidth
+local bw = 17
+eststo clear
+foreach x in z_depression z_somatic z_nonsomatic sum_srq{
+	xi: reg `x' before1955 di1* $contr  if inrange(dif,-`bw',`bw'), vce($se)
+	sum `x' if e(sample) & before1955 == 0
+    estadd scalar outcome_mean = r(mean)
+	eststo l1_`x'
+}
+
+*Linear 30 bandwith
+local bw = 30
+foreach x in z_depression z_somatic z_nonsomatic sum_srq{
+	xi: reg `x' before1955 di1* $contr  if inrange(dif,-`bw',`bw'), vce($se)
+	sum `x' if e(sample) & before1955 == 0
+    estadd scalar outcome_mean = r(mean)
+	eststo l2_`x'
+}
+
+*Linear 45 bandwidth
+local bw = 45
+foreach x in z_depression z_somatic z_nonsomatic sum_srq{
+	xi: reg `x' before1955 di1* $contr  if inrange(dif,-`bw',`bw'), vce($se)
+	sum `x' if e(sample) & before1955 == 0
+    estadd scalar outcome_mean = r(mean)
+	eststo l3_`x'
+}
+
+*Linear 60 bandwidth
+local bw = 60
+foreach x in z_depression z_somatic z_nonsomatic sum_srq{
+	xi: reg `x' before1955 di1* $contr  if inrange(dif,-`bw',`bw'), vce($se)
+	sum `x' if e(sample) & before1955 == 0
+    estadd scalar outcome_mean = r(mean)
+	eststo l4_`x'
+}
+
+foreach x in z_depression z_somatic z_nonsomatic{
+	estout l1_`x' l2_`x' l3_`x' l4_`x' using "output/REPtable4.2male_`x'.tex", ///
+			replace style(tex) collabels(, none) label varlabels(before1955 "Born before 1955") cells(b(star fmt(%9.3f)) se(par))  ///
+			keep(before1955) mlabels(, none) stats(N , fmt(%9.0g ) ///
+			labels("\hspace{0.5 cm} Observations" ) ///
+			) $slvl 
+}
+
+foreach x in sum_srq{
+	estout l1_`x' l2_`x' l3_`x' l4_`x'  using "output/REPtable4.2male_`x'.tex", ///
+			replace style(tex) collabels(, none) label varlabels(before1955 "Born before 1955") cells(b(star fmt(%9.3f)) se(par))  ///
+			keep(before1955) mlabels(, none) stats(N outcome_mean, fmt(%9.0g %9.2f) ///
+			labels("\hspace{0.5 cm} Observations" "\hspace{0.5 cm} Control group mean") ///
+			layout(@ @)) $slvl 
+}
+
+
+
+
+```
+
+### `ICPSR_183165-V1.1/Replication Analysis - 1 Tables 1-3,6.do`
+```stata
+***Last Updated: 22/11/2022 using Stata17
+/*==========================================*
+Paper:			Mental Health Costs of Lockdowns: Evidence from Age-specific Curfews in Turkey *REPLICATON*
+
+Purpose:        Produce the Tables 1-3,6
+
+To re-run our analysis, please install a folder "Mental Health". There should be 4 subfolders in order for do-files to run:
+
+"originals"
+"do files"
+"graphs"
+"output"
+
+Before you run this do file, please change the path of the working directory in line 21 and run all of the data cleaning do files. All output files from the replication begin with the prefix "REP"
+*==========================================*/
+
+clear
+set more off 
+set matsize 8000
+cap log close
+
+global dir= "C:\Users\cianh\Documents\College\4th Year\Advanced Econometrics\Mental Health"
+*global dir="XXX\Mental Health"
+cd "$dir"
+
+use "originals\konda_data_for_analysis.dta", clear
+
+keep if non_response==0
+
+tab education, gen(education_)
+tab ethnicity, gen(ethnicity_)
+tab survey_taker_id, gen(survey_taker_id_)
+
+global contr="month_* province_n_* i.ethnicity i.education female i.survey_taker_id"
+global se "cluster modate"	
+
+
+#delimit ;
+global list1 "head_ache mal_appetite sleeplessness scared shaking nervous 
+indigestion unfocused unhappy weepy unwillingness undecisiveness disrupted useless 
+uninterest worthless suicidal usually_tired stomach_discomfort quickly_tired";
+
+global list2 "head_ache shaking indigestion stomach_discomfort"; 
+
+global list3 "mal_appetite sleeplessness scared nervous unfocused 
+unhappy weepy unwillingness undecisiveness disrupted useless uninterest 
+worthless suicidal usually_tired quickly_tired";
+
+global list4 "religious daily_pray practice_the_book virus_god_sent";
+#delimit cr
+
+
+
+**Indices following Asher and Novasad, who follow Anderson:
+
+/* create reverse treatment dummy, where 1 = non-treated. this will be
+fed into the index creation program so non-treated villages are used
+as the normalizing standard deviation */
+gen controldummy = 0 
+replace controldummy = 1 if before1955 == 0 
+
+/* generate indices for main sample. NOTE - the egen function
+weightave2 function comes from _gweightave2.ado - the .ado file will
+be read into stata when it's in the working directory of the do file
+that calls it. however - it is better practice to put it in your
+personal ado path - which is ~/ado/personal. this function was sent
+from Bilal Siddiqi to Sam Asher, based on Anderson (2008): Multiple
+Inference and Gender Differences in the Effects of Early Intervention:
+A Reevaluation of the Abecedarian, Perry Preschool, and Early Training
+Projects. */
+
+**Note: These normalization makes sure that the control group mean is zero in the regressions.
+egen z_depression = weightave2($list1), normby(controldummy)
+egen z_somatic= weightave2($list2), normby(controldummy)
+egen z_nonsomatic = weightave2($list3), normby(controldummy)
+egen z_religion = weightave2($list4), normby(controldummy)
+
+egen sum_srq=rowtotal($list1)
+
+foreach x in $list1{
+replace z_depression = . if `x' == .
+}
+
+foreach x in $list2{
+replace z_somatic = . if `x' == .
+}
+
+foreach x in $list3{
+replace z_nonsomatic = . if `x' == .
+}
+
+foreach x in $list4{
+replace z_religion = . if `x' == .
+}
+
+foreach x in $list1{
+replace sum_srq = . if `x' == .
+}
+
+
+*Label the variables
+
+label var z_depression "Mental distress index"
+label var z_nonsomatic "Nonsomatic symptoms of distress index"
+label var z_somatic "Somatic symptoms of distress index"
+label var sum_srq "Sum of yes answers in SRQ-20"
+
+
+label var highschool "Completed high school"
+label var illiterate "Illiterate"
+label var female "Female"
+label var married "Married"
+label var widowed_separated "Widowed or separated"
+label var non_turk "Non-Turkish"
+label var pre_covid_hhsize "Pre-Covid-19 household size"
+label var psych_support "Ever received psychological support"
+label var chronic_disease "Has a chronic disease"
+label var outside_week "Days outside last week"
+label var under_curfew "Under curfew"
+label var never_out "Never goes out"
+label var paid_employment "Paid employed"
+label var total_employment "Paid or unpaid employed"
+label var job_to_return "Has a job but could not attend last week"
+label var money_as_usual "Has money for usual needs"
+label var money_distressed "Worried about spending money"
+label var lim_social_interaction "Limited social interaction"
+label var limited_physical_act "Limited physical activity"
+label var hh_size "Current household size"
+label var conflict "Conflict with a household member"
+
+eststo clear
+
+tabstat highschool illiterate female married widowed_separated non_turk pre_covid_hhsize psych_support ///
+		chronic_disease  outside_week under_curfew never_out paid_employment total_employment job_to_return money_as_usual ///
+		money_distressed lim_social_interaction limited_physical_act hh_size conflict, ///
+		stat(mean sd min max n) format(%9.2f) long col(stat)
+		
+fsum highschool illiterate female married widowed_separated non_turk pre_covid_hhsize psych_support ///
+		chronic_disease  outside_week under_curfew never_out paid_employment total_employment job_to_return money_as_usual ///
+		money_distressed lim_social_interaction limited_physical_act hh_size conflict, /// 
+		stat(mean sd min max n) label
+
+fsum highschool illiterate female married widowed_separated non_turk pre_covid_hhsize psych_support ///
+		chronic_disease  outside_week under_curfew never_out paid_employment total_employment job_to_return money_as_usual ///
+		money_distressed lim_social_interaction limited_physical_act hh_size conflict, /// 
+		stat(mean sd min max n) uselabel
+
+
+label var head_ache "Have you often had headaches?"
+label var mal_appetite "Has your appetite been poor?"
+label var sleeplessness "Have you slept badly?"
+label var scared "Have you been easily frightened?"
+label var shaking "Have you had shaking hands?"
+label var nervous "Have you felt nervous, tense, or worried?"
+label var indigestion "Has your digestion been poor?"
+label var unfocused "Have you had trouble in thinking clearly?"
+label var unhappy "Have you felt unhappy?"
+label var weepy "Have you cried more often than usual?"
+label var unwillingness "Have you found it difficult to enjoy your daily activities?"
+label var undecisiveness "Have you found it difficult to make decisions?"
+label var disrupted "Has your daily work suffered?"
+label var useless "Have you been unable to play a useful part in life?"
+label var uninterest "Have you lost interest in things?"
+label var worthless "Have you felt that you are a worthless person?"
+label var suicidal "Has the thought of ending your life been on your mind?"
+label var usually_tired "Have you felt tired all the time?"
+label var stomach_discomfort "Have you had uncomfortable feelings in your stomach?"
+label var quickly_tired "Have you gotten tired easily?"
+
+eststo clear
+
+tabstat head_ache mal_appetite sleeplessness scared shaking nervous indigestion  ///
+		unfocused unhappy weepy unwillingness undecisiveness disrupted useless  ///
+		uninterest worthless suicidal usually_tired stomach_discomfort quickly_tired,  ///
+		stat(mean sd min max n) format(%9.2f) long col(stat)
+			
+fsum head_ache mal_appetite sleeplessness scared shaking nervous indigestion  ///
+		unfocused unhappy weepy unwillingness undecisiveness disrupted useless  ///
+		uninterest worthless suicidal usually_tired stomach_discomfort quickly_tired,  ///
+		stat(mean sd min max n) label
+
+fsum head_ache mal_appetite sleeplessness scared shaking nervous indigestion  ///
+		unfocused unhappy weepy unwillingness undecisiveness disrupted useless  ///
+		uninterest worthless suicidal usually_tired stomach_discomfort quickly_tired,  ///
+		stat(mean sd min max n) uselabel		
+
+
+
+***Table 1
+
+eststo clear
+
+foreach x in outside_week under_curfew never_out{
+	xi: rdrobust `x' dif, covs(di1* $contr) vce($se) kernel(uniform) 
+	sum `x' if dif <0 & dif>= e(b_l)
+	estadd scalar outcome_mean = r(mean)
+	eststo h1_`x'
+}
+
+
+foreach x in outside_week under_curfew never_out {
+	estout h1_`x' using "output/REPBWselect_`x'.tex", ///
+			replace style(tex) collabels(, none) label varlabels(dif "Month born before or after 1955") cells(b(fmt(%9.3f)) se(par))    ///
+			 mlabels(, none) stats(tau_bc se_tau_rb pv_rb N_b_l N_b_r outcome_mean b_l, fmt(%9.3f %9.3f %9.3f %9.0g %9.0g %9.2f %9.0g) ///
+			labels("Robust point estimate" "Robust standard error" " " "\hspace{0.5 cm} Observations (left)" "\hspace{0.5 cm} Observations (right)" "\hspace{0.5 cm} Control group mean"  " \hspace{0.5 cm}Bandwidth") ///
+			layout(@ @)) 
+}
+
+eststo clear
+local bw = 17
+
+
+foreach x in outside_week under_curfew never_out{
+	xi: rdrobust `x' dif if inrange(dif,-`bw',`bw'), covs(di1* $contr) vce($se) kernel(uniform) h(`bw')  
+	sum `x' if e(sample) & dif<0
+	estadd scalar outcome_mean = r(mean)
+	eststo h1_`x'
+}
+
+*b 30
+
+local bw = 30
+foreach x in outside_week under_curfew never_out{
+	xi: rdrobust `x' dif if inrange(dif,-`bw',`bw'), covs(di1* $contr) vce($se) kernel(uniform) h(`bw') 
+	sum `x' if e(sample) & dif<0
+	estadd scalar outcome_mean = r(mean)
+	eststo h2_`x'
+}
+
+*bw 45
+
+local bw = 45
+foreach x in outside_week under_curfew never_out{
+	xi: rdrobust `x' dif if inrange(dif,-`bw',`bw'), covs(di1* $contr) vce($se) kernel(uniform) h(`bw') 
+	sum `x' if e(sample) & dif<0
+	estadd scalar outcome_mean = r(mean)
+	eststo h3_`x'
+}
+
+
+*bw 60
+
+local bw = 60
+foreach x in outside_week under_curfew never_out{
+	xi: rdrobust `x' dif if inrange(dif,-`bw',`bw'), covs(di1* $contr) vce($se) kernel(uniform) h(`bw') 
+	sum `x' if e(sample) & dif<0
+	estadd scalar outcome_mean = r(mean)
+	eststo h4_`x'
+}
+
+
+foreach x in outside_week under_curfew never_out{
+	estout h1_`x' h2_`x' h3_`x' h4_`x'  using "output/REPtable1_`x'.tex", ///
+			replace style(tex) collabels(, none) label varlabels(dif "Month born before or after 1955") cells(b(fmt(%9.3f)) se(par))    ///
+			 mlabels(, none) stats(tau_bc se_tau_rb pv_rb N outcome_mean, fmt(%9.3f %9.3f %9.3f %9.0g %9.2f) ///
+			labels("Robust point estimate" "Robust standard error" " ""\hspace{0.5 cm} Observations" "\hspace{0.5 cm} Control group mean") ///
+			layout(@ @))  
+}
+
+
+**Table 2 
+eststo clear
+
+foreach x in z_depression z_somatic z_nonsomatic sum_srq{
+	xi: rdrobust `x' dif , covs(di1* $contr) vce($se) kernel(uniform) 
+	sum `x' if dif <0 & dif>= e(b_l)
+	estadd scalar outcome_mean = r(mean)
+	eststo h1_`x'
+}
+
+foreach x in z_depression z_somatic z_nonsomatic sum_srq{
+	estout h1_`x' using "output/REPBWselect_`x'.tex", ///
+			replace style(tex) collabels(, none) label varlabels(dif "Month born before or after 1955") cells(b(fmt(%9.3f)) se(par))    ///
+			 mlabels(, none) stats(tau_bc se_tau_rb pv_rb N_b_l N_b_r outcome_mean  b_l, fmt(%9.3f %9.3f %9.3f %9.0g %9.0g %9.2f  %9.0g) ///
+			labels("Robust point estimate" "Robust standard error" " " "\hspace{0.5 cm} Observations (left)" "\hspace{0.5 cm} Observations (right)" "\hspace{0.5 cm} Control group mean" " \hspace{0.5 cm} Bias Bandwidth") ///
+			layout(@ @)) 
+}
+
+
+local bw = 17
+eststo clear
+
+foreach x in z_depression z_somatic z_nonsomatic sum_srq{
+	xi: rdrobust `x' dif if inrange(dif,-`bw',`bw'), covs(di1* $contr) vce($se) kernel(uniform) h(`bw') 
+	sum `x' if e(sample) & dif<0
+	estadd scalar outcome_mean = r(mean)
+	eststo h1_`x'
+}
+
+*b 30
+
+local bw = 30
+foreach x in z_depression z_somatic z_nonsomatic sum_srq{
+	xi: rdrobust `x' dif, covs(di1* $contr) vce($se) kernel(uniform) h(`bw')
+	sum `x' if e(sample) & dif<0
+	estadd scalar outcome_mean = r(mean)
+	eststo h2_`x'
+}
+
+*bw 45
+
+local bw = 45
+foreach x in z_depression z_somatic z_nonsomatic sum_srq{
+	xi: rdrobust `x' dif if inrange(dif,-`bw',`bw'),covs(di1* $contr) vce($se) kernel(uniform) h(`bw') 
+	sum `x' if e(sample) & dif<0
+	estadd scalar outcome_mean = r(mean)
+	eststo h3_`x'
+}
+
+
+*bw 60
+
+local bw = 60
+foreach x in z_depression z_somatic z_nonsomatic sum_srq{
+	xi: rdrobust `x' dif if inrange(dif,-`bw',`bw'), covs(di1* $contr) vce($se) kernel(uniform) h(`bw') 
+	sum `x' if e(sample) & dif<0
+	estadd scalar outcome_mean = r(mean)
+	eststo h4_`x'
+}
+
+
+foreach x in z_depression z_somatic z_nonsomatic sum_srq{
+	estout h1_`x' h2_`x' h3_`x' h4_`x'  using "output/REPtable2_`x'.tex", ///
+			replace style(tex) collabels(, none) label varlabels(dif "Month born before or after 1955") cells(b(fmt(%9.3f)) se(par))  ///
+			 mlabels(, none) stats(tau_bc se_tau_rb pv_rb N outcome_mean, fmt(%9.3f %9.3f %9.3f %9.0g %9.2f) ///
+			labels("Robust point estimate" "Robust standard error"  " " "\hspace{0.5 cm} Observations" "\hspace{0.5 cm} Control group mean") ///
+			layout(@ @)) $slvl 
+}
+
+
+*table 3
+
+eststo clear
+
+foreach x in paid_employment total_employment job_to_return money_as_usual money_distressed hh_size conflict limited_physical_act lim_social_interaction{
+	xi: rdrobust `x' dif, covs(di1* $contr) vce($se) kernel(uniform) 
+	sum `x' if dif <0 & dif>= e(b_l)
+	estadd scalar outcome_mean = r(mean)
+	eststo h1_`x'
+}
+
+foreach x in paid_employment total_employment job_to_return money_as_usual money_distressed hh_size conflict limited_physical_act lim_social_interaction{
+	estout h1_`x' using "output/REPBWselect_`x'.tex", ///
+			replace style(tex) collabels(, none) label varlabels(dif "Month born before or after 1955") cells(b(fmt(%9.3f)) se(par))    ///
+			 mlabels(, none) stats(tau_bc se_tau_rb pv_rb N_b_l N_b_r outcome_mean b_l, fmt(%9.3f %9.3f %9.3f %9.0g %9.0g %9.2f %9.0g) ///
+			labels("Robust point estimate" "Robust standard error" "" "\hspace{0.5 cm} Observations (left)" "\hspace{0.5 cm} Observations (right)" "\hspace{0.5 cm} Control group mean" " \hspace{0.5 cm} Bandwidth") ///
+			layout(@ @))  
+}
+
+local bw = 17
+eststo clear
+
+foreach x in  paid_employment total_employment job_to_return money_as_usual money_distressed hh_size conflict limited_physical_act lim_social_interaction{
+	xi: rdrobust `x' dif if inrange(dif,-`bw',`bw'), covs(di1* $contr) vce($se) kernel(uniform) h(`bw')
+	sum `x' if e(sample) & dif<0
+	estadd scalar outcome_mean = r(mean)
+	eststo h1_`x'
+}
+
+*b 30
+
+local bw = 30
+foreach x in  paid_employment total_employment job_to_return money_as_usual money_distressed hh_size conflict limited_physical_act lim_social_interaction{
+	xi: rdrobust `x' dif if inrange(dif,-`bw',`bw'), covs(di1* $contr) vce($se) kernel(uniform) h(`bw')
+	sum `x' if e(sample) & dif<0
+	estadd scalar outcome_mean = r(mean)
+	eststo h2_`x'
+}
+
+*bw 45
+
+local bw = 45
+foreach x in  paid_employment total_employment job_to_return money_as_usual money_distressed hh_size conflict limited_physical_act lim_social_interaction{
+	xi: rdrobust `x' dif if inrange(dif,-`bw',`bw'), covs(di1* $contr) vce($se) kernel(uniform) h(`bw')
+	sum `x' if e(sample) & dif<0
+	estadd scalar outcome_mean = r(mean)
+	eststo h3_`x'
+}
+
+
+*bw 60
+
+local bw = 60
+foreach x in  paid_employment total_employment job_to_return money_as_usual money_distressed hh_size conflict limited_physical_act lim_social_interaction{
+	xi: rdrobust `x' dif if inrange(dif,-`bw',`bw'), covs(di1* $contr) vce($se) kernel(uniform) h(`bw')
+	sum `x' if e(sample) & dif<0
+	estadd scalar outcome_mean = r(mean)
+	eststo h4_`x'
+}
+
+
+foreach x in  paid_employment total_employment job_to_return money_as_usual money_distressed hh_size conflict limited_physical_act lim_social_interaction{
+	estout h1_`x' h2_`x' h3_`x' h4_`x'  using "output/REPtable3_`x'.tex", ///
+			replace style(tex) collabels(, none) label varlabels(dif "Month born before or after 1955") cells(b(fmt(%9.3f)) se(par))    ///
+			 mlabels(, none) stats(tau_bc se_tau_rb pv_rb N outcome_mean, fmt(%9.3f %9.3f %9.3f %9.0g %9.2f ) ///
+			labels("Robust point estimate" "Robust standard error" "" "\hspace{0.5 cm} Observations" "\hspace{0.5 cm} Control group mean") ///
+			layout(@ @))  
+}
+
+***Table 5 
+ 
+eststo clear
+
+
+foreach x in z_depression z_somatic z_nonsomatic sum_srq{
+	xi: rdrobust `x' dif if female ==1 , covs(di1* month_* province_n_* i.ethnicity i.education i.survey_taker_id) vce($se) kernel(uniform) 
+	sum `x' if dif <0 & dif>= e(b_l)
+	estadd scalar outcome_mean = r(mean)
+	eststo h1_`x'
+}
+
+foreach x in z_depression z_somatic z_nonsomatic sum_srq{
+	estout h1_`x' using "output/REPtable5female_`x'.tex", ///
+			replace style(tex) collabels(, none) label varlabels(dif "Month born before or after 1955") cells(b(fmt(%9.3f)) se(par))    ///
+			 mlabels(, none) stats(tau_bc se_tau_rb pv_rb N_b_l N_b_r outcome_mean  b_l, fmt(%9.3f %9.3f %9.3f %9.0g %9.0g %9.2f  %9.0g) ///
+			labels("Robust point estimate" "Robust standard error" " " "\hspace{0.5 cm} Observations (left)" "\hspace{0.5 cm} Observations (right)" "\hspace{0.5 cm} Control group mean" " \hspace{0.5 cm} Bias Bandwidth") ///
+			layout(@ @)) 
+}
+
+
+***Table 6
+ 
+eststo clear
+
+
+foreach x in z_depression z_somatic z_nonsomatic sum_srq{
+	xi: rdrobust `x' dif if female ==0 , covs(di1* month_* province_n_* i.ethnicity i.education i.survey_taker_id) vce($se) kernel(uniform) 
+	sum `x' if dif <0 & dif>= e(b_l)
+	estadd scalar outcome_mean = r(mean)
+	eststo h1_`x'
+}
+
+foreach x in z_depression z_somatic z_nonsomatic sum_srq{
+	estout h1_`x' using "output/REPtable5male_`x'.tex", ///
+			replace style(tex) collabels(, none) label varlabels(dif "Month born before or after 1955") cells(b(fmt(%9.3f)) se(par))    ///
+			 mlabels(, none) stats(tau_bc se_tau_rb pv_rb N_b_l N_b_r outcome_mean  b_l, fmt(%9.3f %9.3f %9.3f %9.0g %9.0g %9.2f  %9.0g) ///
+			labels("Robust point estimate" "Robust standard error" " " "\hspace{0.5 cm} Observations (left)" "\hspace{0.5 cm} Observations (right)" "\hspace{0.5 cm} Control group mean" " \hspace{0.5 cm} Bias Bandwidth") ///
+			layout(@ @)) 
+}
+
+
+
+
+```
+
+### `ICPSR_183165-V1.1/Replication Analysis - 3 Adj q Table 6.do`
+```stata
+***Last Updated: 22/11/2022 using Stata17
+/*==========================================*
+Paper:			Mental Health Costs of Lockdowns: Evidence from Age-specific Curfews in Turkey *REPLICATON*
+
+Purpose:        Multiple hypothesis adjustment for Table 6
+
+To re-run our analysis, please install a folder "Mental Health". There should be 4 subfolders in order for do-files to run:
+
+"originals"
+"do files"
+"graphs"
+"output"
+
+Before you run this do file, please change the path of the working directory in line 21 and run all of the data cleaning do files.
+*==========================================*/
+
+**# The purpose of this do file is to generate the various q values for the paper, which are used to test for False Discovery Rate based off Anderson (2008) "Multiple Inference and Gender Differences in the Effects of Early Intervention: A Reevaluation of the Abecedarian, Perry Preschool, and Early Training Projects".
+
+clear
+set more off 
+set matsize 8000
+cap log close
+
+
+**# The following section imports the data file, and classifies certain variables.
+
+*global dir="XXX\Mental Health"
+cd "$dir"
+
+use "originals\konda_data_for_analysis.dta", clear
+
+tab education, gen(education_)
+tab ethnicity, gen(ethnicity_)
+tab survey_taker_id, gen(survey_taker_id_)
+
+global contr="month_* province_n_* i.ethnicity i.education i.survey_taker_id"
+global se "cluster modate"	
+global slvl "starlevels(* 0.10 ** 0.05 *** 0.01)"
+
+#delimit ;
+global list1 "head_ache mal_appetite sleeplessness scared shaking nervous 
+indigestion unfocused unhappy weepy unwillingness undecisiveness disrupted useless 
+uninterest worthless suicidal usually_tired stomach_discomfort quickly_tired";
+
+global list2 "head_ache shaking indigestion stomach_discomfort"; 
+
+global list3 "mal_appetite sleeplessness scared nervous unfocused 
+unhappy weepy unwillingness undecisiveness disrupted useless uninterest 
+worthless suicidal usually_tired quickly_tired";
+
+global list4 "religious daily_pray practice_the_book virus_god_sent";
+#delimit cr
+
+
+**# The following section lays out the commands to create indeces for the outcome variables of the survey. The methodology and reasoning behind creating these indices is explained in Anderson (2008). The weightave2 function is based of the Anderson methodology, but is provided in the accesible data files of Asher and Novasad (2020). The ado file needs to be downloaded and added to the personal file collection of the computer the code is being run on.
+
+**Indices following Asher and Novasad, who follow Anderson:
+
+/* create reverse treatment dummy, where 1 = non-treated. this will be
+fed into the index creation program so non-treated villages are used
+as the normalizing standard deviation */
+gen controldummy = 0 
+replace controldummy = 1 if before1955 == 0 
+
+/* generate indices for main sample. NOTE - the egen function
+weightave2 function comes from _gweightave2.ado - the .ado file will
+be read into stata when it's in the working directory of the do file
+that calls it. however - it is better practice to put it in your
+personal ado path - which is ~/ado/personal. this function was sent
+from Bilal Siddiqi to Sam Asher, based on Anderson (2008): Multiple
+Inference and Gender Differences in the Effects of Early Intervention:
+A Reevaluation of the Abecedarian, Perry Preschool, and Early Training
+Projects. */
+
+**Note: These normalization makes sure that the control group mean is zero in the regressions.
+egen z_depression = weightave2($list1), normby(controldummy)
+egen z_somatic= weightave2($list2), normby(controldummy)
+egen z_nonsomatic = weightave2($list3), normby(controldummy)
+egen z_religion = weightave2($list4), normby(controldummy)
+
+egen sum_srq=rowtotal($list1)
+
+**# The following creates missing values in each of the indices if any value in the variables that make up that index are missing 
+
+foreach x in $list1{
+replace z_depression = . if `x' == .
+}
+
+foreach x in $list2{
+replace z_somatic = . if `x' == .
+}
+
+foreach x in $list3{
+replace z_nonsomatic = . if `x' == .
+}
+
+foreach x in $list4{
+replace z_religion = . if `x' == .
+}
+
+foreach x in $list1{
+replace sum_srq = . if `x' == .
+}
+
+
+********TABLE 1: SUMMARY STATISTICS
+label var highschool "Completed high school"
+label var illiterate "Illiterate"
+label var female "Female"
+label var married "Married"
+label var widowed_separated "Widowed or separated"
+label var non_turk "Non-Turkish"
+label var pre_covid_hhsize "Pre-Covid-19 household size"
+label var psych_support "Ever received psychological support"
+label var chronic_disease "Has a chronic disease"
+label var outside_week "Days outside last week"
+label var under_curfew "Under curfew"
+label var never_out "Never goes out"
+label var paid_employment "Paid employed"
+label var total_employment "Paid or unpaid employed"
+label var job_to_return "Has a job but could not attend last week"
+label var money_as_usual "Has money for usual needs"
+label var money_distressed "Worried about spending money"
+label var lim_social_interaction "Limited social interaction"
+label var limited_physical_act "Limited physical activity"
+label var hh_size "Current household size"
+label var conflict "Conflict with a household member"
+
+
+
+********TABLE 2: LIST OF SRQ-20 QUESTIONS AND THEIR SUMMARY STATISTICS
+
+label var head_ache "Have you often had headaches?"
+label var mal_appetite "Has your appetite been poor?"
+label var sleeplessness "Have you slept badly?"
+label var scared "Have you been easily frightened?"
+label var shaking "Have you had shaking hands?"
+label var nervous "Have you felt nervous, tense, or worried?"
+label var indigestion "Has your digestion been poor?"
+label var unfocused "Have you had trouble in thinking clearly?"
+label var unhappy "Have you felt unhappy?"
+label var weepy "Have you cried more often than usual?"
+label var unwillingness "Have you found it difficult to enjoy your daily activities?"
+label var undecisiveness "Have you found it difficult to make decisions?"
+label var disrupted "Has your daily work suffered?"
+label var useless "Have you been unable to play a useful part in life?"
+label var uninterest "Have you lost interest in things?"
+label var worthless "Have you felt that you are a worthless person?"
+label var suicidal "Has the thought of ending your life been on your mind?"
+label var usually_tired "Have you felt tired all the time?"
+label var stomach_discomfort "Have you had uncomfortable feelings in your stomach?"
+label var quickly_tired "Have you gotten tired easily?"
+
+global outsetT3 "outside_week under_curfew never_out"
+global outsetT4 "z_depression z_somatic z_nonsomatic sum_srq"
+global outsetT5A "paid_employment total_employment job_to_return money_as_usual money_distressed" 
+global outsetT5B "limited_physical_act lim_social_interaction"
+global outsetT5C "hh_size conflict"
+global outsetT6 "curfew_support_d gov_support_d"
+
+foreach x in $outsetT4 {
+	xi: qui rdrobust `x' dif if female ==1 , covs(di1* $contr) vce($se) kernel(uniform)
+	g N__`x'__1 = e(N)
+	g b__`x'__1 = e(tau_bc)
+	g se__`x'__1 = e(se_tau_bc)
+	g p__`x'__1 = e(pv_rb)
+	sum `x' if e(sample) & dif <0
+	g M__`x'__1 = r(mean)
+}
+
+foreach x in $outsetT4 {
+	xi: qui rdrobust `x' dif if female ==0 , covs(di1* $contr) vce($se) kernel(uniform)
+	g N__`x'__0 = e(N)
+	g b__`x'__0 = e(tau_bc)
+	g se__`x'__0 = e(se_tau_bc)
+	g p__`x'__0 = e(pv_rb)
+	sum `x' if e(sample) & dif <0
+	g M__`x'__0 = r(mean)
+}
+
+keep b__* se__* p__* N__* M__* 
+keep if _n==1 
+xpose, clear varname
+rename v1 v_scalar
+split _varname, p("__") 
+drop _varname
+rename _varname1 coef_name  
+rename _varname2 vname 
+rename _varname3 bw
+destring bw, replace 
+
+* The following creates a group variable that relates a number to each variable depending on which group of index variables the variable belongs to. It allows one to seperate the p values into their respective tables in the paper.
+
+g group = . 
+
+foreach x in $outsetT3{ 
+replace group = 1 if vname=="`x'"	
+}
+
+foreach x in $outsetT4{ 
+replace group = 2 if vname=="`x'"	
+}
+
+foreach x in $outsetT5A{ 
+replace group = 3 if vname=="`x'"	
+}
+
+foreach x in $outsetT5B{ 
+replace group = 4 if vname=="`x'"	
+}
+
+foreach x in $outsetT5C{ 
+replace group = 5 if vname=="`x'"	
+}
+
+foreach x in $outsetT6{ 
+replace group = 6 if vname=="`x'"	
+}
+
+tempfile t1 
+save `t1' 
+
+foreach x in 1 2 3 4 5 6 { 
+foreach y in 1 0{ 
+use `t1', clear 
+keep if group==`x' & bw==`y' & coef_name=="p"
+g pval = v_scalar
+do "do files/fdr_sharpened_qvalues_v02.do" 
+tempfile t_`x'_`y'
+save `t_`x'_`y''
+}
+}
+
+clear all 
+
+
+**# The following section creates tables for the p and q values and exports the output. The q values can be found in the excel file under coef_name = q, with the value in the v_scalar column. "version 16" command is added before the bysort command in this do file, as bysort is no longer supported by Stata version 17.
+
+foreach x in 1 2 3 4 5 6 { 
+foreach y in 1 0{ 
+append using `t_`x'_`y''	
+}
+}
+
+rename bky06_qval q
+replace pval = round(pval, 0.001)
+
+
+*see the p and q-values in table order for TABLES 3-6
+version 16
+bysort group: table vname bw, c(mean pval mean q)
+
+
+
+
+***Rest of the code is to output the results into an Excel file*** 
+keep coef_name vname group bw q 
+replace coef_name = "q"
+rename q v_scalar
+
+append using `t1'
+
+sort coef_name vname group bw
+
+
+export excel using "output\REPtable5MHC_sharpened_q_main.xlsx", firstrow(variables) replace
+
+```
+
+### `ICPSR_183165-V1.1/Replication Analysis - 3 Adj q Tables 1-3.do`
+```stata
+***Last Updated: 22/11/2022 using Stata17
+/*==========================================*
+Paper:			Mental Health Costs of Lockdowns: Evidence from Age-specific Curfews in Turkey *REPLICATON*
+
+Purpose:        Multiple hypothesis adjustment for Tables 1-3
+
+To re-run our analysis, please install a folder "Mental Health". There should be 4 subfolders in order for do-files to run:
+
+"originals"
+"do files"
+"graphs"
+"output"
+
+Before you run this do file, please change the path of the working directory in line 21 and run all of the data cleaning do files.
+*==========================================*/
+
+**# The purpose of this do file is to generate the various q values for the paper, which are used to test for False Discovery Rate based off Anderson (2008) "Multiple Inference and Gender Differences in the Effects of Early Intervention: A Reevaluation of the Abecedarian, Perry Preschool, and Early Training Projects".
+
+clear
+set more off 
+set matsize 8000
+cap log close
+
+
+**# The following section imports the data file, and classifies certain variables.
+
+*global dir="XXX\Mental Health"
+cd "$dir"
+
+use "originals\konda_data_for_analysis.dta", clear
+
+tab education, gen(education_)
+tab ethnicity, gen(ethnicity_)
+tab survey_taker_id, gen(survey_taker_id_)
+
+global contr="month_* province_n_* i.ethnicity i.education female i.survey_taker_id"
+global se "cluster modate"	
+global slvl "starlevels(* 0.10 ** 0.05 *** 0.01)"
+
+#delimit ;
+global list1 "head_ache mal_appetite sleeplessness scared shaking nervous 
+indigestion unfocused unhappy weepy unwillingness undecisiveness disrupted useless 
+uninterest worthless suicidal usually_tired stomach_discomfort quickly_tired";
+
+global list2 "head_ache shaking indigestion stomach_discomfort"; 
+
+global list3 "mal_appetite sleeplessness scared nervous unfocused 
+unhappy weepy unwillingness undecisiveness disrupted useless uninterest 
+worthless suicidal usually_tired quickly_tired";
+
+global list4 "religious daily_pray practice_the_book virus_god_sent";
+#delimit cr
+
+
+**# The following section lays out the commands to create indeces for the outcome variables of the survey. The methodology and reasoning behind creating these indices is explained in Anderson (2008). The weightave2 function is based of the Anderson methodology, but is provided in the accesible data files of Asher and Novasad (2020). The ado file needs to be downloaded and added to the personal file collection of the computer the code is being run on.
+
+**Indices following Asher and Novasad, who follow Anderson:
+
+/* create reverse treatment dummy, where 1 = non-treated. this will be
+fed into the index creation program so non-treated villages are used
+as the normalizing standard deviation */
+gen controldummy = 0 
+replace controldummy = 1 if before1955 == 0 
+
+/* generate indices for main sample. NOTE - the egen function
+weightave2 function comes from _gweightave2.ado - the .ado file will
+be read into stata when it's in the working directory of the do file
+that calls it. however - it is better practice to put it in your
+personal ado path - which is ~/ado/personal. this function was sent
+from Bilal Siddiqi to Sam Asher, based on Anderson (2008): Multiple
+Inference and Gender Differences in the Effects of Early Intervention:
+A Reevaluation of the Abecedarian, Perry Preschool, and Early Training
+Projects. */
+
+**Note: These normalization makes sure that the control group mean is zero in the regressions.
+egen z_depression = weightave2($list1), normby(controldummy)
+egen z_somatic= weightave2($list2), normby(controldummy)
+egen z_nonsomatic = weightave2($list3), normby(controldummy)
+egen z_religion = weightave2($list4), normby(controldummy)
+
+egen sum_srq=rowtotal($list1)
+
+**# The following creates missing values in each of the indices if any value in the variables that make up that index are missing 
+
+foreach x in $list1{
+replace z_depression = . if `x' == .
+}
+
+foreach x in $list2{
+replace z_somatic = . if `x' == .
+}
+
+foreach x in $list3{
+replace z_nonsomatic = . if `x' == .
+}
+
+foreach x in $list4{
+replace z_religion = . if `x' == .
+}
+
+foreach x in $list1{
+replace sum_srq = . if `x' == .
+}
+
+
+********TABLE 1: SUMMARY STATISTICS
+label var highschool "Completed high school"
+label var illiterate "Illiterate"
+label var female "Female"
+label var married "Married"
+label var widowed_separated "Widowed or separated"
+label var non_turk "Non-Turkish"
+label var pre_covid_hhsize "Pre-Covid-19 household size"
+label var psych_support "Ever received psychological support"
+label var chronic_disease "Has a chronic disease"
+label var outside_week "Days outside last week"
+label var under_curfew "Under curfew"
+label var never_out "Never goes out"
+label var paid_employment "Paid employed"
+label var total_employment "Paid or unpaid employed"
+label var job_to_return "Has a job but could not attend last week"
+label var money_as_usual "Has money for usual needs"
+label var money_distressed "Worried about spending money"
+label var lim_social_interaction "Limited social interaction"
+label var limited_physical_act "Limited physical activity"
+label var hh_size "Current household size"
+label var conflict "Conflict with a household member"
+
+
+
+********TABLE 2: LIST OF SRQ-20 QUESTIONS AND THEIR SUMMARY STATISTICS
+
+label var head_ache "Have you often had headaches?"
+label var mal_appetite "Has your appetite been poor?"
+label var sleeplessness "Have you slept badly?"
+label var scared "Have you been easily frightened?"
+label var shaking "Have you had shaking hands?"
+label var nervous "Have you felt nervous, tense, or worried?"
+label var indigestion "Has your digestion been poor?"
+label var unfocused "Have you had trouble in thinking clearly?"
+label var unhappy "Have you felt unhappy?"
+label var weepy "Have you cried more often than usual?"
+label var unwillingness "Have you found it difficult to enjoy your daily activities?"
+label var undecisiveness "Have you found it difficult to make decisions?"
+label var disrupted "Has your daily work suffered?"
+label var useless "Have you been unable to play a useful part in life?"
+label var uninterest "Have you lost interest in things?"
+label var worthless "Have you felt that you are a worthless person?"
+label var suicidal "Has the thought of ending your life been on your mind?"
+label var usually_tired "Have you felt tired all the time?"
+label var stomach_discomfort "Have you had uncomfortable feelings in your stomach?"
+label var quickly_tired "Have you gotten tired easily?"
+
+global outsetT3 "outside_week under_curfew never_out"
+global outsetT4 "z_depression z_somatic z_nonsomatic sum_srq"
+global outsetT5A "paid_employment total_employment job_to_return money_as_usual money_distressed" 
+global outsetT5B "limited_physical_act lim_social_interaction"
+global outsetT5C "hh_size conflict"
+global outsetT6 "curfew_support_d gov_support_d"
+
+foreach x in $outsetT3 $outsetT4 $outsetT5A $outsetT5B $outsetT5C $outsetT6{
+	xi: qui rdrobust `x' dif , covs(di1* $contr) vce($se) kernel(uniform)
+	g p__`x'__1 = e(pv_rb)
+}
+
+foreach x in $outsetT3 $outsetT4 $outsetT5A $outsetT5B $outsetT5C $outsetT6{
+foreach bw in 17 30 45 60{
+	xi: qui rdrobust `x' dif if inrange(dif,-`bw',`bw'), covs(di1* $contr) vce($se) kernel(uniform) h(`bw')
+	g N__`x'__`bw' = e(N)
+	g b__`x'__`bw' = e(tau_bc)
+	g se__`x'__`bw' = e(se_tau_bc)
+	g p__`x'__`bw' = e(pv_rb)
+	sum `x' if e(sample) & dif <0
+	g M__`x'__`bw' = r(mean)
+	
+}
+}
+
+
+keep b__* se__* p__* N__* M__* 
+keep if _n==1 
+xpose, clear varname
+rename v1 v_scalar
+split _varname, p("__") 
+drop _varname
+rename _varname1 coef_name  
+rename _varname2 vname 
+rename _varname3 bw
+destring bw, replace 
+
+* The following creates a group variable that relates a number to each variable depending on which group of index variables the variable belongs to. It allows one to seperate the p values into their respective tables in the paper.
+
+g group = . 
+
+foreach x in $outsetT3{ 
+replace group = 1 if vname=="`x'"	
+}
+
+foreach x in $outsetT4{ 
+replace group = 2 if vname=="`x'"	
+}
+
+foreach x in $outsetT5A{ 
+replace group = 3 if vname=="`x'"	
+}
+
+foreach x in $outsetT5B{ 
+replace group = 4 if vname=="`x'"	
+}
+
+foreach x in $outsetT5C{ 
+replace group = 5 if vname=="`x'"	
+}
+
+foreach x in $outsetT6{ 
+replace group = 6 if vname=="`x'"	
+}
+
+tempfile t1 
+save `t1' 
+
+foreach x in 1 2 3 4 5 6 { 
+foreach y in 1 17 30 45 60{ 
+use `t1', clear 
+keep if group==`x' & bw==`y' & coef_name=="p"
+g pval = v_scalar
+do "do files/fdr_sharpened_qvalues_v02.do" 
+tempfile t_`x'_`y'
+save `t_`x'_`y''
+}
+}
+
+clear all 
+
+
+**# The following section creates tables for the p and q values and exports the output. The q values can be found in the excel file under coef_name = q, with the value in the v_scalar column. "version 16" command is added before the bysort command in this do file, as bysort is no longer supported by Stata version 17.
+
+foreach x in 1 2 3 4 5 6 { 
+foreach y in 1 17 30 45 60{ 
+append using `t_`x'_`y''	
+}
+}
+
+rename bky06_qval q
+replace pval = round(pval, 0.001)
+
+
+*see the p and q-values in table order for TABLES 3-6
+version 16
+bysort group: table vname bw, c(mean pval mean q)
+
+
+
+
+***Rest of the code is to output the results into an Excel file*** 
+keep coef_name vname group bw q 
+replace coef_name = "q"
+rename q v_scalar
+
+append using `t1'
+
+sort coef_name vname group bw
+
+
+export excel using "output\REPtable1-3MHC_sharpened_q_main.xlsx", firstrow(variables) replace
+
+```
+
+### `ICPSR_183165-V1.1/Replication Analysis - 3 Adj q Tables 4&5.do`
+```stata
+***Last Updated: 07/12/2021 using Stata17
+/*==========================================*
+Paper:			Mental Health Costs of Lockdowns: Evidence from Age-specific Curfews in Turkey *REPLICATON*
+
+Purpose:        Produce the Multiple hypothesis adjustment for Tables 4 & 5
+
+To re-run our analysis, please install a folder "Mental Health". There should be 4 subfolders in order for do-files to run:
+
+"originals"
+"do files"
+"graphs"
+"output"
+
+Before you run this do file, please change the path of the working directory in line 25, 265 and 507 to run all of the data cleaning do files.
+*==========================================*/
+clear
+set more off 
+set matsize 8000
+cap log close
+
+
+*global dir="XXX\Mental Health"
+cd "$dir"
+
+use "C:\Users\cianh\Documents\College\4th Year\Advanced Econometrics\Mental Health\originals/konda_data_for_analysis.dta", clear
+
+drop if female==0
+
+tab education, gen(education_)
+tab ethnicity, gen(ethnicity_)
+tab survey_taker_id, gen(survey_taker_id_)
+
+global contr="month_* province_n_* i.ethnicity i.education i.survey_taker_id"
+global se "cluster modate"	
+global slvl "starlevels(* 0.10 ** 0.05 *** 0.01)"
+
+#delimit ;
+global list1 "head_ache mal_appetite sleeplessness scared shaking nervous 
+indigestion unfocused unhappy weepy unwillingness undecisiveness disrupted useless 
+uninterest worthless suicidal usually_tired stomach_discomfort quickly_tired";
+
+global list2 "head_ache shaking indigestion stomach_discomfort"; 
+
+global list3 "mal_appetite sleeplessness scared nervous unfocused 
+unhappy weepy unwillingness undecisiveness disrupted useless uninterest 
+worthless suicidal usually_tired quickly_tired";
+
+global list4 "religious daily_pray practice_the_book virus_god_sent";
+#delimit cr
+
+**Indices following Asher and Novasad, who follow Anderson:
+
+/* create reverse treatment dummy, where 1 = non-treated. this will be
+fed into the index creation program so non-treated villages are used
+as the normalizing standard deviation */
+gen controldummy = 0 
+replace controldummy = 1 if before1955 == 0 
+
+/* generate indices for main sample. NOTE - the egen function
+weightave2 function comes from _gweightave2.ado - the .ado file will
+be read into stata when it's in the working directory of the do file
+that calls it. however - it is better practice to put it in your
+personal ado path - which is ~/ado/personal. this function was sent
+from Bilal Siddiqi to Sam Asher, based on Anderson (2008): Multiple
+Inference and Gender Differences in the Effects of Early Intervention:
+A Reevaluation of the Abecedarian, Perry Preschool, and Early Training
+Projects. */
+
+**Note: These normalization makes sure that the control group mean is zero in the regressions.
+egen z_depression = weightave2($list1), normby(controldummy)
+egen z_somatic= weightave2($list2), normby(controldummy)
+egen z_nonsomatic = weightave2($list3), normby(controldummy)
+egen z_religion = weightave2($list4), normby(controldummy)
+
+egen sum_srq=rowtotal($list1)
+
+foreach x in $list1{
+replace z_depression = . if `x' == .
+}
+
+foreach x in $list2{
+replace z_somatic = . if `x' == .
+}
+
+foreach x in $list3{
+replace z_nonsomatic = . if `x' == .
+}
+
+foreach x in $list4{
+replace z_religion = . if `x' == .
+}
+
+foreach x in $list1{
+replace sum_srq = . if `x' == .
+}
+
+
+********TABLE 1: SUMMARY STATISTICS
+label var highschool "Completed high school"
+label var illiterate "Illiterate"
+label var female "Female"
+label var married "Married"
+label var widowed_separated "Widowed or separated"
+label var non_turk "Non-Turkish"
+label var pre_covid_hhsize "Pre-Covid-19 household size"
+label var psych_support "Ever received psychological support"
+label var chronic_disease "Has a chronic disease"
+label var outside_week "Days outside last week"
+label var under_curfew "Under curfew"
+label var never_out "Never goes out"
+label var paid_employment "Paid employed"
+label var total_employment "Paid or unpaid employed"
+label var job_to_return "Has a job but could not attend last week"
+label var money_as_usual "Has money for usual needs"
+label var money_distressed "Worried about spending money"
+label var lim_social_interaction "Limited social interaction"
+label var limited_physical_act "Limited physical activity"
+label var hh_size "Current household size"
+label var conflict "Conflict with a household member"
+
+
+
+********TABLE 2: LIST OF SRQ-20 QUESTIONS AND THEIR SUMMARY STATISTICS
+
+label var head_ache "Have you often had headaches?"
+label var mal_appetite "Has your appetite been poor?"
+label var sleeplessness "Have you slept badly?"
+label var scared "Have you been easily frightened?"
+label var shaking "Have you had shaking hands?"
+label var nervous "Have you felt nervous, tense, or worried?"
+label var indigestion "Has your digestion been poor?"
+label var unfocused "Have you had trouble in thinking clearly?"
+label var unhappy "Have you felt unhappy?"
+label var weepy "Have you cried more often than usual?"
+label var unwillingness "Have you found it difficult to enjoy your daily activities?"
+label var undecisiveness "Have you found it difficult to make decisions?"
+label var disrupted "Has your daily work suffered?"
+label var useless "Have you been unable to play a useful part in life?"
+label var uninterest "Have you lost interest in things?"
+label var worthless "Have you felt that you are a worthless person?"
+label var suicidal "Has the thought of ending your life been on your mind?"
+label var usually_tired "Have you felt tired all the time?"
+label var stomach_discomfort "Have you had uncomfortable feelings in your stomach?"
+label var quickly_tired "Have you gotten tired easily?"
+
+global outsetT3 "outside_week under_curfew never_out"
+global outsetT4 "z_depression z_somatic z_nonsomatic sum_srq"
+global outsetT5A "paid_employment total_employment job_to_return money_as_usual money_distressed" 
+global outsetT5B "limited_physical_act lim_social_interaction"
+global outsetT5C "hh_size conflict"
+global outsetT6 "curfew_support_d gov_support_d"
+
+**q-values for main tables **
+
+eststo clear
+foreach x in $outsetT3 $outsetT4 $outsetT5A $outsetT5B $outsetT5C $outsetT6{
+foreach bw in 17 30 45 60{
+	xi: qui reg `x' before1955 di1* $contr  if inrange(dif,-`bw',`bw'), vce($se)
+	g N__`x'__`bw' = e(N)
+    test before1955
+	g b__`x'__`bw' = _b[before1955]
+	g se__`x'__`bw' = _se[before1955]
+	g p__`x'__`bw' = r(p)
+	sum `x' if e(sample) & before1955 == 0
+	g M__`x'__`bw' = r(mean)
+}
+}
+
+
+
+keep b__* se__* p__* N__* M__* 
+keep if _n==1 
+xpose, clear varname
+rename v1 v_scalar
+split _varname, p("__") 
+drop _varname
+rename _varname1 coef_name  
+rename _varname2 vname 
+rename _varname3 bw
+destring bw, replace 
+
+g group = . 
+
+foreach x in $outsetT3{ 
+replace group = 1 if vname=="`x'"	
+}
+
+foreach x in $outsetT4{ 
+replace group = 2 if vname=="`x'"	
+}
+
+foreach x in $outsetT5A{ 
+replace group = 3 if vname=="`x'"	
+}
+
+foreach x in $outsetT5B{ 
+replace group = 4 if vname=="`x'"	
+}
+
+foreach x in $outsetT5C{ 
+replace group = 5 if vname=="`x'"	
+}
+
+foreach x in $outsetT6{ 
+replace group = 6 if vname=="`x'"	
+}
+
+
+
+tempfile t1 
+save `t1' 
+
+foreach x in 1 2 3 4 5 6 { 
+foreach y in 17 30 45 60{ 
+use `t1', clear 
+keep if group==`x' & bw==`y' & coef_name=="p"
+g pval = v_scalar
+do "do files/fdr_sharpened_qvalues_v02.do" 
+tempfile t_`x'_`y'
+save `t_`x'_`y''
+}
+}
+
+clear all 
+
+
+
+foreach x in 1 2 3 4 5 6 { 
+foreach y in 17 30 45 60{ 
+append using `t_`x'_`y''	
+}
+}
+
+version 16
+rename bky06_qval q
+replace pval = round(pval, 0.001)
+*see the p and q-values in table order 
+bysort group: table vname bw, c(mean pval mean q)
+
+***Rest of the code is to output the results into an Excel file*** 
+
+keep coef_name vname group bw q 
+replace coef_name = "q"
+rename q v_scalar
+
+append using `t1'
+
+sort coef_name vname group bw
+
+
+export excel using "output\REPfemaleMHC_sharpened_q_main.xlsx", firstrow(variables) replace
+
+****************************
+
+clear
+set more off 
+set matsize 8000
+cap log close
+
+
+*global dir="XXX\Mental Health"
+cd "$dir"
+
+
+use "C:\Users\cianh\Documents\College\4th Year\Advanced Econometrics\Mental Health\originals/konda_data_for_analysis.dta", clear
+
+
+
+drop if female==1
+
+tab education, gen(education_)
+tab ethnicity, gen(ethnicity_)
+tab survey_taker_id, gen(survey_taker_id_)
+
+global contr="month_* province_n_* i.ethnicity i.education i.survey_taker_id"
+global se "cluster modate"	
+global slvl "starlevels(* 0.10 ** 0.05 *** 0.01)"
+
+#delimit ;
+global list1 "head_ache mal_appetite sleeplessness scared shaking nervous 
+indigestion unfocused unhappy weepy unwillingness undecisiveness disrupted useless 
+uninterest worthless suicidal usually_tired stomach_discomfort quickly_tired";
+
+global list2 "head_ache shaking indigestion stomach_discomfort"; 
+
+global list3 "mal_appetite sleeplessness scared nervous unfocused 
+unhappy weepy unwillingness undecisiveness disrupted useless uninterest 
+worthless suicidal usually_tired quickly_tired";
+
+global list4 "religious daily_pray practice_the_book virus_god_sent";
+#delimit cr
+
+**Indices following Asher and Novasad, who follow Anderson:
+
+/* create reverse treatment dummy, where 1 = non-treated. this will be
+fed into the index creation program so non-treated villages are used
+as the normalizing standard deviation */
+gen controldummy = 0 
+replace controldummy = 1 if before1955 == 0 
+
+/* generate indices for main sample. NOTE - the egen function
+weightave2 function comes from _gweightave2.ado - the .ado file will
+be read into stata when it's in the working directory of the do file
+that calls it. however - it is better practice to put it in your
+personal ado path - which is ~/ado/personal. this function was sent
+from Bilal Siddiqi to Sam Asher, based on Anderson (2008): Multiple
+Inference and Gender Differences in the Effects of Early Intervention:
+A Reevaluation of the Abecedarian, Perry Preschool, and Early Training
+Projects. */
+
+**Note: These normalization makes sure that the control group mean is zero in the regressions.
+egen z_depression = weightave2($list1), normby(controldummy)
+egen z_somatic= weightave2($list2), normby(controldummy)
+egen z_nonsomatic = weightave2($list3), normby(controldummy)
+egen z_religion = weightave2($list4), normby(controldummy)
+
+egen sum_srq=rowtotal($list1)
+
+foreach x in $list1{
+replace z_depression = . if `x' == .
+}
+
+foreach x in $list2{
+replace z_somatic = . if `x' == .
+}
+
+foreach x in $list3{
+replace z_nonsomatic = . if `x' == .
+}
+
+foreach x in $list4{
+replace z_religion = . if `x' == .
+}
+
+foreach x in $list1{
+replace sum_srq = . if `x' == .
+}
+
+
+********TABLE 1: SUMMARY STATISTICS
+label var highschool "Completed high school"
+label var illiterate "Illiterate"
+label var female "Female"
+label var married "Married"
+label var widowed_separated "Widowed or separated"
+label var non_turk "Non-Turkish"
+label var pre_covid_hhsize "Pre-Covid-19 household size"
+label var psych_support "Ever received psychological support"
+label var chronic_disease "Has a chronic disease"
+label var outside_week "Days outside last week"
+label var under_curfew "Under curfew"
+label var never_out "Never goes out"
+label var paid_employment "Paid employed"
+label var total_employment "Paid or unpaid employed"
+label var job_to_return "Has a job but could not attend last week"
+label var money_as_usual "Has money for usual needs"
+label var money_distressed "Worried about spending money"
+label var lim_social_interaction "Limited social interaction"
+label var limited_physical_act "Limited physical activity"
+label var hh_size "Current household size"
+label var conflict "Conflict with a household member"
+
+
+
+********TABLE 2: LIST OF SRQ-20 QUESTIONS AND THEIR SUMMARY STATISTICS
+
+label var head_ache "Have you often had headaches?"
+label var mal_appetite "Has your appetite been poor?"
+label var sleeplessness "Have you slept badly?"
+label var scared "Have you been easily frightened?"
+label var shaking "Have you had shaking hands?"
+label var nervous "Have you felt nervous, tense, or worried?"
+label var indigestion "Has your digestion been poor?"
+label var unfocused "Have you had trouble in thinking clearly?"
+label var unhappy "Have you felt unhappy?"
+label var weepy "Have you cried more often than usual?"
+label var unwillingness "Have you found it difficult to enjoy your daily activities?"
+label var undecisiveness "Have you found it difficult to make decisions?"
+label var disrupted "Has your daily work suffered?"
+label var useless "Have you been unable to play a useful part in life?"
+label var uninterest "Have you lost interest in things?"
+label var worthless "Have you felt that you are a worthless person?"
+label var suicidal "Has the thought of ending your life been on your mind?"
+label var usually_tired "Have you felt tired all the time?"
+label var stomach_discomfort "Have you had uncomfortable feelings in your stomach?"
+label var quickly_tired "Have you gotten tired easily?"
+
+global outsetT3 "outside_week under_curfew never_out"
+global outsetT4 "z_depression z_somatic z_nonsomatic sum_srq"
+global outsetT5A "paid_employment total_employment job_to_return money_as_usual money_distressed" 
+global outsetT5B "limited_physical_act lim_social_interaction"
+global outsetT5C "hh_size conflict"
+global outsetT6 "curfew_support_d gov_support_d"
+
+**q-values **
+
+eststo clear
+foreach x in $outsetT3 $outsetT4 $outsetT5A $outsetT5B $outsetT5C $outsetT6{
+foreach bw in 17 30 45 60{
+	xi: qui reg `x' before1955 di1* $contr  if inrange(dif,-`bw',`bw'), vce($se)
+	g N__`x'__`bw' = e(N)
+    test before1955
+	g b__`x'__`bw' = _b[before1955]
+	g se__`x'__`bw' = _se[before1955]
+	g p__`x'__`bw' = r(p)
+	sum `x' if e(sample) & before1955 == 0
+	g M__`x'__`bw' = r(mean)
+}
+}
+
+
+
+keep b__* se__* p__* N__* M__* 
+keep if _n==1 
+xpose, clear varname
+rename v1 v_scalar
+split _varname, p("__") 
+drop _varname
+rename _varname1 coef_name  
+rename _varname2 vname 
+rename _varname3 bw
+destring bw, replace 
+
+g group = . 
+
+foreach x in $outsetT3{ 
+replace group = 1 if vname=="`x'"	
+}
+
+foreach x in $outsetT4{ 
+replace group = 2 if vname=="`x'"	
+}
+
+foreach x in $outsetT5A{ 
+replace group = 3 if vname=="`x'"	
+}
+
+foreach x in $outsetT5B{ 
+replace group = 4 if vname=="`x'"	
+}
+
+foreach x in $outsetT5C{ 
+replace group = 5 if vname=="`x'"	
+}
+
+foreach x in $outsetT6{ 
+replace group = 6 if vname=="`x'"	
+}
+
+
+
+tempfile t1 
+save `t1' 
+
+foreach x in 1 2 3 4 5 6 { 
+foreach y in 17 30 45 60{ 
+use `t1', clear 
+keep if group==`x' & bw==`y' & coef_name=="p"
+g pval = v_scalar
+do "do files/fdr_sharpened_qvalues_v02.do" 
+tempfile t_`x'_`y'
+save `t_`x'_`y''
+}
+}
+
+clear all 
+
+
+
+foreach x in 1 2 3 4 5 6 { 
+foreach y in 17 30 45 60{ 
+append using `t_`x'_`y''	
+}
+}
+
+version 16
+rename bky06_qval q
+replace pval = round(pval, 0.001)
+*see the p and q-values in table order 
+bysort group: table vname bw, c(mean pval mean q)
+
+***Rest of the code is to output the results into an Excel file*** 
+
+keep coef_name vname group bw q 
+replace coef_name = "q"
+rename q v_scalar
+
+append using `t1'
+
+sort coef_name vname group bw
+
+
+export excel using "output\REPmaleMHC_sharpened_q_main.xlsx", firstrow(variables) replace
+
+
+**************************************
+
+clear
+set more off 
+set matsize 8000
+cap log close
+
+
+*global dir="XXX\Mental Health"
+cd "$dir"
+
+use "C:\Users\cianh\Documents\College\4th Year\Advanced Econometrics\Mental Health\originals/konda_data_for_analysis.dta", clear
+
+tab education, gen(education_)
+tab ethnicity, gen(ethnicity_)
+tab survey_taker_id, gen(survey_taker_id_)
+
+global contr="month_* province_n_* i.ethnicity i.education i.survey_taker_id"
+global se "cluster modate"	
+global slvl "starlevels(* 0.10 ** 0.05 *** 0.01)"
+
+#delimit ;
+global list1 "head_ache mal_appetite sleeplessness scared shaking nervous 
+indigestion unfocused unhappy weepy unwillingness undecisiveness disrupted useless 
+uninterest worthless suicidal usually_tired stomach_discomfort quickly_tired";
+
+global list2 "head_ache shaking indigestion stomach_discomfort"; 
+
+global list3 "mal_appetite sleeplessness scared nervous unfocused 
+unhappy weepy unwillingness undecisiveness disrupted useless uninterest 
+worthless suicidal usually_tired quickly_tired";
+
+global list4 "religious daily_pray practice_the_book virus_god_sent";
+#delimit cr
+
+**Indices following Asher and Novasad, who follow Anderson:
+
+/* create reverse treatment dummy, where 1 = non-treated. this will be
+fed into the index creation program so non-treated villages are used
+as the normalizing standard deviation */
+gen controldummy = 0 
+replace controldummy = 1 if before1955 == 0 
+
+/* generate indices for main sample. NOTE - the egen function
+weightave2 function comes from _gweightave2.ado - the .ado file will
+be read into stata when it's in the working directory of the do file
+that calls it. however - it is better practice to put it in your
+personal ado path - which is ~/ado/personal. this function was sent
+from Bilal Siddiqi to Sam Asher, based on Anderson (2008): Multiple
+Inference and Gender Differences in the Effects of Early Intervention:
+A Reevaluation of the Abecedarian, Perry Preschool, and Early Training
+Projects. */
+
+**Note: These normalization makes sure that the control group mean is zero in the regressions.
+egen z_depression = weightave2($list1), normby(controldummy)
+egen z_somatic= weightave2($list2), normby(controldummy)
+egen z_nonsomatic = weightave2($list3), normby(controldummy)
+egen z_religion = weightave2($list4), normby(controldummy)
+
+egen sum_srq=rowtotal($list1)
+
+foreach x in $list1{
+replace z_depression = . if `x' == .
+}
+
+foreach x in $list2{
+replace z_somatic = . if `x' == .
+}
+
+foreach x in $list3{
+replace z_nonsomatic = . if `x' == .
+}
+
+foreach x in $list4{
+replace z_religion = . if `x' == .
+}
+
+foreach x in $list1{
+replace sum_srq = . if `x' == .
+}
+
+
+********TABLE 1: SUMMARY STATISTICS
+label var highschool "Completed high school"
+label var illiterate "Illiterate"
+label var female "Female"
+label var married "Married"
+label var widowed_separated "Widowed or separated"
+label var non_turk "Non-Turkish"
+label var pre_covid_hhsize "Pre-Covid-19 household size"
+label var psych_support "Ever received psychological support"
+label var chronic_disease "Has a chronic disease"
+label var outside_week "Days outside last week"
+label var under_curfew "Under curfew"
+label var never_out "Never goes out"
+label var paid_employment "Paid employed"
+label var total_employment "Paid or unpaid employed"
+label var job_to_return "Has a job but could not attend last week"
+label var money_as_usual "Has money for usual needs"
+label var money_distressed "Worried about spending money"
+label var lim_social_interaction "Limited social interaction"
+label var limited_physical_act "Limited physical activity"
+label var hh_size "Current household size"
+label var conflict "Conflict with a household member"
+
+
+
+********TABLE 2: LIST OF SRQ-20 QUESTIONS AND THEIR SUMMARY STATISTICS
+
+label var head_ache "Have you often had headaches?"
+label var mal_appetite "Has your appetite been poor?"
+label var sleeplessness "Have you slept badly?"
+label var scared "Have you been easily frightened?"
+label var shaking "Have you had shaking hands?"
+label var nervous "Have you felt nervous, tense, or worried?"
+label var indigestion "Has your digestion been poor?"
+label var unfocused "Have you had trouble in thinking clearly?"
+label var unhappy "Have you felt unhappy?"
+label var weepy "Have you cried more often than usual?"
+label var unwillingness "Have you found it difficult to enjoy your daily activities?"
+label var undecisiveness "Have you found it difficult to make decisions?"
+label var disrupted "Has your daily work suffered?"
+label var useless "Have you been unable to play a useful part in life?"
+label var uninterest "Have you lost interest in things?"
+label var worthless "Have you felt that you are a worthless person?"
+label var suicidal "Has the thought of ending your life been on your mind?"
+label var usually_tired "Have you felt tired all the time?"
+label var stomach_discomfort "Have you had uncomfortable feelings in your stomach?"
+label var quickly_tired "Have you gotten tired easily?"
+
+global outsetT3 "outside_week under_curfew never_out"
+global outsetT4 "z_depression z_somatic z_nonsomatic sum_srq"
+global outsetT5A "paid_employment total_employment job_to_return money_as_usual money_distressed" 
+global outsetT5B "limited_physical_act lim_social_interaction"
+global outsetT5C "hh_size conflict"
+global outsetT6 "curfew_support_d gov_support_d"
+
+**q-values for main tables**
+
+eststo clear
+foreach x in $outsetT3 $outsetT4 $outsetT5A $outsetT5B $outsetT5C $outsetT6{
+foreach bw in 17 30 45 60{
+	xi: qui reg `x' before1955 di1* $contr  if inrange(dif,-`bw',`bw'), vce($se)
+	g N__`x'__`bw' = e(N)
+    test before1955
+	g b__`x'__`bw' = _b[before1955]
+	g se__`x'__`bw' = _se[before1955]
+	g p__`x'__`bw' = r(p)
+	sum `x' if e(sample) & before1955 == 0
+	g M__`x'__`bw' = r(mean)
+}
+}
+
+
+
+keep b__* se__* p__* N__* M__* 
+keep if _n==1 
+xpose, clear varname
+rename v1 v_scalar
+split _varname, p("__") 
+drop _varname
+rename _varname1 coef_name  
+rename _varname2 vname 
+rename _varname3 bw
+destring bw, replace 
+
+g group = . 
+
+foreach x in $outsetT3{ 
+replace group = 1 if vname=="`x'"	
+}
+
+foreach x in $outsetT4{ 
+replace group = 2 if vname=="`x'"	
+}
+
+foreach x in $outsetT5A{ 
+replace group = 3 if vname=="`x'"	
+}
+
+foreach x in $outsetT5B{ 
+replace group = 4 if vname=="`x'"	
+}
+
+foreach x in $outsetT5C{ 
+replace group = 5 if vname=="`x'"	
+}
+
+foreach x in $outsetT6{ 
+replace group = 6 if vname=="`x'"	
+}
+
+
+
+tempfile t1 
+save `t1' 
+
+foreach x in 1 2 3 4 5 6 { 
+foreach y in 17 30 45 60{ 
+use `t1', clear 
+keep if group==`x' & bw==`y' & coef_name=="p"
+g pval = v_scalar
+do "do files/fdr_sharpened_qvalues_v02.do" 
+tempfile t_`x'_`y'
+save `t_`x'_`y''
+}
+}
+
+clear all 
+
+
+
+foreach x in 1 2 3 4 5 6 { 
+foreach y in 17 30 45 60{ 
+append using `t_`x'_`y''	
+}
+}
+
+version 16
+rename bky06_qval q
+replace pval = round(pval, 0.001)
+*see the p and q-values in table 
+bysort group: table vname bw, c(mean pval mean q)
+
+***Rest of the code is to output the results into an Excel file*** 
+
+keep coef_name vname group bw q 
+replace coef_name = "q"
+rename q v_scalar
+
+append using `t1'
+
+sort coef_name vname group bw
+
+
+export excel using "output\REPNGCMHC_sharpened_q_main.xlsx", firstrow(variables) replace
+
+
+
+```
+
+### `ICPSR_183165-V1.1/5 Appendix Table A1 and Figure A1.R`
+```r
+####################################################################
+
+# ***Last Updated: 2/5/2021 using R
+# /*==========================================*
+#   Paper:			Mental Health Costs of Lockdowns: Evidence from Age-specific Curfews in Turkey
+# 
+# Purpose:        Produce the results in Appendix Table A1 and Figure A1
+# 
+# To re-run our analysis, please install a folder "Mental Health". There should be 4 subfolders in order for programs to run:
+#   
+#   "originals"
+#   "do files"
+#   "graphs"
+#   "output"
+# 
+# *==========================================*/
+
+# To install and open the R packages that you need for this code. 
+need <- c('tidyverse','glue',  'showtext',
+          'ggthemes', 'readstata13', 'stargazer',
+          'ggplot2', 'readxl','dplyr', 'gridExtra', 'lubridate','zoo')
+have <- need %in% rownames(installed.packages()) 
+if(any(!have)) install.packages(need[!have]) 
+invisible(lapply(need, library, character.only=T)) 
+# Change path to wherever you place the models
+# To set up the working directory. 
+script_folder = dirname(rstudioapi::getSourceEditorContext()$path)
+setwd(glue('{script_folder}'))
+rm(list = ls())
+
+
+#uncomment to get Georgia font
+#loadfonts(device="win")
+#loadfonts(device="postscript")
+
+#read the data sets 
+thls <- read.dta13("../originals/HLSF2019_age_restricted.dta", nonint.factors = T)
+
+konda <- read.dta13("../originals/konda_data_for_analysis.dta", nonint.factors=TRUE) %>%
+  filter(non_response==0)
+
+
+##FIGURE A1 - RETIREMENT GRAPH 
+
+g1 <- thls %>%
+  mutate(retired = case_when(ido_neden==36 ~ 1, TRUE ~ 0)) %>%
+  group_by(yas) %>%
+  summarise(pct.retired1 = weighted.mean(retired, faktor), 
+            pct.retired2 = mean(retired)) %>%
+  ggplot() + 
+  geom_point(aes(x=yas, y=pct.retired1*100)) + 
+  geom_line(aes(x=yas, y=pct.retired1*100)) + 
+  geom_vline(xintercept = 65, colour='black', linetype='dashed') +
+  theme_minimal() + 
+  xlab("Age") + 
+  ylab("Percent retired") + 
+  scale_x_continuous(breaks=seq(58, 69, 1)) + 
+  theme(text=element_text(family="Georgia", size=12))
+
+#plot appendix graph A1
+plot(g1)
+
+ggsave("../output/retirement.eps", g1, device="eps", 
+       width = 10, height=5) 
+
+#adjust the variables to make them comparable across data sets
+thls$educ1 <- 0 
+thls$educ1[thls$educ=="okur-yazar olmayan"] <- 1 
+
+thls$educ2 <- 0 
+thls$educ2[thls$educ=="okul bitirmeyen"] <- 1 
+
+thls$educ3 <- 0 
+thls$educ3[thls$educ=="ilkokul"] <- 1 
+
+thls$educ4 <- 0 
+thls$educ4[thls$educ=="orta/ilkogretim"] <- 1 
+
+thls$educ5 <- 0 
+thls$educ5[thls$educ=="genel lise" | 
+            thls$educ=="meslek lisesi"] <- 1 
+
+thls$educ6 <- 0 
+thls$educ6[thls$educ=="yuksekokul, fakulte ve uzeri"] <- 1 
+thls$educ6[thls$educ=="yuksekokul, fakulte ve uzeri"] <- 1 
+
+thls$marital1 <- 0 
+thls$marital1[thls$mar_status=="hi� evlenmedi"] <- 1 
+
+thls$marital2 <- 0 
+thls$marital2[thls$mar_status=="evli"] <- 1 
+
+thls$marital3 <- 0 
+thls$marital3[thls$mar_status=="bosandi"] <- 1 
+
+thls$marital4 <- 0 
+thls$marital4[thls$mar_status=="esi oldu"] <- 1 
+
+thls$female <- 0 
+thls$female[thls$gender=="kadin"] <- 1 
+
+konda$educ1 <- 0 
+konda$educ1[konda$education=="illiterate"] <- 1 
+konda$educ1[is.na(konda$education)] <- NA 
+
+konda$educ2 <- 0 
+konda$educ2[konda$education=="literate but no formal schooling"] <- 1 
+konda$educ2[is.na(konda$education)] <- NA 
+
+konda$educ3 <- 0 
+konda$educ3[konda$education=="primary school"] <- 1 
+konda$educ3[is.na(konda$education)] <- NA 
+
+konda$educ4 <- 0 
+konda$educ4[konda$education=="secondary school"] <- 1 
+konda$educ4[is.na(konda$education)] <- NA 
+
+konda$educ5 <- 0 
+konda$educ5[konda$education=="highschool"] <- 1 
+konda$educ5[is.na(konda$education)] <- NA 
+
+konda$educ6 <- 0 
+konda$educ6[konda$education=="college" | konda$education=="above college"] <- 1 
+konda$educ6[is.na(konda$education)] <- NA 
+
+konda$marital1 <- 0 
+konda$marital1[konda$marital_status=="single"] <- 1 
+konda$marital1[is.na(konda$marital_status)] <- NA 
+
+konda$marital2 <- 0 
+konda$marital2[konda$marital_status=="married"] <- 1 
+konda$marital2[is.na(konda$marital_status)] <- NA 
+
+konda$marital3 <- 0 
+konda$marital3[konda$marital_status=="divorced"] <- 1 
+konda$marital3[is.na(konda$marital_status)] <- NA 
+
+konda$marital4 <- 0 
+konda$marital4[konda$marital_status=="widowed"] <- 1 
+konda$marital4[is.na(konda$marital_status)] <- NA 
+
+
+ 
+t1 <- thls %>%
+  select(age2020, female, starts_with("marital"), starts_with("educ")) %>%
+  select(-c("educ"))
+
+t1d <- psych::describe(t1) %>%
+  select(vars,mean,sd,n) 
+
+t2 <- thls %>%
+  filter(yerlesim_tur<3) %>%
+  select(age2020, female, starts_with("marital"), starts_with("educ")) %>%
+  select(-c("educ")) 
+
+t2d <- psych::describe(t2) %>%
+  select(vars,mean,sd,n) 
+
+
+t3 <- konda %>%
+  select(age, female, starts_with("marital"), starts_with("educ")) %>%
+  select(-c("marital_status","education"))
+
+t3d <- psych::describe(t3) %>%
+  select(vars,mean,sd,n) 
+
+##only konda part 
+print(t3d)
+
+
+label.list1 <- c("Age","Female (%)", "Marital Status (%)",  
+               "Never Married","Married","Divorced","Widowed", 
+               "Education (%)", "Illiterate", "Literate but no formal schooling", 
+               "Primary school","Secondary school", "Highschool" , 
+               "College and above")
+
+
+
+label.list2 <- c("Age","Female (%)",   
+                 "Never Married","Married","Divorced","Widowed", 
+                 "Illiterate", "Literate but no formal schooling", 
+                 "Primary school","Secondary school", "Highschool" , 
+                 "College and above")
+
+
+part1 <- cbind(t1d,t3d, label.list2) 
+
+colnames(part1) <- c("vars1","mean1","sd1", "n1", "vars2",
+                     "mean2","sd2", "n2", "lab")
+
+part2 <- as.data.frame(label.list1) %>%
+  rename(lab=1) %>% mutate(id=row_number()) 
+
+app.table <- merge(part1,part2,by="lab",all.y = TRUE) %>%
+  arrange(id) %>%
+  select(-c("id","vars1", "vars2"))
+
+
+#Print Appendix Table A1
+stargazer(app.table, type="text", summary=FALSE, digits = 2)
+
+
+
+
+
+```
+
+### `ICPSR_183165-V1.1/Replication Analysis - 2 Figures.do`
+```stata
+***Last Updated: 06/12/2022 using Stata17
+/*==========================================*
+Paper:			Mental Health Costs of Lockdowns: Evidence from Age-specific Curfews in Turkey *REPLICATON*
+
+Purpose:        Produce the Figures 1-3 
+
+To re-run our analysis, please install a folder "Mental Health". There should be 4 subfolders in order for do-files to run:
+
+"originals"
+"do files"
+"graphs"
+"output"
+
+Before you run this do file, please change the path of the working directory in line 21 and run all of the data cleaning do files.
+*==========================================*/
+
+
+clear
+set more off 
+set matsize 8000
+cap log close
+
+**# The following section imports the data file, and classifies certain variables.
+
+global dir= "C:\Users\cianh\Documents\College\4th Year\Advanced Econometrics\Mental Health"
+*global dir="XXX\Mental Health"
+cd "$dir"
+
+use "originals\konda_data_for_analysis.dta", clear
+
+global grfont "Georgia"
+
+tab education, gen(education_)
+tab ethnicity, gen(ethnicity_)
+tab survey_taker_id, gen(survey_taker_id_)
+
+#delimit ;
+global list1 "head_ache mal_appetite sleeplessness scared shaking nervous 
+indigestion unfocused unhappy weepy unwillingness undecisiveness disrupted useless 
+uninterest worthless suicidal usually_tired stomach_discomfort quickly_tired";
+
+global list2 "head_ache shaking indigestion stomach_discomfort"; 
+
+global list3 "mal_appetite sleeplessness scared nervous unfocused 
+unhappy weepy unwillingness undecisiveness disrupted useless uninterest 
+worthless suicidal usually_tired quickly_tired";
+
+global list4 "religious daily_pray practice_the_book virus_god_sent";
+#delimit cr
+
+**# The following section lays out the commands to create indeces for the outcome variables of the survey. The methodology and reasoning behind creating these indices is explained in Anderson (2008). The weightave2 function is based of the Anderson methodology, but is provided in the accesible data files of Asher and Novasad (2020). The ado file needs to be downleoaded and addd to the personal file collection of the computer the code is being run on.
+
+**Indices following Asher and Novasad, who follow Anderson:
+
+/* create reverse treatment dummy, where 1 = non-treated. this will be
+fed into the index creation program so non-treated villages are used
+as the normalizing standard deviation */
+gen controldummy = 0 
+replace controldummy = 1 if before1955 == 0 
+
+/* generate indices for main sample. NOTE - the egen function
+weightave2 function comes from _gweightave2.ado - the .ado file will
+be read into stata when it's in the working directory of the do file
+that calls it. however - it is better practice to put it in your
+personal ado path - which is ~/ado/personal. this function was sent
+from Bilal Siddiqi to Sam Asher, based on Anderson (2008): Multiple
+Inference and Gender Differences in the Effects of Early Intervention:
+A Reevaluation of the Abecedarian, Perry Preschool, and Early Training
+Projects. */
+
+**Note: These normalization makes sure that the control group mean is zero in the regressions.
+egen z_depression = weightave2($list1), normby(controldummy)
+egen z_somatic= weightave2($list2), normby(controldummy)
+egen z_nonsomatic = weightave2($list3), normby(controldummy)
+egen z_religion = weightave2($list4), normby(controldummy)
+
+egen sum_srq=rowtotal($list1)
+
+**# The following creates missing values in each of the indices if any value in the variables that make up that index are missing 
+
+foreach x in $list1{
+replace z_depression = . if `x' == .
+}
+
+foreach x in $list2{
+replace z_somatic = . if `x' == .
+}
+
+foreach x in $list3{
+replace z_nonsomatic = . if `x' == .
+}
+
+foreach x in $list4{
+replace z_religion = . if `x' == .
+}
+
+foreach x in $list1{
+replace sum_srq = . if `x' == .
+}
+
+label var z_depression "Mental distress index"
+label var z_nonsomatic "Nonsomatic symptoms of distress index"
+label var z_somatic "Somatic symptoms of distress index"
+label var sum_srq "Sum of yes answers in SRQ-20"
+
+set more off
+
+
+global mobility_vars "outside_week under_curfew never_out"
+global depression_vars "z_depression z_somatic z_nonsomatic sum_srq"
+global balance_vars "highschool illiterate female married widowed_separated non_turk pre_covid_hhsize psych_support chronic_disease"
+global channel_vars "paid_employment total_employment job_to_return money_as_usual money_distressed lim_social_interaction limited_physical_act hh_size conflict"
+
+global controls "month_* province_n_* ethnicity_* education_* female survey_taker_id_*"
+global se "cluster modate"	
+
+
+****************
+
+*Figure 1
+eststo clear
+local xtitle xtitle("Born before December 1955 (in months)", size(4) color(black))
+
+qui xi: rdrobust outside_week dif, vce($se) kernel(uniform) 
+local bw = e(b_r)
+
+rdplot outside_week dif if inrange(dif, -`bw' ,`bw'), vce($se) kernel(uniform) nbins(`bw') h(`bw') p(2)  graph_options(title("Panel A: Days outside last week", size(large))  `xtitle' xlabel(minmax,labsize(small)) ylabel(-0(2)6,labsize(medium))) 
+graph save "graphs/REPoutside_week", replace
+
+
+qui xi: rdrobust under_curfew dif, vce($se) kernel(uniform) 
+local bw = e(b_r)
+
+rdplot under_curfew dif if inrange(dif, -`bw' ,`bw'), vce($se) kernel(uniform) nbins(`bw') h(`bw') p(2)  graph_options(title("Panel B: Under Curfew", size(large))  `xtitle' xlabel(minmax,labsize(small)) ylabel(-0(.2)1,labsize(medium))) 
+graph save "graphs/REPunder_curfew", replace
+
+
+qui xi: rdrobust never_out dif, vce($se) kernel(uniform) 
+local bw = e(b_r)
+
+rdplot never_out dif if inrange(dif,-`bw',`bw'), vce($se) kernel(uniform) nbins(`bw') h(`bw') p(2) graph_options(title("Panel C: Never Goes Out", size(large))  `xtitle' xlabel(minmax,labsize(small)) ylabel(-0(.2)1,labsize(medium))) 
+graph save "graphs/REPnever_out", replace
+
+graph combine "graphs/REPoutside_week" "graphs/REPunder_curfew" "graphs/REPnever_out", col(3) ///
+	imargin(small) graphregion(color(white) lcolor(white) lwidth(thick)) ysize(1.75) xsize(5) ///
+	title("", size(3.5) color(black)) saving("graphs/REPFigure1.gph", replace)
+	
+	graph export "graphs/REPFigure1.eps", replace font($grfont)
+	
+
+*Figure 2 
+
+eststo clear
+local xtitle xtitle("Born before December 1955 (in months)", size(2) color(black))
+
+ xi: rdrobust z_depression dif, vce($se) kernel(uniform) covs($controls) 
+local bw = e(b_r)
+
+rdplot z_depression dif if inrange(dif,-`bw',`bw'), vce($se) kernel(uniform) covs($controls) p(2) nbins(`bw') h(`bw')  graph_options(title("Panel A: Mental distress index", size(small))  `xtitle' xlabel(minmax,labsize(small)) ylabel(-1(0.5)1,labsize(small))) 
+graph save "graphs/REPz_depression", replace
+
+qui xi: rdrobust z_somatic dif, vce($se) kernel(uniform) covs($controls)
+local bw = e(b_r)
+
+rdplot z_somatic dif if inrange(dif,-`bw',`bw'), vce($se) kernel(uniform) covs($controls) p(2) nbins(`bw') h(`bw') graph_options(title("Panel B: Somatic symptoms of distress index", size(small))  `xtitle' xlabel(minmax,labsize(small)) ylabel(-1(0.5)1,labsize(small))) 
+graph save "graphs/REPz_somatic", replace
+
+qui xi: rdrobust z_nonsomatic dif, vce($se) kernel(uniform) covs($controls)
+local bw = e(b_r)
+
+rdplot z_nonsomatic dif if inrange(dif,-`bw',`bw'), vce($se) kernel(uniform) covs($controls) p(2) nbins(`bw') h(`bw') graph_options(title("Panel C: Nonsomatic symptoms of distress index", size(small))  `xtitle' xlabel(minmax,labsize(small)) ylabel(-1(0.5)1,labsize(small))) 
+graph save "graphs/REPz_nonsomatic", replace
+
+qui xi: rdrobust sum_srq dif, vce($se) kernel(uniform) covs($controls)
+local bw = e(b_r)
+
+rdplot sum_srq dif if inrange(dif,-`bw',`bw'), vce($se) kernel(uniform) covs($controls) p(2) nbins(`bw') h(`bw') graph_options(title("Panel D: Sum of yes answers in SRQ-20", size(small))  `xtitle' xlabel(minmax,labsize(small)) ylabel(4(2)10,labsize(small))) 
+graph save "graphs/REPsum_srq", replace
+
+graph combine "graphs/REPz_depression.gph" "graphs/REPz_somatic.gph" , col(2) ///
+	imargin(small) graphregion(color(white) lcolor(white) lwidth(thick)) ysize(3) xsize(7) ///
+	title("", size(5) color(black)) saving("graphs/REPFigure2.gph", replace)
+graph export "graphs/REPFigure2.eps", replace font($grfont)
+
+
+graph combine  "graphs/REPz_nonsomatic.gph" "graphs/REPsum_srq.gph", col(2) ///
+	imargin(small) graphregion(color(white) lcolor(white) lwidth(thick)) ysize(3) xsize(7) ///
+	title("", size(5) color(black)) saving("graphs/REPFigure3.gph", replace)
+graph export "graphs/REPFigure3.eps", replace font($grfont)
+
+
+******* Figure XXX\Mental
+
+qui xi: rdrobust female dif, vce($se) kernel(uniform) covs(month_* province_n_* ethnicity_* education_* survey_taker_id_*)
+local bw = e(b_r)
+
+rdplot z_nonsomatic dif if inrange(dif,-`bw',`bw'), vce($se) kernel(uniform) p(2) nbins(`bw') h(`bw') graph_options(title("Female", size(Large))  `xtitle' xlabel(minmax,labsize(small)) ylabel(-1(0.5)1,labsize(small))) 
+graph save "graphs/REPFigure4", replace
+graph export "graphs/REPFigure4.eps", replace font($grfont)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+```
+
+### `ICPSR_183165-V1.1/4 Adjustment q appendix.do`
+```stata
+***Last Updated: 26/11/2022 using Stata17
+/*==========================================*
+Paper:			Mental Health Costs of Lockdowns: Evidence from Age-specific Curfews in Turkey *REPLICATON*
+
+Purpose:        Multiple hypothesis adjustment for Appendix Tables A2-A8
+
+To re-run our analysis, please install a folder "Mental Health". There should be 4 subfolders in order for do-files to run:
+
+"originals"
+"do files"
+"graphs"
+"output"
+
+Before you run this do file, please change the path of the working directory in line 21 and run all of the data cleaning do files.
+*==========================================*/
+
+**# The purpose of this do file is to generate the various q values for the tables in the online appendix, which are used to test for False Discovery Rate based off Anderson (2008) "Multiple Inference and Gender Differences in the Effects of Early Intervention: A Reevaluation of the Abecedarian, Perry Preschool, and Early Training Projects".
+
+clear
+set more off 
+set matsize 8000
+cap log close
+
+**# The following section imports the data file, and classifies certain variables.
+
+*global dir="XXX\Mental Health"
+cd "$dir"
+
+
+use "originals\konda_data_for_analysis.dta", clear
+
+keep if non_response==0
+
+tab education, gen(education_)
+tab ethnicity, gen(ethnicity_)
+tab survey_taker_id, gen(survey_taker_id_)
+
+global contr="month_* province_n_* i.ethnicity i.education female i.survey_taker_id"
+global se "cluster modate"	
+global slvl "starlevels(* 0.10 ** 0.05 *** 0.01)"
+
+#delimit ;
+global list1 "head_ache mal_appetite sleeplessness scared shaking nervous 
+indigestion unfocused unhappy weepy unwillingness undecisiveness disrupted useless 
+uninterest worthless suicidal usually_tired stomach_discomfort quickly_tired";
+
+global list2 "head_ache shaking indigestion stomach_discomfort"; 
+
+global list3 "mal_appetite sleeplessness scared nervous unfocused 
+unhappy weepy unwillingness undecisiveness disrupted useless uninterest 
+worthless suicidal usually_tired quickly_tired";
+
+global list4 "religious daily_pray practice_the_book virus_god_sent";
+#delimit cr
+
+**# The following section lays out the commands to create indeces for the outcome variables of the survey. The methodology and reasoning behind creating these indices is explained in Anderson (2008). The weightave2 function is based of the Anderson methodology, but is provided in the accesible data files of Asher and Novasad (2020). The ado file needs to be downloaded and added to the personal file collection of the computer the code is being run on.
+
+**Indices following Asher and Novasad, who follow Anderson:
+
+/* create reverse treatment dummy, where 1 = non-treated. this will be
+fed into the index creation program so non-treated villages are used
+as the normalizing standard deviation */
+gen controldummy = 0 
+replace controldummy = 1 if before1955 == 0 
+
+/* generate indices for main sample. NOTE - the egen function
+weightave2 function comes from _gweightave2.ado - the .ado file will
+be read into stata when it's in the working directory of the do file
+that calls it. however - it is better practice to put it in your
+personal ado path - which is ~/ado/personal. this function was sent
+from Bilal Siddiqi to Sam Asher, based on Anderson (2008): Multiple
+Inference and Gender Differences in the Effects of Early Intervention:
+A Reevaluation of the Abecedarian, Perry Preschool, and Early Training
+Projects. */
+
+**Note: These normalization makes sure that the control group mean is zero in the regressions.
+egen z_depression = weightave2($list1), normby(controldummy)
+egen z_somatic= weightave2($list2), normby(controldummy)
+egen z_nonsomatic = weightave2($list3), normby(controldummy)
+egen z_religion = weightave2($list4), normby(controldummy)
+
+egen sum_srq=rowtotal($list1)
+
+**# The following creates missing values in each of the indices if any value in the variables that make up that index are missing 
+
+foreach x in $list1{
+replace z_depression = . if `x' == .
+}
+
+foreach x in $list2{
+replace z_somatic = . if `x' == .
+}
+
+foreach x in $list3{
+replace z_nonsomatic = . if `x' == .
+}
+
+foreach x in $list4{
+replace z_religion = . if `x' == .
+}
+
+foreach x in $list1{
+replace sum_srq = . if `x' == .
+}
+
+
+
+********TABLE 1: SUMMARY STATISTICS
+label var highschool "Completed high school"
+label var illiterate "Illiterate"
+label var female "Female"
+label var married "Married"
+label var widowed_separated "Widowed or separated"
+label var non_turk "Non-Turkish"
+label var pre_covid_hhsize "Pre-Covid-19 household size"
+label var psych_support "Ever received psychological support"
+label var chronic_disease "Has a chronic disease"
+label var outside_week "Days outside last week"
+label var under_curfew "Under curfew"
+label var never_out "Never goes out"
+label var paid_employment "Paid employed"
+label var total_employment "Paid or unpaid employed"
+label var job_to_return "Has a job but could not attend last week"
+label var money_as_usual "Has money for usual needs"
+label var money_distressed "Worried about spending money"
+label var lim_social_interaction "Limited social interaction"
+label var limited_physical_act "Limited physical activity"
+label var hh_size "Current household size"
+label var conflict "Conflict with a household member"
+
+
+
+********TABLE 2: LIST OF SRQ-20 QUESTIONS AND THEIR SUMMARY STATISTICS
+
+label var head_ache "Have you often had headaches?"
+label var mal_appetite "Has your appetite been poor?"
+label var sleeplessness "Have you slept badly?"
+label var scared "Have you been easily frightened?"
+label var shaking "Have you had shaking hands?"
+label var nervous "Have you felt nervous, tense, or worried?"
+label var indigestion "Has your digestion been poor?"
+label var unfocused "Have you had trouble in thinking clearly?"
+label var unhappy "Have you felt unhappy?"
+label var weepy "Have you cried more often than usual?"
+label var unwillingness "Have you found it difficult to enjoy your daily activities?"
+label var undecisiveness "Have you found it difficult to make decisions?"
+label var disrupted "Has your daily work suffered?"
+label var useless "Have you been unable to play a useful part in life?"
+label var uninterest "Have you lost interest in things?"
+label var worthless "Have you felt that you are a worthless person?"
+label var suicidal "Has the thought of ending your life been on your mind?"
+label var usually_tired "Have you felt tired all the time?"
+label var stomach_discomfort "Have you had uncomfortable feelings in your stomach?"
+label var quickly_tired "Have you gotten tired easily?"
+
+
+global appset0 "highschool illiterate female married widowed_separated non_turk pre_covid_hhsize psych_support chronic_disease"
+global appset1 "outside_week under_curfew never_out"
+global appset2 "z_depression z_somatic z_nonsomatic sum_srq"
+global appset3 "poor_physical_health poor_mental_health"
+global appset4 "suffering"
+global appset5 "paid_employment total_employment job_to_return money_as_usual money_distressed"
+global appset6 "hh_size conflict" 
+global appset7 "limited_physical_act lim_social_interaction"
+global appset8 "religious daily_pray practice_the_book virus_god_sent z_religion"
+
+
+**# The following code quietly runs all regression as the Table do file, and then proceeds to store the ouput of the regressions 
+
+tempfile t1 
+save `t1' 
+
+*pre-determined covars table A2 and A3 
+eststo clear
+foreach x in $appset0{
+foreach bw in 17 24 30 36 45 48 60 72{
+   xi: qui reg `x' before1955 di1*  if inrange(dif,-`bw',`bw'), vce($se)
+	g N__`x'__`bw' = e(N)
+    test before1955
+	g b__`x'__`bw' = _b[before1955]
+	g se__`x'__`bw' = _se[before1955]
+	g p__`x'__`bw' = r(p)
+	sum `x' if e(sample) & before1955 == 0
+	g M__`x'__`bw' = r(mean)
+} 	
+}
+
+
+
+*Table A4, A5, A7 
+eststo clear
+foreach x in $appset1 $appset2 $appset5 $appset6 $appset7{
+foreach bw in 24 36 48 60 72{
+	xi: qui reg `x' before1955 di1* $contr  if inrange(dif,-`bw',`bw'), vce($se)
+	g N__`x'__`bw' = e(N)
+    test before1955
+	g b__`x'__`bw' = _b[before1955]
+	g se__`x'__`bw' = _se[before1955]
+	g p__`x'__`bw' = r(p)
+	sum `x' if e(sample) & before1955 == 0
+	g M__`x'__`bw' = r(mean)
+} 	
+}
+
+
+*Table A6, A8
+eststo clear
+foreach x in $appset3 $appset4 $appset8{
+foreach bw in 17 30 45 60{
+	xi: qui reg `x' before1955 di1* $contr  if inrange(dif,-`bw',`bw'), vce($se)
+	g N__`x'__`bw' = e(N)
+    test before1955
+	g b__`x'__`bw' = _b[before1955]
+	g se__`x'__`bw' = _se[before1955]
+	g p__`x'__`bw' = r(p)
+	sum `x' if e(sample) & before1955 == 0
+	g M__`x'__`bw' = r(mean)
+} 	
+}
+
+
+* The next section of code keeps only the output of the regression, and creates only 1 cross section. It then tranposes, renames splits and drops the data to create a datset that can be used with the imported do file.
+
+keep b__* se__* p__* N__* M__* 
+keep if _n==1 
+xpose, clear varname
+rename v1 v_scalar
+split _varname, p("__") 
+drop _varname
+rename _varname1 coef_name  
+rename _varname2 vname 
+rename _varname3 bw
+destring bw, replace 
+
+* The following creates a group variable that relates a number to each variable depending on which group of index variables the variable belongs to. It allows one to seperate the p values into their respective tables in the paper.
+
+g group = . 
+
+
+foreach x in $appset0{ 
+replace group = 0 if vname=="`x'"	
+}
+
+
+foreach x in $appset1{ 
+replace group = 1 if vname=="`x'"	
+}
+
+foreach x in $appset2{ 
+replace group = 2 if vname=="`x'"	
+}
+
+foreach x in $appset3{ 
+replace group = 3 if vname=="`x'"	
+}
+
+foreach x in $appset4{ 
+replace group = 4 if vname=="`x'"	
+}
+
+foreach x in $appset5{ 
+replace group = 5 if vname=="`x'"	
+}
+
+foreach x in $appset6{ 
+replace group = 6 if vname=="`x'"	
+}
+
+foreach x in $appset7{ 
+replace group = 7 if vname=="`x'"	
+}
+
+foreach x in $appset8{ 
+replace group = 8 if vname=="`x'"	
+}
+
+**# The data has now been sorted and necessary values have been created. Then, the code uses the "fdr_sharpened_qvalues_v02" do file, which creates the respective q-values based on the methodology in Anderson (2008). No changes are needed to be made to the "fdr_sharpened_qvalues_v02" do file, just store it in your working directory.
+
+tempfile t2 
+save `t2' 
+
+foreach x in 0 1 2 3 4 5 6 7 8 { 
+foreach y in 17 24 30 36 45 48 60 72{ 
+use `t2', clear 
+keep if group==`x' & bw==`y' & coef_name=="p"
+g pval = v_scalar
+do "do files/fdr_sharpened_qvalues_v02.do" 
+tempfile t_`x'_`y'
+save `t_`x'_`y''
+}
+}
+
+clear all 
+
+
+**# The following section creates tables for the p and q values and exports the output. The q values can be found in the excel file under coef_name = q, with the value in the v_scalar column. "version 16" command is added before the bysort command in this do file, as bysort is no longer supported by Stata version 17.
+
+foreach x in 0 1 2 3 4 5 6 7 8 { 
+foreach y in 17 24 30 36 45 48 60 72{ 
+append using `t_`x'_`y''	
+}
+}
+
+rename bky06_qval q
+replace pval = round(pval, 0.001)
+
+*see the p and q-values in table order for TABLES A2-A7
+version 16
+bysort group: table vname bw, c(mean pval mean q)
+
+***Rest of the code is to output the results into an Excel file*** 
+
+keep coef_name vname group bw q 
+replace coef_name = "q"
+rename q v_scalar
+
+append using `t2'
+
+
+
+sort coef_name vname group bw
+
+export excel using "output\MHC_sharpened_q_App1.xlsx", firstrow(variables) replace
+
+
+**# The previous code created q-values for tables A2-A7. The next section repeats the process for table A8.
+
+use `t1', clear 
+
+
+local bw = 45
+eststo clear
+foreach x in $appset1 $appset2 $appset5 $appset6 $appset7 {
+	xi: qui reg `x' before1955 di1* di2* $contr if inrange(dif,-`bw',`bw'), vce($se)
+	g N__`x'__`bw' = e(N)
+    test before1955
+	g b__`x'__`bw' = _b[before1955]
+	g se__`x'__`bw' = _se[before1955]
+	g p__`x'__`bw' = r(p)
+	sum `x' if e(sample) & before1955 == 0
+	g M__`x'__`bw' = r(mean)
+}
+
+
+
+keep b__* se__* p__* N__* M__* 
+keep if _n==1 
+xpose, clear varname
+rename v1 v_scalar
+split _varname, p("__") 
+drop _varname
+rename _varname1 coef_name  
+rename _varname2 vname 
+rename _varname3 bw
+destring bw, replace 
+
+g group = . 
+
+
+
+foreach x in $appset1{ 
+replace group = 1 if vname=="`x'"	
+}
+
+foreach x in $appset2{ 
+replace group = 2 if vname=="`x'"	
+}
+
+
+foreach x in $appset5{ 
+replace group = 5 if vname=="`x'"	
+}
+
+foreach x in $appset6{ 
+replace group = 6 if vname=="`x'"	
+}
+
+foreach x in $appset7{ 
+replace group = 7 if vname=="`x'"	
+}
+
+
+tempfile t3
+save `t3' 
+
+foreach x in 1 2 5 6 7 { 
+foreach y in 45{ 
+use `t3', clear 
+keep if group==`x' & bw==`y' & coef_name=="p"
+g pval = v_scalar
+do "do files/fdr_sharpened_qvalues_v02.do" 
+tempfile t_`x'_`y'
+save `t_`x'_`y''
+}
+}
+
+clear all 
+
+foreach x in 1 2 5 6 7 { 
+foreach y in 45{ 
+append using `t_`x'_`y''	
+}
+}
+
+rename bky06_qval q
+replace pval = round(pval, 0.001)
+*see the p and q-values in table order for TABLE A8 
+
+version 16
+bysort group: table vname bw, c(mean pval mean q)
+
+
+***Rest of the code is to output the results into an Excel file*** 
+
+keep coef_name vname group bw q 
+replace coef_name = "q"
+rename q v_scalar
+
+append using `t3'
+
+sort coef_name vname group bw
+
+
+export excel using "output\MHC_sharpened_q_App2.xlsx", firstrow(variables) replace
+
+
+```
+
+### `ICPSR_183165-V1.1/fdr_sharpened_qvalues_v02.do`
+```stata
+* This code generates BKY (2006) sharpened two-stage q-values as described in Anderson (2008), "Multiple Inference and Gender Differences in the Effects of Early Intervention: A Reevaluation of the Abecedarian, Perry Preschool, and Early Training Projects", Journal of the American Statistical Association, 103(484), 1481-1495
+
+* BKY (2006) sharpened two-stage q-values are introduced in Benjamini, Krieger, and Yekutieli (2006), "Adaptive Linear Step-up Procedures that Control the False Discovery Rate", Biometrika, 93(3), 491-507
+
+* Last modified: M. Anderson, 11/20/07
+* Test Platform: Stata/MP 10.0 for Macintosh (Intel 32-bit), Mac OS X 10.5.1
+* Should be compatible with Stata 10 or greater on all platforms
+* Likely compatible with with Stata 9 or earlier on all platforms (remove "version 10" line below)
+
+version 10
+
+****  INSTRUCTIONS:
+****    Please start with a clear data set
+****	When prompted, paste the vector of p-values you are testing into the "pval" variable
+****	Please use the "do" button rather than the "run" button to run this file (if you use "run", you will miss the instructions at the prompts)
+/*
+pause on
+set more off
+
+if _N>0 {
+	display "Please clear data set before proceeding"
+	display "After clearing, type 'q' to resume"
+	pause
+	}	
+
+quietly gen float pval = .
+set obs 50 
+replace pval = runiform() 
+
+display "***********************************"
+display "Please paste the vector of p-values that you wish to test into the variable 'pval'"
+display	"After pasting, type 'q' to resume"
+display "***********************************"
+
+pause
+
+* Collect the total number of p-values tested
+*/
+
+quietly sum pval
+local totalpvals = r(N)
+
+* Sort the p-values in ascending order and generate a variable that codes each p-value's rank
+
+quietly gen int original_sorting_order = _n
+quietly sort pval
+quietly gen int rank = _n if pval~=.
+
+* Set the initial counter to 1 
+
+local qval = 1
+
+* Generate the variable that will contain the BKY (2006) sharpened q-values
+
+gen bky06_qval = 1 if pval~=.
+
+* Set up a loop that begins by checking which hypotheses are rejected at q = 1.000, then checks which hypotheses are rejected at q = 0.999, then checks which hypotheses are rejected at q = 0.998, etc.  The loop ends by checking which hypotheses are rejected at q = 0.001.
+
+
+while `qval' > 0 {
+	* First Stage
+	* Generate the adjusted first stage q level we are testing: q' = q/1+q
+	local qval_adj = `qval'/(1+`qval')
+	* Generate value q'*r/M
+	gen fdr_temp1 = `qval_adj'*rank/`totalpvals'
+	* Generate binary variable checking condition p(r) <= q'*r/M
+	gen reject_temp1 = (fdr_temp1>=pval) if pval~=.
+	* Generate variable containing p-value ranks for all p-values that meet above condition
+	gen reject_rank1 = reject_temp1*rank
+	* Record the rank of the largest p-value that meets above condition
+	egen total_rejected1 = max(reject_rank1)
+
+	* Second Stage
+	* Generate the second stage q level that accounts for hypotheses rejected in first stage: q_2st = q'*(M/m0)
+	local qval_2st = `qval_adj'*(`totalpvals'/(`totalpvals'-total_rejected1[1]))
+	* Generate value q_2st*r/M
+	gen fdr_temp2 = `qval_2st'*rank/`totalpvals'
+	* Generate binary variable checking condition p(r) <= q_2st*r/M
+	gen reject_temp2 = (fdr_temp2>=pval) if pval~=.
+	* Generate variable containing p-value ranks for all p-values that meet above condition
+	gen reject_rank2 = reject_temp2*rank
+	* Record the rank of the largest p-value that meets above condition
+	egen total_rejected2 = max(reject_rank2)
+
+	* A p-value has been rejected at level q if its rank is less than or equal to the rank of the max p-value that meets the above condition
+	replace bky06_qval = `qval' if rank <= total_rejected2 & rank~=.
+	* Reduce q by 0.001 and repeat loop
+	drop fdr_temp* reject_temp* reject_rank* total_rejected*
+	local qval = `qval' - .001
+}
+	
+
+quietly sort original_sorting_order
+
+/*
+pause off
+set more on
+
+display "Code has completed."
+display "Benjamini Krieger Yekutieli (2006) sharpened q-vals are in variable 'bky06_qval'"
+display	"Sorting order is the same as the original vector of p-values"
+
+
+* Note: Sharpened FDR q-vals can be LESS than unadjusted p-vals when many hypotheses are rejected, because if you have many true rejections, then you can tolerate several false rejections too (this effectively just happens for p-vals that are so large that you are not going to reject them regardless).
+*/
+```
+
+### `ICPSR_183165-V1.1/rd_an.do`
+```stata
+  /**********************************************************************************/
+  /* program capdrop : Drop a bunch of variables without errors if they don't exist */
+  /**********************************************************************************/
+  cap prog drop capdrop
+  prog def capdrop
+  {
+    syntax anything
+    foreach v in `anything' {
+      cap drop `v'
+    }
+  }
+  end
+  /* *********** END program capdrop ***************************************** */
+
+  
+  /*************************************************************************************/
+  /* program rd : produce a nice RD graph, using polynomial (quartic default) for fits */
+  /*************************************************************************************/
+  global rd_start -250
+  global rd_end 250
+  cap prog drop rd
+  prog def rd
+  {
+    syntax varlist(min=2 max=2) [aweight pweight] [if], [degree(real 4) name(string) Bins(real 100) Start(real -9999) End(real -9999) MSize(string) YLabel(string) NODRAW bw xtitle(passthru) title(passthru) ytitle(passthru) xlabel(passthru) xline(passthru) absorb(string) control(string) xq(varname) cluster(passthru) nofit]
+
+    tokenize `varlist'
+    local xvar `2'
+
+    preserve
+
+    // Create convenient weight local
+    if ("`weight'"!="") local wt [`weight'`exp']
+
+    /* set start/end to global defaults (from include) if unspecified */
+    if `start' == -9999 & `end' == -9999 {
+      local start $rd_start
+      local end   $rd_end
+    }
+
+    if "`msize'" == "" {
+      local msize small
+    }
+
+    if "`ylabel'" == "" {
+      local ylabel ""
+    }
+    else {
+      local ylabel "ylabel(`ylabel') "
+    }
+
+    if "`name'" == "" {
+      local name `1'_rd
+    }
+
+    /* set colors */
+    if mi("`bw'") {
+      local color_b "red"
+      local color_se "blue"
+    }
+    else {
+      local color_b "black"
+      local color_se "gs8"
+    }
+
+    if "`se'" == "nose" {
+      local color_se "white"
+    }
+
+    capdrop pos_rank neg_rank xvar_index xvar_group_mean rd_bin_mean rd_tag mm2 mm3 mm4 l_hat r_hat l_se l_up l_down r_se r_up r_down total_weight rd_resid
+    qui {
+      /* restrict sample to specified range */
+      if !mi("`if'") {
+        keep `if'
+      }
+      keep if inrange(`xvar', `start', `end')
+
+      /* get residuals of yvar on absorbed variables */
+      if !mi("`absorb'")  | !mi("`control'") {
+        if !mi("`absorb'") {
+          areg `1' `wt' `control' `if', absorb(`absorb')
+        }
+        else {
+          reg `1' `wt' `control' `if'
+        }
+        predict rd_resid, resid
+        local 1 rd_resid
+      }
+
+      /* GOAL: cut into `bins' equally sized groups, with no groups crossing zero, to create the data points in the graph */
+      if mi("`xq'") {
+
+        /* count the number of observations with margin and dependent var, to know how to cut into 100 */
+        count if !mi(`xvar') & !mi(`1')
+        local group_size = floor(`r(N)' / `bins')
+
+        /* create ranked list of margins on + and - side of zero */
+        egen pos_rank = rank(`xvar') if `xvar' > 0 & !mi(`xvar'), unique
+        egen neg_rank = rank(-`xvar') if `xvar' < 0 & !mi(`xvar'), unique
+
+        /* hack: multiply bins by two so this works */
+        local bins = `bins' * 2
+
+        /* index `bins' margin groups of size `group_size' */
+        /* note this conservatively creates too many groups since 0 may not lie in the middle of the distribution */
+        gen xvar_index = .
+        forval i = 0/`bins' {
+          local cut_start = `i' * `group_size'
+          local cut_end = (`i' + 1) * `group_size'
+
+          replace xvar_index = (`i' + 1) if inrange(pos_rank, `cut_start', `cut_end')
+          replace xvar_index = -(`i' + 1) if inrange(neg_rank, `cut_start', `cut_end')
+        }
+      }
+      /* on the other hand, if xq was specified, just use xq for bins */
+      else {
+        gen xvar_index = `xq'
+      }
+
+      /* generate mean value in each margin group */
+      bys xvar_index: egen xvar_group_mean = mean(`xvar') if !mi(xvar_index)
+
+      /* generate value of depvar in each X variable group */
+      if mi("`weight'") {
+        bys xvar_index: egen rd_bin_mean = mean(`1')
+      }
+      else {
+        bys xvar_index: egen total_weight = total(wt)
+        bys xvar_index: egen rd_bin_mean = total(wt * `1')
+        replace rd_bin_mean = rd_bin_mean / total_weight
+      }
+
+      /* generate a tag to plot one observation per bin */
+      egen rd_tag = tag(xvar_index)
+
+      /* run polynomial regression for each side of plot */
+      gen mm2 = `xvar' ^ 2
+      gen mm3 = `xvar' ^ 3
+      gen mm4 = `xvar' ^ 4
+
+      /* set covariates according to degree specified */
+      if "`degree'" == "4" {
+        local mpoly mm2 mm3 mm4
+      }
+      if "`degree'" == "3" {
+        local mpoly mm2 mm3
+      }
+      if "`degree'" == "2" {
+        local mpoly mm2
+      }
+      if "`degree'" == "1" {
+        local mpoly
+      }
+
+      reg `1' `xvar' `mpoly' `wt' if `xvar' < 0, `cluster'
+      predict l_hat
+      predict l_se, stdp
+      gen l_up = l_hat + 1.65 * l_se
+      gen l_down = l_hat - 1.65 * l_se
+
+      reg `1' `xvar' `mpoly' `wt' if `xvar' > 0, `cluster'
+      predict r_hat
+      predict r_se, stdp
+      gen r_up = r_hat + 1.65 * r_se
+      gen r_down = r_hat - 1.65 * r_se
+    }
+
+    if "`fit'" == "nofit" {
+      local color_b white
+      local color_se white
+    }
+
+    /* fit polynomial to the full data, but draw the points at the mean of each bin */
+    sort `xvar'
+    twoway ///
+      (line r_hat  `xvar' if inrange(`xvar', 0, `end') & !mi(`1'), color(`color_b') msize(vtiny)) ///
+      (line l_hat  `xvar' if inrange(`xvar', `start', 0) & !mi(`1'), color(`color_b') msize(vtiny)) ///
+      (line l_up   `xvar' if inrange(`xvar', `start', 0) & !mi(`1'), color(`color_se') msize(vtiny)) ///
+      (line l_down `xvar' if inrange(`xvar', `start', 0) & !mi(`1'), color(`color_se') msize(vtiny)) ///
+      (line r_up   `xvar' if inrange(`xvar', 0, `end') & !mi(`1'), color(`color_se') msize(vtiny)) ///
+      (line r_down `xvar' if inrange(`xvar', 0, `end') & !mi(`1'), color(`color_se') msize(vtiny)) ///
+      (scatter rd_bin_mean xvar_group_mean if rd_tag == 1 & inrange(`xvar', `start', `end'), xline(0, lcolor(black)) msize(`msize') color(black)),  `ylabel'  name(`name', replace) legend(off) `title' `xline' `xlabel' `ytitle' `xtitle' `nodraw' graphregion(color(white))
+    restore
+  }
+  end
+  /* *********** END program rd ***************************************** */
+
+```
+
+### `ICPSR_183165-V1.1/rdprog_cols1_se2_connected.do`
+```stata
+
+*define program
+
+
+capture program drop rdintgraphtlim
+program rdintgraphtlim
+	args outcome  diff bin lim ytit xtit ylabel xlabel yscale title xscale bw
+
+gen int`diff'0=  int(`diff'*`bin') if  `diff'<=0
+gen int`diff'1=  int(`diff'*`bin') if  `diff'>0
+*gen int`diff'0=  int(`diff'*`bin'/2) if `lim' & `diff'<=0
+*gen int`diff'1=  int(`diff'*`bin'/2) if `lim' & `diff'>0
+	
+*		sort int`diff'
+		by int`diff'0, sort: egen mi`diff'0=mean(`diff') if int`diff'0!=.
+		by int`diff'1, sort: egen mi`diff'1=mean(`diff') if int`diff'1!=.
+
+		by int`diff'0, sort: egen mi`diff'outcome0=mean(`outcome') if int`diff'0!=.
+		by int`diff'1, sort: egen mi`diff'outcome1=mean(`outcome') if int`diff'1!=.
+
+*		
+gen mi`diff'=mi`diff'0 
+replace mi`diff'=mi`diff'1 if mi`diff'==.
+
+gen mi`diff'outcome=mi`diff'outcome0 
+replace mi`diff'outcome=mi`diff'outcome1 if mi`diff'outcome==.
+
+
+gen ii1=0 if mi`diff'<0
+replace ii1=1 if mi`diff'>0 & mi`diff'<.
+
+
+forval x=1/4{
+gen l10vi`x'=mi`diff'^`x'
+gen l10vi`x'_i=mi`diff'^`x'*ii1
+}
+
+
+
+gen binc=int`diff'0 if mi`diff'<0
+replace binc=int`diff'1 if mi`diff'>0 & mi`diff'<.
+
+
+
+lpoly `outcome' `diff' if `diff'<0 & `lim' , bw(`bw') gen(x0 s0) se(se0) nograph
+lpoly `outcome' `diff' if `diff'>0 & `lim' , bw(`bw') gen(x1 s1) se(se1) nograph
+
+
+*quietly reg mi`diff'outcome ii1 l10vi*, cluster(binc)
+*predict fit
+*predict stderror, stdp
+gen fit1=s0 if mi`diff'<0
+gen fit2=s1 if mi`diff'>0 & mi`diff'<.
+
+
+g stderror1 = se0 if mi`diff' <0
+g stderror2 = se1 if mi`diff' >0 & mi`diff'<.
+
+g int1U = fit1 + 2*stderror1
+g int1L = fit1 - 2*stderror1
+g int2U = fit2 + 2*stderror2
+g int2L = fit2 - 2*stderror2
+
+
+sort mi`diff'
+
+
+
+
+#delimit ;
+twoway scatter mi`diff'outcome mi`diff' if `lim',  mcolor(gs6) msymbol(o) msize(2) mlwidth(thin)
+	|| lpolyci `outcome' `diff' if mi`diff'<=0 & `lim', lpattern(solid) lwidth(vvthin) lcolor(gs6) bw(`bw') degree(1) kernel()  ciplot(rline)
+	|| lpolyci `outcome'  `diff' if mi`diff'>=0 & `lim', lpattern(solid) lwidth(vvthin) lcolor(gs6) bw(`bw') degree(1) kernel()   ciplot(rline)
+	|| lpoly `outcome' `diff' if mi`diff'<=0 & `lim', lpattern(solid) lwidth(medium) lcolor(black) bw(`bw') degree(1) kernel()
+	|| lpoly `outcome'  `diff' if mi`diff'>=0 & `lim', lpattern(solid) lwidth(medium) lcolor(black) bw(`bw') degree(1) kernel()
+	ylabel(`ylabel' nogrid labsize(3)) xlabel(`xlabel') ytitle(`ytit') yscale(`yscale') xscale(`xscale') 
+	graphregion(color(white) fcolor(white)) plotregion(color(white)) title(`title') 
+	xtitle(`xtit') legend(off) xline(0, lwidth(.2) lpattern(shortdash) lcolor(gs6));
+#delimit cr
+
+
+
+drop int`diff'0-int2L s0 s1 x0 x1 se0 se1
+end
+
+
+
+```
+
+### `ICPSR_183165-V1.1/6 Appendix Figure A2.R`
+```r
+####################################################################
+
+# ***Last Updated: 2/5/2021 using R
+# /*==========================================*
+#   Paper:			Mental Health Costs of Lockdowns: Evidence from Age-specific Curfews in Turkey
+# 
+# Purpose:        Produce the results in Appendix Figure A2
+# 
+# To re-run our analysis, please install a folder "Mental Health". 
+# There should be 4 subfolders in order for programs to run:
+#   
+#   "originals"
+#   "do files"
+#   "graphs"
+#   "output"
+# 
+# *==========================================*/
+
+
+####################################################################
+## Packages
+# To install and open the R packages that you need for this code. 
+need <- c('tidyverse','glue',
+          'ggthemes', 'readstata13',
+          'ggplot2', 'dplyr', 'gridExtra', 'zoo')
+have <- need %in% rownames(installed.packages()) 
+if(any(!have)) install.packages(need[!have]) 
+invisible(lapply(need, library, character.only=T)) 
+
+# Change path to wherever you place the models
+# To set up the working directory. 
+script_folder = dirname(rstudioapi::getSourceEditorContext()$path)
+setwd(glue('{script_folder}'))
+rm(list = ls())
+####################################################################
+
+#include to see with Georgia font
+#loadfonts(device="win")
+#showtext_auto() 
+
+konda <- read.dta13("../originals/konda_data_for_analysis.dta", nonint.factors=TRUE) %>%
+  mutate(bday = as.Date(paste(year,month,"15",sep="-"))) %>%
+  mutate(ym=as.yearmon(bday)) %>%
+  group_by(bday) %>%
+  mutate(index = row_number()) %>%
+  filter(non_response==0)
+  
+grid.list <- konda %>%
+  filter(index==1) %>%
+  select(bday,ym) %>%
+  arrange(-desc(bday)) %>%
+  ungroup(bday) %>%
+  mutate(ranking=row_number())
+
+konda <- merge(konda,grid.list, by=c('ym','bday'))
+  
+grid.search <- function(x){
+    dft <- konda %>%
+    mutate(treat=(case_when(ranking < x  ~ 1, TRUE ~ 0)))
+    
+    mo1 <- lm(data=dft, formula = under_curfew ~ treat)
+    treat.coef1 <- mo1$coefficients[2]
+    treat.coef2 <- c(cbind(treat.coef1,x))
+    return(treat.coef2)
+  }  
+
+grid.out1 <- lapply(10:134, grid.search)  
+
+grid.out1 <- as.data.frame(do.call(rbind,grid.out1)) %>%
+  rename(treat.coef=1,ranking=2)
+
+grid.list <- merge(grid.out1,grid.list, by='ranking',all.y=TRUE)
+
+threshold <- grid.list %>%
+  mutate(max.coef = max(treat.coef, na.rm=TRUE)) %>%
+  filter(treat.coef==max.coef) %>%
+  select(ym)
+
+g1 <- ggplot() + 
+  geom_point(data=grid.list, aes(y=treat.coef,x=ym), size=2) + 
+  geom_vline(aes(xintercept=threshold$ym), colour="gray50", linetype="dashed") + 
+  theme_classic() + 
+  labs(x="Birthday",y='Coefficient on "under curfew"' )  + 
+  theme(text=element_text(family="Georgia", size=15))
+
+plot(g1)
+
+ggsave("../output/grid_search.eps", g1,   width = 7.5, height=5)
+
+
+```
+
+### `ICPSR_183165-V1.1/7 Appendix Figure A4.R`
+```r
+####################################################################
+
+# ***Last Updated: 4/3/2021 using R
+# /*==========================================*
+#   Paper:			Mental Health Costs of Lockdowns: Evidence from Age-specific Curfews in Turkey
+# 
+# Purpose:  Produce the results in Appendix Figure A4
+# 
+# To re-run our analysis, please install a folder "Mental Health". 
+# There should be 4 subfolders in order for programs to run:
+#   
+#   "originals"
+#   "do files"
+#   "graphs"
+#   "output"
+# 
+# *==========================================*/
+
+# To install and open the R packages that you need for this code. 
+need <- c('tidyverse','glue', 'ggthemes', 'readstata13',  'rdd', 
+          'ggplot2', 'readxl','dplyr',  'zoo')
+have <- need %in% rownames(installed.packages()) 
+if(any(!have)) install.packages(need[!have]) 
+invisible(lapply(need, library, character.only=T)) 
+# Change path to whereever you place the models
+# To set up the working directory. 
+script_folder = dirname(rstudioapi::getSourceEditorContext()$path)
+setwd(glue('{script_folder}'))
+rm(list = ls())
+####################################################################
+
+#Georgia font installer
+#showtext_auto() 
+
+konda <- read.dta13("../originals/konda_data_for_analysis.dta", nonint.factors=TRUE) %>%
+mutate(bday = as.Date(paste(year,month,"15",sep="-"))) %>%
+mutate(ym=as.yearmon(bday)) %>%
+filter(non_response==0)
+
+#McCrary test 
+#first stage bw 
+res1 <- DCdensity(konda$dif,ext.out=TRUE, bw=45, bin=1)
+print(res1$p)
+#default option 
+#res2 <- DCdensity(konda$dif,ext.out=TRUE)
+#print(res2$p)
+#graph 
+
+dens.df <- konda %>%
+  mutate(count=1) %>%
+  group_by(dif) %>%
+  summarise(count=sum(count))
+
+
+mo1 <- loess(data=dens.df[dens.df$dif<=0,], formula = count ~ dif, 
+             degree = 2, span = 1) 
+
+predict.mo1 <- predict(mo1,se=TRUE,newdata = dens.df) 
+
+mo2 <- loess(data=dens.df[dens.df$dif>0,], formula = count ~ dif, 
+             degree = 2, span = 1) 
+
+
+predict.mo2 <- predict(mo2,se=TRUE,newdata = dens.df) 
+
+
+
+dens.df <- dens.df %>%
+  mutate(yhat1 = predict.mo1$fit,
+         yhat2 = predict.mo2$fit, 
+         ub1 = predict.mo1$fit + 1.96*predict.mo1$se.fit, 
+         lb1 = predict.mo1$fit - 1.96*predict.mo1$se.fit,
+         ub2 = predict.mo2$fit + 1.96*predict.mo2$se.fit, 
+         lb2 = predict.mo2$fit - 1.96*predict.mo2$se.fit) 
+
+g1 <- ggplot(data=dens.df) +
+  geom_vline(xintercept=0, linetype="dashed", color = "black") +
+  geom_point(aes(x=dif,y=count),colour='#636363', size=3) + 
+  geom_line(aes(x=dif,y=yhat1), size=1, alpha=1, color="#000000") + 
+  geom_line(aes(x=dif,y=yhat2), size=1,alpha=1, color="#000000") +  
+  geom_line(aes(x=dif,y=ub1), colour='gray50', linetype='solid') + 
+  geom_line(aes(x=dif,y=ub2), colour='gray50', linetype='solid') + 
+  geom_line(aes(x=dif,y=lb1), colour='gray50', linetype='solid') + 
+  geom_line(aes(x=dif,y=lb2), colour='gray50', linetype='solid') +
+  theme_classic() +
+  labs(x="Born before December 1955 (in months)",y="Frequency") + 
+  ggtitle(" ") +
+  theme(plot.title = element_text(hjust = 0.5))+ 
+  theme(axis.title=element_text(size=15)) + 
+  theme(plot.title = element_text(size=15)) + 
+  theme(text=element_text(size=16,  family="Georgia"))
+
+#graph Appendix A4 
+plot(g1)
+
+ggsave("../output/mc_crary.eps", g1, width = 7.5, height=5)
+
+
+
+
+
+
+```
+
+## How to run a script
+
+Write each script to a file under the output directory, then run it with
+exactly this command (the data directory is mounted read-only at its own
+path; nothing else from the host is visible; `$SCRIPT` is the absolute path of
+the script you wrote):
+
+    SCRIPT=<repo>/benchmark/reproductions/altindag-2022-mental-health-costs-lockdowns/seeded/2026-11-10-b/script.R   # or <repo>/benchmark/reproductions/altindag-2022-mental-health-costs-lockdowns/seeded/2026-11-10-b/attempt-<n>/script.R
+    uv run --directory <repo> python -m benchmark.reproducers.run_sandbox --timeout 300 --label retally.run=claude-code-altindag-2022-mental-health-costs-lockdowns-seeded-2026-11-10-b --run-dir "$(dirname "$SCRIPT")" -- docker run --rm --label retally.run=claude-code-altindag-2022-mental-health-costs-lockdowns-seeded-2026-11-10-b --network none --memory 4g --cpus 1.0 --read-only --tmpfs /tmp:size=256m --cap-drop ALL --security-opt no-new-privileges -v "$SCRIPT":/workspace/script.R:ro -v <repo>/benchmark/.cache/claude-code/altindag-2022-mental-health-costs-lockdowns/seeded/2026-11-10-b/mount/altindag_2022_mental_health_costs_lockdowns:<repo>/benchmark/.cache/claude-code/altindag-2022-mental-health-costs-lockdowns/seeded/2026-11-10-b/mount/altindag_2022_mental_health_costs_lockdowns:ro --workdir /workspace retally-sandbox-r:latest Rscript /workspace/script.R; echo "exit code: $?"
+
+The sandbox time limit is 300 seconds (memory 4g, 1.0 CPU).  The
+command enforces it: `run_sandbox` runs the `docker run` after `--`, writes
+its output to `stdout.txt` and `stderr.txt` next to the script, and writes
+`timing.json` there too (wall-clock seconds, and whether the limit was
+hit).  If the limit is hit it kills the container, appends a line saying
+so to `stderr.txt` and exits with code 124: treat the run as a crash.  Do
+not add your own timeout, do not redirect its output yourself, and do not
+delete `timing.json`; keep it with the run's other files.
+
+If a `docker run` produces no output for more than ten minutes (no
+container output, no error, the command does not return), the Docker
+daemon is probably wedged.  Stop: kill the command, and do not restart
+Docker Desktop or the Docker daemon yourself.  The hung attempt is not
+counted: do not save it as an `attempt-<n>` directory or as the final run,
+and say in `notes` that it hung.  Report it in your final message (which
+step hung, and for how long) instead of retrying.
+
+## Output contract
+
+The output directory `<repo>/benchmark/reproductions/altindag-2022-mental-health-costs-lockdowns/seeded/2026-11-10-b` already holds `render.json`; leave it
+there.  Add:
+
+```
+<repo>/benchmark/reproductions/altindag-2022-mental-health-costs-lockdowns/seeded/2026-11-10-b/
+  script.R  stdout.txt  stderr.txt  timing.json   # the FINAL run: its RESULT: lines are what is scored
+  attempt-1/  attempt-2/  ...           # every execution BEFORE the final one, in order
+    script.R  stdout.txt  stderr.txt  timing.json  feedback.txt   # feedback.txt when kind is not ""
+  reproduction.json                     # written LAST
+```
+
+- `attempt-<n>` directories are every execution before the final one, in
+  the order they ran; the final files at the top are the run whose
+  `RESULT:` lines are scored.  If you go back to an earlier attempt, copy
+  that attempt's files to the top level as the final run.
+- `feedback.txt` holds what you acted on before the next attempt: the error
+  you fixed (`kind: "error"`) or the `check_attempt` comparison
+  (`kind: "claim"`).
+- Exploratory runs (inspecting variables, counting rows, checking a filter;
+  no estimate of a listed quantity) are attempts with `kind: ""` and need no
+  `feedback.txt`.  They must NOT print any `RESULT:` line, not even a
+  placeholder: the first run that prints one is scored as your first scored
+  attempt.  Print `RESULT:` lines only from a script that estimates the
+  listed quantities, and `kind: "error"` only for a run that crashed or
+  that was meant to print them and did not.
+- Write `reproduction.json` last, in this schema:
+
+```
+reproduction.json (schema 1), written last by the agent into its run directory
+benchmark/reproductions/<entry_id>/<mode>/<run_id>/:
+
+{
+  "schema": 1,
+  "entry_id": "montero-2022-cooperative-property-rights",
+  "mode": "independent",
+  "run_id": "2026-10-22-a",
+  "reproducer": "claude-code",
+  "language": "r",
+  "final": {"script": "script.R", "stdout": "stdout.txt", "stderr": "stderr.txt", "exit_code": 0},
+  "attempts": [
+    {"dir": "attempt-1", "exit_code": 1, "kind": "error"},
+    {"dir": "attempt-2", "exit_code": 0, "kind": "claim"}
+  ],
+  "deviations": [],
+  "notes": "free text: what the agent did, what it could not do",
+  "files_read_outside_mount": [],
+  "started_at": "2026-10-22T10:00:00Z",
+  "finished_at": "2026-10-22T10:40:00Z"
+}
+
+* entry_id, mode and run_id must match the directory the file sits in.
+* final: the run that is scored -- script.R, stdout.txt, stderr.txt at the
+  run-dir root, and its exit code.  If the agent reverts to an earlier
+  attempt it copies that attempt's files there.
+* attempts: every execution before the final one, oldest first.  Each
+  attempt-<n>/ holds script.R, stdout.txt, stderr.txt, and feedback.txt
+  when kind is not "".  kind is the refinement that followed it:
+  "error" (it crashed or printed no RESULT: line; the agent repaired it),
+  "claim" (the agent compared its RESULT: values with the claimed values
+  and changed the script; never allowed in blind mode), or "" (neither).
+* All paths are relative to the run directory; absolute paths and ".."
+  are rejected.
+* deviations: free-text methodology changes, in addition to any
+  DEVIATION: lines in the final stdout.
+* The numbers scored are the RESULT: lines of the files, never anything
+  written in this JSON.
+```
+
+End your final message with the final run's `RESULT:` lines and a short
+note.  Nothing needed for scoring may live only in the message: the files
+are the record.
+
+Do not edit any file in the repository; your only writes are under `<repo>/benchmark/reproductions/altindag-2022-mental-health-costs-lockdowns/seeded/2026-11-10-b`.

@@ -1,0 +1,556 @@
+{
+  "usage": {
+    "api_calls": 15,
+    "llm_cache_hits": 0,
+    "llm_cache_served": false,
+    "by_model": {
+      "desktop-opus-run2": {
+        "input_tokens": 0,
+        "output_tokens": 0,
+        "cache_creation_input_tokens": 0,
+        "cache_read_input_tokens": 0,
+        "api_calls": 15
+      }
+    },
+    "rows_from_result_cache": 0,
+    "estimated_usd": 0.0,
+    "unpriced_models": [
+      "desktop-opus-run2"
+    ]
+  },
+  "results": [
+    {
+      "entry_id": "altindag-2022-mental-health-costs-lockdowns",
+      "mode": "seeded",
+      "reproducer": "pipeline",
+      "skipped": false,
+      "skip_reason": null,
+      "error": null,
+      "transient": false,
+      "error_kind": null,
+      "retally_ran": true,
+      "agrees_with_paper": false,
+      "agrees_with_i4r": false,
+      "n_claims_in_catalog": 10,
+      "n_claims_with_paper_match": 7,
+      "n_claims_with_i4r_match": 4,
+      "n_claims_with_paper_match_first_attempt": 7,
+      "n_refinements": 3,
+      "n_executions": 4,
+      "n_claims_with_paper_match_first_scored": 7,
+      "first_scored_attempt_index": 0,
+      "n_error_refinements": 0,
+      "n_claim_refinements": 3,
+      "n_files_stripped": null,
+      "claim_details": [
+        {
+          "description": "days_outside_last_week_table3_col3",
+          "claim_type": "coefficient",
+          "claimed": -1.09,
+          "reproduced": -1.089863,
+          "tolerance": 0.02,
+          "rel_err": 0.00012568807339454472,
+          "passed": true,
+          "passed_first_attempt": true,
+          "passed_first_scored": true,
+          "tolerance_source": "relative"
+        },
+        {
+          "description": "under_curfew_table3_col3",
+          "claim_type": "coefficient",
+          "claimed": 0.708,
+          "reproduced": 0.708352,
+          "tolerance": 0.02,
+          "rel_err": 0.0004971751412429647,
+          "passed": true,
+          "passed_first_attempt": true,
+          "passed_first_scored": true,
+          "tolerance_source": "relative"
+        },
+        {
+          "description": "never_goes_out_table3_col3",
+          "claim_type": "coefficient",
+          "claimed": 0.297,
+          "reproduced": 0.297368,
+          "tolerance": 0.02,
+          "rel_err": 0.0012390572390573568,
+          "passed": true,
+          "passed_first_attempt": true,
+          "passed_first_scored": true,
+          "tolerance_source": "relative"
+        },
+        {
+          "description": "n_obs_days_outside_table3_col3",
+          "claim_type": "count",
+          "claimed": 1214.0,
+          "reproduced": 1214.0,
+          "tolerance": 0.05,
+          "rel_err": 0.0,
+          "passed": true,
+          "passed_first_attempt": true,
+          "passed_first_scored": true,
+          "tolerance_source": "relative"
+        },
+        {
+          "description": "n_obs_under_curfew_table3_col3",
+          "claim_type": "count",
+          "claimed": 1222.0,
+          "reproduced": 1222.0,
+          "tolerance": 0.05,
+          "rel_err": 0.0,
+          "passed": true,
+          "passed_first_attempt": true,
+          "passed_first_scored": true,
+          "tolerance_source": "relative"
+        },
+        {
+          "description": "mental_distress_index_table4_col3",
+          "claim_type": "coefficient",
+          "claimed": 0.205,
+          "reproduced": 0.155508,
+          "tolerance": 0.02,
+          "rel_err": 0.24142439024390236,
+          "passed": false,
+          "passed_first_attempt": false,
+          "passed_first_scored": false,
+          "tolerance_source": "relative"
+        },
+        {
+          "description": "somatic_symptoms_index_table4_col3",
+          "claim_type": "coefficient",
+          "claimed": 0.175,
+          "reproduced": 0.143685,
+          "tolerance": 0.02,
+          "rel_err": 0.17894285714285704,
+          "passed": false,
+          "passed_first_attempt": false,
+          "passed_first_scored": false,
+          "tolerance_source": "relative"
+        },
+        {
+          "description": "nonsomatic_symptoms_index_table4_col3",
+          "claim_type": "coefficient",
+          "claimed": 0.158,
+          "reproduced": 0.146281,
+          "tolerance": 0.02,
+          "rel_err": 0.07417088607594942,
+          "passed": false,
+          "passed_first_attempt": false,
+          "passed_first_scored": false,
+          "tolerance_source": "relative"
+        },
+        {
+          "description": "sum_srq20_yes_answers_table4_col3",
+          "claim_type": "coefficient",
+          "claimed": 0.734,
+          "reproduced": 0.73423,
+          "tolerance": 0.02,
+          "rel_err": 0.00031335149863768866,
+          "passed": true,
+          "passed_first_attempt": true,
+          "passed_first_scored": true,
+          "tolerance_source": "relative"
+        },
+        {
+          "description": "n_obs_mental_distress_index_table4_col3",
+          "claim_type": "count",
+          "claimed": 1133.0,
+          "reproduced": 1133.0,
+          "tolerance": 0.05,
+          "rel_err": 0.0,
+          "passed": true,
+          "passed_first_attempt": true,
+          "passed_first_scored": true,
+          "tolerance_source": "relative"
+        }
+      ],
+      "split": "holdout",
+      "data_access": "manual",
+      "components": {
+        "parsed": true,
+        "claims_extracted": true,
+        "dataset_extracted": false,
+        "dataset_downloaded": true,
+        "code_generated": true,
+        "code_executed": true
+      },
+      "cached": false,
+      "usage": {
+        "api_calls": 7,
+        "llm_cache_hits": 0,
+        "llm_cache_served": false,
+        "by_model": {
+          "desktop-opus-run2": {
+            "input_tokens": 0,
+            "output_tokens": 0,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 0,
+            "api_calls": 7
+          }
+        },
+        "estimated_usd": 0.0,
+        "unpriced_models": [
+          "desktop-opus-run2"
+        ]
+      },
+      "artifacts_dir": "benchmark/results/artifacts/altindag-2022-mental-health-costs-lockdowns/seeded/pipeline/20261110T163624Z"
+    },
+    {
+      "entry_id": "altindag-2022-mental-health-costs-lockdowns",
+      "mode": "independent",
+      "reproducer": "pipeline",
+      "skipped": false,
+      "skip_reason": null,
+      "error": null,
+      "transient": false,
+      "error_kind": null,
+      "retally_ran": true,
+      "agrees_with_paper": true,
+      "agrees_with_i4r": true,
+      "n_claims_in_catalog": 10,
+      "n_claims_with_paper_match": 10,
+      "n_claims_with_i4r_match": 7,
+      "n_claims_with_paper_match_first_attempt": 8,
+      "n_refinements": 2,
+      "n_executions": 3,
+      "n_claims_with_paper_match_first_scored": 8,
+      "first_scored_attempt_index": 0,
+      "n_error_refinements": 0,
+      "n_claim_refinements": 2,
+      "n_files_stripped": 17,
+      "claim_details": [
+        {
+          "description": "days_outside_last_week_table3_col3",
+          "claim_type": "coefficient",
+          "claimed": -1.09,
+          "reproduced": -1.072422,
+          "tolerance": 0.16513761467889906,
+          "rel_err": 0.016126605504587242,
+          "passed": true,
+          "passed_first_attempt": true,
+          "passed_first_scored": true,
+          "tolerance_source": "se_band"
+        },
+        {
+          "description": "under_curfew_table3_col3",
+          "claim_type": "coefficient",
+          "claimed": 0.708,
+          "reproduced": 0.703413,
+          "tolerance": 0.0635593220338983,
+          "rel_err": 0.006478813559322045,
+          "passed": true,
+          "passed_first_attempt": true,
+          "passed_first_scored": true,
+          "tolerance_source": "se_band"
+        },
+        {
+          "description": "never_goes_out_table3_col3",
+          "claim_type": "coefficient",
+          "claimed": 0.297,
+          "reproduced": 0.287151,
+          "tolerance": 0.12121212121212122,
+          "rel_err": 0.03316161616161615,
+          "passed": true,
+          "passed_first_attempt": true,
+          "passed_first_scored": true,
+          "tolerance_source": "se_band"
+        },
+        {
+          "description": "n_obs_days_outside_table3_col3",
+          "claim_type": "count",
+          "claimed": 1214.0,
+          "reproduced": 1181.0,
+          "tolerance": 0.05,
+          "rel_err": 0.027182866556836903,
+          "passed": true,
+          "passed_first_attempt": true,
+          "passed_first_scored": true,
+          "tolerance_source": "relative"
+        },
+        {
+          "description": "n_obs_under_curfew_table3_col3",
+          "claim_type": "count",
+          "claimed": 1222.0,
+          "reproduced": 1189.0,
+          "tolerance": 0.05,
+          "rel_err": 0.027004909983633387,
+          "passed": true,
+          "passed_first_attempt": true,
+          "passed_first_scored": true,
+          "tolerance_source": "relative"
+        },
+        {
+          "description": "mental_distress_index_table4_col3",
+          "claim_type": "coefficient",
+          "claimed": 0.205,
+          "reproduced": 0.175576,
+          "tolerance": 0.4585365853658537,
+          "rel_err": 0.14353170731707307,
+          "passed": true,
+          "passed_first_attempt": true,
+          "passed_first_scored": true,
+          "tolerance_source": "se_band"
+        },
+        {
+          "description": "somatic_symptoms_index_table4_col3",
+          "claim_type": "coefficient",
+          "claimed": 0.175,
+          "reproduced": 0.144748,
+          "tolerance": 0.48571428571428577,
+          "rel_err": 0.17286857142857145,
+          "passed": true,
+          "passed_first_attempt": false,
+          "passed_first_scored": false,
+          "tolerance_source": "se_band"
+        },
+        {
+          "description": "nonsomatic_symptoms_index_table4_col3",
+          "claim_type": "coefficient",
+          "claimed": 0.158,
+          "reproduced": 0.21872,
+          "tolerance": 0.5822784810126582,
+          "rel_err": 0.3843037974683544,
+          "passed": true,
+          "passed_first_attempt": true,
+          "passed_first_scored": true,
+          "tolerance_source": "se_band"
+        },
+        {
+          "description": "sum_srq20_yes_answers_table4_col3",
+          "claim_type": "coefficient",
+          "claimed": 0.734,
+          "reproduced": 0.704622,
+          "tolerance": 0.5994550408719346,
+          "rel_err": 0.040024523160762965,
+          "passed": true,
+          "passed_first_attempt": true,
+          "passed_first_scored": true,
+          "tolerance_source": "se_band"
+        },
+        {
+          "description": "n_obs_mental_distress_index_table4_col3",
+          "claim_type": "count",
+          "claimed": 1133.0,
+          "reproduced": 1154.0,
+          "tolerance": 0.05,
+          "rel_err": 0.018534863195057368,
+          "passed": true,
+          "passed_first_attempt": false,
+          "passed_first_scored": false,
+          "tolerance_source": "relative"
+        }
+      ],
+      "split": "holdout",
+      "data_access": "manual",
+      "components": {
+        "parsed": true,
+        "claims_extracted": true,
+        "dataset_extracted": false,
+        "dataset_downloaded": true,
+        "code_generated": true,
+        "code_executed": true
+      },
+      "cached": false,
+      "usage": {
+        "api_calls": 5,
+        "llm_cache_hits": 0,
+        "llm_cache_served": false,
+        "by_model": {
+          "desktop-opus-run2": {
+            "input_tokens": 0,
+            "output_tokens": 0,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 0,
+            "api_calls": 5
+          }
+        },
+        "estimated_usd": 0.0,
+        "unpriced_models": [
+          "desktop-opus-run2"
+        ]
+      },
+      "artifacts_dir": "benchmark/results/artifacts/altindag-2022-mental-health-costs-lockdowns/independent/pipeline/20261110T163226Z"
+    },
+    {
+      "entry_id": "altindag-2022-mental-health-costs-lockdowns",
+      "mode": "blind",
+      "reproducer": "pipeline",
+      "skipped": false,
+      "skip_reason": null,
+      "error": null,
+      "transient": false,
+      "error_kind": null,
+      "retally_ran": true,
+      "agrees_with_paper": false,
+      "agrees_with_i4r": true,
+      "n_claims_in_catalog": 10,
+      "n_claims_with_paper_match": 9,
+      "n_claims_with_i4r_match": 7,
+      "n_claims_with_paper_match_first_attempt": 9,
+      "n_refinements": 0,
+      "n_executions": 1,
+      "n_claims_with_paper_match_first_scored": 9,
+      "first_scored_attempt_index": 0,
+      "n_error_refinements": 0,
+      "n_claim_refinements": 0,
+      "n_files_stripped": 17,
+      "claim_details": [
+        {
+          "description": "days_outside_last_week_table3_col3",
+          "claim_type": "coefficient",
+          "claimed": -1.09,
+          "reproduced": -1.063752,
+          "tolerance": 0.16513761467889906,
+          "rel_err": 0.02408073394495417,
+          "passed": true,
+          "passed_first_attempt": true,
+          "passed_first_scored": true,
+          "tolerance_source": "se_band"
+        },
+        {
+          "description": "under_curfew_table3_col3",
+          "claim_type": "coefficient",
+          "claimed": 0.708,
+          "reproduced": 0.708019,
+          "tolerance": 0.0635593220338983,
+          "rel_err": 2.6836158192078034e-05,
+          "passed": true,
+          "passed_first_attempt": true,
+          "passed_first_scored": true,
+          "tolerance_source": "se_band"
+        },
+        {
+          "description": "never_goes_out_table3_col3",
+          "claim_type": "coefficient",
+          "claimed": 0.297,
+          "reproduced": 0.285103,
+          "tolerance": 0.12121212121212122,
+          "rel_err": 0.04005723905723903,
+          "passed": true,
+          "passed_first_attempt": true,
+          "passed_first_scored": true,
+          "tolerance_source": "se_band"
+        },
+        {
+          "description": "n_obs_days_outside_table3_col3",
+          "claim_type": "count",
+          "claimed": 1214.0,
+          "reproduced": 1165.0,
+          "tolerance": 0.05,
+          "rel_err": 0.04036243822075782,
+          "passed": true,
+          "passed_first_attempt": true,
+          "passed_first_scored": true,
+          "tolerance_source": "relative"
+        },
+        {
+          "description": "n_obs_under_curfew_table3_col3",
+          "claim_type": "count",
+          "claimed": 1222.0,
+          "reproduced": 1173.0,
+          "tolerance": 0.05,
+          "rel_err": 0.040098199672667756,
+          "passed": true,
+          "passed_first_attempt": true,
+          "passed_first_scored": true,
+          "tolerance_source": "relative"
+        },
+        {
+          "description": "mental_distress_index_table4_col3",
+          "claim_type": "coefficient",
+          "claimed": 0.205,
+          "reproduced": 0.15046,
+          "tolerance": 0.4585365853658537,
+          "rel_err": 0.2660487804878048,
+          "passed": true,
+          "passed_first_attempt": true,
+          "passed_first_scored": true,
+          "tolerance_source": "se_band"
+        },
+        {
+          "description": "somatic_symptoms_index_table4_col3",
+          "claim_type": "coefficient",
+          "claimed": 0.175,
+          "reproduced": 0.145179,
+          "tolerance": 0.48571428571428577,
+          "rel_err": 0.17040571428571422,
+          "passed": true,
+          "passed_first_attempt": true,
+          "passed_first_scored": true,
+          "tolerance_source": "se_band"
+        },
+        {
+          "description": "nonsomatic_symptoms_index_table4_col3",
+          "claim_type": "coefficient",
+          "claimed": 0.158,
+          "reproduced": 0.135968,
+          "tolerance": 0.5822784810126582,
+          "rel_err": 0.13944303797468352,
+          "passed": true,
+          "passed_first_attempt": true,
+          "passed_first_scored": true,
+          "tolerance_source": "se_band"
+        },
+        {
+          "description": "sum_srq20_yes_answers_table4_col3",
+          "claim_type": "coefficient",
+          "claimed": 0.734,
+          "reproduced": 0.497153,
+          "tolerance": 0.5994550408719346,
+          "rel_err": 0.32267983651226156,
+          "passed": true,
+          "passed_first_attempt": true,
+          "passed_first_scored": true,
+          "tolerance_source": "se_band"
+        },
+        {
+          "description": "n_obs_mental_distress_index_table4_col3",
+          "claim_type": "count",
+          "claimed": 1133.0,
+          "reproduced": 1060.0,
+          "tolerance": 0.05,
+          "rel_err": 0.06443071491615181,
+          "passed": false,
+          "passed_first_attempt": false,
+          "passed_first_scored": false,
+          "tolerance_source": "relative"
+        }
+      ],
+      "split": "holdout",
+      "data_access": "manual",
+      "components": {
+        "parsed": true,
+        "claims_extracted": true,
+        "dataset_extracted": false,
+        "dataset_downloaded": true,
+        "code_generated": true,
+        "code_executed": true
+      },
+      "cached": false,
+      "usage": {
+        "api_calls": 3,
+        "llm_cache_hits": 0,
+        "llm_cache_served": false,
+        "by_model": {
+          "desktop-opus-run2": {
+            "input_tokens": 0,
+            "output_tokens": 0,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 0,
+            "api_calls": 3
+          }
+        },
+        "estimated_usd": 0.0,
+        "unpriced_models": [
+          "desktop-opus-run2"
+        ]
+      },
+      "artifacts_dir": "benchmark/results/artifacts/altindag-2022-mental-health-costs-lockdowns/blind/pipeline/20261110T145151Z"
+    }
+  ],
+  "rescored": {
+    "policy": "count-5pct",
+    "date": "2026-11-03",
+    "flipped": 0
+  }
+}

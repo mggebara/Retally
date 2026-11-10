@@ -1,0 +1,21 @@
+{
+  "schema": 1,
+  "entry_id": "saccardo-2023-demand-moral-commitment",
+  "mode": "blind",
+  "run_id": "2026-11-10-b",
+  "reproducer": "claude-code",
+  "language": "r",
+  "final": {"script": "script.R", "stdout": "stdout.txt", "stderr": "stderr.txt", "exit_code": 0},
+  "attempts": [
+    {"dir": "attempt-1", "exit_code": 0, "kind": ""},
+    {"dir": "attempt-2", "exit_code": 0, "kind": ""}
+  ],
+  "deviations": [
+    "Wave controls coded as AMT wave 2 and AMT wave 3 dummies (AMT wave 1 as base); professionals form their own wave/indicator, so the Choice Free-Professionals coefficient is relative to AMT Choice Free advisors net of these wave dummies. The paper does not state which wave is the reference category.",
+    "'Whether incentives were probabilistic' coded with probabilistic_incentive (1 for professionals and the probabilistic AMT wave-2 subsample); 'position of products' coded with incentiveleft; interaction = probabilistic_incentive x incentiveleft (equal to incentiveshigh_incentiveleft in the data)."
+  ],
+  "notes": "Data: Data/Clean Data/choice_experiments.dta only. Sample: four main Choice treatments (Choice Free AMT, Choice Free-Professionals, Incentive First Costly, Quality First Costly), High Stakes x10/x100 arms dropped; AMT advisors restricted to attentive advisors with consistent MPL responses (non-missing selfishness measure), which reproduces the Table 1 Ns exactly (2,574 / 712 / 1,562 / 1,067); 7 further observations drop for missing age. Selfishness = stdalpha (standardized MPL count). OLS linear probability models with HC3 SEs (sandwich). Table 2 col1: choicebefore on professionals, costly-treatment dummies and controls (female, age, wave dummies, probabilistic, product position, probabilistic x position); cols 2-3 AMT only with selfishness (and its interactions with the two costly dummies). Table 3: recommendincentive on prefer-incentive-first, no-conflict and their interaction, treatment dummies, incentiveB and the same controls, split by assigned/not assigned preference (getyourchoice), and pooled with not-assigned and its interactions. Two exploratory runs (attempt-1, attempt-2) inspected variables and counts only and printed no RESULT lines. No author scripts, result files or online sources consulted; no run hung.",
+  "files_read_outside_mount": [],
+  "started_at": "2026-11-10T11:24:48Z",
+  "finished_at": "2026-11-10T11:27:30Z"
+}

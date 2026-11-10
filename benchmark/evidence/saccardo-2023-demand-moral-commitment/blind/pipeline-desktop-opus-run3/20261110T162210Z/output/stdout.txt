@@ -1,0 +1,172 @@
+Rows in choice_experiments: 6976 
+Variable names:
+ [1] "id"                               "startdate"                       
+ [3] "enddate"                          "age"                             
+ [5] "condition"                        "shortid"                         
+ [7] "attentionpassed"                  "incentiveB"                      
+ [9] "incentiveA"                       "commission"                      
+[11] "choicebefore"                     "recommendincentive"              
+[13] "beliefbin"                        "belief"                          
+[15] "signalblue"                       "conflict"                        
+[17] "getbefore"                        "incentivecostly"                 
+[19] "study"                            "choice"                          
+[21] "incentiveshigh"                   "flippedorder"                    
+[23] "incentiveleft"                    "Highx10"                         
+[25] "Highx100"                         "chooseblindness"                 
+[27] "sample"                           "alphavaluefinal"                 
+[29] "stdalpha"                         "selfish"                         
+[31] "female"                           "beliefcorrect"                   
+[33] "jobtitle"                         "industry"                        
+[35] "explanationchoice"                "qualitycostly"                   
+[37] "professionals"                    "prolific"                        
+[39] "cloudresearch"                    "professionalscloudresearch"      
+[41] "mturkwave"                        "wave1"                           
+[43] "wave2"                            "wave3"                           
+[45] "probabilistic_incentive"          "locatedus"                       
+[47] "wave"                             "incentivedesign"                 
+[49] "year"                             "treatment"                       
+[51] "selfishseeincentivecostly"        "selfishseequalitycostly"         
+[53] "committ"                          "professionalsfree"               
+[55] "seeincentivecostly"               "seequalitycostly"                
+[57] "incentiveshigh_incentiveleft"     "avoid_incentiveinfo"             
+[59] "choiceafter"                      "getyourchoice"                   
+[61] "choicebefore_getyourchoice"       "getbeforenoconflict"             
+[63] "noconflict"                       "choicebeforenoconflict"          
+[65] "choicebefore_getbefore"           "choicebefore_getbefore_nocon"    
+[67] "notgetyourchoice"                 "notgetyourchoicenoconflict"      
+[69] "choicebeforenotgetyourchoice"     "choicebeforegetbefore"           
+[71] "logsignalhigh"                    "logsignallow"                    
+[73] "logitbelief"                      "good"                            
+[75] "bad"                              "goodchoicebefore"                
+[77] "badchoicebefore"                  "goodgetyourchoice"               
+[79] "badgetyourchoice"                 "goodnotgetyourchoice"            
+[81] "badnotgetyourchoice"              "goodchoicebeforenotgetyourchoice"
+[83] "badchoicebeforenotgetyourchoice"  "bayesianposterior"               
+[85] "badsignal"                        "updatecorrect"                   
+[87] "updatedirection"                  "updatewrong"                     
+[89] "beliefdistance"                   "relbeliefdistance"               
+[91] "correctdirbin"                    "beliefinbin"                     
+[93] "belief_prior"                     "belief_prior_continuos"          
+--- treatment ---
+
+   0    1    2    3 
+3353  712 1741 1170 
+--- condition ---
+
+              ChoiceFree ChoiceFree_Professionals                 PayAfter 
+                    3353                      712                     1170 
+               PayBefore 
+                    1741 
+--- sample ---
+
+CloudResearch         MTurk      Prolific 
+          216          6264           496 
+--- wave ---
+
+                 AMT-1                  AMT-2                  AMT-3 
+                  2951                   1255                   2058 
+Prolific/CloudResearch 
+                   712 
+--- commission ---
+
+            commissionA commissionB 
+        712        3138        3126 
+--- professionals ---
+
+   0    1 
+6264  712 
+--- probabilistic_incentive ---
+
+   0    1 
+5611 1365 
+--- incentiveshigh ---
+
+   0    1 
+6323  653 
+--- incentivedesign ---
+
+                0.15                 1.50 15 (to 1 out of 100) 
+                5193                  295                 1365 
+    15 (to everyone) 
+                 123 
+--- getyourchoice ---
+
+   0    1 
+1733 5243 
+--- flippedorder ---
+
+   0    1 <NA> 
+ 651  604 5721 
+--- conflict ---
+
+   0    1 
+2095 4881 
+--- qualitycostly ---
+
+   0    1 
+5806 1170 
+--- seequalitycostly ---
+
+   0    1 
+5806 1170 
+incentiveshigh x probabilistic_incentive
+   
+       0    1
+  0 5611  712
+  1    0  653
+Robustness-arm variables found:  
+Preference variable: choicebefore 
+Preference table:
+pref
+   0    1 
+3227 3749 
+Position variable: incentiveleft 
+Mask base N = 6976 
+Mask base_cons N = 6976 
+Mask drop_highnonprob N = 6976 
+Mask drop_highnonprob_cons N = 6976 
+Chosen mask: base 
+Main sample by arm: prof 712  IFC 1741  QFC 1170  Free 3353 
+Assigned candidate getyourchoice mean: 0.7515768 
+Assigned candidate notflipped mean: 0.5187251 
+Assigned candidate getbefore_eq_pref mean: 0.7515768 
+Assigned-pref variable used: getyourchoice 
+Selfish raw mean/sd (AMT main): 0.3464567 0.4758834 
+Table 2 col1:
+                   [,1]       [,2]
+(Intercept)  0.69502729 0.02230204
+prof        -0.03793508 0.04470062
+ifc         -0.14643474 0.01628587
+qfc          0.11010069 0.02225133
+Table 2 col3:
+                   [,1]        [,2]
+(Intercept)  0.66749155 0.024346667
+ifc         -0.15229812 0.017005747
+qfc          0.10031040 0.023106153
+sel          0.07827051 0.008804062
+sel_ifc     -0.04527212 0.015285281
+sel_qfc     -0.04218040 0.017093119
+Table 3 col1:
+                    [,1]       [,2]
+(Intercept)  0.733618035 0.02536610
+pref         0.186576512 0.01493066
+nocon        0.250063554 0.01864494
+pref_nocon  -0.131244151 0.02349248
+prof        -0.001711639 0.04512032
+ifc          0.013467147 0.01612509
+qfc         -0.061122027 0.02134435
+incB        -0.162974939 0.01178076
+Table 3 col3 pref x notass SE: 0.02373694 
+RESULT:see_incentive_first_costly_table2_col1=-0.146435
+RESULT:assess_quality_first_costly_table2_col1=0.110101
+RESULT:choice_free_professionals_table2_col1=-0.037935
+RESULT:selfishness_table2_col2=0.057662
+RESULT:selfishness_table2_col3=0.078271
+RESULT:see_incentive_first_costly_x_selfishness_table2_col3=-0.045272
+RESULT:see_quality_first_costly_x_selfishness_table2_col3=-0.042180
+RESULT:n_obs_table2_col1=6976
+RESULT:n_obs_table2_cols2_3=5588
+RESULT:prefer_see_incentive_first_assigned_table3_col1=0.186577
+RESULT:prefer_see_incentive_first_not_assigned_table3_col2=-0.006012
+RESULT:prefer_see_incentive_first_x_not_assigned_table3_col3=-0.138880
+RESULT:n_obs_table3_col1=5243

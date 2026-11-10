@@ -1,0 +1,23 @@
+{
+  "schema": 1,
+  "entry_id": "altindag-2022-mental-health-costs-lockdowns",
+  "mode": "seeded",
+  "run_id": "2026-11-10-a",
+  "reproducer": "claude-code",
+  "language": "r",
+  "final": {"script": "script.R", "stdout": "stdout.txt", "stderr": "stderr.txt", "exit_code": 0},
+  "attempts": [
+    {"dir": "attempt-1", "exit_code": 0, "kind": ""},
+    {"dir": "attempt-2", "exit_code": 0, "kind": "claim"},
+    {"dir": "attempt-3", "exit_code": 0, "kind": ""},
+    {"dir": "attempt-4", "exit_code": 0, "kind": "claim"}
+  ],
+  "deviations": [
+    "The Anderson (2008) indices come from the authors' _gweightave2.ado (egen weightave2, normby(controldummy)), which is not in the replication package. It was reconstructed: items z-scored with control-group (born after Dec 1955) mean/SD; weights = row sums of the inverse covariance matrix of the z-scores estimated on complete cases in the control group; weighted average; index re-standardised to control-group mean 0, SD 1. The control-group covariance was chosen after claim comparisons (attempt-2 used full-sample covariance; attempt-4 scored a raw-item-covariance version and printed alternative constructions as '#' diagnostic lines, among which the control-group-covariance version fit the claimed coefficients and SEs best).",
+    "Stata's xi: dummy regression is translated to feols with the month_*/province_n_* dummies and factor() terms as regressors (collinear month_12 and province_n_66 dropped automatically), clustered by modate."
+  ],
+  "notes": "Followed '1 Tables.do' Table 3 and Table 4 column (3): reg y on before1955, di1, di1_i plus month_*, province_n_*, i.ethnicity, i.education, female, i.survey_taker_id for |dif|<=45 among non_response==0, SEs clustered by modate. Mobility outcomes, SRQ-20 sum and all three observation counts match the paper exactly. Index coefficients depend on the unshipped weightave2 ado; the final reconstruction gives 0.214/0.173/0.147 vs claimed 0.205/0.175/0.158 (SEs 0.097/0.085/0.093 vs 0.094/0.085/0.092). attempt-1 and attempt-3 were exploratory (variable inspection; SRQ item coding, weights and item-level RD coefficients; no index estimates, no RESULT lines). Scripts were run from a scratch directory and copied here. No run hung.",
+  "files_read_outside_mount": [],
+  "started_at": "2026-11-10T11:29:00Z",
+  "finished_at": "2026-11-10T11:34:00Z"
+}

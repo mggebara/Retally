@@ -1,0 +1,693 @@
+{
+  "how": "recomputed: ResultComparator().compare_all(catalog claims, RESULT lines of output/stdout.txt, mode) - the comparator and claim conversion benchmark.runner.score_reproduction uses; row: the results row's claim_details entry as written by the run (tolerance, tolerance_source and rel_err come from there unchanged).",
+  "claims": [
+    {
+      "name": "see_incentive_first_costly_table2_col1",
+      "ground_truth": {
+        "value": -0.139,
+        "standard_error": 0.018,
+        "unit": "change in the probability of preferring to see the incentive first",
+        "claim_type": "coefficient",
+        "location": "Table 2, column (1), See Incentive First Costly",
+        "context": "Table 2 (\"Preference for Information Order\"), column (1).  Linear probability model of an indicator that the advisor prefers to see the incentive first (rather than assess the quality signal first) in the Choice experiment, on indicators for the Choice Free—Professionals, See Incentive First Costly and Assess Quality First Costly treatments (the Choice Free treatment on the AMT convenience sample is the omitted group), with controls for the advisor's gender and age, the wave of the experiment, whether incentives were probabilistic, the position of the products on the screen, and the interaction between probabilistic incentives and product position.  Sample: advisors in the four main Choice treatments (the high-stakes robustness variants excluded), AMT advisors restricted to attentive advisors who gave consistent responses in the moral-cost multiple price list.  The entry is the See Incentive First Costly coefficient (seeing the incentive first costs a third of the commission).  Robust standard errors (HC3).\n",
+        "decimals": 3,
+        "sample_size": null
+      },
+      "i4r": {
+        "reproduced_value": -0.139,
+        "outcome": "matches",
+        "notes": "Team 26 \"Corrected Selfishness coding\" row for the column 1 cell returns -0.139 (0.018), the published spec.",
+        "reproduced_within_band": true
+      },
+      "rule": {
+        "mode": "blind",
+        "type_relative_tolerance": 0.02,
+        "se_multiplier": 1.0,
+        "se_band_relative": 0.1294964028776978,
+        "printed_half_unit": 0.0005
+      },
+      "row": {
+        "description": "see_incentive_first_costly_table2_col1",
+        "claim_type": "coefficient",
+        "claimed": -0.139,
+        "reproduced": -0.139346,
+        "tolerance": 0.1294964028776978,
+        "rel_err": 0.0024892086330934185,
+        "passed": true,
+        "passed_first_attempt": false,
+        "passed_first_scored": true,
+        "tolerance_source": "se_band"
+      },
+      "recomputed": {
+        "result_name": "see_incentive_first_costly_table2_col1",
+        "reproduced": -0.139346,
+        "band_source": "se_band",
+        "band_relative": 0.1294964028776978,
+        "band_absolute": 0.018,
+        "abs_err": 0.0003459999999999852,
+        "rel_err": 0.0024892086330934185,
+        "margin": 0.0192222222222214,
+        "passed": true,
+        "notes": ""
+      },
+      "agrees_with_row": true,
+      "verdict": "PASS"
+    },
+    {
+      "name": "assess_quality_first_costly_table2_col1",
+      "ground_truth": {
+        "value": 0.152,
+        "standard_error": 0.029,
+        "unit": "change in the probability of preferring to see the incentive first",
+        "claim_type": "coefficient",
+        "location": "Table 2, column (1), Assess Quality First Costly",
+        "context": "Table 2, column (1): the same linear probability model of preferring to see the incentive first on the treatment indicators and controls. The entry is the Assess Quality First Costly coefficient (assessing quality first costs a third of the commission).  Robust standard errors (HC3).\n",
+        "decimals": 3,
+        "sample_size": null
+      },
+      "i4r": {
+        "reproduced_value": 0.152,
+        "outcome": "matches",
+        "notes": "Team 26 \"Corrected Selfishness coding\" row for the column 1 cell returns 0.152 (0.029), the published spec.",
+        "reproduced_within_band": true
+      },
+      "rule": {
+        "mode": "blind",
+        "type_relative_tolerance": 0.02,
+        "se_multiplier": 1.0,
+        "se_band_relative": 0.19078947368421054,
+        "printed_half_unit": 0.0005
+      },
+      "row": {
+        "description": "assess_quality_first_costly_table2_col1",
+        "claim_type": "coefficient",
+        "claimed": 0.152,
+        "reproduced": 0.151734,
+        "tolerance": 0.19078947368421054,
+        "rel_err": 0.0017499999999999241,
+        "passed": true,
+        "passed_first_attempt": false,
+        "passed_first_scored": true,
+        "tolerance_source": "se_band"
+      },
+      "recomputed": {
+        "result_name": "assess_quality_first_costly_table2_col1",
+        "reproduced": 0.151734,
+        "band_source": "se_band",
+        "band_relative": 0.19078947368421054,
+        "band_absolute": 0.029,
+        "abs_err": 0.00026599999999998847,
+        "rel_err": 0.0017499999999999241,
+        "margin": 0.00917241379310305,
+        "passed": true,
+        "notes": ""
+      },
+      "agrees_with_row": true,
+      "verdict": "PASS"
+    },
+    {
+      "name": "choice_free_professionals_table2_col1",
+      "ground_truth": {
+        "value": -0.095,
+        "standard_error": 0.026,
+        "unit": "change in the probability of preferring to see the incentive first",
+        "claim_type": "coefficient",
+        "location": "Table 2, column (1), Choice Free—Professionals",
+        "context": "Table 2, column (1): the same linear probability model.  The entry is the Choice Free—Professionals coefficient (advisors who self-report working in finance and insurance or legal services, recruited on Prolific and CloudResearch, relative to the AMT Choice Free advisors).  Robust standard errors (HC3).\n",
+        "decimals": 3,
+        "sample_size": null
+      },
+      "i4r": {
+        "reproduced_value": -0.095,
+        "outcome": "matches",
+        "notes": "Team 26 \"Corrected Selfishness coding\" row returns -0.095 (0.026), the published spec (column 1 only).",
+        "reproduced_within_band": false
+      },
+      "rule": {
+        "mode": "blind",
+        "type_relative_tolerance": 0.02,
+        "se_multiplier": 1.0,
+        "se_band_relative": 0.27368421052631575,
+        "printed_half_unit": 0.0005
+      },
+      "row": {
+        "description": "choice_free_professionals_table2_col1",
+        "claim_type": "coefficient",
+        "claimed": -0.095,
+        "reproduced": -0.021749,
+        "tolerance": 0.27368421052631575,
+        "rel_err": 0.7710631578947368,
+        "passed": false,
+        "passed_first_attempt": false,
+        "passed_first_scored": false,
+        "tolerance_source": "se_band"
+      },
+      "recomputed": {
+        "result_name": "choice_free_professionals_table2_col1",
+        "reproduced": -0.021749,
+        "band_source": "se_band",
+        "band_relative": 0.27368421052631575,
+        "band_absolute": 0.025999999999999995,
+        "abs_err": 0.073251,
+        "rel_err": 0.7710631578947368,
+        "margin": 2.817346153846154,
+        "passed": false,
+        "notes": "Outside tolerance: reproduced=-0.021749 vs claimed=-0.095 (relative error 77.11%, tolerance 27.37%, the ±1·SE band with SE=0.026)."
+      },
+      "agrees_with_row": true,
+      "verdict": "FAIL"
+    },
+    {
+      "name": "selfishness_table2_col2",
+      "ground_truth": {
+        "value": 0.028,
+        "standard_error": 0.007,
+        "unit": "change in the probability of preferring to see the incentive first per standard deviation of selfishness",
+        "claim_type": "coefficient",
+        "location": "Table 2, column (2), Selfishness",
+        "context": "Table 2, column (2): the column (1) model with the advisor's Selfishness added, a standardized measure of the number of times the advisor chose to recommend the incentivized product in the five- decision multiple price list on moral costs, elicited at the end of the experiment (not elicited for the professionals, so this column covers the AMT treatments only).  The entry is the Selfishness coefficient.  Robust standard errors (HC3).\n",
+        "decimals": 3,
+        "sample_size": null
+      },
+      "i4r": {
+        "reproduced_value": 0.028,
+        "outcome": "matches",
+        "notes": "Blanket I4R verdict (team 26); with Selfishness recoded by the team, 0.056 (0.007).",
+        "reproduced_within_band": true
+      },
+      "rule": {
+        "mode": "blind",
+        "type_relative_tolerance": 0.02,
+        "se_multiplier": 1.0,
+        "se_band_relative": 0.25,
+        "printed_half_unit": 0.0005
+      },
+      "row": {
+        "description": "selfishness_table2_col2",
+        "claim_type": "coefficient",
+        "claimed": 0.028,
+        "reproduced": 0.028195,
+        "tolerance": 0.25,
+        "rel_err": 0.0069642857142857405,
+        "passed": true,
+        "passed_first_attempt": false,
+        "passed_first_scored": true,
+        "tolerance_source": "se_band"
+      },
+      "recomputed": {
+        "result_name": "selfishness_table2_col2",
+        "reproduced": 0.028195,
+        "band_source": "se_band",
+        "band_relative": 0.25,
+        "band_absolute": 0.007,
+        "abs_err": 0.00019500000000000073,
+        "rel_err": 0.0069642857142857405,
+        "margin": 0.027857142857142962,
+        "passed": true,
+        "notes": ""
+      },
+      "agrees_with_row": true,
+      "verdict": "PASS"
+    },
+    {
+      "name": "selfishness_table2_col3",
+      "ground_truth": {
+        "value": 0.039,
+        "standard_error": 0.009,
+        "unit": "change in the probability of preferring to see the incentive first per standard deviation of selfishness",
+        "claim_type": "coefficient",
+        "location": "Table 2, column (3), Selfishness",
+        "context": "Table 2, column (3): the column (2) model with the interactions of Selfishness with the See Incentive First Costly and the Assess Quality First Costly indicators added.  The entry is the Selfishness main effect.  Robust standard errors (HC3).\n",
+        "decimals": 3,
+        "sample_size": null
+      },
+      "i4r": {
+        "reproduced_value": 0.039,
+        "outcome": "matches",
+        "notes": "Blanket I4R verdict (team 26); with Selfishness recoded by the team, 0.075 (0.010).",
+        "reproduced_within_band": true
+      },
+      "rule": {
+        "mode": "blind",
+        "type_relative_tolerance": 0.02,
+        "se_multiplier": 1.0,
+        "se_band_relative": 0.23076923076923075,
+        "printed_half_unit": 0.0005
+      },
+      "row": {
+        "description": "selfishness_table2_col3",
+        "claim_type": "coefficient",
+        "claimed": 0.039,
+        "reproduced": 0.039165,
+        "tolerance": 0.23076923076923075,
+        "rel_err": 0.004230769230769192,
+        "passed": true,
+        "passed_first_attempt": false,
+        "passed_first_scored": true,
+        "tolerance_source": "se_band"
+      },
+      "recomputed": {
+        "result_name": "selfishness_table2_col3",
+        "reproduced": 0.039165,
+        "band_source": "se_band",
+        "band_relative": 0.23076923076923075,
+        "band_absolute": 0.009,
+        "abs_err": 0.00016499999999999848,
+        "rel_err": 0.004230769230769192,
+        "margin": 0.018333333333333167,
+        "passed": true,
+        "notes": ""
+      },
+      "agrees_with_row": true,
+      "verdict": "PASS"
+    },
+    {
+      "name": "see_incentive_first_costly_x_selfishness_table2_col3",
+      "ground_truth": {
+        "value": -0.022,
+        "standard_error": 0.016,
+        "unit": "change in the selfishness slope of preferring to see the incentive first",
+        "claim_type": "coefficient",
+        "location": "Table 2, column (3), See Incentive First Costly × Selfishness",
+        "context": "Table 2, column (3): the same model with both interactions.  The entry is the See Incentive First Costly × Selfishness coefficient. Robust standard errors (HC3).\n",
+        "decimals": 3,
+        "sample_size": null
+      },
+      "i4r": {
+        "reproduced_value": -0.022,
+        "outcome": "matches",
+        "notes": "Blanket I4R verdict (team 26); with Selfishness recoded by the team, -0.049 (0.016).",
+        "reproduced_within_band": true
+      },
+      "rule": {
+        "mode": "blind",
+        "type_relative_tolerance": 0.02,
+        "se_multiplier": 1.0,
+        "se_band_relative": 0.7272727272727273,
+        "printed_half_unit": 0.0005
+      },
+      "row": {
+        "description": "see_incentive_first_costly_x_selfishness_table2_col3",
+        "claim_type": "coefficient",
+        "claimed": -0.022,
+        "reproduced": -0.022393,
+        "tolerance": 0.7272727272727273,
+        "rel_err": 0.017863636363636408,
+        "passed": true,
+        "passed_first_attempt": false,
+        "passed_first_scored": true,
+        "tolerance_source": "se_band"
+      },
+      "recomputed": {
+        "result_name": "see_incentive_first_costly_x_selfishness_table2_col3",
+        "reproduced": -0.022393,
+        "band_source": "se_band",
+        "band_relative": 0.7272727272727273,
+        "band_absolute": 0.016,
+        "abs_err": 0.000393000000000001,
+        "rel_err": 0.017863636363636408,
+        "margin": 0.02456250000000006,
+        "passed": true,
+        "notes": ""
+      },
+      "agrees_with_row": true,
+      "verdict": "PASS"
+    },
+    {
+      "name": "see_quality_first_costly_x_selfishness_table2_col3",
+      "ground_truth": {
+        "value": -0.021,
+        "standard_error": 0.018,
+        "unit": "change in the selfishness slope of preferring to see the incentive first",
+        "claim_type": "coefficient",
+        "location": "Table 2, column (3), See Quality First Costly × Selfishness",
+        "context": "Table 2, column (3): the same model with both interactions.  The entry is the See Quality First Costly × Selfishness coefficient (the interaction with the Assess Quality First Costly indicator).  Robust standard errors (HC3).\n",
+        "decimals": 3,
+        "sample_size": null
+      },
+      "i4r": {
+        "reproduced_value": -0.021,
+        "outcome": "matches",
+        "notes": "Blanket I4R verdict (team 26); with Selfishness recoded by the team, -0.024 (0.018).",
+        "reproduced_within_band": true
+      },
+      "rule": {
+        "mode": "blind",
+        "type_relative_tolerance": 0.02,
+        "se_multiplier": 1.0,
+        "se_band_relative": 0.857142857142857,
+        "printed_half_unit": 0.0005
+      },
+      "row": {
+        "description": "see_quality_first_costly_x_selfishness_table2_col3",
+        "claim_type": "coefficient",
+        "claimed": -0.021,
+        "reproduced": -0.02114,
+        "tolerance": 0.857142857142857,
+        "rel_err": 0.0066666666666665595,
+        "passed": true,
+        "passed_first_attempt": false,
+        "passed_first_scored": true,
+        "tolerance_source": "se_band"
+      },
+      "recomputed": {
+        "result_name": "see_quality_first_costly_x_selfishness_table2_col3",
+        "reproduced": -0.02114,
+        "band_source": "se_band",
+        "band_relative": 0.857142857142857,
+        "band_absolute": 0.018,
+        "abs_err": 0.00013999999999999777,
+        "rel_err": 0.0066666666666665595,
+        "margin": 0.007777777777777654,
+        "passed": true,
+        "notes": ""
+      },
+      "agrees_with_row": true,
+      "verdict": "PASS"
+    },
+    {
+      "name": "n_obs_table2_col1",
+      "ground_truth": {
+        "value": 5908.0,
+        "standard_error": null,
+        "unit": "advisors",
+        "claim_type": "count",
+        "location": "Table 2, Observations, column (1)",
+        "context": "Number of observations in Table 2, column (1): advisors in the four main Choice treatments, professionals included.\n",
+        "decimals": 0,
+        "sample_size": null
+      },
+      "i4r": null,
+      "rule": {
+        "mode": "blind",
+        "type_relative_tolerance": 0.05,
+        "se_multiplier": 1.0,
+        "se_band_relative": null,
+        "printed_half_unit": 0.5
+      },
+      "row": {
+        "description": "n_obs_table2_col1",
+        "claim_type": "count",
+        "claimed": 5908.0,
+        "reproduced": 5908.0,
+        "tolerance": 0.05,
+        "rel_err": 0.0,
+        "passed": true,
+        "passed_first_attempt": false,
+        "passed_first_scored": true,
+        "tolerance_source": "relative"
+      },
+      "recomputed": {
+        "result_name": "n_obs_table2_col1",
+        "reproduced": 5908.0,
+        "band_source": "relative",
+        "band_relative": 0.05,
+        "band_absolute": 295.40000000000003,
+        "abs_err": 0.0,
+        "rel_err": 0.0,
+        "margin": 0.0,
+        "passed": true,
+        "notes": ""
+      },
+      "agrees_with_row": true,
+      "verdict": "PASS"
+    },
+    {
+      "name": "n_obs_table2_cols2_3",
+      "ground_truth": {
+        "value": 5196.0,
+        "standard_error": null,
+        "unit": "advisors",
+        "claim_type": "count",
+        "location": "Table 2, Observations, columns (2) and (3)",
+        "context": "Number of observations in Table 2, columns (2) and (3): the advisors with the Selfishness measure (the AMT treatments, without the professionals).\n",
+        "decimals": 0,
+        "sample_size": null
+      },
+      "i4r": null,
+      "rule": {
+        "mode": "blind",
+        "type_relative_tolerance": 0.05,
+        "se_multiplier": 1.0,
+        "se_band_relative": null,
+        "printed_half_unit": 0.5
+      },
+      "row": {
+        "description": "n_obs_table2_cols2_3",
+        "claim_type": "count",
+        "claimed": 5196.0,
+        "reproduced": 5196.0,
+        "tolerance": 0.05,
+        "rel_err": 0.0,
+        "passed": true,
+        "passed_first_attempt": false,
+        "passed_first_scored": true,
+        "tolerance_source": "relative"
+      },
+      "recomputed": {
+        "result_name": "n_obs_table2_cols2_3",
+        "reproduced": 5196.0,
+        "band_source": "relative",
+        "band_relative": 0.05,
+        "band_absolute": 259.8,
+        "abs_err": 0.0,
+        "rel_err": 0.0,
+        "margin": 0.0,
+        "passed": true,
+        "notes": ""
+      },
+      "agrees_with_row": true,
+      "verdict": "PASS"
+    },
+    {
+      "name": "prefer_see_incentive_first_assigned_table3_col1",
+      "ground_truth": {
+        "value": 0.195,
+        "standard_error": 0.016,
+        "unit": "change in the probability of recommending the incentivized product",
+        "claim_type": "coefficient",
+        "location": "Table 3, column (1) Assigned pref., Prefer to See Incentive First",
+        "context": "Table 3 (\"Advisor Recommendations\"), column (1).  Linear probability model of an indicator that the advisor recommends the incentivized product, for advisors who were assigned their preferred information order, on Prefer to See Incentive First (the advisor's preference), a No Conflict indicator (the quality signal is not in conflict with the advisor's commission) and its interaction with Prefer to See Incentive First, the Choice Free—Professionals, See Incentive First Costly and Assess Quality First Costly indicators, an Incentive for B indicator, and controls for gender, age, wave, probabilistic incentives, product position and the probabilistic incentives x position interaction.  Sample: the four main Choice treatments as in Table 2, column (1).  The entry is the Prefer to See Incentive First coefficient (the gap, in cases of conflict, between advisors who prefer and get the incentive first and those who prefer and get quality first).  Robust standard errors (HC3).\n",
+        "decimals": 3,
+        "sample_size": null
+      },
+      "i4r": null,
+      "rule": {
+        "mode": "blind",
+        "type_relative_tolerance": 0.02,
+        "se_multiplier": 1.0,
+        "se_band_relative": 0.08205128205128205,
+        "printed_half_unit": 0.0005
+      },
+      "row": {
+        "description": "prefer_see_incentive_first_assigned_table3_col1",
+        "claim_type": "coefficient",
+        "claimed": 0.195,
+        "reproduced": 0.195751,
+        "tolerance": 0.08205128205128205,
+        "rel_err": 0.00385128205128206,
+        "passed": true,
+        "passed_first_attempt": false,
+        "passed_first_scored": true,
+        "tolerance_source": "se_band"
+      },
+      "recomputed": {
+        "result_name": "prefer_see_incentive_first_assigned_table3_col1",
+        "reproduced": 0.195751,
+        "band_source": "se_band",
+        "band_relative": 0.08205128205128205,
+        "band_absolute": 0.016,
+        "abs_err": 0.0007510000000000017,
+        "rel_err": 0.00385128205128206,
+        "margin": 0.046937500000000104,
+        "passed": true,
+        "notes": ""
+      },
+      "agrees_with_row": true,
+      "verdict": "PASS"
+    },
+    {
+      "name": "prefer_see_incentive_first_not_assigned_table3_col2",
+      "ground_truth": {
+        "value": 0.003,
+        "standard_error": 0.029,
+        "unit": "change in the probability of recommending the incentivized product",
+        "claim_type": "coefficient",
+        "location": "Table 3, column (2) Not assigned pref., Prefer to See Incentive First",
+        "context": "Table 3, column (2): the column (1) model for advisors who were not assigned their preferred information order.  The entry is the Prefer to See Incentive First coefficient.  Robust standard errors (HC3).\n",
+        "decimals": 3,
+        "sample_size": null
+      },
+      "i4r": null,
+      "rule": {
+        "mode": "blind",
+        "type_relative_tolerance": 0.02,
+        "se_multiplier": 1.0,
+        "se_band_relative": 9.666666666666666,
+        "printed_half_unit": 0.0005
+      },
+      "row": {
+        "description": "prefer_see_incentive_first_not_assigned_table3_col2",
+        "claim_type": "coefficient",
+        "claimed": 0.003,
+        "reproduced": 0.002286,
+        "tolerance": 9.666666666666666,
+        "rel_err": 0.23800000000000007,
+        "passed": true,
+        "passed_first_attempt": false,
+        "passed_first_scored": true,
+        "tolerance_source": "se_band"
+      },
+      "recomputed": {
+        "result_name": "prefer_see_incentive_first_not_assigned_table3_col2",
+        "reproduced": 0.002286,
+        "band_source": "se_band",
+        "band_relative": 9.666666666666666,
+        "band_absolute": 0.028999999999999998,
+        "abs_err": 0.0007140000000000002,
+        "rel_err": 0.23800000000000007,
+        "margin": 0.024620689655172424,
+        "passed": true,
+        "notes": ""
+      },
+      "agrees_with_row": true,
+      "verdict": "PASS"
+    },
+    {
+      "name": "prefer_see_incentive_first_x_not_assigned_table3_col3",
+      "ground_truth": {
+        "value": -0.14,
+        "standard_error": 0.026,
+        "unit": "change in the probability of recommending the incentivized product",
+        "claim_type": "coefficient",
+        "location": "Table 3, column (3) Both, Prefer to See Incentive First × Not Assigned Preference",
+        "context": "Table 3, column (3): both groups pooled, with a Not Assigned Preference indicator (not receiving the preferred order) and its interactions with Prefer to See Incentive First and with No Conflict added to the column (1) regressors.  The entry is the Prefer to See Incentive First × Not Assigned Preference coefficient.  Robust standard errors (HC3).\n",
+        "decimals": 3,
+        "sample_size": null
+      },
+      "i4r": null,
+      "rule": {
+        "mode": "blind",
+        "type_relative_tolerance": 0.02,
+        "se_multiplier": 1.0,
+        "se_band_relative": 0.1857142857142857,
+        "printed_half_unit": 0.0005
+      },
+      "row": {
+        "description": "prefer_see_incentive_first_x_not_assigned_table3_col3",
+        "claim_type": "coefficient",
+        "claimed": -0.14,
+        "reproduced": -0.140367,
+        "tolerance": 0.1857142857142857,
+        "rel_err": 0.0026214285714284175,
+        "passed": true,
+        "passed_first_attempt": false,
+        "passed_first_scored": true,
+        "tolerance_source": "se_band"
+      },
+      "recomputed": {
+        "result_name": "prefer_see_incentive_first_x_not_assigned_table3_col3",
+        "reproduced": -0.140367,
+        "band_source": "se_band",
+        "band_relative": 0.1857142857142857,
+        "band_absolute": 0.026,
+        "abs_err": 0.00036699999999997845,
+        "rel_err": 0.0026214285714284175,
+        "margin": 0.014115384615383787,
+        "passed": true,
+        "notes": ""
+      },
+      "agrees_with_row": true,
+      "verdict": "PASS"
+    },
+    {
+      "name": "n_obs_table3_col1",
+      "ground_truth": {
+        "value": 4448.0,
+        "standard_error": null,
+        "unit": "advisors",
+        "claim_type": "count",
+        "location": "Table 3, Observations, column (1)",
+        "context": "Number of observations in Table 3, column (1): advisors in the main Choice treatments who were assigned their preferred information order.\n",
+        "decimals": 0,
+        "sample_size": null
+      },
+      "i4r": null,
+      "rule": {
+        "mode": "blind",
+        "type_relative_tolerance": 0.05,
+        "se_multiplier": 1.0,
+        "se_band_relative": null,
+        "printed_half_unit": 0.5
+      },
+      "row": {
+        "description": "n_obs_table3_col1",
+        "claim_type": "count",
+        "claimed": 4448.0,
+        "reproduced": 4448.0,
+        "tolerance": 0.05,
+        "rel_err": 0.0,
+        "passed": true,
+        "passed_first_attempt": false,
+        "passed_first_scored": true,
+        "tolerance_source": "relative"
+      },
+      "recomputed": {
+        "result_name": "n_obs_table3_col1",
+        "reproduced": 4448.0,
+        "band_source": "relative",
+        "band_relative": 0.05,
+        "band_absolute": 222.4,
+        "abs_err": 0.0,
+        "rel_err": 0.0,
+        "margin": 0.0,
+        "passed": true,
+        "notes": ""
+      },
+      "agrees_with_row": true,
+      "verdict": "PASS"
+    }
+  ],
+  "row_only_claims": [],
+  "summary": {
+    "n_claims": 13,
+    "row_passed": 12,
+    "recomputed_passed": 12,
+    "disagreements": []
+  },
+  "cell": {
+    "entry_id": "saccardo-2023-demand-moral-commitment",
+    "mode": "blind",
+    "reproducer": "claude-code",
+    "label": "claude-code",
+    "model": null,
+    "oracle": false,
+    "run": "2026-11-10-d",
+    "results_file": "claude-code-run4-1paper-saccardo-indep-blind-2026-11-10.json",
+    "also_in": [],
+    "artifacts_dir": "benchmark/results/artifacts/saccardo-2023-demand-moral-commitment/blind/claude-code/20261110T112917Z",
+    "run_dir": "benchmark/reproductions/saccardo-2023-demand-moral-commitment/blind/2026-11-10-d",
+    "date": "2026-11-10T11:27:30Z",
+    "data_access": "manual",
+    "retally_ran": true,
+    "error": null,
+    "n_claims": 13,
+    "final": 12,
+    "first_scored": 12,
+    "first_scored_index": 3,
+    "first_attempt": 0,
+    "n_refinements": 0,
+    "n_error_refinements": 0,
+    "n_claim_refinements": 0,
+    "n_executions": 4,
+    "n_files_stripped": 4,
+    "agrees_with_i4r": false,
+    "deviations_manifest": [],
+    "deviations_stdout": [],
+    "notes": "Data: Data/Clean Data/choice_experiments.dta. Attempts 1-3 were exploratory (variable inspection, sample counts; no RESULT lines). Sample: four main Choice treatments (High-Stakes x10/x100 arms dropped); AMT advisors with inconsistent MPL responses (missing alphavaluefinal/stdalpha) excluded per the paper's preregistered rule, professionals (no MPL) kept; this reproduces the Table 1 Ns exactly (2574/712/1562/1067). 7 further observations drop for missing age. Table 2: OLS of choicebefore on seeincentivecostly, seequalitycostly, professionalsfree (col 1) or stdalpha (cols 2-3, AMT only; plus interactions in col 3), controls female, age, wave2, wave3 (wave1 base; professionals have no AMT wave), probabilistic_incentive, incentiveleft, incentiveshigh_incentiveleft; HC3 SEs. Table 3: OLS of recommendincentive on choicebefore, noconflict, choicebefore x noconflict, treatment dummies, incentiveB and the same controls, split by getyourchoice (cols 1-2) and pooled with notgetyourchoice and its interactions with choicebefore and noconflict (col 3); HC3. Selfishness uses the dataset's stdalpha (standardized alphavaluefinal). No hangs; each sandbox run took ~2 s.",
+    "files_read_outside_mount": [],
+    "paper_text": "paper.blind.txt",
+    "complete": true,
+    "missing": []
+  }
+}

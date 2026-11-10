@@ -1,0 +1,156 @@
+N rows: 6976 
+Columns: id startdate enddate age condition shortid attentionpassed incentiveB incentiveA commission choicebefore recommendincentive beliefbin belief signalblue conflict getbefore incentivecostly study choice incentiveshigh flippedorder incentiveleft Highx10 Highx100 chooseblindness sample alphavaluefinal stdalpha selfish female beliefcorrect jobtitle industry explanationchoice qualitycostly professionals prolific cloudresearch professionalscloudresearch mturkwave wave1 wave2 wave3 probabilistic_incentive locatedus wave incentivedesign year treatment selfishseeincentivecostly selfishseequalitycostly committ professionalsfree seeincentivecostly seequalitycostly incentiveshigh_incentiveleft avoid_incentiveinfo choiceafter getyourchoice choicebefore_getyourchoice getbeforenoconflict noconflict choicebeforenoconflict choicebefore_getbefore choicebefore_getbefore_nocon notgetyourchoice notgetyourchoicenoconflict choicebeforenotgetyourchoice choicebeforegetbefore logsignalhigh logsignallow logitbelief good bad goodchoicebefore badchoicebefore goodgetyourchoice badgetyourchoice goodnotgetyourchoice badnotgetyourchoice goodchoicebeforenotgetyourchoice badchoicebeforenotgetyourchoice bayesianposterior badsignal updatecorrect updatedirection updatewrong beliefdistance relbeliefdistance correctdirbin beliefinbin belief_prior belief_prior_continuos 
+Arm flags: ci 1741  cq 1170  prof 712 
+High-stakes robustness arms excluded: 418 
+Non-professionals with missing selfish: 676  missing alpha: 676 
+Kept after restrictions: 5915 
+Wave column: wave 
+Controls: prob + left + prob_left 
+Mean pref by arm: free 0.5672106  ci 0.4103713  cq 0.6194939  prof 0.4803371 
+                        arm
+wave                       ci   cq free prof
+  AMT-1                  1347    0 1308    0
+  AMT-2                     0    0 1053    0
+  AMT-3                   215 1067  213    0
+  Prolific/CloudResearch    0    0    0  712
+                              ci        cq      free      prof
+AMT-1                  0.4216778        NA 0.5634557        NA
+AMT-2                         NA        NA 0.5954416        NA
+AMT-3                  0.3395349 0.6194939 0.4507042        NA
+Prolific/CloudResearch        NA        NA        NA 0.4803371
+
+t test of coefficients:
+
+             Estimate Std. Error t value  Pr(>|t|)    
+(Intercept)  0.555056   0.011786 47.0943 < 2.2e-16 ***
+prof        -0.074719   0.022134 -3.3758 0.0007408 ***
+ci          -0.144685   0.017147 -8.4382 < 2.2e-16 ***
+cq           0.064438   0.018976  3.3957 0.0006890 ***
+prob        -0.019085   0.032165 -0.5933 0.5529746    
+left         0.103674   0.032126  3.2272 0.0012571 ** 
+prob_left   -0.044948   0.053309 -0.8432 0.3991684    
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+
+t test of coefficients:
+
+                    Estimate Std. Error t value  Pr(>|t|)    
+(Intercept)        0.5612995  0.0132140 42.4775 < 2.2e-16 ***
+prof              -0.0809624  0.0229287 -3.5310 0.0004171 ***
+ci                -0.1375279  0.0177975 -7.7274 1.282e-14 ***
+cq                 0.1555488  0.0293447  5.3008 1.195e-07 ***
+factor(wave)AMT-2  0.0371561  0.0332242  1.1183 0.2634652    
+factor(wave)AMT-3 -0.0973544  0.0253897 -3.8344 0.0001272 ***
+prob              -0.0624844  0.0427227 -1.4626 0.1436417    
+left               0.0602746  0.0426929  1.4118 0.1580561    
+prob_left         -0.0015488  0.0602749 -0.0257 0.9795008    
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+DEVIATION: Table 2 col 1 includes wave/sample fixed effects ( wave ) so costly arms are compared with Choice Free advisors from the same wave; not stated in the excerpt
+alpha summary: mean 3.026139  sd 1.570859 
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+  0.000   2.000   3.000   3.026   5.000   5.000 
+cor(standardized alpha, binary selfish): 0.8851476 
+DEVIATION: Selfishness measured as standardized continuous MPL value (alphavaluefinal), sign-oriented to agree with the binary selfish indicator, instead of the standardized 0/1 selfish dummy
+
+t test of coefficients:
+
+              Estimate Std. Error t value  Pr(>|t|)    
+(Intercept)  0.5552716  0.0117327 47.3267 < 2.2e-16 ***
+ci          -0.1448899  0.0171075 -8.4694 < 2.2e-16 ***
+cq           0.0646252  0.0189367  3.4127 0.0006481 ***
+selfz        0.0308489  0.0067482  4.5714 4.956e-06 ***
+prob        -0.0196348  0.0320148 -0.6133 0.5397030    
+left         0.1014002  0.0321478  3.1542 0.0016186 ** 
+prob_left   -0.0431657  0.0532619 -0.8104 0.4177229    
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+
+t test of coefficients:
+
+              Estimate Std. Error t value  Pr(>|t|)    
+(Intercept)  0.5553529  0.0117249 47.3651 < 2.2e-16 ***
+ci          -0.1449754  0.0171009 -8.4777 < 2.2e-16 ***
+cq           0.0644151  0.0189277  3.4032  0.000671 ***
+selfz        0.0424863  0.0094758  4.4837 7.495e-06 ***
+prob        -0.0198422  0.0319950 -0.6202  0.535177    
+left         0.1005424  0.0322030  3.1221  0.001805 ** 
+prob_left   -0.0424933  0.0533120 -0.7971  0.425448    
+ci:selfz    -0.0243654  0.0157904 -1.5431  0.122880    
+cq:selfz    -0.0214986  0.0175769 -1.2231  0.221341    
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+
+t test of coefficients:
+
+              Estimate Std. Error  t value  Pr(>|t|)    
+(Intercept)  0.6581740  0.0168474  39.0667 < 2.2e-16 ***
+pref         0.2005318  0.0159769  12.5513 < 2.2e-16 ***
+noconf       0.2576959  0.0199180  12.9378 < 2.2e-16 ***
+prof         0.0124631  0.0210504   0.5921   0.55384    
+ci           0.0385189  0.0168972   2.2796   0.02268 *  
+cq          -0.0191751  0.0188044  -1.0197   0.30792    
+incB        -0.1713509  0.0127214 -13.4695 < 2.2e-16 ***
+prob         0.0328290  0.0286774   1.1448   0.25237    
+left        -0.0073322  0.0308262  -0.2379   0.81200    
+prob_left    0.0220421  0.0488788   0.4510   0.65204    
+pref:noconf -0.1387592  0.0252260  -5.5007 3.997e-08 ***
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+
+t test of coefficients:
+
+              Estimate Std. Error t value  Pr(>|t|)    
+(Intercept)  0.7385308  0.0279549 26.4187 < 2.2e-16 ***
+pref         0.0124592  0.0285091  0.4370    0.6622    
+noconf       0.2077327  0.0329555  6.3034 3.852e-10 ***
+prof         0.0467896  0.0365452  1.2803    0.2006    
+ci           0.0229039  0.0299451  0.7649    0.4445    
+cq           0.0261045  0.0334289  0.7809    0.4350    
+incB        -0.1860982  0.0226650 -8.2108 4.796e-16 ***
+prob         0.0660342  0.0580147  1.1382    0.2552    
+left         0.0157991  0.0593941  0.2660    0.7903    
+prob_left   -0.0080838  0.0957090 -0.0845    0.9327    
+pref:noconf  0.0036949  0.0441455  0.0837    0.9333    
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+
+t test of coefficients:
+
+                      Estimate  Std. Error  t value  Pr(>|t|)    
+(Intercept)         0.66330167  0.01562973  42.4385 < 2.2e-16 ***
+pref                0.18800453  0.01517495  12.3891 < 2.2e-16 ***
+noconf              0.23933211  0.01840138  13.0062 < 2.2e-16 ***
+prof                0.02137781  0.01825096   1.1713  0.241515    
+ci                  0.03416243  0.01471907   2.3210  0.020323 *  
+cq                 -0.00768371  0.01639081  -0.4688  0.639243    
+incB               -0.17535193  0.01109880 -15.7992 < 2.2e-16 ***
+prob                0.04260259  0.02582277   1.6498  0.099036 .  
+left               -0.00040206  0.02738758  -0.0147  0.988288    
+prob_left           0.01235106  0.04366901   0.2828  0.777314    
+notassigned         0.06056901  0.02135632   2.8361  0.004582 ** 
+pref:noconf        -0.10202079  0.02189589  -4.6594 3.242e-06 ***
+pref:notassigned   -0.14095262  0.02557433  -5.5115 3.709e-08 ***
+noconf:notassigned  0.02201834  0.02530180   0.8702  0.384211    
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+RESULT:see_incentive_first_costly_table2_col1=-0.137528
+RESULT:assess_quality_first_costly_table2_col1=0.155549
+RESULT:choice_free_professionals_table2_col1=-0.080962
+RESULT:selfishness_table2_col2=0.030849
+RESULT:selfishness_table2_col3=0.042486
+RESULT:see_incentive_first_costly_x_selfishness_table2_col3=-0.024365
+RESULT:see_quality_first_costly_x_selfishness_table2_col3=-0.021499
+RESULT:n_obs_table2_col1=5915
+RESULT:n_obs_table2_cols2_3=5203
+RESULT:prefer_see_incentive_first_assigned_table3_col1=0.200532
+RESULT:prefer_see_incentive_first_not_assigned_table3_col2=0.012459
+RESULT:prefer_see_incentive_first_x_not_assigned_table3_col3=-0.140953
+RESULT:n_obs_table3_col1=4450

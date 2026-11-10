@@ -1,0 +1,24 @@
+{
+  "schema": 1,
+  "entry_id": "saccardo-2023-demand-moral-commitment",
+  "mode": "independent",
+  "run_id": "2026-11-10-b",
+  "reproducer": "claude-code",
+  "language": "r",
+  "final": {"script": "script.R", "stdout": "stdout.txt", "stderr": "stderr.txt", "exit_code": 0},
+  "attempts": [
+    {"dir": "attempt-1", "exit_code": 0, "kind": ""},
+    {"dir": "attempt-2", "exit_code": 0, "kind": ""},
+    {"dir": "attempt-3", "exit_code": 0, "kind": "claim"},
+    {"dir": "attempt-4", "exit_code": 0, "kind": ""}
+  ],
+  "deviations": [
+    "Probabilistic-incentive control is the dataset's incentiveshigh (randomized $15-to-1-in-100 payment within AMT wave 2) and its interaction with incentiveleft, not probabilistic_incentive (which also equals 1 for every professional); the paper's 'whether incentives were probabilistic' is ambiguous on this point. Chosen after the attempt-3 claim comparison.",
+    "Selfishness is the dataset's prebuilt stdalpha (standardized MPL count, standardized over all advisors with a consistent MPL, including high-stakes variants), not re-standardized within the regression sample.",
+    "Wave controls entered as a factor of the wave variable (AMT-1, AMT-2, AMT-3, Prolific/CloudResearch); the Prolific/CloudResearch level is collinear with the Professionals indicator and is dropped."
+  ],
+  "notes": "Data: Data/Clean Data/choice_experiments.dta. Sample: the four main Choice treatments (Choice Free AMT, Choice Free-Professionals, Incentive First Costly, Quality First Costly), excluding the High Stakes 10x/100x variants and AMT advisors with inconsistent MPL answers (missing stdalpha, i.e. multiple switchers); this gives exactly the Table 1 Ns (2574/712/1562/1067), and after age missings N=5908 (Table 2 col 1), 5196 (cols 2-3), 4448/1460/5908 (Table 3). OLS linear probability models with HC3 SEs (sandwich), controls female, age, wave factor, probabilistic incentive, incentive-left position and their interaction. Outcome Table 2: choicebefore; Table 3: recommendincentive with choicebefore, noconflict, interactions, treatment indicators, incentiveB; split by getyourchoice. Attempts 1, 2 and 4 were exploratory (variable inspection, sample counts, alternative control codings; no RESULT lines). Attempt-3 was the first scored run; check_attempt flagged only choice_free_professionals_table2_col1 (-0.022 vs -0.095); after switching the probabilistic control to incentiveshigh it is -0.084 (SE 0.023 vs paper 0.026). All other reproduced coefficients and counts match the paper to the reported precision. No hang occurred; every sandbox run took under 2 s.",
+  "files_read_outside_mount": [],
+  "started_at": "2026-11-10T11:24:47Z",
+  "finished_at": "2026-11-10T11:28:30Z"
+}

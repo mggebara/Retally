@@ -1,0 +1,230 @@
+Rows in choice_experiments: 6976 
+
+--- table of treatment ---
+x
+   0    1    2    3 
+3353  712 1741 1170 
+
+--- table of condition ---
+x
+              ChoiceFree ChoiceFree_Professionals                 PayAfter 
+                    3353                      712                     1170 
+               PayBefore 
+                    1741 
+
+--- table of study ---
+x
+   1    2    3    4    6    7    8 
+ 712 1447 1504 1255  651  237 1170 
+
+--- table of sample ---
+x
+CloudResearch         MTurk      Prolific 
+          216          6264           496 
+
+--- table of wave ---
+x
+                 AMT-1                  AMT-2                  AMT-3 
+                  2951                   1255                   2058 
+Prolific/CloudResearch 
+                   712 
+
+--- table of professionals ---
+x
+   0    1 
+6264  712 
+
+--- table of incentiveshigh ---
+x
+   0    1 
+6323  653 
+
+--- table of probabilistic_incentive ---
+x
+   0    1 
+5611 1365 
+
+--- table of qualitycostly ---
+x
+   0    1 
+5806 1170 
+
+--- table of incentivecostly ---
+x
+   0    1 
+5235 1741 
+
+--- table of seeincentivecostly ---
+x
+   0    1 
+5235 1741 
+
+--- table of seequalitycostly ---
+x
+   0    1 
+5806 1170 
+
+--- table of Highx10 ---
+x
+   0    1 
+6681  295 
+
+--- table of Highx100 ---
+x
+   0    1 
+6853  123 
+
+--- table of attentionpassed ---
+x
+   1 <NA> 
+6264  712 
+
+--- table of choicebefore ---
+x
+   0    1 
+3227 3749 
+
+--- table of getyourchoice ---
+x
+   0    1 
+1733 5243 
+
+--- table of noconflict ---
+x
+   0    1 
+4881 2095 
+
+--- table of incentiveleft ---
+x
+   0    1 
+6358  618 
+
+Costly arm variables: seeincentivecostly seequalitycostly 
+Treatment indicator counts: prof 712  incost 1741  qcost 1170 
+
+Selfish summary (full data):
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max.     NAs 
+ 0.0000  0.0000  0.0000  0.3465  1.0000  1.0000    1388 
+sd: 0.4758834 
+
+Rows flagged: highx 418  replication/deterministic labels 0 
+DEVIATION: Controls restricted to design-variation controls (probabilistic payment, left position, their interaction) per fn. 14; demographics/wave removed
+
+Candidate sample sizes (target 5908):
+     att  cons  nohx nolab    n
+1   TRUE  TRUE  TRUE  TRUE 5846
+2  FALSE  TRUE  TRUE  TRUE 6558
+3   TRUE FALSE  TRUE  TRUE 5846
+4  FALSE FALSE  TRUE  TRUE 6558
+5   TRUE  TRUE FALSE  TRUE 6264
+6  FALSE  TRUE FALSE  TRUE 6976
+7   TRUE FALSE FALSE  TRUE 6264
+8  FALSE FALSE FALSE  TRUE 6976
+9   TRUE  TRUE  TRUE FALSE 5846
+10 FALSE  TRUE  TRUE FALSE 6558
+11  TRUE FALSE  TRUE FALSE 5846
+12 FALSE FALSE  TRUE FALSE 6558
+13  TRUE  TRUE FALSE FALSE 6264
+14 FALSE  TRUE FALSE FALSE 6976
+15  TRUE FALSE FALSE FALSE 6264
+16 FALSE FALSE FALSE FALSE 6976
+Chosen sample filters:
+   att cons nohx nolab    n dist
+1 TRUE TRUE TRUE  TRUE 5846   62
+Selected rows: 5846  professionals: 0 
+
+==== Table 2 col 1 ====
+                  b     se
+(Intercept)  0.5675 0.0111
+prof             NA     NA
+incost      -0.1459 0.0162
+qcost        0.0521 0.0180
+prob         0.0090 0.0293
+left         0.1137 0.0293
+prob_left   -0.0809 0.0484
+N = 5846 
+
+Selfish mean/sd in estimation sample: 0.3459543 0.4757241 
+DEVIATION: Selfishness used as provided in the data (already standardised variable 'selfish'), not re-standardised on the estimation sample
+
+==== Table 2 col 2 ====
+                  b     se
+(Intercept)  0.5129 0.0127
+incost      -0.1454 0.0170
+qcost        0.0644 0.0188
+selfz        0.1248 0.0141
+prob        -0.0218 0.0319
+left         0.0949 0.0320
+prob_left   -0.0371 0.0531
+N = 5203 
+
+==== Table 2 col 3 ====
+                   b     se
+(Intercept)   0.4968 0.0137
+incost       -0.1124 0.0205
+qcost         0.0953 0.0230
+selfz         0.1723 0.0198
+prob         -0.0228 0.0319
+left          0.0915 0.0321
+prob_left    -0.0341 0.0532
+incost:selfz -0.0967 0.0330
+qcost:selfz  -0.0912 0.0367
+N = 5203 
+
+==== Table 3 col 1 (assigned) ====
+                     b     se
+(Intercept)     0.5921 0.0162
+prefinc         0.1779 0.0168
+noconf          0.2211 0.0203
+prof                NA     NA
+incost          0.0287 0.0165
+qcost          -0.0209 0.0184
+prob           -0.0094 0.0281
+left           -0.0065 0.0299
+prob_left       0.0757 0.0470
+prefinc:noconf -0.1311 0.0261
+N = 4392 
+
+==== Table 3 col 2 (not assigned) ====
+                     b     se
+(Intercept)     0.6620 0.0274
+prefinc         0.0008 0.0298
+noconf          0.1552 0.0347
+prof                NA     NA
+incost          0.0147 0.0292
+qcost           0.0167 0.0327
+prob           -0.0129 0.0576
+left            0.0072 0.0574
+prob_left       0.0819 0.0909
+prefinc:noconf  0.0247 0.0462
+N = 1454 
+
+==== Table 3 col 3 (both) ====
+                          b     se
+(Intercept)          0.5980 0.0152
+prefinc              0.1648 0.0160
+noconf               0.2001 0.0188
+notassigned          0.0464 0.0226
+prof                     NA     NA
+incost               0.0248 0.0143
+qcost               -0.0116 0.0161
+prob                -0.0084 0.0253
+left                -0.0019 0.0264
+prob_left            0.0745 0.0418
+prefinc:noconf      -0.0921 0.0228
+prefinc:notassigned -0.1258 0.0267
+noconf:notassigned   0.0192 0.0264
+N = 5846 
+
+RESULT:see_incentive_first_costly_table2_col1=-0.145944
+RESULT:assess_quality_first_costly_table2_col1=0.052118
+RESULT:n_obs_table2_col1=5846.000000
+RESULT:selfishness_table2_col2=0.124766
+RESULT:n_obs_table2_cols2_3=5203.000000
+RESULT:selfishness_table2_col3=0.172269
+RESULT:see_incentive_first_costly_x_selfishness_table2_col3=-0.096696
+RESULT:see_quality_first_costly_x_selfishness_table2_col3=-0.091207
+RESULT:prefer_see_incentive_first_assigned_table3_col1=0.177949
+RESULT:n_obs_table3_col1=4392.000000
+RESULT:prefer_see_incentive_first_not_assigned_table3_col2=0.000794
+RESULT:prefer_see_incentive_first_x_not_assigned_table3_col3=-0.125839

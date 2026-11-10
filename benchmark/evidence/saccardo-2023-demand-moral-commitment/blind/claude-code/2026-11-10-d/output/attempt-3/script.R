@@ -1,0 +1,10 @@
+library(haven); library(dplyr)
+options(width = 250)
+D <- "<repo>/benchmark/.cache/claude-code/saccardo-2023-demand-moral-commitment/blind/2026-11-10-d/mount/saccardo_2023_demand_moral_commitment/Data/Clean Data/"
+d <- read_dta(paste0(D,"choice_experiments.dta"))
+d$alphaNA <- is.na(d$alphavaluefinal)
+print(as.data.frame(d %>% count(study, Highx10, Highx100, incentiveshigh, incentiveleft, flippedorder, incentiveshigh_incentiveleft, alphaNA)))
+m <- d %>% filter(Highx10 == 0, Highx100 == 0)
+print(table(m$treatment))
+print(table(m$treatment[!(m$alphaNA & m$professionals == 0)]))
+print(table(m$treatment[!(m$alphaNA & m$professionals == 0) & !is.na(m$age)]))

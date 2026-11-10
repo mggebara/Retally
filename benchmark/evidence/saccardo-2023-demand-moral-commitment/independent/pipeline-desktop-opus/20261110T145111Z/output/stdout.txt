@@ -1,0 +1,171 @@
+N raw: 6976 
+Table of treatment :
+
+   0    1    2    3 
+3353  712 1741 1170 
+Table of study :
+
+   1    2    3    4    6    7    8 
+ 712 1447 1504 1255  651  237 1170 
+Table of sample :
+
+cloudresearch         mturk      prolific 
+          216          6264           496 
+Table of condition :
+
+              choicefree choicefree_professionals                 payafter 
+                    3353                      712                     1170 
+               paybefore 
+                    1741 
+Table of wave :
+
+                 amt-1                  amt-2                  amt-3 
+                  2951                   1255                   2058 
+prolific/cloudresearch 
+                   712 
+Table of highx10 :
+
+   0    1 
+6681  295 
+Table of highx100 :
+
+   0    1 
+6853  123 
+Table of getyourchoice :
+
+   0    1 
+1733 5243 
+Table of attentionpassed :
+
+   1 <NA> 
+6264  712 
+Table of qualitycostly :
+
+   0    1 
+5806 1170 
+Table of incentivecostly :
+
+   0    1 
+5235 1741 
+Table of professionals :
+
+   0    1 
+6264  712 
+Table of incentiveshigh :
+
+   0    1 
+6323  653 
+Table of probabilistic_incentive :
+
+   0    1 
+5611 1365 
+Table of incentivedesign :
+
+                0.15                 1.50 15 (to 1 out of 100) 
+                5193                  295                 1365 
+    15 (to everyone) 
+                 123 
+Table of mturkwave :
+
+   1    2    3 <NA> 
+2951 1255 2058  712 
+Preference column: choicebefore 
+Probabilistic-payment control column: incentiveshigh 
+Left-position control column: incentiveleft 
+selfish summary: mean 0.3464567  sd 0.4758834 
+stdalpha summary: mean -0.000224815  sd 0.9999482 
+N after restriction: 5915 
+DEVIATION: Multiple switchers identified as non-professional advisors with a missing selfishness (MPL) measure; High Stakes arms dropped via highx10/highx100 flags
+left by condition (restricted sample):
+                          
+                              0    1
+  choicefree               2058  516
+  choicefree_professionals  712    0
+  payafter                 1067    0
+  paybefore                1562    0
+probab by condition (restricted sample):
+                          
+                              0    1
+  choicefree               2032  542
+  choicefree_professionals  712    0
+  payafter                 1067    0
+  paybefore                1562    0
+
+t test of coefficients:
+
+             Estimate Std. Error t value  Pr(>|t|)    
+(Intercept)  0.555056   0.011786 47.0943 < 2.2e-16 ***
+prof        -0.074719   0.022134 -3.3758 0.0007408 ***
+inccostly   -0.144685   0.017147 -8.4382 < 2.2e-16 ***
+qualcostly   0.064438   0.018976  3.3957 0.0006890 ***
+probab      -0.019085   0.032165 -0.5933 0.5529746    
+left         0.103674   0.032126  3.2272 0.0012571 ** 
+prob_left   -0.044948   0.053309 -0.8432 0.3991684    
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+Using stdalpha (standardised selfishness from the MPL) as the selfishness measure
+
+t test of coefficients:
+
+              Estimate Std. Error t value  Pr(>|t|)    
+(Intercept)  0.5553029  0.0117326 47.3300 < 2.2e-16 ***
+inccostly   -0.1448899  0.0171075 -8.4694 < 2.2e-16 ***
+qualcostly   0.0646252  0.0189367  3.4127 0.0006481 ***
+selfish_z    0.0308308  0.0067442  4.5714 4.956e-06 ***
+probab      -0.0196348  0.0320148 -0.6133 0.5397030    
+left         0.1014002  0.0321478  3.1542 0.0016186 ** 
+prob_left   -0.0431657  0.0532619 -0.8104 0.4177229    
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+
+t test of coefficients:
+
+                       Estimate Std. Error t value  Pr(>|t|)    
+(Intercept)           0.5553960  0.0117246 47.3703 < 2.2e-16 ***
+inccostly            -0.1450002  0.0171007 -8.4792 < 2.2e-16 ***
+qualcostly            0.0643933  0.0189273  3.4021 0.0006737 ***
+selfish_z             0.0424613  0.0094702  4.4837 7.495e-06 ***
+probab               -0.0198422  0.0319950 -0.6202 0.5351766    
+left                  0.1005424  0.0322030  3.1221 0.0018053 ** 
+prob_left            -0.0424933  0.0533120 -0.7971 0.4254484    
+inccostly:selfish_z  -0.0243510  0.0157811 -1.5431 0.1228796    
+qualcostly:selfish_z -0.0214859  0.0175665 -1.2231 0.2213412    
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+
+t test of coefficients:
+
+                      Estimate  Std. Error  t value  Pr(>|t|)    
+(Intercept)         0.66330167  0.01562973  42.4385 < 2.2e-16 ***
+pref                0.18800453  0.01517495  12.3891 < 2.2e-16 ***
+noconf              0.23933211  0.01840138  13.0062 < 2.2e-16 ***
+prof                0.02137781  0.01825096   1.1713  0.241515    
+inccostly           0.03416243  0.01471907   2.3210  0.020323 *  
+qualcostly         -0.00768371  0.01639081  -0.4688  0.639243    
+incB               -0.17535193  0.01109880 -15.7992 < 2.2e-16 ***
+notassigned         0.06056901  0.02135632   2.8361  0.004582 ** 
+probab              0.04260259  0.02582277   1.6498  0.099036 .  
+left               -0.00040206  0.02738758  -0.0147  0.988288    
+prob_left           0.01235106  0.04366901   0.2828  0.777314    
+pref:noconf        -0.10202079  0.02189589  -4.6594 3.242e-06 ***
+pref:notassigned   -0.14095262  0.02557433  -5.5115 3.709e-08 ***
+noconf:notassigned  0.02201834  0.02530180   0.8702  0.384211    
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+RESULT:see_incentive_first_costly_table2_col1=-0.144685
+RESULT:assess_quality_first_costly_table2_col1=0.064438
+RESULT:choice_free_professionals_table2_col1=-0.074719
+RESULT:selfishness_table2_col2=0.030831
+RESULT:selfishness_table2_col3=0.042461
+RESULT:see_incentive_first_costly_x_selfishness_table2_col3=-0.024351
+RESULT:see_quality_first_costly_x_selfishness_table2_col3=-0.021486
+RESULT:n_obs_table2_col1=5915
+RESULT:n_obs_table2_cols2_3=5203
+RESULT:prefer_see_incentive_first_assigned_table3_col1=0.200532
+RESULT:prefer_see_incentive_first_not_assigned_table3_col2=0.012459
+RESULT:prefer_see_incentive_first_x_not_assigned_table3_col3=-0.140953
+RESULT:n_obs_table3_col1=4450

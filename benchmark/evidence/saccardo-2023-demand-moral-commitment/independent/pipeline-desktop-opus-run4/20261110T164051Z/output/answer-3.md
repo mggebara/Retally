@@ -1,0 +1,197 @@
+suppressPackageStartupMessages({
+  library(haven)
+  library(dplyr)
+  library(fixest)
+  library(sandwich)
+})
+set.seed(42)
+
+base <- "<repo>/.cache/datasets/saccardo_2023_demand_moral_commitment.script-free"
+d <- read_dta(file.path(base, "Data/Clean Data/choice_experiments.dta"))
+cat("Rows in choice_experiments:", nrow(d), "\n")
+
+nm_low <- tolower(names(d))
+fv <- function(cands) {
+  for (c in cands) {
+    i <- which(nm_low == tolower(c))
+    if (length(i) > 0) return(names(d)[i[1]])
+  }
+  NULL
+}
+num <- function(x) { x <- zap_labels(x); suppressWarnings(as.numeric(x)) }
+labtxt <- function(v) {
+  x <- d[[v]]
+  if (is.labelled(x)) tolower(as.character(as_factor(x))) else tolower(as.character(x))
+}
+show_tab <- function(v) {
+  if (!is.null(v) && v %in% names(d)) {
+    cat("\n--- table of", v, "---\n")
+    x <- d[[v]]
+    if (is.labelled(x)) print(table(as_factor(x), useNA = "ifany")) else
+      if (length(unique(x)) < 40) print(table(x, useNA = "ifany")) else print(summary(num(x)))
+  }
+}
+for (v in c("treatment", "condition", "study", "sample", "wave", "professionals",
+            "incentiveshigh", "probabilistic_incentive", "qualitycostly", "incentivecostly",
+            "seeincentivecostly", "seequalitycostly", "highx10", "highx100",
+            "attentionpassed", "choicebefore", "getyourchoice", "noconflict", "incentiveleft")) {
+  vv <- fv(v); if (!is.null(vv)) show_tab(vv)
+}
+
+# ---------------- Core variables ----------------
+v_pref <- fv(c("choicebefore", "choice"))
+d$prefinc <- num(d[[v_pref]])
+if (!all(na.omit(d$prefinc) %in% c(0, 1))) {
+  lt <- labtxt(v_pref)
+  d$prefinc <- ifelse(grepl("incent|before", lt), 1, ifelse(is.na(lt), NA, 0))
+}
+
+v_prof <- fv(c("professionals", "professionalsfree"))
+d$prof <- if (!is.null(v_prof)) { x <- num(d[[v_prof]]); ifelse(is.na(x), 0, x) } else 0
+d$prof <- as.numeric(d$prof > 0)
+
+labcols <- Filter(Negate(is.null), lapply(c("treatment", "condition", "study", "sample"), fv))
+alllab <- do.call(paste, c(lapply(labcols, labtxt), sep = " | "))
+
+# Arm dummies: prefer the variables used in the authors' interaction terms
+v_ic <- fv(c("seeincentivecostly", "incentivecostly"))
+v_qc <- fv(c("seequalitycostly", "qualitycostly"))
+cat("\nCostly arm variables:", v_ic, v_qc, "\n")
+d$incost <- num(d[[v_ic]]); d$incost[is.na(d$incost)] <- 0
+d$qcost <- num(d[[v_qc]]); d$qcost[is.na(d$qcost)] <- 0
+cat("Treatment indicator counts: prof", sum(d$prof), " incost", sum(d$incost), " qcost", sum(d$qcost), "\n")
+
+# Design-variation controls (fn. 14): probabilistic payment, left/right position, interaction
+v_prob <- fv(c("incentiveshigh", "probabilistic_incentive", "incentivedesign"))
+d$prob <- { x <- num(d[[v_prob]]); x[is.na(x)] <- 0; x }
+v_left <- fv(c("incentiveleft"))
+d$left <- { x <- num(d[[v_left]]); x[is.na(x)] <- 0; x }
+v_hl <- fv(c("incentiveshigh_incentiveleft"))
+d$prob_left <- if (!is.null(v_hl)) { x <- num(d[[v_hl]]); x[is.na(x)] <- 0; x } else d$prob * d$left
+
+# selfishness
+v_self <- fv(c("selfish", "selfishness"))
+d$selfraw <- num(d[[v_self]])
+cat("\nSelfish summary (full data):\n"); print(summary(d$selfraw)); cat("sd:", sd(d$selfraw, na.rm = TRUE), "\n")
+
+d$recinc <- num(d[[fv(c("recommendincentive"))]])
+v_nc <- fv(c("noconflict"))
+d$noconf <- if (!is.null(v_nc)) num(d[[v_nc]]) else 1 - num(d[[fv(c("conflict"))]])
+d$assigned <- num(d[[fv(c("getyourchoice"))]])
+d$notassigned <- 1 - d$assigned
+
+# ---------------- Sample selection ----------------
+v_att <- fv(c("attentionpassed", "attentive"))
+v_inc <- fv(c("inconsistentid", "inconsistent", "multipleswitcher"))
+m_att <- if (!is.null(v_att)) (num(d[[v_att]]) == 1) %in% TRUE else rep(TRUE, nrow(d))
+m_cons <- if (!is.null(v_inc)) !((num(d[[v_inc]]) == 1) %in% TRUE) else rep(TRUE, nrow(d))
+m_nohx <- rep(TRUE, nrow(d))
+for (v in c("highx10", "highx100")) {
+  vv <- fv(v); if (!is.null(vv)) m_nohx <- m_nohx & !((num(d[[vv]]) == 1) %in% TRUE)
+}
+m_nolab <- !grepl("replic|determin|x10|x100|10x|100x|tenfold|hundred", alllab)
+cat("\nRows flagged: highx", sum(!m_nohx), " replication/deterministic labels", sum(!m_nolab), "\n")
+
+ctrl <- "prob + left + prob_left"
+cat("DEVIATION: Controls restricted to design-variation controls (probabilistic payment, left position, their interaction) per fn. 14; demographics/wave removed\n")
+f1 <- as.formula(paste("prefinc ~ prof + incost + qcost +", ctrl))
+vars1 <- c("prefinc", "prof", "incost", "qcost", "prob", "left", "prob_left")
+
+grid <- expand.grid(att = c(TRUE, FALSE), cons = c(TRUE, FALSE), nohx = c(TRUE, FALSE), nolab = c(TRUE, FALSE))
+grid$n <- NA
+for (i in seq_len(nrow(grid))) {
+  m <- rep(TRUE, nrow(d))
+  if (grid$att[i]) m <- m & m_att
+  if (grid$cons[i]) m <- m & m_cons
+  if (grid$nohx[i]) m <- m & m_nohx
+  if (grid$nolab[i]) m <- m & m_nolab
+  grid$n[i] <- sum(m & complete.cases(d[, vars1]))
+}
+cat("\nCandidate sample sizes (target 5908):\n"); print(grid)
+grid$dist <- abs(grid$n - 5908)
+best <- grid[order(grid$dist, -(grid$att + grid$cons + grid$nohx + grid$nolab)), ][1, ]
+cat("Chosen sample filters:\n"); print(best)
+msel <- rep(TRUE, nrow(d))
+if (best$att) msel <- msel & m_att
+if (best$cons) msel <- msel & m_cons
+if (best$nohx) msel <- msel & m_nohx
+if (best$nolab) msel <- msel & m_nolab
+s <- d[msel, ]
+cat("Selected rows:", nrow(s), " professionals:", sum(s$prof), "\n")
+
+hc3 <- function(f, data) {
+  out <- tryCatch({
+    m <- lm(f, data = data)
+    V <- vcovHC(m, type = "HC3")
+    list(b = coef(m), se = sqrt(diag(V))[names(coef(m))], n = nobs(m))
+  }, error = function(e) {
+    cat("lm/HC3 failed:", conditionMessage(e), "\n")
+    m <- feols(f, data = data, vcov = "hetero")
+    list(b = coef(m), se = se(m), n = nobs(m))
+  })
+  print(round(cbind(b = out$b, se = out$se[names(out$b)]), 4))
+  cat("N =", out$n, "\n")
+  out
+}
+gb <- function(r, nm) { x <- r$b[nm]; if (is.null(x) || length(x) == 0 || is.na(x)) NA else unname(x) }
+
+res <- list()
+
+# ---------------- Table 2 ----------------
+cat("\n==== Table 2 col 1 ====\n")
+t21 <- tryCatch(hc3(f1, s), error = function(e) { print(e); NULL })
+if (!is.null(t21)) {
+  res$see_incentive_first_costly_table2_col1 <- gb(t21, "incost")
+  res$assess_quality_first_costly_table2_col1 <- gb(t21, "qcost")
+  res$choice_free_professionals_table2_col1 <- gb(t21, "prof")
+  res$n_obs_table2_col1 <- t21$n
+}
+
+s2 <- s[s$prof == 0 & !is.na(s$selfraw), ]
+s2 <- s2[complete.cases(s2[, vars1]), ]
+sdv <- sd(s2$selfraw); mu <- mean(s2$selfraw)
+cat("\nSelfish mean/sd in estimation sample:", mu, sdv, "\n")
+s2$selfz <- s2$selfraw
+cat("DEVIATION: Selfishness used as provided in the data (already standardised variable 'selfish'), not re-standardised on the estimation sample\n")
+f2 <- as.formula(paste("prefinc ~ incost + qcost + selfz +", ctrl))
+cat("\n==== Table 2 col 2 ====\n")
+t22 <- tryCatch(hc3(f2, s2), error = function(e) { print(e); NULL })
+if (!is.null(t22)) {
+  res$selfishness_table2_col2 <- gb(t22, "selfz")
+  res$n_obs_table2_cols2_3 <- t22$n
+}
+f3 <- as.formula(paste("prefinc ~ incost + qcost + selfz + incost:selfz + qcost:selfz +", ctrl))
+cat("\n==== Table 2 col 3 ====\n")
+t23 <- tryCatch(hc3(f3, s2), error = function(e) { print(e); NULL })
+if (!is.null(t23)) {
+  res$selfishness_table2_col3 <- gb(t23, "selfz")
+  res$see_incentive_first_costly_x_selfishness_table2_col3 <- gb(t23, "incost:selfz")
+  res$see_quality_first_costly_x_selfishness_table2_col3 <- gb(t23, "qcost:selfz")
+}
+
+# ---------------- Table 3 ----------------
+f31 <- as.formula(paste("recinc ~ prefinc + noconf + prefinc:noconf + prof + incost + qcost +", ctrl))
+s3 <- s[!is.na(s$assigned), ]
+cat("\n==== Table 3 col 1 (assigned) ====\n")
+t31 <- tryCatch(hc3(f31, s3[s3$assigned == 1, ]), error = function(e) { print(e); NULL })
+if (!is.null(t31)) {
+  res$prefer_see_incentive_first_assigned_table3_col1 <- gb(t31, "prefinc")
+  res$n_obs_table3_col1 <- t31$n
+}
+cat("\n==== Table 3 col 2 (not assigned) ====\n")
+t32 <- tryCatch(hc3(f31, s3[s3$assigned == 0, ]), error = function(e) { print(e); NULL })
+if (!is.null(t32)) res$prefer_see_incentive_first_not_assigned_table3_col2 <- gb(t32, "prefinc")
+f33 <- as.formula(paste("recinc ~ prefinc + noconf + prefinc:noconf + notassigned + prefinc:notassigned + noconf:notassigned + prof + incost + qcost +", ctrl))
+cat("\n==== Table 3 col 3 (both) ====\n")
+t33 <- tryCatch(hc3(f33, s3), error = function(e) { print(e); NULL })
+if (!is.null(t33)) {
+  b <- gb(t33, "prefinc:notassigned")
+  if (is.na(b)) b <- gb(t33, "notassigned:prefinc")
+  res$prefer_see_incentive_first_x_not_assigned_table3_col3 <- b
+}
+
+cat("\n")
+for (n in names(res)) {
+  v <- res[[n]]
+  if (!is.null(v) && !is.na(v)) cat(sprintf("RESULT:%s=%.6f\n", n, v))
+}

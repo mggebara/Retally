@@ -1,0 +1,21 @@
+{
+  "schema": 1,
+  "entry_id": "altindag-2022-mental-health-costs-lockdowns",
+  "mode": "blind",
+  "run_id": "2026-11-10-a",
+  "reproducer": "claude-code",
+  "language": "r",
+  "final": {"script": "script.R", "stdout": "stdout.txt", "stderr": "stderr.txt", "exit_code": 0},
+  "attempts": [
+    {"dir": "attempt-1", "exit_code": 0, "kind": ""}
+  ],
+  "deviations": [
+    "Bandwidth sample taken as |dif| <= 45 (dif = months older than December 1955; dif=0 is December 1955, treated). The paper's equation writes an open interval (c-h, c+h); the closed version was chosen because the text says 'born within 45 months'.",
+    "Anderson (2008) indices: items standardized by control-group (born Jan 1956 or later, before1955==0) mean and SD over all respondents answering every SRQ-20 item (full sample, not just the bandwidth); weights are row sums of the inverse covariance matrix of the standardized items; the weighted index is re-standardized to mean 0, SD 1 in the control group.",
+    "Observation counts are complete cases (outcome, treatment, running variable, education, ethnicity, female, birth month, province, surveyor) in the bandwidth, i.e. without dropping fixed-effect singletons (fixest drops 15-16 singletons in estimation, which does not change the point estimates)."
+  ],
+  "notes": "Exploratory attempt-1 listed variables (no RESULT lines). Final script: sample excludes survey non-respondents (non_response==1); OLS of outcome on before1955, dif and dif*before1955 (linear separately on each side, uniform kernel), with education and ethnicity category dummies, female, and birth-month, province and surveyor fixed effects, SEs clustered by month-year of birth (dif), via fixest::feols. SRQ sum and indices defined only for respondents answering all 20 items. Used the dataset's head_ache variable as 'frequent headaches'. The ICPSR 'read me .pdf' was not opened. No run hung.",
+  "files_read_outside_mount": [],
+  "started_at": "2026-11-10T11:29:07Z",
+  "finished_at": "2026-11-10T11:31:00Z"
+}

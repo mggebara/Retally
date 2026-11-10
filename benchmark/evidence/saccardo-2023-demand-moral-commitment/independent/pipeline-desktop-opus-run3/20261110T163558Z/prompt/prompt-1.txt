@@ -1,0 +1,159 @@
+You are reproducing results from an econometrics paper for validation purposes.
+Write R code (not Python) — the paper's reference implementation is in R.
+
+## Paper Information
+Title: American Economic Review 2023, 113(2): 396–429
+Abstract (first 500 chars): 396 Enabling or Limiting Cognitive Flexibility? Evidence of Demand for Moral Commitment† By Silvia Saccardo and Marta  Serra-Garcia* Moral behavior is more prevalent when individuals cannot easily distort their beliefs  self-servingly. Do individuals seek to limit or
+Methodology Summary: - **Design / estimation approach:** Preregistered online experiments (aspredicted.org) with N = 9,323 advisors (Table 1) in an advice game. An advisor recommends product A (pays $2 with prob. 0.6) or product B (pays $2 with prob. 0.8 if high quality, 0.4 if low quality; prior 0.5) to an uninformed client. The advisor gets a $0.15 commission for one product and sees one ball drawn from B as a quality signal. The key outcome is a binary indicator for recommending the incentivized product, analysed separately by conflict of interest (commission on B with a $0 signal, or commission on A with a $2 signal) vs. no conflict. Treatment effects are estimated with regressions of this indicator on information-order indicators: assigned to "See Incentive First" vs. "Assess Quality First", interacted with the advisor's preferred order. The design-variation controls in all regressions are probabilistic vs. standard payment and left/right screen position of the incentivized product (fn. 14). A stylised dual-self attention model (Bénabou–Tirole 2002) generates Hypotheses 1–2.
+- **Experiments / treatments (Table 1):**
+  - NoChoice: See Incentive First (N = 152) vs. Assess Quality First (N = 147), exogenously assigned.
+  - Choice: advisors choose their information order, which is implemented with 75% probability (50% their choice + 50% × a 50-50 randomisation). This gives random assignment conditional on preference. Arms: Choice Free—Professionals (N = 712; self-reported finance/insurance and legal workers from Prolific + CloudResearch, pooled because p = 0.308 for choice and p = 0.820 for recommendations); Choice Free (AMT/CloudResearch, N = 2,574); Incentive First Costly (N = 1,562); Quality First Costly (N = 1,067). The cost is forgoing $0.05 (one-third of the commission) to get the costly order.
+  - Robustness arms (online appendix): High Stakes 10-fold (275) and 100-fold (110), Replication (385), Deterministic implementation (369).
+  - Choice Stakes: advisor incentive of $0.01 / $0.15 / $0.30 (N = 483 / 511 / 478), with seeing the incentive first always costly.
+  - Information Architect third-party experiment: IA-Advisor (245) vs. IA-Client (253), with a $0.15 IA payment aligned with the advisor or the client.
+- **Assignment / payoffs:** The commission is predetermined to maximise conflicts: a low-quality B is always paired with a commission on B, and a high-quality B with a commission on A. This gives about 70% of advisors a conflict of interest. Most arms pay $0.15 and match 1 in 10 advisors with a client. Professionals and a Choice Free subsample get a probabilistic scheme: 1 in 100 advisors is paid a $15 commission with product payoffs scaled to $0/$20. The base pay is $0.50 or $1 for a 5–7 minute study. Clients (N = 924) were recruited later; 84% followed the advice.
+- **Additional measures:**
+  - Posterior belief that B is low quality: an incentivised choice of one of ten 10-pp intervals ($0.15 for a correct range; $15 in the 1/100 arms), plus an exact 0–100 number.
+  - Moral costs / "selfishness": a 5-decision multiple price list recommending Y (always the incentivized product, with a $0 signal) vs. X paying $2 with prob. 1, 0.8, 0.6, 0.4 and 0. This is used as a **standardised** selfishness measure and was not collected for the Professionals sample.
+  - Blinding take-up (a stronger commitment) in wave 3 of the Choice experiment.
+- **Sample restrictions:** Following the preregistrations, the main analyses keep attentive advisors who gave consistent multiple-price-list responses, so multiple switchers are excluded. Online Appendix C shows the results are qualitatively similar with them included. Further exclusion criteria are in online Appendix B. The Choice experiment was run in three separately preregistered waves, which are pooled.
+- **Key comparisons / evaluation:**
+  - Hypothesis 1: higher incentivized-product recommendation under See Incentive First when there is a conflict.
+  - Hypothesis 2: the share choosing each order, including when costly (willingness to pay reveals strict preference). The result is about 30% pay for quality first and about 41% pay for incentive first.
+  - The correlation of preferences with selfishness and with blinding.
+  - The recommendation gap between those who prefer incentive first and those who prefer quality first, when assigned vs. not assigned their preference (about 19–20 pp when assigned, about 0 when not).
+  - Beliefs relative to the prior by conflict and assignment.
+  - The shares choosing incentive first across stakes and across IA treatments.
+- **Inference / not applicable:** Inference uses regression t-statistics and p-values (e.g., fn. 14). The provided text does not state the exact standard-error type (robust vs. clustered) or fixed effects. Since every advisor makes a single decision, heteroskedasticity-robust standard errors are presumably used, but this is not stated in the excerpt. There is no train/test split, cross-validation or hyperparameters; this is not an ML paper. The specific regression table/column for the preferred specification is not included in the provided excerpt.
+
+
+## Claims to Reproduce
+1. see_incentive_first_costly_table2_col1: -0.139 (change in the probability of preferring to see the incentive first) [type: coefficient]
+   Location: Table 2, column (1), See Incentive First Costly
+   Context: Table 2 ("Preference for Information Order"), column (1). Linear probability model of an indicator that the advisor prefers to see the incentive first (rather than assess the quality signal first) in the Choice experiment, on indicators for the Choice Free—Professionals, See Incentive First Costly and Assess Quality First Costly treatments (the Choice Free treatment on the AMT convenience sample is the omitted group), with controls for the advisor's gender and age, the wave of the experiment, whether incentives were probabilistic, the position of the products on the screen, and the interaction…
+2. assess_quality_first_costly_table2_col1: 0.152 (change in the probability of preferring to see the incentive first) [type: coefficient]
+   Location: Table 2, column (1), Assess Quality First Costly
+   Context: Table 2, column (1): the same linear probability model of preferring to see the incentive first on the treatment indicators and controls. The entry is the Assess Quality First Costly coefficient (assessing quality first costs a third of the commission). Robust standard errors (HC3).
+3. choice_free_professionals_table2_col1: -0.095 (change in the probability of preferring to see the incentive first) [type: coefficient]
+   Location: Table 2, column (1), Choice Free—Professionals
+   Context: Table 2, column (1): the same linear probability model. The entry is the Choice Free—Professionals coefficient (advisors who self-report working in finance and insurance or legal services, recruited on Prolific and CloudResearch, relative to the AMT Choice Free advisors). Robust standard errors (HC3).
+4. selfishness_table2_col2: 0.028 (change in the probability of preferring to see the incentive first per standard deviation of selfishness) [type: coefficient]
+   Location: Table 2, column (2), Selfishness
+   Context: Table 2, column (2): the column (1) model with the advisor's Selfishness added, a standardized measure of the number of times the advisor chose to recommend the incentivized product in the five- decision multiple price list on moral costs, elicited at the end of the experiment (not elicited for the professionals, so this column covers the AMT treatments only). The entry is the Selfishness coefficient. Robust standard errors (HC3).
+5. selfishness_table2_col3: 0.039 (change in the probability of preferring to see the incentive first per standard deviation of selfishness) [type: coefficient]
+   Location: Table 2, column (3), Selfishness
+   Context: Table 2, column (3): the column (2) model with the interactions of Selfishness with the See Incentive First Costly and the Assess Quality First Costly indicators added. The entry is the Selfishness main effect. Robust standard errors (HC3).
+6. see_incentive_first_costly_x_selfishness_table2_col3: -0.022 (change in the selfishness slope of preferring to see the incentive first) [type: coefficient]
+   Location: Table 2, column (3), See Incentive First Costly × Selfishness
+   Context: Table 2, column (3): the same model with both interactions. The entry is the See Incentive First Costly × Selfishness coefficient. Robust standard errors (HC3).
+7. see_quality_first_costly_x_selfishness_table2_col3: -0.021 (change in the selfishness slope of preferring to see the incentive first) [type: coefficient]
+   Location: Table 2, column (3), See Quality First Costly × Selfishness
+   Context: Table 2, column (3): the same model with both interactions. The entry is the See Quality First Costly × Selfishness coefficient (the interaction with the Assess Quality First Costly indicator). Robust standard errors (HC3).
+8. n_obs_table2_col1: 5908.0 (advisors) [type: count]
+   Location: Table 2, Observations, column (1)
+   Context: Number of observations in Table 2, column (1): advisors in the four main Choice treatments, professionals included.
+9. n_obs_table2_cols2_3: 5196.0 (advisors) [type: count]
+   Location: Table 2, Observations, columns (2) and (3)
+   Context: Number of observations in Table 2, columns (2) and (3): the advisors with the Selfishness measure (the AMT treatments, without the professionals).
+10. prefer_see_incentive_first_assigned_table3_col1: 0.195 (change in the probability of recommending the incentivized product) [type: coefficient]
+   Location: Table 3, column (1) Assigned pref., Prefer to See Incentive First
+   Context: Table 3 ("Advisor Recommendations"), column (1). Linear probability model of an indicator that the advisor recommends the incentivized product, for advisors who were assigned their preferred information order, on Prefer to See Incentive First (the advisor's preference), a No Conflict indicator (the quality signal is not in conflict with the advisor's commission) and its interaction with Prefer to See Incentive First, the Choice Free—Professionals, See Incentive First Costly and Assess Quality First Costly indicators, an Incentive for B indicator, and controls for gender, age, wave, probabilist…
+11. prefer_see_incentive_first_not_assigned_table3_col2: 0.003 (change in the probability of recommending the incentivized product) [type: coefficient]
+   Location: Table 3, column (2) Not assigned pref., Prefer to See Incentive First
+   Context: Table 3, column (2): the column (1) model for advisors who were not assigned their preferred information order. The entry is the Prefer to See Incentive First coefficient. Robust standard errors (HC3).
+12. prefer_see_incentive_first_x_not_assigned_table3_col3: -0.14 (change in the probability of recommending the incentivized product) [type: coefficient]
+   Location: Table 3, column (3) Both, Prefer to See Incentive First × Not Assigned Preference
+   Context: Table 3, column (3): both groups pooled, with a Not Assigned Preference indicator (not receiving the preferred order) and its interactions with Prefer to See Incentive First and with No Conflict added to the column (1) regressors. The entry is the Prefer to See Incentive First × Not Assigned Preference coefficient. Robust standard errors (HC3).
+13. n_obs_table3_col1: 4448.0 (advisors) [type: count]
+   Location: Table 3, Observations, column (1)
+   Context: Number of observations in Table 3, column (1): advisors in the main Choice treatments who were assigned their preferred information order.
+
+## Dataset Information
+Name: saccardo-2023-demand-moral-commitment
+Local path: <repo>/.cache/datasets/saccardo_2023_demand_moral_commitment.script-free
+File format: csv
+Files in the dataset directory (paths relative to the local path above):
+- Data/Clean Data/Choice_coding_explanations.dta (2.3 MB) — 1749 rows, 125 columns: commission, belief, conflict, study, choice, sample, professionals, prolific, cloudresearch, probabilistic_incentive, wave, treatment, belief_prior, choicebefore_getyourchoice, getyourchoice, condition, attentionpassed, recommendincentive, flippedorder, chooseblindness, selfish, professionalscloudresearch, incentivedesign, bayesianposterior, belief_prior_continuos, studyg, _mergedecisions, incentiveshigh, professionalsfree, incentiveshigh_incentiveleft, limitbias1, commission…
+- Data/Clean Data/choice_experiments.dta (7.1 MB) — 6976 rows, 94 columns: commission, belief, conflict, study, choice, sample, professionals, prolific, cloudresearch, probabilistic_incentive, wave, treatment, belief_prior, choicebefore_getyourchoice, getyourchoice, condition, attentionpassed, recommendincentive, flippedorder, chooseblindness, selfish, professionalscloudresearch, incentivedesign, bayesianposterior, belief_prior_continuos, incentiveshigh, professionalsfree, incentiveshigh_incentiveleft, beliefcorrect, qualitycostly, wave1, wave2, wav…
+- Data/Clean Data/Choice_Deterministic.dta (739.2 KB) — 952 rows, 128 columns: attention, belief, gender, incentive, commission, signal, conflict, sample, Deterministic, choicebefore_getyourchoiceDet, getyourchoice, beliefbin, assignmentid, condition, clientpay, sizecommission, attentionpassed, recommenda, signalblue, costlydemand, inconsistentid, recommendationa, recommendationb, incentiveB, incentiveA, recommendincentive, getbefore_Deterministic, choicebefore_Deterministic, Deterministic_noconflict, Deterministic_choicebeforeNocon, recommendb, noconfl…
+- Data/Clean Data/nochoice1_2_merged.dta (911.5 KB) — 886 rows, 177 columns: attention, gender, order, commission, signal, treatment, conflict, wave, choice, assignmentid, condition, attentionpassed, signalblue, inconsistentid, selfish, recommendationb, recommendationa, noconflict, seeincentivefirst_noconflict, beli…
+- Data/Clean Data/NoChoiceSimoultaneous.dta (524.5 KB) — 559 rows, 158 columns: attention, gender, order, commission, signal, treatment, conflict, wave, assignmentid, condition, attentionpassed, signalblue, inconsistentid, noconflict, recommendationb, recommendationa, beliefbin, beliefnum, recommendb, recommendincentiv…
+- Data/Clean Data/stakes.dta (1.1 MB) — 1681 rows, 143 columns: attention, gender, commission, signal, belief, conflict, choice, assignmentid, attentionpassed, signalblue, beliefcorrect, recommenda, inconsistentid, selfish, belief_beforegetbefo_1, belief_aftergetafter_1, condition, condition2, recommend…
+- Data/Clean Data/InformationArchitect_advisors.dta (326.4 KB) — 498 rows, 115 columns: attention, belief, gender, conflict, study, treatment, id_advisor, dm_choicebefore, assignmentid, signalblue, beliefcorrect, inconsistentid, condition_dm, recommendationb, recommendationa, beliefbin, condition, recommendincentive, incentive…
+- Data/Clean Data/nochoice.dta (312.4 KB) — 327 rows, 133 columns: attention, gender, treatment, conflict, choice, assignmentid, condition, attentionpassed, signalblue, inconsistentid, selfish, recommendationb, recommendationa, noconflict, seeincentivefirst_noconflict, belief_beforegetbefo_1, belief_afterg…
+- Data/Clean Data/professionals.dta (522.0 KB) — 712 rows, 22 columns: sample, belief, conflict, choice, study, recommendincentive, signalblue, costlydemand, beliefcorrect, choicebefore, beliefbin, explanationchoice, incentiveA, incentiveB, age, jobtitle, newid, shortid, currentcountryofresidence, industry, ge…
+- Data/Clean Data/predictionsstudy.dta (1.0 MB) — 288 rows, 121 columns: gender, treatment, choice, attentive, control1, assignmentid, response, attentivenum, predictcorrect, q62_firstclick, q349_firstclick, q359_firstclick, q309_firstclick, q353_firstclick, q357_firstclick, q350_firstclick, q358_firstclick, q37…
+- Data/Clean Data/Clients_Blinding.dta (17.6 KB)
+- Data/Clean Data/Clients_ChoiceDeterministic_MPL.dta (13.5 KB)
+- Data/Clean Data/Clients_ChoiceDeterministic_Main.dta (11.0 KB)
+- Data/Clean Data/Clients_IAAdvisors_MPL.dta (10.0 KB)
+- Data/Clean Data/Clients_IAInfoArchitects_MPL.dta (10.0 KB)
+- Data/Clean Data/Clients_InfoArchitectsMain.dta (9.8 KB)
+- Data/Clean Data/Clients_MPL.dta (60.1 KB)
+- Data/Clean Data/Clients_Main.dta (79.6 KB)
+- Data/Clean Data/Clients_NoChoiceSimultaneousMPL.dta (9.5 KB)
+- Data/Clean Data/Clients_NoChoiceSimultaneousMain.dta (8.5 KB)
+- Data/Clean Data/InformationArchitect.dta (358.0 KB)
+- Data/Clean Data/predictions_explanations_coded.dta (333.1 KB)
+- Data/Clean Data/professionals_jobtitles.dta (157.0 KB)
+- Data/Raw Data/Choice1_deidentified.csv (1.8 MB) — columns: startdate,enddate,status,progress,durationinseconds,finished,recordeddate,responseid,distributionchannel,userlanguage,q60_1,q60_2,q60_3,q62_firstclick,q62_lastclick,q62_pagesubmit,q62_clickcount,q39,q124_firstclick,q124_lastclick,q124_pages…
+- Data/Raw Data/Choice2_deidentified.csv (1.4 MB) — columns: startdate,enddate,status,progress,durationinseconds,finished,recordeddate,responseid,distributionchannel,userlanguage,q_recaptchascore,q_relevantidduplicate,q_relevantidduplicatescore,q_relevantidfraudscore,q_relevantidlaststartdate,q60_1,q…
+- Data/Raw Data/Choice3_deidentified.csv (1.7 MB) — columns: startdate,enddate,status,progress,durationinseconds,finished,recordeddate,responseid,distributionchannel,userlanguage,q_recaptchascore,q_relevantidduplicate,q_relevantidduplicatescore,q_relevantidfraudscore,q_relevantidlaststartdate,q60_1,q…
+- Data/Raw Data/ChoiceDeterministic_deidentified.csv (744.3 KB) — columns: startdate,enddate,status,progress,durationinseconds,finished,recordeddate,responseid,distributionchannel,userlanguage,q_recaptchascore,q_relevantidduplicate,q_relevantidduplicatescore,q_relevantidfraudscore,q_relevantidlaststartdate,q60_1,q…
+- Data/Raw Data/Choice_explanations_deidentified.xlsx (235.1 KB)
+- Data/Raw Data/Clients/Clients_Blinding_deidentified.csv (12.2 KB) — columns: recommendation_infoavoidance,ia_quality,sample,client_startdate,client_enddate,choice1,experiment,clientid_short
+- Data/Raw Data/Clients/Clients_ChoiceDeterministic_MPL_deidentified.csv (6.3 KB) — columns: incentiveb,advisor_lotteryrowselected,odds_2dollarsx,advisor_recommends_producty,highqualitympl,sample,client_startdate,client_enddate,client_choicey,experiment,clientid_short
+- Data/Raw Data/Clients/Clients_ChoiceDeterministic_Main_deidentified.csv (4.2 KB) — columns: incentiveb,signalblue,advisor_recommendb,highquality,highincentive,sample,client_startdate,client_enddate,client_choiceb,clientid_short
+- Data/Raw Data/Clients/Clients_IAAdvisors_MPL_deidentified.csv (3.1 KB) — columns: incentiveb,advisor_lotteryrowselected,odds_2dollarsx,advisor_recommends_producty,highqualitympl,sample,client_startdate,client_enddate,client_choicey,clientid_short
+- Data/Raw Data/Clients/Clients_IAInfoArchitects_MPL_deidentified.csv (3.1 KB) — columns: incentiveb,advisor_lotteryrowselected,odds_2dollarsx,advisor_recommends_producty,highqualitympl,sample,client_startdate,client_enddate,client_choicey,clientid_short
+- Data/Raw Data/Clients/Clients_InfoArchitectsMain_deidentified.csv (2.8 KB) — columns: incentiveb,signalblue,advisor_recommendb,highquality,highincentive,sample,client_startdate,client_enddate,client_choiceb,clientid_short
+- Data/Raw Data/Clients/Clients_MPL_deidentified.csv (50.6 KB)
+- Data/Raw Data/Clients/Clients_Main_deidentified.csv (59.6 KB)
+- Data/Raw Data/Clients/Clients_NoChoiceSimultaneousMPL_deidentified.csv (2.4 KB)
+- Data/Raw Data/Clients/Clients_NoChoiceSimultaneousMain_deidentified.csv (2.0 KB)
+- Data/Raw Data/InformationArchitect_Advisor_deidentified.csv (206.9 KB)
+- Data/Raw Data/InformationArchitect_deidentified.csv (319.9 KB)
+- Data/Raw Data/NoChoiceSimoultaneous_deidentified.csv (466.8 KB)
+- Data/Raw Data/NoChoice_deidentified.csv (203.8 KB)
+- Data/Raw Data/ProfessionalsCloudresearch_deidentified.csv (151.5 KB)
+- Data/Raw Data/ProfessionalsProlific_deidentified.csv (373.6 KB)
+- Data/Raw Data/Professionals_jobtitles.xlsx (41.2 KB)
+- Data/Raw Data/Stakes_deidentified.csv (1.2 MB)
+- Data/Raw Data/predictions_deidentified.xlsx (291.2 KB)
+- Data/Raw Data/predictions_explanations_coded_deidentified.xlsx (24.4 KB)
+- Qualtrics/Choice3.qsf (779.1 KB)
+- Qualtrics/Clients_ProductA.qsf (27.8 KB)
+- Qualtrics/Clients_ProductB.qsf (23.2 KB)
+- Qualtrics/NoChoice.qsf (311.4 KB)
+- Qualtrics/Predictions.qsf (773.4 KB)
+- Qualtrics/Professionals_CloudResearch.qsf (599.5 KB)
+- Qualtrics/Professionals_Prolific.qsf (590.1 KB)
+- Qualtrics/Revision-Choice_Deterministic.qsf (744.3 KB)
+- Qualtrics/Revision-InformationArchitect.qsf (758.1 KB)
+- Qualtrics/Stakes.qsf (611.1 KB)
+- README.pdf (190.5 KB)
+- metadata.json (240 B)
+
+## Required Output Convention
+Emit each reproduced metric on its own line to stdout using EXACTLY this format:
+    RESULT:<metric_name>=<numeric_value>
+For example:  cat('RESULT:beta=0.342\n')
+Use snake_case metric names matching the claim descriptions.
+
+## Code Requirements
+Write a complete, self-contained R script that runs under Rscript.
+The dataset is a directory tree at '<repo>/.cache/datasets/saccardo_2023_demand_moral_commitment.script-free' — see the file listing under Dataset Information.  Load the actual data file(s) by the exact paths listed there (readr::read_csv() for .csv, haven::read_dta() for Stata .dta, load() for .RData/.rda, which creates the objects listed for the file under exactly those names: use them, do not guess others; readRDS() for .rds).
+Installed packages (no network; nothing else can be installed): jsonlite, fixest, lfe, AER, ivreg, plm, estimatr, lme4, quantreg, car, sandwich, lmtest, clubSandwich, multiwayvcov, marginaleffects, MatchIt, optmatch, CBPS, WeightIt, cobalt, did, rdrobust, rddensity, Synth, modelsummary, stargazer, texreg, broom, tidyverse, dplyr, tidyr, readr, stringr, lubridate, data.table, haven, readxl, janitor, zoo, ggplot2, ggridges, ggrepel, gridExtra, cowplot, gtable, extrafont, sf, MASS, nnet, survival, splines, Matrix, boot, stats, utils.
+Prefer fixest for fixed effects, IV and clustered SEs; use the other installed packages where the paper's method calls for them.
+Set a deterministic seed with ``set.seed(42)`` for any randomness.
+Do NOT access the internet; the container runs with --network none.
+Do NOT shell out via system() / system2().
+Emit RESULT:<name>=<value> lines to stdout at the end via cat().
+
+## Algorithm Hints
+This paper reports regression coefficients with standard errors. Default to fixest::feols() for OLS with fixed effects; switch to AER::ivreg() for instrumental variables and plm::plm() for panel data.  Use the cluster argument or cluster_var argument in feols() / vcovCL() from sandwich for cluster-robust standard errors.  Extract each coefficient via ``coef(model)['varname']`` and each SE via ``sqrt(diag(vcov(model)))['varname']`` so they can be emitted as separate RESULT: lines.
+
+## Independent Reproduction
+This is an INDEPENDENT reproduction: reconstruct the analysis from the paper's description alone.  The authors' own analysis code is deliberately withheld.  Do NOT open, read, source, or execute any script files that may appear in the dataset directory listing (.do, .ado, .R, .Rmd, .py, .sas, .sps, .m, and similar) — load data files only.  Derive the estimating equation, sample restrictions, fixed effects, and standard-error clustering from the paper information and claims above.
+
+Now write the complete R script. Output ONLY the code — no explanation, no markdown fences.

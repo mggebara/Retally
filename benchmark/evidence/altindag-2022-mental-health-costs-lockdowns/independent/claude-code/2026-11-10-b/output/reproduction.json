@@ -1,0 +1,21 @@
+{
+  "schema": 1,
+  "entry_id": "altindag-2022-mental-health-costs-lockdowns",
+  "mode": "independent",
+  "run_id": "2026-11-10-b",
+  "reproducer": "claude-code",
+  "language": "r",
+  "final": {"script": "script.R", "stdout": "stdout.txt", "stderr": "stderr.txt", "exit_code": 0},
+  "attempts": [
+    {"dir": "attempt-1", "exit_code": 0, "kind": ""},
+    {"dir": "attempt-2", "exit_code": 0, "kind": ""},
+    {"dir": "attempt-3", "exit_code": 0, "kind": "claim"}
+  ],
+  "deviations": [
+    "Anderson (2008) indices: items standardized by the mean/sd of the control group (born Jan 1956 or later) in the full respondent sample; inverse-covariance weights from all complete-case respondents; index defined only for respondents answering every component item; final index re-standardized to control mean 0 / sd 1. Exact details of the authors' implementation are not given in the paper, and the index coefficients (0.157, 0.112, 0.152) are below the published ones (0.205, 0.175, 0.158)."
+  ],
+  "notes": "Sample: survey respondents (non_response == 0) with |dif| <= 45, dif = months born before Dec 1955 (Dec 1955 itself treated). OLS (fixest) of outcome on treatment, dif and treatment x dif; month-of-birth, province and surveyor fixed effects; education and ethnicity category dummies and female; SEs clustered by month-year of birth (dif). Attempts 1-2 were exploratory (variable listing; sample counts by bandwidth, which matched every published N under |dif| <= h with complete-case indices). Attempt 3 was the first estimating run; check_attempt reported all claims within tolerance, but my own comparison showed Ns 15-16 lower because fixest dropped fixed-effect singletons; the final run keeps singletons (fixef.rm = 'none'), which reproduces N = 1214 / 1222 / 1133 exactly and leaves coefficients unchanged. Mobility coefficients (-1.090, 0.708, 0.297) and the SRQ-20 sum (0.734) match the paper; the Anderson index coefficients are lower than published and were not tuned. No run hung.",
+  "files_read_outside_mount": [],
+  "started_at": "2026-11-10T11:29:07Z",
+  "finished_at": "2026-11-10T11:31:35Z"
+}

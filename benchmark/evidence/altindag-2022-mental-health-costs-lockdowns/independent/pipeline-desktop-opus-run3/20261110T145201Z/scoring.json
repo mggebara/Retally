@@ -1,0 +1,552 @@
+{
+  "how": "recomputed: ResultComparator().compare_all(catalog claims, RESULT lines of output/stdout.txt, mode) - the comparator and claim conversion benchmark.runner.score_reproduction uses; row: the results row's claim_details entry as written by the run (tolerance, tolerance_source and rel_err come from there unchanged).",
+  "claims": [
+    {
+      "name": "days_outside_last_week_table3_col3",
+      "ground_truth": {
+        "value": -1.09,
+        "standard_error": 0.18,
+        "unit": "days per week",
+        "claim_type": "coefficient",
+        "location": "Table 3, Days outside last week, Born before 1955, column (3) +/-45",
+        "context": "Table 3 (\"Effects of Curfew on Mobility Outcomes\"), column (3). Regression discontinuity estimate of the effect of being born before December 1955 (the cohorts subject to Turkey's 65+ curfew) on the number of days the respondent went outside last week.  OLS of the outcome on the treatment indicator and a linear function of the running variable (months between the respondent's month-year of birth and the December 1955 threshold) fit separately on each side of the threshold, uniform kernel, sample restricted to respondents born within 45 months of the threshold (the Imbens- Kalyanaraman optimal bandwidth for this outcome).  Controls: month of birth fixed effects, province fixed effects, surveyor fixed effects, and indicators for education level, ethnicity and gender. Sample: respondents of the authors' phone survey of 59- to 70-year-olds in urban Turkey (late May to early July 2020). Standard errors clustered at the month-year of birth cohort.  The entry is the \"Born before 1955\" coefficient.\n",
+        "decimals": 3,
+        "sample_size": null
+      },
+      "i4r": {
+        "reproduced_value": -1.09,
+        "outcome": "matches",
+        "notes": "DP16 Tables 1-2 col 1 -1.090 (0.180); DP Table 3 col 1 prints -1.089 (0.179). Robustness rows -1.090 (0.189) no clustering, -0.963 (0.190) no covariates.",
+        "reproduced_within_band": true
+      },
+      "rule": {
+        "mode": "independent",
+        "type_relative_tolerance": 0.02,
+        "se_multiplier": 1.0,
+        "se_band_relative": 0.16513761467889906,
+        "printed_half_unit": 0.0005
+      },
+      "row": {
+        "description": "days_outside_last_week_table3_col3",
+        "claim_type": "coefficient",
+        "claimed": -1.09,
+        "reproduced": -1.07355,
+        "tolerance": 0.16513761467889906,
+        "rel_err": 0.015091743119266122,
+        "passed": true,
+        "passed_first_attempt": true,
+        "passed_first_scored": true,
+        "tolerance_source": "se_band"
+      },
+      "recomputed": {
+        "result_name": "days_outside_last_week_table3_col3",
+        "reproduced": -1.07355,
+        "band_source": "se_band",
+        "band_relative": 0.16513761467889906,
+        "band_absolute": 0.18,
+        "abs_err": 0.016450000000000076,
+        "rel_err": 0.015091743119266122,
+        "margin": 0.09138888888888931,
+        "passed": true,
+        "notes": ""
+      },
+      "agrees_with_row": true,
+      "verdict": "PASS"
+    },
+    {
+      "name": "under_curfew_table3_col3",
+      "ground_truth": {
+        "value": 0.708,
+        "standard_error": 0.045,
+        "unit": "change in the probability of reporting being under curfew",
+        "claim_type": "coefficient",
+        "location": "Table 3, Under curfew, Born before 1955, column (3) +/-45",
+        "context": "Table 3, column (3): the same RD specification (linear in the running variable on each side, uniform kernel, 45-month bandwidth, month of birth, province and surveyor fixed effects, education, ethnicity and gender indicators, SEs clustered by month-year of birth) for a dummy equal to one if the respondent reported being subject to the curfew within the last month.  The entry is the \"Born before 1955\" coefficient.\n",
+        "decimals": 3,
+        "sample_size": null
+      },
+      "i4r": {
+        "reproduced_value": 0.708,
+        "outcome": "matches",
+        "notes": "DP16 Tables 1-2 col 1 0.708 (0.045); DP Table 3 col 1 prints SE 0.044. Robustness rows 0.708 (0.039) no clustering, 0.696 (0.040) no covariates.",
+        "reproduced_within_band": true
+      },
+      "rule": {
+        "mode": "independent",
+        "type_relative_tolerance": 0.02,
+        "se_multiplier": 1.0,
+        "se_band_relative": 0.0635593220338983,
+        "printed_half_unit": 0.0005
+      },
+      "row": {
+        "description": "under_curfew_table3_col3",
+        "claim_type": "coefficient",
+        "claimed": 0.708,
+        "reproduced": 0.706367,
+        "tolerance": 0.0635593220338983,
+        "rel_err": 0.002306497175141237,
+        "passed": true,
+        "passed_first_attempt": true,
+        "passed_first_scored": true,
+        "tolerance_source": "se_band"
+      },
+      "recomputed": {
+        "result_name": "under_curfew_table3_col3",
+        "reproduced": 0.706367,
+        "band_source": "se_band",
+        "band_relative": 0.0635593220338983,
+        "band_absolute": 0.045,
+        "abs_err": 0.0016329999999999956,
+        "rel_err": 0.002306497175141237,
+        "margin": 0.036288888888888794,
+        "passed": true,
+        "notes": ""
+      },
+      "agrees_with_row": true,
+      "verdict": "PASS"
+    },
+    {
+      "name": "never_goes_out_table3_col3",
+      "ground_truth": {
+        "value": 0.297,
+        "standard_error": 0.036,
+        "unit": "change in the probability of never going outside",
+        "claim_type": "coefficient",
+        "location": "Table 3, Never goes out, Born before 1955, column (3) +/-45",
+        "context": "Table 3, column (3): the same RD specification for a dummy equal to one if the respondent reported his or her current frequency of going outside as \"never going outside\".  The entry is the \"Born before 1955\" coefficient; SEs clustered by month-year of birth.\n",
+        "decimals": 3,
+        "sample_size": null
+      },
+      "i4r": {
+        "reproduced_value": 0.297,
+        "outcome": "matches",
+        "notes": "DP16 Tables 1-3 col 1 0.297 (0.036). Robustness rows 0.297 (0.051) no clustering, 0.281 (0.037) no covariates.",
+        "reproduced_within_band": true
+      },
+      "rule": {
+        "mode": "independent",
+        "type_relative_tolerance": 0.02,
+        "se_multiplier": 1.0,
+        "se_band_relative": 0.12121212121212122,
+        "printed_half_unit": 0.0005
+      },
+      "row": {
+        "description": "never_goes_out_table3_col3",
+        "claim_type": "coefficient",
+        "claimed": 0.297,
+        "reproduced": 0.292004,
+        "tolerance": 0.12121212121212122,
+        "rel_err": 0.016821548821548824,
+        "passed": true,
+        "passed_first_attempt": true,
+        "passed_first_scored": true,
+        "tolerance_source": "se_band"
+      },
+      "recomputed": {
+        "result_name": "never_goes_out_table3_col3",
+        "reproduced": 0.292004,
+        "band_source": "se_band",
+        "band_relative": 0.12121212121212122,
+        "band_absolute": 0.036,
+        "abs_err": 0.0049960000000000004,
+        "rel_err": 0.016821548821548824,
+        "margin": 0.1387777777777778,
+        "passed": true,
+        "notes": ""
+      },
+      "agrees_with_row": true,
+      "verdict": "PASS"
+    },
+    {
+      "name": "n_obs_days_outside_table3_col3",
+      "ground_truth": {
+        "value": 1214.0,
+        "standard_error": null,
+        "unit": "respondents",
+        "claim_type": "count",
+        "location": "Table 3, Days outside last week, Observations, column (3)",
+        "context": "Number of observations in Table 3, column (3), for days outside last week: survey respondents born within 45 months of the threshold with the outcome and all controls observed (survey non-respondents excluded).\n",
+        "decimals": 0,
+        "sample_size": null
+      },
+      "i4r": null,
+      "rule": {
+        "mode": "independent",
+        "type_relative_tolerance": 0.05,
+        "se_multiplier": 1.0,
+        "se_band_relative": null,
+        "printed_half_unit": 0.5
+      },
+      "row": {
+        "description": "n_obs_days_outside_table3_col3",
+        "claim_type": "count",
+        "claimed": 1214.0,
+        "reproduced": 1181.0,
+        "tolerance": 0.05,
+        "rel_err": 0.027182866556836903,
+        "passed": true,
+        "passed_first_attempt": true,
+        "passed_first_scored": true,
+        "tolerance_source": "relative"
+      },
+      "recomputed": {
+        "result_name": "n_obs_days_outside_table3_col3",
+        "reproduced": 1181.0,
+        "band_source": "relative",
+        "band_relative": 0.05,
+        "band_absolute": 60.7,
+        "abs_err": 33.0,
+        "rel_err": 0.027182866556836903,
+        "margin": 0.543657331136738,
+        "passed": true,
+        "notes": ""
+      },
+      "agrees_with_row": true,
+      "verdict": "PASS"
+    },
+    {
+      "name": "n_obs_under_curfew_table3_col3",
+      "ground_truth": {
+        "value": 1222.0,
+        "standard_error": null,
+        "unit": "respondents",
+        "claim_type": "count",
+        "location": "Table 3, Under curfew, Observations, column (3)",
+        "context": "Number of observations in Table 3, column (3), for the under-curfew outcome: respondents born within 45 months of the threshold with the outcome and all controls observed.\n",
+        "decimals": 0,
+        "sample_size": null
+      },
+      "i4r": null,
+      "rule": {
+        "mode": "independent",
+        "type_relative_tolerance": 0.05,
+        "se_multiplier": 1.0,
+        "se_band_relative": null,
+        "printed_half_unit": 0.5
+      },
+      "row": {
+        "description": "n_obs_under_curfew_table3_col3",
+        "claim_type": "count",
+        "claimed": 1222.0,
+        "reproduced": 1189.0,
+        "tolerance": 0.05,
+        "rel_err": 0.027004909983633387,
+        "passed": true,
+        "passed_first_attempt": true,
+        "passed_first_scored": true,
+        "tolerance_source": "relative"
+      },
+      "recomputed": {
+        "result_name": "n_obs_under_curfew_table3_col3",
+        "reproduced": 1189.0,
+        "band_source": "relative",
+        "band_relative": 0.05,
+        "band_absolute": 61.1,
+        "abs_err": 33.0,
+        "rel_err": 0.027004909983633387,
+        "margin": 0.5400981996726677,
+        "passed": true,
+        "notes": ""
+      },
+      "agrees_with_row": true,
+      "verdict": "PASS"
+    },
+    {
+      "name": "mental_distress_index_table4_col3",
+      "ground_truth": {
+        "value": 0.205,
+        "standard_error": 0.094,
+        "unit": "standard deviations of the mental distress index",
+        "claim_type": "coefficient",
+        "location": "Table 4, Mental distress index, Born before 1955, column (3) +/-45",
+        "context": "Table 4 (\"Effects of Curfew on Mental Health Outcomes\"), column (3). Reduced-form RD estimate of the effect of being born before December 1955 on the mental distress index, with the Table 3 specification (linear in the running variable on each side, uniform kernel, 45-month bandwidth, month of birth, province and surveyor fixed effects, education, ethnicity and gender indicators, SEs clustered by month-year of birth).  The index follows Anderson (2008) over all 20 SRQ-20 items (binary symptoms within the last four weeks): each item is demeaned and divided by the control group's (born after the threshold) standard deviation, the items are combined with weights from the inverse of their covariance matrix, and the index is scaled to mean 0 and standard deviation 1 in the control group; higher values mean more distress.  The entry is the \"Born before 1955\" coefficient.\n",
+        "decimals": 3,
+        "sample_size": null
+      },
+      "i4r": {
+        "reproduced_value": 0.205,
+        "outcome": "matches",
+        "notes": "DP16 Tables 4-6 col 1 0.205 (0.094). Robustness rows 0.205 (0.119) no clustering, 0.169 (0.135) no covariates.",
+        "reproduced_within_band": true
+      },
+      "rule": {
+        "mode": "independent",
+        "type_relative_tolerance": 0.02,
+        "se_multiplier": 1.0,
+        "se_band_relative": 0.4585365853658537,
+        "printed_half_unit": 0.0005
+      },
+      "row": {
+        "description": "mental_distress_index_table4_col3",
+        "claim_type": "coefficient",
+        "claimed": 0.205,
+        "reproduced": 0.142506,
+        "tolerance": 0.4585365853658537,
+        "rel_err": 0.3048487804878049,
+        "passed": true,
+        "passed_first_attempt": true,
+        "passed_first_scored": true,
+        "tolerance_source": "se_band"
+      },
+      "recomputed": {
+        "result_name": "mental_distress_index_table4_col3",
+        "reproduced": 0.142506,
+        "band_source": "se_band",
+        "band_relative": 0.4585365853658537,
+        "band_absolute": 0.094,
+        "abs_err": 0.062493999999999994,
+        "rel_err": 0.3048487804878049,
+        "margin": 0.6648297872340425,
+        "passed": true,
+        "notes": ""
+      },
+      "agrees_with_row": true,
+      "verdict": "PASS"
+    },
+    {
+      "name": "somatic_symptoms_index_table4_col3",
+      "ground_truth": {
+        "value": 0.175,
+        "standard_error": 0.085,
+        "unit": "standard deviations of the somatic symptoms index",
+        "claim_type": "coefficient",
+        "location": "Table 4, Somatic symptoms of distress index, Born before 1955, column (3) +/-45",
+        "context": "Table 4, column (3): the same RD specification for the somatic symptoms of distress index, the Anderson (2008) index over the four somatic SRQ-20 items (frequent headaches, shaking hands, poor digestion, uncomfortable feelings in the stomach).  The entry is the \"Born before 1955\" coefficient.\n",
+        "decimals": 3,
+        "sample_size": null
+      },
+      "i4r": {
+        "reproduced_value": 0.175,
+        "outcome": "matches",
+        "notes": "DP16 Tables 4-6 col 1 0.175 (0.085). Robustness rows 0.175 (0.120) no clustering, 0.221 (0.113) no covariates.",
+        "reproduced_within_band": true
+      },
+      "rule": {
+        "mode": "independent",
+        "type_relative_tolerance": 0.02,
+        "se_multiplier": 1.0,
+        "se_band_relative": 0.48571428571428577,
+        "printed_half_unit": 0.0005
+      },
+      "row": {
+        "description": "somatic_symptoms_index_table4_col3",
+        "claim_type": "coefficient",
+        "claimed": 0.175,
+        "reproduced": 0.106788,
+        "tolerance": 0.48571428571428577,
+        "rel_err": 0.38978285714285715,
+        "passed": true,
+        "passed_first_attempt": true,
+        "passed_first_scored": true,
+        "tolerance_source": "se_band"
+      },
+      "recomputed": {
+        "result_name": "somatic_symptoms_index_table4_col3",
+        "reproduced": 0.106788,
+        "band_source": "se_band",
+        "band_relative": 0.48571428571428577,
+        "band_absolute": 0.085,
+        "abs_err": 0.068212,
+        "rel_err": 0.38978285714285715,
+        "margin": 0.8024941176470587,
+        "passed": true,
+        "notes": ""
+      },
+      "agrees_with_row": true,
+      "verdict": "PASS"
+    },
+    {
+      "name": "nonsomatic_symptoms_index_table4_col3",
+      "ground_truth": {
+        "value": 0.158,
+        "standard_error": 0.092,
+        "unit": "standard deviations of the nonsomatic symptoms index",
+        "claim_type": "coefficient",
+        "location": "Table 4, Nonsomatic symptoms of distress index, Born before 1955, column (3) +/-45",
+        "context": "Table 4, column (3): the same RD specification for the nonsomatic symptoms of distress index, the Anderson (2008) index over the other 16 SRQ-20 items (poor appetite, sleeping badly, easily frightened, nervous or worried, trouble thinking clearly, unhappy, crying more, difficulty enjoying daily activities, difficulty making decisions, daily work suffered, unable to play a useful part in life, lost interest, feeling worthless, thoughts of suicide, tired all the time, tired easily).  The entry is the \"Born before 1955\" coefficient.\n",
+        "decimals": 3,
+        "sample_size": null
+      },
+      "i4r": {
+        "reproduced_value": 0.158,
+        "outcome": "matches",
+        "notes": "DP16 Tables 4-6 col 1 0.158 (0.092). Robustness rows 0.158 (0.114) no clustering, 0.100 (0.100) no covariates (DB SE 0.100; DP prints 0.125).",
+        "reproduced_within_band": true
+      },
+      "rule": {
+        "mode": "independent",
+        "type_relative_tolerance": 0.02,
+        "se_multiplier": 1.0,
+        "se_band_relative": 0.5822784810126582,
+        "printed_half_unit": 0.0005
+      },
+      "row": {
+        "description": "nonsomatic_symptoms_index_table4_col3",
+        "claim_type": "coefficient",
+        "claimed": 0.158,
+        "reproduced": 0.139339,
+        "tolerance": 0.5822784810126582,
+        "rel_err": 0.11810759493670893,
+        "passed": true,
+        "passed_first_attempt": true,
+        "passed_first_scored": true,
+        "tolerance_source": "se_band"
+      },
+      "recomputed": {
+        "result_name": "nonsomatic_symptoms_index_table4_col3",
+        "reproduced": 0.139339,
+        "band_source": "se_band",
+        "band_relative": 0.5822784810126582,
+        "band_absolute": 0.092,
+        "abs_err": 0.01866100000000001,
+        "rel_err": 0.11810759493670893,
+        "margin": 0.20283695652173925,
+        "passed": true,
+        "notes": ""
+      },
+      "agrees_with_row": true,
+      "verdict": "PASS"
+    },
+    {
+      "name": "sum_srq20_yes_answers_table4_col3",
+      "ground_truth": {
+        "value": 0.734,
+        "standard_error": 0.44,
+        "unit": "number of \"yes\" answers (0-20)",
+        "claim_type": "coefficient",
+        "location": "Table 4, Sum of \"yes\" answers in SRQ-20, Born before 1955, column (3) +/-45",
+        "context": "Table 4, column (3): the same RD specification for the sum of \"yes\" answers to the 20 SRQ-20 questions (respondents with every item answered).  The entry is the \"Born before 1955\" coefficient.\n",
+        "decimals": 3,
+        "sample_size": null
+      },
+      "i4r": {
+        "reproduced_value": 0.734,
+        "outcome": "matches",
+        "notes": "DP16 Tables 4-6 col 1 0.734 (0.440). Robustness rows 0.734 (0.563) no clustering, 0.560 (0.589) no covariates.",
+        "reproduced_within_band": true
+      },
+      "rule": {
+        "mode": "independent",
+        "type_relative_tolerance": 0.02,
+        "se_multiplier": 1.0,
+        "se_band_relative": 0.5994550408719346,
+        "printed_half_unit": 0.0005
+      },
+      "row": {
+        "description": "sum_srq20_yes_answers_table4_col3",
+        "claim_type": "coefficient",
+        "claimed": 0.734,
+        "reproduced": 0.493676,
+        "tolerance": 0.5994550408719346,
+        "rel_err": 0.32741689373297,
+        "passed": true,
+        "passed_first_attempt": true,
+        "passed_first_scored": true,
+        "tolerance_source": "se_band"
+      },
+      "recomputed": {
+        "result_name": "sum_srq20_yes_answers_table4_col3",
+        "reproduced": 0.493676,
+        "band_source": "se_band",
+        "band_relative": 0.5994550408719346,
+        "band_absolute": 0.43999999999999995,
+        "abs_err": 0.24032399999999998,
+        "rel_err": 0.32741689373297,
+        "margin": 0.5461909090909092,
+        "passed": true,
+        "notes": ""
+      },
+      "agrees_with_row": true,
+      "verdict": "PASS"
+    },
+    {
+      "name": "n_obs_mental_distress_index_table4_col3",
+      "ground_truth": {
+        "value": 1133.0,
+        "standard_error": null,
+        "unit": "respondents",
+        "claim_type": "count",
+        "location": "Table 4, Mental distress index, Observations, column (3)",
+        "context": "Number of observations in Table 4, column (3), for the mental distress index (the same sample as the SRQ-20 sum): respondents born within 45 months of the threshold who answered all 20 SRQ-20 items and have all controls observed.\n",
+        "decimals": 0,
+        "sample_size": null
+      },
+      "i4r": null,
+      "rule": {
+        "mode": "independent",
+        "type_relative_tolerance": 0.05,
+        "se_multiplier": 1.0,
+        "se_band_relative": null,
+        "printed_half_unit": 0.5
+      },
+      "row": {
+        "description": "n_obs_mental_distress_index_table4_col3",
+        "claim_type": "count",
+        "claimed": 1133.0,
+        "reproduced": 1120.0,
+        "tolerance": 0.05,
+        "rel_err": 0.01147396293027361,
+        "passed": true,
+        "passed_first_attempt": true,
+        "passed_first_scored": true,
+        "tolerance_source": "relative"
+      },
+      "recomputed": {
+        "result_name": "n_obs_mental_distress_index_table4_col3",
+        "reproduced": 1120.0,
+        "band_source": "relative",
+        "band_relative": 0.05,
+        "band_absolute": 56.650000000000006,
+        "abs_err": 13.0,
+        "rel_err": 0.01147396293027361,
+        "margin": 0.22947925860547216,
+        "passed": true,
+        "notes": ""
+      },
+      "agrees_with_row": true,
+      "verdict": "PASS"
+    }
+  ],
+  "row_only_claims": [],
+  "summary": {
+    "n_claims": 10,
+    "row_passed": 10,
+    "recomputed_passed": 10,
+    "disagreements": []
+  },
+  "cell": {
+    "entry_id": "altindag-2022-mental-health-costs-lockdowns",
+    "mode": "independent",
+    "reproducer": "pipeline",
+    "label": "pipeline-desktop-opus-run3",
+    "model": "desktop-opus-run3",
+    "oracle": true,
+    "run": "20261110T145201Z",
+    "results_file": "pipeline-oracle-desktop-opus-run3-1paper-altindag-all-modes-2026-11-10.json",
+    "also_in": [],
+    "artifacts_dir": "benchmark/results/artifacts/altindag-2022-mental-health-costs-lockdowns/independent/pipeline/20261110T145201Z",
+    "run_dir": null,
+    "date": "2026-11-10T14:52:01Z",
+    "data_access": "manual",
+    "retally_ran": true,
+    "error": null,
+    "n_claims": 10,
+    "final": 10,
+    "first_scored": 10,
+    "first_scored_index": 0,
+    "first_attempt": 10,
+    "n_refinements": 0,
+    "n_error_refinements": 0,
+    "n_claim_refinements": 0,
+    "n_executions": 1,
+    "n_files_stripped": 17,
+    "agrees_with_i4r": true,
+    "deviations_manifest": [],
+    "deviations_stdout": [],
+    "notes": null,
+    "files_read_outside_mount": null,
+    "paper_text": null,
+    "complete": true,
+    "missing": []
+  }
+}
