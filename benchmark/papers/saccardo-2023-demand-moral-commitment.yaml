@@ -1,0 +1,446 @@
+# Original paper: Saccardo, S., & Serra-Garcia, M. (2023). "Enabling or
+#   Limiting Cognitive Flexibility? Evidence of Demand for Moral
+#   Commitment." American Economic Review, 113(2), 396-429.
+#   doi:10.1257/aer.20201333 (February 2023 issue; Crossref created
+#   2023-01-27, issued 2023-02-01).
+#
+# Reproduction report: I4R First Meta Database replication team 26 (77
+#   rows under the paper title, entered 2023-11-28; one row empty, 76 with
+#   an original value, 75 with a replicator value).  No I4R discussion
+#   paper was found for this report (EconStor / IDEAS i4rdps web search for
+#   the title with "I4R", 2026-11-09).  Verdict: reproducible — the team's
+#   survey answer is "Analysis and cleaning code produce the same output as
+#   presented in the paper" (best_describe_compreprod), perfect_reproduction
+#   is "Yes", the run took less than an hour and the team rated it 10 of
+#   10; but why_not_perfect_repro adds: "Although a perfect reproduction,
+#   the replicators found their main variable of interest was incorrectly
+#   coded" (the Selfishness measure).  Every row is against Table 2, and
+#   every one is a ROBUSTNESS or RECODING variant of a Table 2 cell, 11
+#   cells x 8 checks (some checks only on 7 cells): "Corrected Selfishness
+#   coding", "Redefine Selfishness on Q1-Q3", "Wave 3 Only", "Include
+#   control for incentive for B", "Corrected Selfishness AND drop any
+#   irrational or spiteful subjects ..." (with or without three dummies for
+#   the MPL value), "Replace Selfishness with Blindness indicator" and
+#   "Replace Selfishness with 5 dummies".  result_same is blank on every
+#   row.  So the replicator values that differ from the paper (0.056 vs
+#   0.028, 0.075 vs 0.039 for Selfishness) are the team's recoding, not
+#   failed reproductions.  The only rows that recompute a published cell
+#   under the published specification are the "Corrected Selfishness
+#   coding" rows of column 1, which has no Selfishness term: they return
+#   the published values exactly (see i4r_replicator_findings).
+#
+# Why this paper:
+#   1. An online experiment (over 9,000 participants across studies) with
+#      linear probability models and HC3 robust standard errors on the
+#      pooled main treatments of the Choice experiment: treatment dummies
+#      against the Choice Free baseline, a standardized moral-cost
+#      (Selfishness) measure and its interactions with the costly
+#      treatments, and preference x assignment interactions.
+#   2. A manually placed openICPSR package (data_access: manual) of 6 MB
+#      zipped / 32 MB unpacked, Stata, with ready-made clean .dta files
+#      beside the raw de-identified Qualtrics exports; no result files at
+#      all (the Results/ folders are empty), so the script-free copy only
+#      withholds the four do-files.
+#
+# What original_claims pins: Table 2 (preference to see the incentive
+#   first): the treatment coefficients of column 1 (See Incentive First
+#   Costly, Assess Quality First Costly, Choice Free—Professionals), the
+#   Selfishness coefficient in columns 2 and 3, the two column 3
+#   interactions, and the two N rows (column 1; columns 2-3); Table 3
+#   (recommending the incentivized product): Prefer to See Incentive First
+#   in columns 1 and 2, the Prefer to See Incentive First x Not Assigned
+#   Preference interaction in column 3, and the column 1 N.  13 claims (3
+#   counts), values exactly as printed (3 decimals).  Every pinned
+#   coefficient, SE and N was recomputed from the package's clean data
+#   (HC3 OLS in numpy, 2026-11-09) and equals the printed value.
+#
+# Paper text: the published AER article itself, open on NSF's Public
+#   Access Repository (PAR 10473378).  The candidates file's eScholarship
+#   copy answers 403 to scripts, and the CESifo working paper on ifo.de
+#   answers a bot-check page; neither was used.  All 76 meta-database
+#   original values equal the article's Table 2 in the same cell (see
+#   notes).
+
+id: saccardo-2023-demand-moral-commitment
+i4r_report_url: https://github.com/I4Replication/I4R-First-Meta-Paper
+# Target language for regeneration (the original is Stata with estout;
+# Retally generates R and reads the .dta files with haven).
+language: r
+outcome_label: reproducible
+# Pipeline tuning is frozen; this is an evaluation paper.
+split: holdout
+# Contamination bookkeeping.  publication_date is the FIRST public
+# version: CESifo Working Paper No. 8529, "Cognitive Flexibility or Moral
+#   Commitment? Evidence of Anticipated Belief Distortion" (2020; the ifo
+#   page and EconPapers RePEc:ces:ceswps:_8529 give the year only, and a
+#   web-search summary calls the original version August 2020, not
+#   verified because the PDF on ifo.de answers a bot check; found by web
+#   search 2026-11-09).  An SSRN record of the same year exists (login-gated,
+#   not opened).  The data were collected 2019-05-02 to 2021-11-30
+#   (DataCite "Collected" dates).  The journal version: Crossref issued
+#   2023-02-01 (created 2023-01-27).  package_release_date is the DataCite
+#   registration of doi:10.3886/E180741V1 (registered
+#   2023-01-23T20:32:10Z, DataCite API 2026-11-09); openICPSR itself needs
+#   a login.  The package README.pdf was created 2022-12-06.
+publication_date: "2020"
+package_release_date: "2023-01-23"
+
+paper:
+  # The published AER typeset article ("American Economic Review 2023,
+  # 113(2): 396–429" on p. 1), deposited on the NSF Public Access
+  # Repository; checked 2026-11-09: 200 application/pdf, 34 pp., 947,830
+  # bytes, md5 e85a0ed7e4b0f5f4e71765e16bacd6bf (PDF CreationDate
+  # 2023-11-09).  The candidates file's eScholarship URL
+  # (https://escholarship.org/content/qt0874x1wz/qt0874x1wz.pdf) answers
+  # 403 to scripts.
+  source: https://par.nsf.gov/servlets/purl/10473378
+  title: "Enabling or Limiting Cognitive Flexibility? Evidence of Demand for Moral Commitment"
+  authors:
+    - Silvia Saccardo
+    - Marta Serra-Garcia
+
+dataset:
+  source: benchmark/manual-packages/T26/180741-V1.zip
+  data_access: manual
+  access_notes: >
+    AEA Data and Code Repository on openICPSR, project 180741, version V1
+    (doi:10.3886/E180741V1); login and terms-of-use click-through required,
+    so the zip was downloaded by hand (2026-11-09) and placed unchanged at
+    benchmark/manual-packages/T26/180741-V1.zip (6,216,179 bytes, md5
+    b7e550192ed257e5e00e214ce8ef31cb; SOURCE.txt beside it).  V1 is the
+    only version.  72 zip entries (63 files and 9 directories, 32,030,520
+    bytes uncompressed), no nested archives.  Contents: README.pdf (7 pp.,
+    created 2022-12-06; data provenance, a dataset list, run time about 2
+    minutes, and an "In-text Numbers" map from quoted in-text statistics
+    to analysis.do line numbers, which quotes the paper's own sentences,
+    e.g. the Table 3 column 1 gap in percentage points; no table cells);
+    Code/ with four Stata do-files (main.do, config.do, datacleaning.do,
+    analysis.do); Data/Clean Data/ with 23 Stata .dta files, among them
+    choice_experiments.dta (7.4 MB, the advisor-level analysis file for
+    Tables 2-4: treatment, wave, sample and design indicators, the
+    standardized moral-cost measure and its interactions, preference,
+    assignment, conflict and recommendation variables), nochoice.dta,
+    professionals.dta, stakes.dta, the information-architect, prediction
+    and client files; Data/Raw Data/ with 21 de-identified Qualtrics .csv
+    exports (Choice waves 1-3, professionals from Prolific and
+    CloudResearch, NoChoice, Stakes, clients, ...) and 4 .xlsx raw files
+    (open-ended explanations, professionals' job titles, predictions and
+    coded prediction explanations; raw responses, no estimates); Qualtrics/
+    with 10 .qsf survey exports; Results/Main Text/ and Results/Appendix/
+    empty.  The script-free copy (independent / blind) withholds 4 files
+    (benchmark.strip_rule.classify_tree on the extracted package,
+    2026-11-09): the four .do files by suffix.  Kept: README.pdf, the data,
+    the .xlsx and the .qsf files; none prints a table cell (README text and
+    xlsx strings read, 2026-11-09).  Project page:
+    https://www.openicpsr.org/openicpsr/project/180741/version/V1/view
+
+original_claims:
+  # ---- Table 2: preference for information order ----
+  - description: see_incentive_first_costly_table2_col1
+    value: -0.139
+    claim_type: coefficient
+    standard_error: 0.018
+    unit: change in the probability of preferring to see the incentive first
+    location: "Table 2, column (1), See Incentive First Costly"
+    context: >
+      Table 2 ("Preference for Information Order"), column (1).  Linear
+      probability model of an indicator that the advisor prefers to see the
+      incentive first (rather than assess the quality signal first) in the
+      Choice experiment, on indicators for the Choice Free—Professionals,
+      See Incentive First Costly and Assess Quality First Costly treatments
+      (the Choice Free treatment on the AMT convenience sample is the
+      omitted group), with controls for the advisor's gender and age, the
+      wave of the experiment, whether incentives were probabilistic, the
+      position of the products on the screen, and the interaction between
+      probabilistic incentives and product position.  Sample: advisors in
+      the four main Choice treatments (the high-stakes robustness variants
+      excluded), AMT advisors restricted to attentive advisors who gave
+      consistent responses in the moral-cost multiple price list.  The
+      entry is the See Incentive First Costly coefficient (seeing the
+      incentive first costs a third of the commission).  Robust standard
+      errors (HC3).
+  - description: assess_quality_first_costly_table2_col1
+    value: 0.152
+    claim_type: coefficient
+    standard_error: 0.029
+    unit: change in the probability of preferring to see the incentive first
+    location: "Table 2, column (1), Assess Quality First Costly"
+    context: >
+      Table 2, column (1): the same linear probability model of preferring
+      to see the incentive first on the treatment indicators and controls.
+      The entry is the Assess Quality First Costly coefficient (assessing
+      quality first costs a third of the commission).  Robust standard
+      errors (HC3).
+  - description: choice_free_professionals_table2_col1
+    value: -0.095
+    claim_type: coefficient
+    standard_error: 0.026
+    unit: change in the probability of preferring to see the incentive first
+    location: "Table 2, column (1), Choice Free—Professionals"
+    context: >
+      Table 2, column (1): the same linear probability model.  The entry is
+      the Choice Free—Professionals coefficient (advisors who self-report
+      working in finance and insurance or legal services, recruited on
+      Prolific and CloudResearch, relative to the AMT Choice Free
+      advisors).  Robust standard errors (HC3).
+  - description: selfishness_table2_col2
+    value: 0.028
+    claim_type: coefficient
+    standard_error: 0.007
+    unit: change in the probability of preferring to see the incentive first per standard deviation of selfishness
+    location: "Table 2, column (2), Selfishness"
+    context: >
+      Table 2, column (2): the column (1) model with the advisor's
+      Selfishness added, a standardized measure of the number of times the
+      advisor chose to recommend the incentivized product in the five-
+      decision multiple price list on moral costs, elicited at the end of
+      the experiment (not elicited for the professionals, so this column
+      covers the AMT treatments only).  The entry is the Selfishness
+      coefficient.  Robust standard errors (HC3).
+  - description: selfishness_table2_col3
+    value: 0.039
+    claim_type: coefficient
+    standard_error: 0.009
+    unit: change in the probability of preferring to see the incentive first per standard deviation of selfishness
+    location: "Table 2, column (3), Selfishness"
+    context: >
+      Table 2, column (3): the column (2) model with the interactions of
+      Selfishness with the See Incentive First Costly and the Assess
+      Quality First Costly indicators added.  The entry is the Selfishness
+      main effect.  Robust standard errors (HC3).
+  - description: see_incentive_first_costly_x_selfishness_table2_col3
+    value: -0.022
+    claim_type: coefficient
+    standard_error: 0.016
+    unit: change in the selfishness slope of preferring to see the incentive first
+    location: "Table 2, column (3), See Incentive First Costly × Selfishness"
+    context: >
+      Table 2, column (3): the same model with both interactions.  The
+      entry is the See Incentive First Costly × Selfishness coefficient.
+      Robust standard errors (HC3).
+  - description: see_quality_first_costly_x_selfishness_table2_col3
+    value: -0.021
+    claim_type: coefficient
+    standard_error: 0.018
+    unit: change in the selfishness slope of preferring to see the incentive first
+    location: "Table 2, column (3), See Quality First Costly × Selfishness"
+    context: >
+      Table 2, column (3): the same model with both interactions.  The
+      entry is the See Quality First Costly × Selfishness coefficient (the
+      interaction with the Assess Quality First Costly indicator).  Robust
+      standard errors (HC3).
+  - description: n_obs_table2_col1
+    value: 5908
+    claim_type: count
+    unit: advisors
+    location: "Table 2, Observations, column (1)"
+    context: >
+      Number of observations in Table 2, column (1): advisors in the four
+      main Choice treatments, professionals included.
+  - description: n_obs_table2_cols2_3
+    value: 5196
+    claim_type: count
+    unit: advisors
+    location: "Table 2, Observations, columns (2) and (3)"
+    context: >
+      Number of observations in Table 2, columns (2) and (3): the advisors
+      with the Selfishness measure (the AMT treatments, without the
+      professionals).
+  # ---- Table 3: advisor recommendations ----
+  - description: prefer_see_incentive_first_assigned_table3_col1
+    value: 0.195
+    claim_type: coefficient
+    standard_error: 0.016
+    unit: change in the probability of recommending the incentivized product
+    location: "Table 3, column (1) Assigned pref., Prefer to See Incentive First"
+    context: >
+      Table 3 ("Advisor Recommendations"), column (1).  Linear probability
+      model of an indicator that the advisor recommends the incentivized
+      product, for advisors who were assigned their preferred information
+      order, on Prefer to See Incentive First (the advisor's preference), a
+      No Conflict indicator (the quality signal is not in conflict with the
+      advisor's commission) and its interaction with Prefer to See
+      Incentive First, the Choice Free—Professionals, See Incentive First
+      Costly and Assess Quality First Costly indicators, an Incentive for B
+      indicator, and controls for gender, age, wave, probabilistic
+      incentives, product position and the probabilistic incentives x
+      position interaction.  Sample: the four main Choice treatments as in
+      Table 2, column (1).  The entry is the Prefer to See Incentive First
+      coefficient (the gap, in cases of conflict, between advisors who
+      prefer and get the incentive first and those who prefer and get
+      quality first).  Robust standard errors (HC3).
+  - description: prefer_see_incentive_first_not_assigned_table3_col2
+    value: 0.003
+    claim_type: coefficient
+    standard_error: 0.029
+    unit: change in the probability of recommending the incentivized product
+    location: "Table 3, column (2) Not assigned pref., Prefer to See Incentive First"
+    context: >
+      Table 3, column (2): the column (1) model for advisors who were not
+      assigned their preferred information order.  The entry is the Prefer
+      to See Incentive First coefficient.  Robust standard errors (HC3).
+  - description: prefer_see_incentive_first_x_not_assigned_table3_col3
+    value: -0.140
+    claim_type: coefficient
+    standard_error: 0.026
+    unit: change in the probability of recommending the incentivized product
+    location: "Table 3, column (3) Both, Prefer to See Incentive First × Not Assigned Preference"
+    context: >
+      Table 3, column (3): both groups pooled, with a Not Assigned
+      Preference indicator (not receiving the preferred order) and its
+      interactions with Prefer to See Incentive First and with No Conflict
+      added to the column (1) regressors.  The entry is the Prefer to See
+      Incentive First × Not Assigned Preference coefficient.  Robust
+      standard errors (HC3).
+  - description: n_obs_table3_col1
+    value: 4448
+    claim_type: count
+    unit: advisors
+    location: "Table 3, Observations, column (1)"
+    context: >
+      Number of observations in Table 3, column (1): advisors in the main
+      Choice treatments who were assigned their preferred information
+      order.
+
+# Every meta-database row is a robustness or recoding variant of a Table 2
+# cell; the team's blanket verdict is "Analysis and cleaning code produce the
+# same output as presented in the paper" (perfect_reproduction "Yes").  For
+# the three column 1 claims, the "Corrected Selfishness coding" row is the
+# published specification (column 1 has no Selfishness term) and returns the
+# published value and SE exactly; it is recorded as the reproduction.  For
+# the four Selfishness claims, as in lopez-2022, the finding records the
+# paper's own value under the blanket verdict and quotes the team's
+# corrected-coding value in the note.  The N claims and the Table 3 claims
+# have no row and carry no finding; they are scored against the paper.
+i4r_replicator_findings:
+  - claim_id: 0
+    reproduced_value: -0.139
+    outcome: matches
+    notes: Team 26 "Corrected Selfishness coding" row for the column 1 cell returns -0.139 (0.018), the published spec.
+  - claim_id: 1
+    reproduced_value: 0.152
+    outcome: matches
+    notes: Team 26 "Corrected Selfishness coding" row for the column 1 cell returns 0.152 (0.029), the published spec.
+  - claim_id: 2
+    reproduced_value: -0.095
+    outcome: matches
+    notes: Team 26 "Corrected Selfishness coding" row returns -0.095 (0.026), the published spec (column 1 only).
+  - claim_id: 3
+    reproduced_value: 0.028
+    outcome: matches
+    notes: Blanket I4R verdict (team 26); with Selfishness recoded by the team, 0.056 (0.007).
+  - claim_id: 4
+    reproduced_value: 0.039
+    outcome: matches
+    notes: Blanket I4R verdict (team 26); with Selfishness recoded by the team, 0.075 (0.010).
+  - claim_id: 5
+    reproduced_value: -0.022
+    outcome: matches
+    notes: Blanket I4R verdict (team 26); with Selfishness recoded by the team, -0.049 (0.016).
+  - claim_id: 6
+    reproduced_value: -0.021
+    outcome: matches
+    notes: Blanket I4R verdict (team 26); with Selfishness recoded by the team, -0.024 (0.018).
+notes: >
+  Headline findings.  Table 2: relative to the AMT Choice Free baseline,
+  making it costly to see the incentive first lowers the preference to see
+  it first by -0.139 (0.018) and making it costly to assess quality first
+  raises it by 0.152 (0.029); professionals prefer it less, -0.095 (0.026);
+  N 5,908.  Among AMT advisors (N 5,196) Selfishness raises the preference,
+  0.028 (0.007) in column 2 and 0.039 (0.009) in column 3, with
+  interactions -0.022 (0.016) (incentive-first costly) and -0.021 (0.018)
+  (quality-first costly).  Table 3: advisors assigned their preferred order
+  who prefer the incentive first recommend the incentivized product 0.195
+  (0.016) more often (N 4,448); among those not assigned their preference
+  the gap is 0.003 (0.029); pooled, the Prefer x Not Assigned interaction
+  is -0.140 (0.026).
+
+  Paper text and how it was verified.  The catalog source is the published
+  article (NSF PAR copy of the AER typeset PDF).  Its Table 2 holds every
+  cell the I4R meta-database records, in the same row and column (column
+  positions read from the PDF's word coordinates): See Incentive First
+  Costly -0.139 / -0.140 / -0.140 (0.018 each), Assess Quality First Costly
+  0.152 (0.029) in all three columns, Choice Free—Professionals -0.095
+  (0.026) in column 1 only, Selfishness 0.028 (0.007) col 2 and 0.039
+  (0.009) col 3, and the column 3 interactions -0.022 (0.016) and -0.021
+  (0.018).  The 76 original values group into exactly those 8 distinct
+  value/SE pairs (24 rows 0.152, 16 rows -0.140, 8 rows -0.139, 8 rows
+  -0.095, 5 rows each for the other four); no typo was found.  Table 3 has
+  no meta-database rows; its pinned cells are read from the same published
+  article.
+
+  Package cross-check (2026-11-09, numpy HC3 OLS on Data/Clean
+  Data/choice_experiments.dta, not committed).  analysis.do "TABLE 2":
+  use choice_experiments.dta, drop if study!=1 & alphavaluefinal==. (the
+  preregistered exclusion of MTurk advisors with an inconsistent MPL;
+  study 1 is the professionals, who have no MPL); reg choicebefore
+  $covariates2 [stdalpha] [selfishseeincentivecostly
+  selfishseequalitycostly] if Highx10==0 & Highx100==0 [& professionals==0
+  in column 2], vce(hc3), with $covariates2 = professionalsfree
+  seeincentivecostly seequalitycostly wave2 wave3
+  professionalscloudresearch incentiveshigh incentiveleft
+  incentiveshigh_incentiveleft age female.  Column 3 has no
+  professionals==0 condition; stdalpha is missing for them, so the sample
+  is the same 5,196.  "TABLE 3": reg recommendincentive choicebefore
+  choicebeforenoconflict noconflict incentiveB $covariates2 if Highx10==0
+  & Highx100==0 & getyourchoice==1 (col 1) / ==0 (col 2); col 3 adds
+  notgetyourchoice choicebeforenotgetyourchoice notgetyourchoicenoconflict
+  on the full sample.  Note professionalscloudresearch (an indicator for
+  professionals recruited via CloudResearch rather than Prolific) is a
+  regressor the paper's table notes do not list.  Re-running these in
+  numpy reproduces every pinned value, SE and N exactly (and the
+  constants, Female and Age rows).
+
+  Selfishness coding.  The I4R team reports the Selfishness variable as
+  "incorrectly coded" while still reproducing the paper; its corrected
+  coding roughly doubles the Selfishness coefficients (0.056 vs 0.028,
+  0.075 vs 0.039) and the incentive-first interaction (-0.049 vs -0.022).
+  The catalog pins the published numbers, which the shipped stdalpha
+  reproduces; a reproduction that recodes Selfishness from the raw MPL
+  answers could legitimately land on the team's values instead.
+
+  Curation pass (2026-11-09).  13 claims.  Left out: the Table 2 controls
+  and constants, the See Incentive First Costly / Assess Quality First
+  Costly coefficients of columns 2-3 (near-duplicates of column 1), the
+  Table 3 conflict and treatment rows, Table 4 (belief updating, logit
+  beliefs on log likelihood ratios, a different data shape), Table 1
+  (sample sizes by treatment), Figure 4's adjusted shares, and all appendix
+  tables.
+
+  Package-only facts (never in contexts).  Variables: choicebefore
+  (prefer to see incentive first), recommendincentive, getyourchoice
+  (assigned preference), noconflict, incentiveB, stdalpha (standardized
+  alphavaluefinal, the MPL count), Highx10 / Highx100 (high-stakes
+  variants), professionals, study.  README: Stata, about 2 minutes for
+  main.do; estout, grc1leg, dataout and cdfplot from SSC.
+
+  Blind-mode exposure (step 6, 2026-11-09, oracle label curate-t26, both
+  modes reached llm_answer_pending at the generation prompt).  The blind
+  generation prompt states no pinned value or SE, at printed precision or
+  rounded, no N, and no script text (the hits for choicebefore,
+  recommendincentive, getyourchoice and similar are data column names in
+  the dataset listing); no .do file is listed.  The paper text the
+  pipeline's summariser receives is cut at about 60,000 characters (it
+  ends on p. 413, before Tables 2 and 3), and the parser takes the journal
+  line as the title.  The full paper text does state three pinned values
+  in words: the costly-treatment shifts as a "14 percentage point drop"
+  and a "15 percentage point increase" (Section V) and the Table 3 column 1 gap
+  as "19.5 percentage points" (Section VI); README.pdf, which stays in the
+  mount, quotes the same sentences in its "In-text Numbers" map.  Neither
+  adds a value the paper does not print.
+
+  What was read.  The published article pp. 396-422 (Sections I-VI and Tables
+  1-4); the 77 meta-database rows; the package README.pdf, the Table 1-3
+  blocks of analysis.do and the Selfishness construction in
+  datacleaning.do; the strip-rule classification of the extracted
+  package; the strings of the four .xlsx files.
+
+  What could not be verified.  The CESifo working paper and its exact
+  month (the ifo.de PDF answers a bot check).  What exactly the I4R team
+  corrected in the Selfishness coding (no discussion paper; only the
+  meta-database's row labels).  The authors' Stata code was not run (no
+  Stata here); the cross-check above is an independent numpy OLS with
+  HC3.
+
+  Original analysis in Stata (estout); language: r is the reproduction
+  target.

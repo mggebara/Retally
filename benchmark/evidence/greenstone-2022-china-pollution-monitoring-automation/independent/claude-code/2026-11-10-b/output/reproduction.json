@@ -1,0 +1,28 @@
+{
+  "schema": 1,
+  "entry_id": "greenstone-2022-china-pollution-monitoring-automation",
+  "mode": "independent",
+  "run_id": "2026-11-10-b",
+  "reproducer": "claude-code",
+  "language": "r",
+  "final": {"script": "script.R", "stdout": "stdout.txt", "stderr": "stderr.txt", "exit_code": 0},
+  "attempts": [
+    {"dir": "attempt-1", "exit_code": 0, "kind": ""},
+    {"dir": "attempt-2", "exit_code": 1, "kind": "error"},
+    {"dir": "attempt-3", "exit_code": 0, "kind": ""},
+    {"dir": "attempt-4", "exit_code": 0, "kind": "claim"},
+    {"dir": "attempt-5", "exit_code": 0, "kind": ""},
+    {"dir": "attempt-6", "exit_code": 0, "kind": ""}
+  ],
+  "deviations": [
+    "rdrobust run with masspoints='off' (the R default 'adjust' gives bandwidths 179/494 days; 'off' reproduces the paper's 109/263-day bandwidths, consistent with the pre-2020 Stata rdrobust). Reported RD coefficient is the conventional local-linear estimate.",
+    "'Deadline' stations defined by automation date (exactly 2013-01-01 or 2014-01-01) regardless of listed wave: this gives the 242 treated / 123 control stations in the Table 1 notes (24 of the 242 are in cities coded wave 2). Panel A col 5 uses the same definition (73 cities, not the 84 quoted in the text; N within bandwidth 86,042 matches the table).",
+    "Matched event-study sample (Panel B cols 3 and 5): each 2013-01-01 station paired with its haversine-nearest 2014-01-01 station, with replacement, and the control station's data duplicated per match. This gives 231,990 obs rather than the paper's 186,499; none of the alternative definitions tried in exploratory attempts 5-6 (Euclidean or swapped coordinates, unique pairs, city-level matching, reverse matching) hit 186,499, so the literal description was kept. Station FE use the original station id.",
+    "Residualization for cols 3-5 uses residuals from the full-sample regression (station FE + month-of-year FE + four weather controls), then subsets. Singletons dropped as reghdfe would (19 in AOD).",
+    "Search RD: daily Baidu indices averaged to city-month; city weather = mean over the city's stations; months from automation = calendar-month difference to the city's modal station automation date (14 cities have several station dates)."
+  ],
+  "notes": "Data: pollution + weather station-day merged (1,049,325 obs with PM10 and all weather, matching the paper). Panel A RDs reproduce the paper's coefficients, SEs, bandwidths and N within bandwidth to rounding (34.72, 34.89, 27.55, 64.65, 57.14; AOD -0.0049 with N=5,851, h=7). Panel B cols 1-2 (deadline sample, Jan 2012-Dec 2013, treated x event-bin dummies with Nov-Dec 2012 as reference, station FE + month or year-month FE + weather, city-clustered) reproduce 60.31 and 31.44 and N=176,426 exactly. The matched columns are off (51.8 vs 66.5; log 0.18 vs 0.24) because the matched sample could not be reconstructed (231,990 vs 186,499 obs). Search RDs: 10.00 (mask) and 8.21 (filter), observation counts 8,661/8,590 match the paper. One claim comparison was made (attempt-4); after exploratory checks of matching definitions failed to find the paper's sample, the final run is a copy of attempt-4. No run hung. Read README.pdf in the mount (documentation, not a script).",
+  "files_read_outside_mount": [],
+  "started_at": "2026-11-10T05:55:43Z",
+  "finished_at": "2026-11-10T06:03:00Z"
+}

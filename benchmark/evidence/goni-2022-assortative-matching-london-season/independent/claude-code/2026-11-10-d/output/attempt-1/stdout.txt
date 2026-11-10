@@ -1,0 +1,455 @@
+counter refno str_refno surname firstnames child parent rankstrg title ptitle titlec sexdeath violentd soleheirship illegitchm illegitchf illegitdied created entry entryflag notes bday bmonth byear bacc bbefore bafter bcomment dday dmonth dyear dacc dbefore dafter dcomment nmarriages nthismarriage livethismarr allstillbirths alllivebirths spousefnames spousesurname spousecomment spousechild spouseparent spouserank stitle spouseaddress widowfnames widowsurname widowcomment wdowchild widowparent widowrank widowttitle widowaddress fathercomment fatherchild fatherparent fatherrank ftitle mothercomment motherchild motherparent motherrank mtitle mgffnames mgfsurname mgfcomment mgfchild mgfparent mgfrank mgfttitle mgfaddress heir marrcomment mday mmonth myear macc mbefore mafter mcomment sbday sbmonth sbyear sbacc sbbefore sbafter sbcomment sdday sdmonth sdyear sdacc sdbefore sdafter sdcomment dsday dsmonth dsyear dsacc dsbefore dsafter dscomment setno avebacc wom bdate ddate mdate sbdate sddate mage smage dage sdage biorder celibacy rankspo prankspo rank hrank prank hrankspo crank crankspo grank grankspo pr4 ownrank peerage peeragespo ppeerage ppeeragespo hpeerage hpeeragespo hforeign hbritcom hengpee hscotpee hiripee cOut mheir age1861 syntheticT mourn wrisk countryseat county countryseat2 county2 countryseat3 county3 countryseat4 county4 wgslat wgslon wgslat2 wgslon2 wgslat3 wgslon3 wgslat4 wgslon4 countryseatspo countyspo countryseat2spo county2spo countryseat3spo county3spo countryseat4spo county4spo countryseat5spo county5spo wgslatspo wgslonspo wgslat2spo wgslon2spo wgslat3spo wgslon3spo wgslat4spo wgslon4spo wgslat5spo wgslon5spo dist distlondon fatotal sfatotal id sid fsource sfsource fATot sfATot fmissmatch fmissmatch2 fdown rnk_bate seatname town school college militaryacademy club club2 club3 club4 club5 club6 club7 succyear accuracy oldfamily woods acrestotal valuetotal estate1 acres1 value1 estate2 acres2 value2 estate3 acres3 value3 estate4 acres4 value4 estate5 acres5 value5 estate6 acres6 value6 estate7 acres7 value7 estate8 acres8 value8 estate9 acres9 value9 estate10 acres10 value10 estate11 acres11 value11 estate12 acres12 value12 estate13 acres13 value13 estate14 acres14 value14 queenservices queenservices2 queenservices3 queensevices4 queensevices5 queensevices6 queensevices7 queensevices8 parliament parliament2 parliament3 parliament4 wealthsources wealthsources2 sfatherfirstname ssurname sseatname stown scounty sschool scollege smilitaryacademy sclub sclub2 sclub3 sclub4 sclub5 sclub6 sclub7 ssuccyear saccuracy soldfamily swoods sacrestotal svaluetotal sestate1 sacres1 svalue1 sestate2 sacres2 svalue2 sestate3 sacres3 svalue3 sestate4 sacres4 svalue4 sestate5 sacres5 svalue5 sestate6 sacres6 svalue6 sestate7 sacres7 svalue7 sestate8 sacres8 svalue8 sestate9 sacres9 svalue9 sestate10 sacres10 svalue10 sestate11 sacres11 svalue11 sestate12 sacres12 svalue12 sestate13 sacres13 svalue13 sestate14 sacres14 svalue14 squeenservices squeenservices2 squeenservices3 squeensevices4 squeensevices5 squeensevices6 squeensevices7 squeensevices8 sparliament sparliament2 sparliament3 sparliament4 swealthsources swealthsources2 excused_bc attendLC court courtp courtpc attend100 invited100 excused100 attended_bc100 invited_bc100 base_sample marital_rates_sample 
+counter : Counter number in Hollingsworth 
+refno : Reference number in Hollingsworth 
+str_refno : Reference number in Hollingsworth (string) 
+surname : Surname 
+firstnames : First Names 
+child : Abbreviated family relationship to peer 
+parent : Rank and title of parent or last incumbent of peerage; eg 3E = third Earl. 
+rankstrg : Rank & no of title (eg, D=Duke;M=Marquess;E=Earl;Cs=Countess;V=Viscount;B=Baron) 
+title : Title 
+ptitle : Parental Title 
+titlec : Title comment 
+sexdeath : Sex/Death 
+violentd : Violent death comment 
+soleheirship : Sole heir (Y=Only child of F who reached 15 / of M if Peeress; X=Not only child) 
+illegitchm : Illegitimate male children 
+illegitchf : Illegitimate female children 
+illegitdied : Ill ch died<15 (Y=0;X=1M;0=1F;1=2M;2=1M1F;3=2F;4=3M;5=2M1F;6=1M2F;7=3F;8=4;9=>4) 
+created : Title created date comment 
+entry : Year of entry to peerage? Meaning unknown 
+entryflag : Entry flag (0;1;blank) Meaning unknown 
+notes : Notes from original Hollingsworth paper slips 
+bday : Birth/baptism Day 
+bmonth : Birth/baptism Month (Y=Jan;X=Feb;0=Mar;1=Apr;...;9=Dec) 
+byear : Birth/baptism Year 
+bacc : B Accuracy +-years (Y=0;X=.03;0=.06;1=.12;2=.25;3=.5;4=1;5=2:6=4;7=8;8=16;9=32) 
+bbefore : Birth/baptism Before 
+bafter : Birth/baptism After 
+bcomment : Birth/baptism Comment 
+dday : Death/burial Day 
+dmonth : Death/burial Month (Y=Jan;X=Feb;0=Mar;1=Apr;...;9=Dec) 
+dyear : Death/burial Year 
+dacc : D Accuracy +-years (Y=0;X=.03;0=.06;1=.12;2=.25;3=.5;4=1;5=2:6=4;7=8;8=16;9=32) 
+dbefore : Death/burial Before 
+dafter : Death/burial After 
+dcomment : Death/burial Comment 
+nmarriages : Number of marriages 
+nthismarriage : Number this Marriage 
+livethismarr : Live Births this marriage 
+allstillbirths : All Stillbirths 
+alllivebirths : All Live Births 
+spousefnames : First Names of spouse in this marriage 
+spousesurname : Surname of spouse in this marriage 
+spousecomment : Spouse Comment 
+spousechild : Abbreviated family relationship to peer of spouse in this marriage 
+spouseparent : Rank and title of spouse's parent in this marriage 
+spouserank : Rank and number of that title of spouse in this marriage 
+stitle : Title of spouse in this marriage 
+spouseaddress : Address of spouse in this marriage 
+widowfnames : First Names of spouse's own dead spouse from their previous marriage 
+widowsurname : Surname of spouse's own dead spouse from their previous marriage 
+widowcomment : Widow Comment 
+wdowchild : Abbr family relation to peer of spouse's own dead spouse from previous marriage 
+widowparent : Rank & title of spouse's own dead spouse's parent from previous marriage 
+widowrank : Rank and number of title of spouse's own dead spouse from previous marriage 
+widowttitle : Title of spouse's own dead spouse from their previous marriage 
+widowaddress : Address of spouse's own dead spouse from their previous marriage 
+fathercomment : Spouse's Father Comment 
+fatherchild : Abbreviated family relationship to peer of spouse's father 
+fatherparent : Rank and title of parent of spouse's father 
+fatherrank : Rank and number of that title of spouse's father 
+ftitle : Title of spouse's father 
+mothercomment : Spouse's Mother Comment 
+motherchild : Abbreviated family relationship to peer of spouse's mother 
+motherparent : Rank and title of parent of spouse's mother 
+motherrank : Rank and number of that title of spouse's mother 
+mtitle : Title of spouse's mother 
+mgffnames : First Names of Spouse's maternal grandfather (MGF) 
+mgfsurname : Surname of spouse's MGF 
+mgfcomment : Spouse's MGF Comment 
+mgfchild : Abbreviated family relationship to peer of spouse's MGF 
+mgfparent : Rank and title of parent of spouse's MGF 
+mgfrank : Rank and number of that title of spouse's MGF 
+mgfttitle : Title of spouse's MGF 
+mgfaddress : Address of spouse's MGF 
+heir : Heir to estate? (1=wife sole heir;2=wife coheir;3=wife not;4=hus heir;5=hus not) 
+marrcomment : Comments on marriage 
+mday : Marriage Day 
+mmonth : Marriage Month (Y=Jan;X=Feb;0=Mar;1=Apr;...;9=Dec) 
+myear : Marriage year 
+macc : M Accuracy +-years (Y=0;X=.03;0=.06;1=.12;2=.25;3=.5;4=1;5=2:6=4;7=8;8=16;9=32) 
+mbefore : Marriage Before 
+mafter : Marriage After 
+mcomment : Marriage date Comment 
+sbday : Spouse's birth day 
+sbmonth : Spouse's birth month (Y=Jan;X=Feb;0=Mar;1=Apr;...;9=Dec) 
+sbyear : Spouse's birth year 
+sbacc : SB Accuracy +-years (Y=0;X=.03;0=.06;1=.12;2=.25;3=.5;4=1;5=2:6=4;7=8;8=16;9=32) 
+sbbefore : Spouse's birth Before 
+sbafter : Spouse's birth After 
+sbcomment : Spouse's birth Comment 
+sdday : Spouse's death day 
+sdmonth : Spouse's death month (Y=Jan;X=Feb;0=Mar;1=Apr;...;9=Dec) 
+sdyear : Spouse's death year 
+sdacc : SD Accuracy +-years (Y=0;X=.03;0=.06;1=.12;2=.25;3=.5;4=1;5=2:6=4;7=8;8=16;9=32) 
+sdbefore : Spouse's death Before 
+sdafter : Spouse's death After 
+sdcomment : Spouse's death Comment 
+dsday : Day of divorce/separation this marriage 
+dsmonth : Month of divorce/separation this marriage (Y=Jan;X=Feb;0=Mar;1=Apr;...;9=Dec) 
+dsyear : Year of divorce/separation this marriage 
+dsacc : DS Accuracy +-years (Y=0;X=.03;0=.06;1=.12;2=.25;3=.5;4=1;5=2:6=4;7=8;8=16;9=32) 
+dsbefore : Divorce/separation Before 
+dsafter : Divorce/separation After 
+dscomment : Divorce/separation Comment 
+setno : This marriage: specification for children: set no 
+avebacc : Average accuracy of birth dates 
+wom : Woman (1=yes;0=no) 
+bdate : Birth date 
+ddate : Death date 
+mdate : Marriage date 
+sbdate : Spouse's birth date 
+sddate : Spouse's death date 
+mage : Age at marriage 
+smage : Spouse's age at marriage 
+dage : Age at death 
+sdage : Spouse's age at death 
+biorder : Birth order (excluding heirs) 
+celibacy : Celibacy 
+rankspo : Highest title the spouse succeeded to/was heir to at 15/was created for 
+prankspo : Highest title the spouse's parent succeeded to/was heir to at 15/was created for 
+rank : Highest title succeeded to/was heir to at 15/was created for 
+hrank : Highest title heir to at 15 
+prank : Highest title the parent succeeded to/was heir to at 15/was created for 
+hrankspo : Highest title the spouse was heir to at 15 
+crank : Rank (heir to at 15 for men; highest parental rank for women) 
+crankspo : Spouse's rank (heir to at 15 for men; highest parental rank for women) 
+grank : Wife's parental rank 
+grankspo : Husband's rank at age 15 
+pr4 : Duke/Earl/Marquis' daughter 
+ownrank : Title (separating Duke, Earl, Marqui, Baron, Viscount daughters) 
+peerage : Nation of peerage (highest title succeeded to/heir to at 15/created for) 
+peeragespo : Spouse Nation of peerage (highest title succeeded to/heir to at 15/created for) 
+ppeerage : Parent Nation of peerage (highest title succeeded to/heir to at 15/created for) 
+ppeeragespo : Spo parent Nation of peerage (highest title succ to/heir to at 15/created for) 
+hpeerage : Nation of peerage (highest title self or parent succeeded/heir at 15/created) 
+hpeeragespo : Spouse Nation of peerage (highest title self or parent succ/heir at 15/created) 
+hforeign : Foreign 
+hbritcom : British commoner 
+hengpee : Peerage of England 
+hscotpee : Peerage of Scotland 
+hiripee : Peerage of Ireland 
+cOut : Married a commoner 
+mheir : Married an heir 
+age1861 : Age at the start of the 1861 Season 
+syntheticT : Treatment 
+mourn : Married in 1861-63 
+wrisk : Size of the marriageble cohort (women) 
+countryseat : Name of family seat (1/n) 
+county : County where family seat is located (1/n) 
+countryseat2 : Name of family seat (2/n) 
+county2 : County where family seat is located (2/n) 
+countryseat3 : Name of family seat (3/n) 
+county3 : County where family seat is located (3/n) 
+countryseat4 : Name of family seat (4/4) 
+county4 : County where family seat is located (4/4) 
+wgslat : Latitude of family seat (1/n), WGS84 
+wgslon : Longitude of family seat (1/n), WGS84 
+wgslat2 : Latitude of family seat (2/n), WGS84 
+wgslon2 : Longitude of family seat (2/n), WGS84 
+wgslat3 : Latitude of family seat (3/n), WGS84 
+wgslon3 : Longitude of family seat (3/n), WGS84 
+wgslat4 : Latitude of family seat (4/4), WGS84 
+wgslon4 : Longitude of family seat (4/4), WGS84 
+countryseatspo : Name of family seat (1/n) (for spouses' families) 
+countyspo : County where family seat is located (1/n) (for spouses' families) 
+countryseat2spo : Name of family seat (2/n) (for spouses' families) 
+county2spo : County where family seat is located (2/n) (for spouses' families) 
+countryseat3spo : Name of family seat (3/n) (for spouses' families) 
+county3spo : County where family seat is located (3/n) (for spouses' families) 
+countryseat4spo : Name of family seat (4/n) (for spouses' families) 
+county4spo : County where family seat is located (4/n) (for spouses' families) 
+countryseat5spo : Name of family seat (5/5) (for spouses' families) 
+county5spo : County where family seat is located (5/5) (for spouses' families) 
+wgslatspo : Latitude of family seat (1/n), WGS84 (for spouses' families) 
+wgslonspo : Longitude of family seat (1/n), WGS84 (for spouses' families) 
+wgslat2spo : Latitude of family seat (2/n), WGS84 (for spouses' families) 
+wgslon2spo : Longitude of family seat (2/n), WGS84 (for spouses' families) 
+wgslat3spo : Latitude of family seat (3/n), WGS84 (for spouses' families) 
+wgslon3spo : Longitude of family seat (3/n), WGS84 (for spouses' families) 
+wgslat4spo : Latitude of family seat (4/n), WGS84 (for spouses' families) 
+wgslon4spo : Longitude of family seat (4/n), WGS84 (for spouses' families) 
+wgslat5spo : Latitude of family seat (5/5), WGS84 (for spouses' families) 
+wgslon5spo : Latitude of family seat (5/5), WGS84 (for spouses' families) 
+dist : Shortest distance between spouses' seats 
+distlondon : Shortest distance between seat and London 
+fatotal : Family landholdings 
+sfatotal : Family landholdings, spouse 
+id : Reference number in bateman-master for fatotal 
+sid : Reference number in bateman-master for sfaTotal 
+fsource : Source for fATotal (landholdings or landholdings of spouses in bateman-master) 
+sfsource : Source sfATotal (Bateman 1883;lholdings or lholdings spouses in bateman-master) 
+fATot : 100 quantiles of fatotal 
+sfATot : 100 quantiles of sfatotal 
+fmissmatch : Difference in spouses' family landholdings (absolute value, percentile ranks) 
+fmissmatch2 : Difference in spouses' family landholdings (hus-wife, percentile ranks) 
+fdown : Married down in family landholdings 
+rnk_bate : Rank listed in Bateman (1883) 
+seatname : Address/name of seat in Bateman 
+town : Town of address/seat in Bateman 
+school : School attended by landowner as of 1870s 
+college : College attended by landowner as of 1870s 
+militaryacademy : Military academy attended by landowner as of 1870s 
+club : Club (1/n) to which landowner belonged 
+club2 : Club (2/n) to which landowner belonged 
+club3 : Club (3/n) to which landowner belonged 
+club4 : Club (4/n) to which landowner belonged 
+club5 : Club (5/n) to which landowner belonged 
+club6 : Club (6/n) to which landowner belonged 
+club7 : Club (7/7) to which landowner belonged 
+succyear : Year of succession in Bateman 
+accuracy : Accuracy Bateman entry (1 = least; 3 = most; see Bateman prologue) 
+oldfamily : Head of family/family's junior branch who held land in England since Henry VII 
+woods : Woods included in Bateman 
+acrestotal : Acreage (total) 
+valuetotal : Gross annual value, pounds (total) 
+estate1 : County 1/n where landowners has estates 
+acres1 : Acres in county 1/n 
+value1 : Gross annual value (pounds) in county 1/n 
+estate2 : County 2/n where landowners has estates 
+acres2 : Acres in county 2/n 
+value2 : Gross annual value (pounds) in county 2/n 
+estate3 : County 3/n where landowners has estates 
+acres3 : Acres in county 3/n 
+value3 : Gross annual value (pounds) in county 3/n 
+estate4 : County 4/n where landowners has estates 
+acres4 : Acres in county 4/n 
+value4 : Gross annual value (pounds) in county 4/n 
+estate5 : County 5/n where landowners has estates 
+acres5 : Acres in county 5/n 
+value5 : Gross annual value (pounds) in county 5/n 
+estate6 : County 6/n where landowners has estates 
+acres6 : Acres in county 6/n 
+value6 : Gross annual value (pounds) in county 6/n 
+estate7 : County 7/n where landowners has estates 
+acres7 : Acres in county 7/n 
+value7 : Gross annual value (pounds) in county 7/n 
+estate8 : County 8/n where landowners has estates 
+acres8 : Acres in county 8/n 
+value8 : Gross annual value (pounds) in county 8/n 
+estate9 : County 9/n where landowners has estates 
+acres9 : Acres in county 9/n 
+value9 : Gross annual value (pounds) in county 9/n 
+estate10 : County 10/n where landowners has estates 
+acres10 : Acres in county 10/n 
+value10 : Gross annual value (pounds) in county 10/n 
+estate11 : County 11/n where landowners has estates 
+acres11 : Acres in county 11/n 
+value11 : Gross annual value (pounds) in county 11/n 
+estate12 : County 12/n where landowners has estates 
+acres12 : Acres in county 12/n 
+value12 : Gross annual value (pounds) in county 12/n 
+estate13 : County 13/n where landowners has estates 
+acres13 : Acres in county 13/n 
+value13 : Gross annual value (pounds) in county 13/n 
+estate14 : County 14/14 where landowners has estates 
+acres14 : Acres in county 14/14 
+value14 : Gross annual value (pounds) in county 14/14 
+queenservices : Services to the Queen, as of 1870s (1/n) 
+queenservices2 : Services to the Queen, as of 1870s (2/n) 
+queenservices3 : Services to the Queen, as of 1870s (3/n) 
+queensevices4 : Services to the Queen, as of 1870s (4/n) 
+queensevices5 : Services to the Queen, as of 1870s (5/n) 
+queensevices6 : Services to the Queen, as of 1870s (6/n) 
+queensevices7 : Services to the Queen, as of 1870s (7/n) 
+queensevices8 : Services to the Queen, as of 1870s (8/8) 
+parliament : Services to Parliament, as of 1870s (1/n) 
+parliament2 : Services to Parliament, as of 1870s (2/n) 
+parliament3 : Services to Parliament, as of 1870s (3/n) 
+parliament4 : Services to Parliament, as of 1870s (4/4) 
+wealthsources : Other wealth sources listed in Bateman (1/n) 
+wealthsources2 : Other wealth sources listed in Bateman (1/2) 
+sfatherfirstname : Spouse's father first name 
+ssurname : Spouse's surname 
+sseatname : Address/name of seat in Bateman (spouse's family) 
+stown : Town of address/seat in Bateman (spouse's family) 
+scounty : County of address/seat in Bateman (spouse's family) 
+sschool : School attended by landowner as of 1870s (spouse's family) 
+scollege : College attended by landowner as of 1870s (spouse's family) 
+smilitaryacademy : Military academy attended by landowner as of 1870s (spouse's family) 
+sclub : Club (1/n) to which landowner belonged (spouse's family) 
+sclub2 : Club (2/n) to which landowner belonged (spouse's family) 
+sclub3 : Club (3/n) to which landowner belonged (spouse's family) 
+sclub4 : Club (4/n) to which landowner belonged (spouse's family) 
+sclub5 : Club (5/n) to which landowner belonged (spouse's family) 
+sclub6 : Club (6/n) to which landowner belonged (spouse's family) 
+sclub7 : Club (7/7) to which landowner belonged (spouse's family) 
+ssuccyear : Year of succession in Bateman (spouse's family) 
+saccuracy : Accuracy Bateman entry for spouse family (1=least; 3=most; see Bateman prologue) 
+soldfamily : Spouse in family/family's junior branch held land in England since Henry VII 
+swoods : Woods included in Bateman (spouse's family) 
+sacrestotal : Acreage (total) (spouse's family) 
+svaluetotal : Gross annual value, pounds (total) (spouse's family) 
+sestate1 : County 1/n where landowners has estates (spouse's family) 
+sacres1 : Acres in county 1/n (spouse's family) 
+svalue1 : Gross annual value (pounds) in county 1/n (spouse's family) 
+sestate2 : County 2/n where landowners has estates (spouse's family) 
+sacres2 : Acres in county 2/n (spouse's family) 
+svalue2 : Gross annual value (pounds) in county 2/n (spouse's family) 
+sestate3 : County 3/n where landowners has estates (spouse's family) 
+sacres3 : Acres in county 3/n (spouse's family) 
+svalue3 : Gross annual value (pounds) in county 3/n (spouse's family) 
+sestate4 : County 4/n where landowners has estates (spouse's family) 
+sacres4 : Acres in county 4/n (spouse's family) 
+svalue4 : Gross annual value (pounds) in county 4/n (spouse's family) 
+sestate5 : County 5/n where landowners has estates (spouse's family) 
+sacres5 : Acres in county 5/n (spouse's family) 
+svalue5 : Gross annual value (pounds) in county 5/n (spouse's family) 
+sestate6 : County 6/n where landowners has estates (spouse's family) 
+sacres6 : Acres in county 6/n (spouse's family) 
+svalue6 : Gross annual value (pounds) in county 6/n (spouse's family) 
+sestate7 : County 7/n where landowners has estates (spouse's family) 
+sacres7 : Acres in county 7/n (spouse's family) 
+svalue7 : Gross annual value (pounds) in county 7/n (spouse's family) 
+sestate8 : County 8/n where landowners has estates (spouse's family) 
+sacres8 : Acres in county 8/n (spouse's family) 
+svalue8 : Gross annual value (pounds) in county 8/n (spouse's family) 
+sestate9 : County 9/n where landowners has estates (spouse's family) 
+sacres9 : Acres in county 9/n (spouse's family) 
+svalue9 : Gross annual value (pounds) in county 9/n (spouse's family) 
+sestate10 : County 10/n where landowners has estates (spouse's family) 
+sacres10 : Acres in county 10/n (spouse's family) 
+svalue10 : Gross annual value (pounds) in county 10/n (spouse's family) 
+sestate11 : County 11/n where landowners has estates (spouse's family) 
+sacres11 : Acres in county 11/n (spouse's family) 
+svalue11 : Gross annual value (pounds) in county 11/n (spouse's family) 
+sestate12 : County 12/n where landowners has estates (spouse's family) 
+sacres12 : Acres in county 12/n (spouse's family) 
+svalue12 : Gross annual value (pounds) in county 12/n (spouse's family) 
+sestate13 : County 13/n where landowners has estates (spouse's family) 
+sacres13 : Acres in county 13/n (spouse's family) 
+svalue13 : Gross annual value (pounds) in county 13/n (spouse's family) 
+sestate14 : County 14/14 where landowners has estates (spouse's family) 
+sacres14 : Acres in county 14/14 (spouse's family) 
+svalue14 : Gross annual value (pounds) in county 14/14 (spouse's family) 
+squeenservices : Services to the Queen, as of 1870s (1/n) (spouse's family) 
+squeenservices2 : Services to the Queen, as of 1870s (2/n) (spouse's family) 
+squeenservices3 : Services to the Queen, as of 1870s (3/n) (spouse's family) 
+squeensevices4 : Services to the Queen, as of 1870s (4/n) (spouse's family) 
+squeensevices5 : Services to the Queen, as of 1870s (5/n) (spouse's family) 
+squeensevices6 : Services to the Queen, as of 1870s (6/n) (spouse's family) 
+squeensevices7 : Services to the Queen, as of 1870s (7/n) (spouse's family) 
+squeensevices8 : Services to the Queen, as of 1870s (8/8) (spouse's family) 
+sparliament : Services to Parliament, as of 1870s (1/n) (spouse's family) 
+sparliament2 : Services to Parliament, as of 1870s (2/n) (spouse's family) 
+sparliament3 : Services to Parliament, as of 1870s (3/n) (spouse's family) 
+sparliament4 : Services to Parliament, as of 1870s (4/4) (spouse's family) 
+swealthsources : Other wealth sources listed in Bateman (1/n) (spouse's family) 
+swealthsources2 : Other wealth sources listed in Bateman (1/2) (spouse's family) 
+excused_bc : Yearly invitees who excused themselves at Season (balls and concerts) 
+attendLC : Yearly attendees at Season (royal parties) 
+court : Yearly number of girls presented at court in the Season 
+courtp : Yearly number of peers' daughters presented at court in the Season 
+courtpc : Yearly % of court presentations in the Season by peers' daughters 
+attend100 : Yearly attendees at Season (royal parties), in hundreds 
+invited100 : Yearly invitees at Season (royal parties), in hundreds 
+excused100 : Yearly invitees who excused themselves at Season (royal parties), in hundreds 
+attended_bc100 : Attendees at balls and concerts 
+invited_bc100 : Yearly invitees at Season (balls and concerts), in hundreds 
+base_sample : Baseline sample (1=yes;0=no) 
+marital_rates_sample : Sample to examine marital rates (1=yes;0=no) 
+base_sample
+
+    0     1  <NA> 
+29770   644     0 
+marital_rates_sample
+
+    0     1  <NA> 
+29649   765     0 
+== syntheticT 
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+  1.575   4.134  11.417  11.089  18.110  22.835 
+== cOut 
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+  0.000   0.000   1.000   0.646   1.000   1.000 
+== mheir 
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+ 0.0000  0.0000  0.0000  0.2593  1.0000  1.0000 
+== fdown 
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max.     NAs 
+ 0.0000  0.0000  1.0000  0.5278  1.0000  1.0000     320 
+== distlondon 
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max.     NAs 
+   3.82   59.68  132.45  187.77  329.36  511.26     160 
+== biorder 
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+  0.000   2.000   3.000   3.694   5.000  14.000 
+== byear 
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+   1825    1830    1836    1835    1841    1846 
+== hengpee 
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+  0.000   0.000   1.000   0.587   1.000   1.000 
+== pr4 
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+ 0.0000  0.0000  0.0000  0.4907  1.0000  1.0000 
+== prank 
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+  1.000   4.000   4.000   4.463   5.000   5.000 
+== fmissmatch 
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max.     NAs 
+   0.00   11.00   24.00   28.90   42.25   97.00     320 
+== fmissmatch2 
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max.     NAs 
+-97.000 -28.000  -4.000  -3.318  20.000  95.000     320 
+== fatotal 
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max.     NAs 
+   2012    8294   15554   29672   33449 1358545     106 
+== nthismarriage 
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+      1       1       1       1       1       1 
+rankstrg soleheirship byear nmarriages nthismarriage spouserank widowrank fatherrank motherrank mgfrank heir sbyear mage smage dage sdage rankspo prankspo rank hrank prank hrankspo crank crankspo grank grankspo ownrank peerage peeragespo ppeerage ppeeragespo hpeerage hpeeragespo hengpee mheir age1861 countryseat countryseat2 countryseat3 countryseat4 countryseatspo countryseat2spo countryseat3spo countryseat4spo countryseat5spo dist distlondon seatname acrestotal acres1 acres2 acres3 acres4 acres5 acres6 acres7 acres8 acres9 acres10 acres11 acres12 acres13 acres14 sseatname sacrestotal sacres1 sacres2 sacres3 sacres4 sacres5 sacres6 sacres7 sacres8 sacres9 sacres10 sacres11 sacres12 sacres13 sacres14 base_sample marital_rates_sample 
+nrow marital 765 
+== mr syntheticT 
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+  1.575   4.134  11.417  11.258  18.110  22.835 
+== mr cOut 
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+ 0.0000  0.0000  1.0000  0.5033  1.0000  1.0000 
+== mr mheir 
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+ 0.0000  0.0000  0.0000  0.4235  1.0000  1.0000 
+== mr fdown 
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max.     NAs 
+ 0.0000  0.0000  1.0000  0.5243  1.0000  1.0000     477 
+== mr distlondon 
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max.     NAs 
+   3.82   55.41  124.31  183.61  328.26  511.26     200 
+== mr biorder 
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+  1.000   2.000   3.000   3.868   5.000  14.000 
+== mr byear 
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+   1825    1831    1836    1836    1841    1846 
+== mr hengpee 
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+ 0.0000  0.0000  1.0000  0.5765  1.0000  1.0000 
+== mr pr4 
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+ 0.0000  0.0000  0.0000  0.4641  1.0000  1.0000 
+== mr prank 
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+  4.000   4.000   4.000   4.464   5.000   5.000 
+== mr fmissmatch 
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max.     NAs 
+   0.00   11.00   24.00   28.91   43.00   97.00     477 
+== mr fmissmatch2 
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max.     NAs 
+-97.000 -28.250  -3.500  -3.233  20.000  95.000     477 
+== mr fatotal 
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max.     NAs 
+   2012    7941   15480   28594   30789 1358545     137 
+== mr nthismarriage 
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+ 0.0000  1.0000  1.0000  0.7725  1.0000  1.0000 

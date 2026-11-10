@@ -1,0 +1,22 @@
+{
+  "schema": 1,
+  "entry_id": "goni-2022-assortative-matching-london-season",
+  "mode": "blind",
+  "run_id": "2026-11-10-c",
+  "reproducer": "claude-code",
+  "language": "r",
+  "final": {"script": "script.R", "stdout": "stdout.txt", "stderr": "stderr.txt", "exit_code": 0},
+  "attempts": [
+    {"dir": "attempt-1", "exit_code": 0, "kind": ""},
+    {"dir": "attempt-2", "exit_code": 0, "kind": ""}
+  ],
+  "deviations": [
+    "Probit columns report the average marginal effect of syntheticT (marginaleffects::avg_slopes); the paper says 'marginal effect' without stating average vs at-means. Marginal effects at means are printed as non-RESULT diagnostics in stdout.",
+    "Standard errors clustered by birth year (byear, 22 clusters in the baseline sample) as the text says; the paper mentions G = 21, which equals the number of ages in 1861. Bootstrap-t p-values not computed (no listed quantity depends on them).",
+    "Samples, outcomes and treatment taken from the prebuilt variables in data/final-data.dta: base_sample, marital_rates_sample, syntheticT, cOut, mheir, fmissmatch, fmissmatch2, fdown, celibacy, distlondon; controls pr4 (duke/marquess/earl daughter), hengpee (English peerage), biorder (birth order excluding heirs). Landholdings sample = base_sample with non-missing fmissmatch/fmissmatch2/fdown."
+  ],
+  "notes": "Two exploratory runs (variable labels; sample counts and variable summaries, no estimates) then one final run. Sample sizes match the counts printed in the paper text where not withheld (484 women with seat, 260 landholdings with seat, 565 marital-rates with seat). Baseline N=644, landholdings N=324, never-married N=765. Probit via glm(probit), OLS via lm, cluster-robust vcov via sandwich::vcovCL. No hung runs.",
+  "files_read_outside_mount": [],
+  "started_at": "2026-11-10T05:29:44Z",
+  "finished_at": "2026-11-10T05:32:30Z"
+}

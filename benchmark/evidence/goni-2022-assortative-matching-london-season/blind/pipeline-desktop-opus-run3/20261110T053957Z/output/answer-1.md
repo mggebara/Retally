@@ -1,0 +1,228 @@
+suppressPackageStartupMessages({
+  library(haven)
+  library(dplyr)
+  library(sandwich)
+  library(lmtest)
+})
+set.seed(42)
+
+root <- "<repo>/.cache/datasets/goni_2022_assortative_matching_london_season.script-free"
+df <- haven::read_dta(file.path(root, "data/final-data.dta"))
+df <- haven::zap_labels(df)
+df <- as.data.frame(df)
+nms <- names(df)
+cat("Number of columns:", length(nms), " rows:", nrow(df), "\n")
+
+fv <- function(cands) {
+  for (c in cands) if (c %in% nms) return(c)
+  low <- tolower(nms)
+  for (c in cands) { i <- which(low == tolower(c)); if (length(i)) return(nms[i[1]]) }
+  NA_character_
+}
+num <- function(x) suppressWarnings(as.numeric(x))
+
+# print candidate names for diagnostics
+cat("Candidate landholding/rank vars:\n")
+print(grep("dif|pct|perc|xtile|acre|^A|fatot|ATot|rank|land|down", nms, value = TRUE, ignore.case = TRUE))
+cat("Candidate sample/age/sex/death vars:\n")
+print(grep("sample|age|sex|female|gender|dyear|death|died|byear|royal|foreign|pr4|heng|prank|duke", nms, value = TRUE, ignore.case = TRUE))
+
+# ---------------- key variables ----------------
+v_T     <- fv(c("syntheticT"))
+v_cOut  <- fv(c("cOut"))
+v_mheir <- fv(c("mheir"))
+v_fdown <- fv(c("fdown"))
+v_bio   <- fv(c("biorder"))
+v_dist  <- fv(c("distlondon"))
+v_by    <- fv(c("byear", "birthyear", "yob"))
+v_base  <- fv(c("base_sample"))
+v_nthis <- fv(c("nthismarriage"))
+v_nmar  <- fv(c("nmarriages"))
+v_myear <- fv(c("myear"))
+
+df$T_ <- num(df[[v_T]])
+df$cl_ <- if (!is.na(v_by)) num(df[[v_by]]) else NA_real_
+df$bio_ <- num(df[[v_bio]])
+
+# Duke/marquess/earl daughter indicator
+v_pr4 <- fv(c("pr4"))
+v_prank <- fv(c("prank"))
+duke <- NULL
+if (!is.na(v_pr4)) {
+  x <- num(df[[v_pr4]])
+  if (all(x[!is.na(x)] %in% c(0, 1))) duke <- x
+}
+if (is.null(duke)) {
+  v_d <- fv(c("duke", "dukes", "dme", "pr_dme", "dukemarqearl"))
+  if (!is.na(v_d)) duke <- num(df[[v_d]])
+}
+if (is.null(duke) && !is.na(v_prank)) {
+  x <- num(df[[v_prank]])
+  # assume lowest codes are the highest ranks (duke=1, marquess=2, earl=3)
+  duke <- ifelse(is.na(x), NA, as.numeric(x %in% c(1, 2, 3)))
+}
+if (is.null(duke)) duke <- rep(0, nrow(df))
+df$duke_ <- duke
+
+v_eng <- fv(c("hengpee", "engpeerage", "english", "peerage_eng"))
+if (!is.na(v_eng)) {
+  df$eng_ <- num(df[[v_eng]])
+} else if (!is.na(fv("peerage"))) {
+  p <- df[[fv("peerage")]]
+  df$eng_ <- as.numeric(grepl("^E|Eng", as.character(p)))
+} else df$eng_ <- 0
+df$eng_[is.na(df$eng_)] <- 0
+df$duke_[is.na(df$duke_)] <- 0
+
+df$dist_ <- if (!is.na(v_dist)) num(df[[v_dist]]) else NA_real_
+
+# ---------------- baseline sample ----------------
+if (!is.na(v_base)) {
+  base <- df[!is.na(num(df[[v_base]])) & num(df[[v_base]]) == 1, ]
+} else {
+  base <- df
+}
+if (!is.na(v_nthis)) {
+  nt <- num(base[[v_nthis]])
+  base <- base[is.na(nt) | nt <= 1, ]
+}
+base$cOut_ <- num(base[[v_cOut]])
+base$mheir_ <- num(base[[v_mheir]])
+cat("Baseline rows (base_sample):", nrow(base), "\n")
+
+ctrl <- "duke_ + eng_ + bio_"
+
+probit_ame <- function(d, y) {
+  f <- as.formula(paste(y, "~ T_ +", ctrl))
+  d <- d[complete.cases(d[, c(y, "T_", "duke_", "eng_", "bio_")]), ]
+  m <- glm(f, data = d, family = binomial(link = "probit"))
+  X <- model.matrix(m)
+  b <- coef(m)
+  xb <- as.vector(X %*% b)
+  me <- mean(dnorm(xb)) * b["T_"]
+  se <- tryCatch(sqrt(diag(vcovCL(m, cluster = d$cl_)))["T_"], error = function(e) NA)
+  cat(sprintf("Probit %s: N=%d coef=%.5f se=%.5f AME=%.6f\n", y, nrow(d), b["T_"], se, me))
+  list(me = unname(me), n = nrow(d))
+}
+ols_coef <- function(d, y) {
+  f <- as.formula(paste(y, "~ T_ +", ctrl))
+  d <- d[complete.cases(d[, c(y, "T_", "duke_", "eng_", "bio_")]), ]
+  m <- lm(f, data = d)
+  se <- tryCatch(sqrt(diag(vcovCL(m, cluster = d$cl_)))["T_"], error = function(e) NA)
+  cat(sprintf("OLS %s: N=%d coef=%.5f se=%.5f\n", y, nrow(d), coef(m)["T_"], se))
+  list(b = unname(coef(m)["T_"]), n = nrow(d))
+}
+
+# ---------------- landholding outcomes ----------------
+# look for ready-made difference variables first
+v_dabs <- fv(c("difAabs", "absdifA", "dAabs", "absdiff", "difabs", "adifA", "difA_abs"))
+v_dhw  <- fv(c("difA", "diffA", "dA", "difAhw", "diff_hw", "difpct"))
+if (!is.na(v_dhw) && !is.na(v_dabs)) {
+  base$dhw_ <- num(base[[v_dhw]])
+  base$dabs_ <- num(base[[v_dabs]])
+} else {
+  # construct percentile ranks of birth-family acres for wife and husband
+  v_wa <- fv(c("fatotal", "ATotal", "ATot", "acres"))
+  v_ha <- fv(c("fatotalspo", "fatotal_spo", "ATotalspo", "ATotspo", "spofatotal", "hfatotal", "acresspo", "ATotal_spo"))
+  if (is.na(v_ha)) {
+    cand <- grep("spo", nms, value = TRUE, ignore.case = TRUE)
+    cand <- grep("tot|acre|^A", cand, value = TRUE, ignore.case = TRUE)
+    if (length(cand)) v_ha <- cand[1]
+  }
+  cat("Wife acres var:", v_wa, " Husband acres var:", v_ha, "\n")
+  if (!is.na(v_wa) && !is.na(v_ha)) {
+    wa <- num(base[[v_wa]]); ha <- num(base[[v_ha]])
+    ok <- !is.na(wa) & !is.na(ha)
+    pooled <- c(wa[ok], ha[ok])
+    Fn <- ecdf(pooled)
+    pr <- function(x) ifelse(is.na(x), NA, 100 * Fn(x))
+    base$dhw_ <- ifelse(ok, pr(ha) - pr(wa), NA)
+    base$dabs_ <- abs(base$dhw_)
+  } else {
+    base$dhw_ <- NA_real_; base$dabs_ <- NA_real_
+  }
+}
+if (!is.na(v_fdown)) base$fdown_ <- num(base[[v_fdown]]) else base$fdown_ <- ifelse(is.na(base$dhw_), NA, as.numeric(base$dhw_ < 0))
+land <- base[!is.na(base$dabs_) & !is.na(base$dhw_), ]
+land$fdown_[is.na(land$fdown_)] <- as.numeric(land$dhw_[is.na(land$fdown_)] < 0)
+
+# ---------------- never-married sample ----------------
+v_age61 <- fv(c("age1861"))
+age61 <- if (!is.na(v_age61)) num(df[[v_age61]]) else 1861 - df$cl_
+v_sex <- fv(c("sex", "female", "gender"))
+fem <- rep(TRUE, nrow(df))
+if (!is.na(v_sex)) {
+  s <- df[[v_sex]]
+  if (is.numeric(s)) {
+    if (tolower(v_sex) == "female") fem <- s == 1 else fem <- s %in% c(2) | s == 0 & FALSE
+    if (tolower(v_sex) != "female") fem <- s == 2
+  } else fem <- toupper(substr(as.character(s), 1, 1)) %in% c("F", "W")
+} else if (!is.na(v_base)) {
+  # women: rows sharing the structure of the base sample; approximate via base_sample defined (non-missing)
+  fem <- !is.na(num(df[[v_base]]))
+}
+fem[is.na(fem)] <- FALSE
+v_dy <- fv(c("dyear", "deathyear", "yod", "ddate_year"))
+dage_ok <- rep(TRUE, nrow(df))
+if (!is.na(v_dy)) {
+  dy <- num(df[[v_dy]])
+  dage_ok <- is.na(dy) | (dy - df$cl_) >= 35
+}
+v_royal <- fv(c("royal", "royals"))
+notroyal <- if (!is.na(v_royal)) (is.na(num(df[[v_royal]])) | num(df[[v_royal]]) != 1) else rep(TRUE, nrow(df))
+nmv <- if (!is.na(v_nmar)) num(df[[v_nmar]]) else NA
+my <- if (!is.na(v_myear)) num(df[[v_myear]]) else NA
+never <- ifelse(!is.na(nmv), as.numeric(nmv == 0), as.numeric(is.na(my)))
+v_nt <- if (!is.na(v_nthis)) num(df[[v_nthis]]) else rep(NA, nrow(df))
+nm_idx <- fem & !is.na(age61) & age61 >= 15 & age61 <= 35 & dage_ok & notroyal & (is.na(v_nt) | v_nt <= 1) & !is.na(df$T_)
+nmdf <- df[nm_idx, ]
+nmdf$never_ <- never[nm_idx]
+cat("Never-married sample rows:", nrow(nmdf), " share never:", mean(nmdf$never_, na.rm = TRUE), "\n")
+
+# ---------------- Panel A ----------------
+rA1 <- probit_ame(base, "cOut_")
+rA2 <- probit_ame(base, "mheir_")
+rA3 <- ols_coef(land, "dabs_")
+rA4 <- ols_coef(land, "dhw_")
+rA5 <- tryCatch(probit_ame(land, "fdown_"), error = function(e) list(me = NA, n = NA))
+rA6 <- tryCatch(probit_ame(nmdf, "never_"), error = function(e) list(me = NA, n = nrow(nmdf)))
+
+# ---------------- Panel B ----------------
+ctrl0 <- ctrl
+ctrl <- paste(ctrl0, "+ dist_")
+bB <- base[!is.na(base$dist_), ]
+lB <- land[!is.na(land$dist_), ]
+probit_ame2 <- function(d, y) {
+  f <- as.formula(paste(y, "~ T_ +", ctrl))
+  d <- d[complete.cases(d[, c(y, "T_", "duke_", "eng_", "bio_", "dist_")]), ]
+  m <- glm(f, data = d, family = binomial(link = "probit"))
+  X <- model.matrix(m); b <- coef(m)
+  me <- mean(dnorm(as.vector(X %*% b))) * b["T_"]
+  cat(sprintf("Probit B %s: N=%d AME=%.6f\n", y, nrow(d), me))
+  unname(me)
+}
+ols2 <- function(d, y) {
+  f <- as.formula(paste(y, "~ T_ +", ctrl))
+  d <- d[complete.cases(d[, c(y, "T_", "duke_", "eng_", "bio_", "dist_")]), ]
+  m <- lm(f, data = d)
+  cat(sprintf("OLS B %s: N=%d coef=%.5f\n", y, nrow(d), coef(m)["T_"]))
+  unname(coef(m)["T_"])
+}
+rB1 <- tryCatch(probit_ame2(bB, "cOut_"), error = function(e) NA)
+rB2 <- tryCatch(probit_ame2(bB, "mheir_"), error = function(e) NA)
+rB3 <- tryCatch(ols2(lB, "dabs_"), error = function(e) NA)
+rB4 <- tryCatch(ols2(lB, "dhw_"), error = function(e) NA)
+
+cat(sprintf("RESULT:treatment_married_commoner_table2_panelA_col1=%.6f\n", rA1$me))
+cat(sprintf("RESULT:treatment_married_heir_table2_panelA_col2=%.6f\n", rA2$me))
+cat(sprintf("RESULT:treatment_landholdings_diff_abs_table2_panelA_col3=%.6f\n", rA3$b))
+cat(sprintf("RESULT:treatment_landholdings_diff_husband_minus_wife_table2_panelA_col4=%.6f\n", rA4$b))
+cat(sprintf("RESULT:treatment_married_down_table2_panelA_col5=%.6f\n", rA5$me))
+cat(sprintf("RESULT:treatment_never_married_table2_panelA_col6=%.6f\n", rA6$me))
+cat(sprintf("RESULT:treatment_married_commoner_table2_panelB_col1=%.6f\n", rB1))
+cat(sprintf("RESULT:treatment_married_heir_table2_panelB_col2=%.6f\n", rB2))
+cat(sprintf("RESULT:treatment_landholdings_diff_abs_table2_panelB_col3=%.6f\n", rB3))
+cat(sprintf("RESULT:treatment_landholdings_diff_husband_minus_wife_table2_panelB_col4=%.6f\n", rB4))
+cat(sprintf("RESULT:n_obs_table2_panelA_baseline=%d\n", as.integer(rA1$n)))
+cat(sprintf("RESULT:n_obs_table2_panelA_landholdings=%d\n", as.integer(rA3$n)))
+cat(sprintf("RESULT:n_obs_table2_panelA_never_married=%d\n", as.integer(rA6$n)))

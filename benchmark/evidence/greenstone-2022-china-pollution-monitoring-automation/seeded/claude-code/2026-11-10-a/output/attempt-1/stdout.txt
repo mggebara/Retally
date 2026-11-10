@@ -1,0 +1,288 @@
+rdrobust 4.1.1 fixest 0.14.2 
+== pollution_1116 1433568 
+[1] "station_n" "code_city" "date"      "pm10"      "no2"       "so2"      
+  station_n code_city  date pm10 no2 so2
+1        46    440300 18628   NA  NA  NA
+2        46    440300 18629   NA  NA  NA
+3        46    440300 18630   NA  NA  NA
+== weather_1116 1433568 
+[1] "station_n"  "date"       "wind_speed" "rain"       "temp"      
+[6] "rh"        
+  station_n  date wind_speed        rain      temp       rh
+1        46 18628   2.573261 0.000000000 14.381263 50.31115
+2        46 18629   2.760001 0.007967923 13.609482 54.14326
+3        46 18630   2.985742 0.671218097  9.860863 75.62115
+== station_list 654 
+[1] "pm10_n"      "code_city"   "phase"       "auto_date"   "station_lon"
+[6] "station_lat"
+  pm10_n code_city phase auto_date station_lon station_lat
+1    175    110100     1     19264    116.2834    39.84415
+2    322    110100     1     19264    116.3634    39.86415
+3    323    110100     1     19264    116.4234    39.94415
+== mask_filter_search 712088 
+[1] "code_city" "date"      "filter"    "pmmask"   
+  code_city  date filter pmmask
+1    110100 18628    102      0
+2    110100 18629    140      0
+3    110100 18630    157      0
+== aod_month 47088 
+[1] "pm10_n" "year"   "month"  "aod"   
+  pm10_n year month aod
+1     46 2011     1  NA
+2     46 2011     2  NA
+3     46 2011     3  NA
+== city_info 123 
+[1] "code_city" "city_en"   "phase"    
+  code_city      city_en phase
+1    110100      Beijing     1
+2    120100      Tianjin     1
+3    130100 Shijiazhuang     1
+pollution stations 654  dates range 18628 20819 
+   code_city           date            sdt               sdr         
+ Min.   :110100   Min.   :18628   Min.   : 0.0000   Min.   :  0.000  
+ 1st Qu.:320300   1st Qu.:19176   1st Qu.: 0.0000   1st Qu.:  0.000  
+ Median :371100   Median :19724   Median : 0.0000   Median :  0.000  
+ Mean   :380522   Mean   :19724   Mean   : 0.1878   Mean   :  0.474  
+ 3rd Qu.:450300   3rd Qu.:20271   3rd Qu.: 0.0000   3rd Qu.:  0.000  
+ Max.   :650200   Max.   :20819   Max.   :12.6275   Max.   :128.500  
+                                  NAs    :8437      NAs    :8165     
+      sdw        
+ Min.   :0.0000  
+ 1st Qu.:0.0000  
+ Median :0.0000  
+ Mean   :0.1049  
+ 3rd Qu.:0.0000  
+ Max.   :7.6499  
+ NAs    :7674    
+       
+          1   2
+  FALSE 179 110
+  TRUE  218 147
+
+   1    2 <NA> 
+ 397  257    0 
+     pm10_n         code_city          phase         auto_date    
+ Min.   :  46.0   Min.   :110100   Min.   :1.000   Min.   :19060  
+ 1st Qu.: 475.0   1st Qu.:230100   1st Qu.:1.000   1st Qu.:19348  
+ Median : 845.5   Median :370300   Median :1.000   Median :19359  
+ Mean   : 896.8   Mean   :358314   Mean   :1.393   Mean   :19448  
+ 3rd Qu.:1312.5   3rd Qu.:441200   3rd Qu.:2.000   3rd Qu.:19632  
+ Max.   :1837.0   Max.   :650200   Max.   :2.000   Max.   :19724  
+  station_lon      station_lat   
+ Min.   : 84.12   Min.   :19.94  
+ 1st Qu.:111.49   1st Qu.:28.33  
+ Median :114.40   Median :32.09  
+ Mean   :114.49   Mean   :32.86  
+ 3rd Qu.:119.36   3rd Qu.:37.99  
+ Max.   :129.64   Max.   :47.37  
+function (d, s, RX, res, C, invG = NULL, sqrtRX = NULL, crv2 = FALSE, 
+    k_override = NULL, cluster_idx = NULL) 
+{
+    k = ncol(as.matrix(RX))
+    k_df = if (is.null(k_override)) 
+        k
+    else k_override
+    M = matrix(0, k, k)
+    crv3_mode = !is.null(invG) && !is.null(C) && !crv2
+    crv2_mode = !is.null(invG) && !is.null(C) && crv2
+    if (is.null(C)) {
+        w = 1
+        if (d == 0) {
+            M = crossprod(c(res) * RX)
+        }
+        else {
+            r_comb <- as.vector(res %*% s)
+            M = crossprod(c(r_comb) * RX)
+        }
+    }
+    else if (crv3_mode) {
+        if (is.null(cluster_idx)) 
+            cluster_idx = .rdrobust_cluster_idx(C)
+        g = length(cluster_idx)
+        w = 1
+        has_sqrtRX = !is.null(sqrtRX)
+        G = tryCatch(solve(invG), error = function(e) ginv(invG))
+        if (d == 0) {
+            for (i in seq_along(cluster_idx)) {
+                ind = cluster_idx[[i]]
+                if (has_sqrtRX) {
+                  sRX_g = sqrtRX[ind, , drop = FALSE]
+                  sw_g = sRX_g[, 1, drop = FALSE]
+                  e_g = res[ind, 1, drop = FALSE]
+                  L_g = crossprod(sRX_g)
+                  u_g = crossprod(sRX_g, sw_g * e_g)
+                  M_g = tryCatch(solve(G - L_g), error = function(e) ginv(G - 
+                    L_g))
+                  score_g = u_g + L_g %*% (M_g %*% u_g)
+                }
+                else {
+                  RX_g = RX[ind, , drop = FALSE]
+                  e_g = res[ind, 1, drop = FALSE]
+                  L_g = crossprod(RX_g)
+                  M_g = tryCatch(solve(G - L_g), error = function(e) matrix(0, 
+                    k, k))
+                  u_g = crossprod(RX_g, e_g)
+                  score_g = u_g + L_g %*% (M_g %*% u_g)
+                }
+                M = M + tcrossprod(score_g)
+            }
+        }
+        else {
+            for (i in seq_along(cluster_idx)) {
+                ind = cluster_idx[[i]]
+                ri = res[ind, , drop = FALSE]
+                sv = numeric(k)
+                if (has_sqrtRX) {
+                  sRX_g = sqrtRX[ind, , drop = FALSE]
+                  sw_g = sRX_g[, 1, drop = FALSE]
+                  L_g = crossprod(sRX_g)
+                  M_g = tryCatch(solve(G - L_g), error = function(e) ginv(G - 
+                    L_g))
+                  for (l in 1:(1 + d)) {
+                    u_g_l = crossprod(sRX_g, sw_g * ri[, l])
+                    score_l = u_g_l + L_g %*% (M_g %*% u_g_l)
+                    sv = sv + as.vector(score_l) * s[l]
+                  }
+                }
+                else {
+                  RX_g = RX[ind, , drop = FALSE]
+                  L_g = crossprod(RX_g)
+                  M_g = tryCatch(solve(G - L_g), error = function(e) matrix(0, 
+                    k, k))
+                  for (l in 1:(1 + d)) {
+                    u_g_l = crossprod(RX_g, ri[, l])
+                    score_l = u_g_l + L_g %*% (M_g %*% u_g_l)
+                    sv = sv + as.vector(score_l) * s[l]
+                  }
+                }
+                M = M + tcrossprod(matrix(sv, k, 1))
+            }
+        }
+    }
+    else if (crv2_mode) {
+        if (is.null(cluster_idx)) 
+            cluster_idx = .rdrobust_cluster_idx(C)
+        g = length(cluster_idx)
+        w = 1
+        has_sqrtRX = !is.null(sqrtRX)
+        C_half = tryCatch(chol(invG), error = function(e) NULL)
+        tC_half = if (!is.null(C_half)) 
+            t(C_half)
+        else NULL
+        crv2_ok = !is.null(C_half)
+        if (d == 0) {
+            for (i in seq_along(cluster_idx)) {
+                ind = cluster_idx[[i]]
+                if (has_sqrtRX) {
+                  sRX_g = sqrtRX[ind, , drop = FALSE]
+                  sw_g = sRX_g[, 1, drop = FALSE]
+                  e_g = res[ind, 1, drop = FALSE]
+                  L_g = crossprod(sRX_g)
+                  u_g = crossprod(sRX_g, sw_g * e_g)
+                }
+                else {
+                  RX_g = RX[ind, , drop = FALSE]
+                  e_g = res[ind, 1, drop = FALSE]
+                  L_g = crossprod(RX_g)
+                  u_g = crossprod(RX_g, e_g)
+                }
+                if (crv2_ok) {
+                  F_sq = C_half %*% L_g %*% tC_half
+                  eig_g = eigen(F_sq, symmetric = TRUE)
+                  sigma2 = pmax(eig_g$values, 0)
+                  V_g = eig_g$vectors
+                  c_coef = ifelse(sigma2 < 1e-14, 0, (1/sqrt(pmax(1 - 
+                    sigma2, 1e-08)) - 1)/sigma2)
+                  Ru_g = C_half %*% u_g
+                  adj = V_g %*% (c_coef * crossprod(V_g, Ru_g))
+                  score_g = u_g + L_g %*% (tC_half %*% adj)
+                }
+                else {
+                  score_g = u_g
+                }
+                M = M + tcrossprod(score_g)
+            }
+        }
+        else {
+            for (i in seq_along(cluster_idx)) {
+                ind = cluster_idx[[i]]
+                ri = res[ind, , drop = FALSE]
+                sv = numeric(k)
+                if (has_sqrtRX) {
+                  sRX_g = sqrtRX[ind, , drop = FALSE]
+                  sw_g = sRX_g[, 1, drop = FALSE]
+                  L_g = crossprod(sRX_g)
+                }
+                else {
+                  RX_g = RX[ind, , drop = FALSE]
+                  L_g = crossprod(RX_g)
+                }
+                if (crv2_ok) {
+                  F_sq = C_half %*% L_g %*% tC_half
+                  eig_g = eigen(F_sq, symmetric = TRUE)
+                  sigma2 = pmax(eig_g$values, 0)
+                  V_g = eig_g$vectors
+                  c_coef = ifelse(sigma2 < 1e-14, 0, (1/sqrt(pmax(1 - 
+                    sigma2, 1e-08)) - 1)/sigma2)
+                  LtC_half = L_g %*% tC_half
+                  for (l in 1:(1 + d)) {
+                    u_g_l = if (has_sqrtRX) 
+                      crossprod(sRX_g, sw_g * ri[, l])
+                    else crossprod(RX_g, ri[, l])
+                    Ru_g_l = C_half %*% u_g_l
+                    adj_l = V_g %*% (c_coef * crossprod(V_g, 
+                      Ru_g_l))
+                    score_l = u_g_l + LtC_half %*% adj_l
+                    sv = sv + as.vector(score_l) * s[l]
+                  }
+                }
+                else {
+                  for (l in 1:(1 + d)) {
+                    u_g_l = if (has_sqrtRX) 
+                      crossprod(sRX_g, sw_g * ri[, l])
+                    else crossprod(RX_g, ri[, l])
+                    sv = sv + as.vector(u_g_l) * s[l]
+                  }
+                }
+                M = M + tcrossprod(matrix(sv, k, 1))
+            }
+        }
+    }
+    else {
+        if (is.null(cluster_idx)) 
+            cluster_idx = .rdrobust_cluster_idx(C)
+        g = length(cluster_idx)
+        n = length(C)
+        w = ((n - 1)/(n - k_df)) * (g/(g - 1))
+        if (d == 0) {
+            for (i in seq_along(cluster_idx)) {
+                ind = cluster_idx[[i]]
+                Xi = RX[ind, , drop = FALSE]
+                ri = res[ind, , drop = FALSE]
+                sv = as.vector(crossprod(Xi, ri))
+                M = M + tcrossprod(matrix(sv, k, 1))
+            }
+        }
+        else {
+            for (i in seq_along(cluster_idx)) {
+                ind = cluster_idx[[i]]
+                Xi = RX[ind, , drop = FALSE]
+                ri = res[ind, , drop = FALSE]
+                sv = numeric(k)
+                for (l in 1:(1 + d)) sv = sv + as.vector(crossprod(Xi, 
+                  s[l] * ri[, l]))
+                M = M + tcrossprod(matrix(sv, k, 1))
+            }
+        }
+    }
+    return(w * M)
+}
+<bytecode: 0xaaab1b04a6c0>
+<environment: namespace:rdrobust>
+function (y, x, c = NULL, fuzzy = NULL, deriv = NULL, p = NULL, 
+    q = NULL, h = NULL, b = NULL, rho = NULL, covs = NULL, covs_drop = TRUE, 
+    ginv.tol = 1e-15, kernel = "tri", weights = NULL, bwselect = "mserd", 
+    vce = "nn", cluster = NULL, nnmatch = 3, level = 95, scalepar = 1, 
+    scaleregul = 1, sharpbw = FALSE, subset = NULL, masspoints = "adjust", 
+    bwcheck = NULL, bwrestrict = TRUE, stdvars = TRUE, data = NULL) 
+NULL

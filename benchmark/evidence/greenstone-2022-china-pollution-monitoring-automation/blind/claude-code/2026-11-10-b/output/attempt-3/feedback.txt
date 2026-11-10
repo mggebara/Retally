@@ -1,0 +1,2 @@
+Run crashed before printing any RESULT line: fixest dropped 19 fixed-effect singleton observations in the AOD residualization, so resid() returned fewer values than rows ("Supplied 26964 items to be assigned to 26983 items of column res").
+Fix: use fixef.rm = "none" in the feols residualization (and event-study) calls so every observation keeps a residual, as an OLS with dummies would.

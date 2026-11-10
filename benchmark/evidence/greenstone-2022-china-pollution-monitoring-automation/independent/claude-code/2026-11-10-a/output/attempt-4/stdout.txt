@@ -1,0 +1,122 @@
+[   4.9s] loaded
+pm10 nonmissing: 1067825 
+daily RD sample (pm10 + weather complete): 1049325 
+[   5.8s] daily panel built
+PM10 daily, no controls, all             coef=  34.7172 se= 10.6821 h= 109.32 N_h=36684+54786=91470
+[   6.7s] col1 done
+PM10 daily, resid, all                   coef=  34.8934 se=  5.7856 h= 263.89 N_h=98257+134069=232326
+[   8.6s] col2 done
+PM10 daily, resid, wave 1                coef=  29.9800 se=  9.9315 h= 145.68 N_h=42386+42501=84887
+PM10 daily, resid, wave 2                coef=  60.5455 se=  9.5679 h= 243.51 N_h=19354+51960=71314
+city-level automation dates by phase (city counts):
+Key: <auto>
+          auto     1     2
+        <Date> <int> <int>
+ 1: 2012-03-08     5     0
+ 2: 2012-03-30     2     0
+ 3: 2012-06-01     1     0
+ 4: 2012-08-24     1     0
+ 5: 2012-09-28     1     0
+ 6: 2012-10-06     1     0
+ 7: 2012-11-10     1     0
+ 8: 2012-11-16    14     0
+ 9: 2012-11-30     1     0
+10: 2012-12-01     2     0
+11: 2012-12-20     1     0
+12: 2012-12-24     2     0
+13: 2012-12-26     1     1
+14: 2013-01-01    36     7
+15: 2013-04-30     0     1
+16: 2013-10-01     0    25
+17: 2013-10-25     0     1
+18: 2013-12-23     0     1
+19: 2013-12-24     0     1
+20: 2013-12-25     0     1
+21: 2014-01-01     0    32
+          auto     1     2
+        <Date> <int> <int>
+cities: any station on deadline 68  all on deadline 60  min date on deadline 60  any station 2013-01-01/2014-01-01 73 
+stations auto in {2013-01-01,2014-01-01}: 365  cities 73 
+DIAG deadline=auto in 2013-01-01/2014-01-01 coef=  47.3882 se=  7.2746 h= 298.71 N_h=61474+86118=147592
+DIAG deadline=city any station on deadline coef=  48.6927 se=  7.6740 h= 234.09 N_h=45910+69167=115077
+deadline cities: 68  stations: 341 
+PM10 daily, resid, deadline              coef=  49.3286 se=  8.2761 h= 215.55 N_h=36433+58411=94844
+[  13.8s] panel A PM10 done
+AOD station-month sample: 26983 
+AOD obs after FE residualization: 26964 
+AOD monthly, resid, all                  coef=  -0.0049 se=  0.0207 h=   7.65 N_h=2744+3107=5851
+[  14.0s] AOD done
+event-study stations: treated 242  control 123 
+                                 m1                  m2
+Dependent Var.:                pm10                pm10
+                                                       
+b712                -8.550. (4.723)     -17.23* (6.729)
+b56                   6.827 (5.976)     -19.22* (9.279)
+b34                  -6.376 (5.645)     -12.01. (6.923)
+a12                60.31*** (11.00)     31.44** (11.10)
+a34                45.01*** (7.844)    33.56*** (8.757)
+a56                28.12*** (6.717)     22.20** (8.024)
+a712               39.98*** (6.090)       9.776 (8.840)
+temp              1.850*** (0.3054)   1.720*** (0.3079)
+rh                  0.1368 (0.1217)     0.1481 (0.1216)
+rain            -0.4708*** (0.0877) -0.4787*** (0.0884)
+wind_speed        -8.139*** (1.354)   -7.969*** (1.299)
+Fixed-Effects:  ------------------- -------------------
+station_n                       Yes                 Yes
+moy                             Yes                  No
+ym                               No                 Yes
+_______________ ___________________ ___________________
+S.E.: Clustered       by: code_city       by: code_city
+Observations                176,426             176,426
+R2                          0.34153             0.35004
+Within R2                   0.11872             0.05117
+---
+Signif. codes: 0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+matched control stations used: 27 
+matched sample obs: 231990 
+matched obs with both pair members on same date: 164388 
+DIAG matched common-date sample col3 a12: 44.12337  N 164388 
+DIAG matched dedup sample col3 a12: 67.92836  N 136886 
+                                 m3                  m4                  m5
+Dependent Var.:                pm10                pm10                 lpm
+                                                                           
+b712                -14.07* (6.503)     -14.16. (8.398)   -0.1577* (0.0677)
+b56                   3.850 (7.942)      -9.040 (11.61)    -0.0660 (0.1128)
+b34                  -5.469 (6.674)      -7.179 (8.842)    -0.0502 (0.0896)
+a12                51.83*** (12.53)      32.96* (13.67)    0.1805* (0.0783)
+a34                38.74*** (8.871)      25.13* (12.10)    0.2473* (0.1089)
+a56                 24.96** (8.489)       19.68 (12.48)     0.1686 (0.1202)
+a712               39.41*** (6.503)       13.52 (12.38)     0.1753 (0.1312)
+temp              1.934*** (0.3675)   1.745*** (0.3530)  0.0239*** (0.0034)
+rh                  0.1913 (0.1290)     0.1993 (0.1195)    -0.0004 (0.0011)
+rain            -0.5220*** (0.0809) -0.5226*** (0.0792) -0.0077*** (0.0008)
+wind_speed        -6.568*** (1.395)   -6.509*** (1.374) -0.0814*** (0.0123)
+Fixed-Effects:  ------------------- ------------------- -------------------
+station_n                       Yes                 Yes                 Yes
+moy                             Yes                  No                  No
+ym                               No                 Yes                 Yes
+_______________ ___________________ ___________________ ___________________
+S.E.: Clustered       by: code_city       by: code_city       by: code_city
+Observations                231,990             231,990             231,908
+R2                          0.32754             0.33729             0.39439
+Within R2                   0.10434             0.04856             0.08659
+---
+Signif. codes: 0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+[  16.5s] event study done
+search city-month obs: mask 8661  filter 8590  cities 123 
+Mask search, resid                       coef=   9.9121 se=  1.6865 h=   7.09 N_h=861+984=1845
+Filter search, resid                     coef=   7.9652 se=  1.8531 h=   6.48 N_h=732+854=1586
+[  16.9s] search done
+RESULT:rd_pm_daily_no_controls_table1_panelA_col1=34.717232
+RESULT:rd_pm_daily_controls_table1_panelA_col2=34.893376
+RESULT:rd_pm_daily_wave1_table1_panelA_col3=29.980049
+RESULT:rd_pm_daily_wave2_table1_panelA_col4=60.545469
+RESULT:rd_pm_daily_deadline_table1_panelA_col5=49.328644
+RESULT:rd_aod_monthly_controls_table1_panelA_col2=-0.004870
+RESULT:event_study_pm_1_2_months_after_deadline_month_fe_table1_panelB_col1=60.313121
+RESULT:event_study_pm_1_2_months_after_deadline_year_month_fe_table1_panelB_col2=31.443703
+RESULT:n_obs_table1_panelB_deadline_cols1_2=176426.000000
+RESULT:event_study_pm_1_2_months_after_matched_month_fe_table1_panelB_col3=51.827927
+RESULT:event_study_log_pm_1_2_months_after_matched_table1_panelB_col5=0.180512
+RESULT:rd_face_mask_searches_controls_table2_panelA_col2=9.912078
+RESULT:rd_air_filter_searches_controls_table2_panelA_col2=7.965231

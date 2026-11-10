@@ -1,0 +1,3 @@
+Run crashed before printing any RESULT line: stopifnot(!anyDuplicated(cad$code_city)) failed in the Baidu-search section - some city has stations with different automation dates, so the city-level automation date was not unique.
+Fix: assign each city the modal station automation date (ties -> earliest) and print the affected cities.
+Also changed in the same repair: the matched event-study sample now stacks one copy of the nearest Wave-2 deadline control station per Wave-1 deadline station (pairs, with replacement; each copy its own station FE), reading "re-estimate equation (2) using the paired sample" literally, instead of keeping only the distinct set of matched controls.

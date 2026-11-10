@@ -1,0 +1,2 @@
+Run crashed before printing RESULT lines: fixest dropped 19 fixed-effect singletons in the AOD residualization, so resid() returned 26964 values for 26983 rows.
+Fix: use resid(model, na.rm = FALSE) everywhere (NA for removed singletons, as reghdfe drops singletons) and drop rows with NA residuals before rdrobust.

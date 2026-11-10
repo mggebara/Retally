@@ -1,0 +1,291 @@
+You are fixing R code that was generated to reproduce results from an econometrics paper.
+
+## Original Code
+```r
+suppressPackageStartupMessages({
+  library(haven)
+  library(dplyr)
+  library(fixest)
+})
+set.seed(42)
+
+base_dir <- "<repo>/.cache/datasets/goni_2022_assortative_matching_london_season.script-free"
+d <- haven::read_dta(file.path(base_dir, "data/final-data.dta"))
+d <- haven::zap_labels(d)
+d <- as.data.frame(d)
+nm <- names(d)
+message("N rows final-data: ", nrow(d), "; cols: ", ncol(d))
+
+findcol <- function(cands) {
+  for (c in cands) {
+    idx <- match(tolower(c), tolower(nm))
+    if (!is.na(idx)) return(nm[idx])
+  }
+  NULL
+}
+num <- function(x) suppressWarnings(as.numeric(x))
+
+message("Columns matching dif/land/acre/tot/pct/rank: ",
+        paste(nm[grepl("dif|land|acre|tot|pct|pctile|perc|rank|never|single|death|dyear|dage|female|sex|gender|age1861|byear|sample",
+                       nm, ignore.case = TRUE)], collapse = ", "))
+
+# ---------------- core variables ----------------
+v_T     <- findcol(c("syntheticT", "synthetic"))
+v_com   <- findcol(c("cOut", "commoner"))
+v_heir  <- findcol(c("mheir"))
+v_down  <- findcol(c("fdown", "mdown", "marrieddown"))
+v_dist  <- findcol(c("distlondon"))
+v_bio   <- findcol(c("biorder"))
+v_base  <- findcol(c("base_sample"))
+
+d$T_ <- num(d[[v_T]])
+d$commoner_ <- num(d[[v_com]])
+d$heir_ <- num(d[[v_heir]])
+d$biorder_ <- num(d[[v_bio]])
+d$dist_ <- if (!is.null(v_dist)) num(d[[v_dist]]) else NA_real_
+
+# birth year (cluster)
+v_byear <- findcol(c("byear", "birthyear", "yob"))
+if (!is.null(v_byear)) {
+  d$byear_ <- num(d[[v_byear]])
+} else {
+  v_bdate <- findcol(c("bdate"))
+  bd <- d[[v_bdate]]
+  if (inherits(bd, "Date")) d$byear_ <- as.numeric(format(bd, "%Y")) else d$byear_ <- floor(num(bd) / 365.25) + 1960
+}
+
+# duke/marquess/earl daughter
+v_pr4 <- findcol(c("pr4"))
+if (!is.null(v_pr4)) {
+  d$dme_ <- num(d[[v_pr4]])
+} else {
+  v_prank <- findcol(c("prank"))
+  pr <- num(d[[v_prank]])
+  d$dme_ <- ifelse(is.na(pr), NA, as.numeric(pr < 4))
+}
+# English peerage
+v_eng <- findcol(c("hengpee", "engpee", "english"))
+if (!is.null(v_eng)) {
+  d$eng_ <- num(d[[v_eng]])
+} else {
+  v_pee <- findcol(c("peerage"))
+  pe <- tolower(as.character(d[[v_pee]]))
+  d$eng_ <- ifelse(is.na(pe) | pe == "", NA, as.numeric(grepl("^e", pe)))
+}
+
+# age in 1861
+v_age61 <- findcol(c("age1861"))
+d$age61_ <- if (!is.null(v_age61)) num(d[[v_age61]]) else 1861 - d$byear_
+
+# ---------------- landholdings ----------------
+v_absdif <- findcol(c("absdif", "absdiff", "dif_abs", "diff_abs", "adif", "adiff", "fdifabs", "difabs", "diffabs"))
+v_sdif   <- findcol(c("dif", "diff", "fdif", "fdiff", "difhw", "dif_hw", "landdif"))
+if (!is.null(v_absdif) && !is.null(v_sdif)) {
+  d$sdif_ <- num(d[[v_sdif]])
+  d$absdif_ <- num(d[[v_absdif]])
+  message("Using landholding diff vars: ", v_sdif, ", ", v_absdif)
+} else if (!is.null(v_sdif)) {
+  d$sdif_ <- num(d[[v_sdif]])
+  d$absdif_ <- abs(d$sdif_)
+  message("Using signed diff var: ", v_sdif)
+} else {
+  v_wacres <- findcol(c("fatotal", "ATotal", "ATot"))
+  cand_h <- nm[grepl("fatotal|atot", nm, ignore.case = TRUE) & grepl("spo|husb|^h", nm, ignore.case = TRUE)]
+  v_hacres <- if (length(cand_h) > 0) cand_h[1] else NULL
+  message("Constructing ranks from: wife=", v_wacres, " husband=", ifelse(is.null(v_hacres), "NONE", v_hacres))
+  w <- num(d[[v_wacres]]); h <- if (!is.null(v_hacres)) num(d[[v_hacres]]) else rep(NA_real_, nrow(d))
+  w[!is.na(w) & w <= 0] <- NA; h[!is.na(h) & h <= 0] <- NA
+  pooled <- c(w[!is.na(w)], h[!is.na(h)])
+  Fn <- ecdf(pooled)
+  d$wpct_ <- ifelse(is.na(w), NA, 100 * Fn(w))
+  d$hpct_ <- ifelse(is.na(h), NA, 100 * Fn(h))
+  d$sdif_ <- d$hpct_ - d$wpct_
+  d$absdif_ <- abs(d$sdif_)
+}
+if (!is.null(v_down)) {
+  d$down_ <- num(d[[v_down]])
+} else {
+  d$down_ <- ifelse(is.na(d$sdif_), NA, as.numeric(d$sdif_ < 0))
+}
+
+# ---------------- baseline sample ----------------
+ctrl <- c("dme_", "eng_", "biorder_")
+if (!is.null(v_base)) {
+  base <- d[!is.na(num(d[[v_base]])) & num(d[[v_base]]) == 1, ]
+} else {
+  base <- d[!is.na(d$age61_) & d$age61_ >= 15 & d$age61_ <= 35, ]
+}
+message("base_sample rows: ", nrow(base))
+
+# ---------------- estimators ----------------
+probit_ame <- function(df, y, xs) {
+  f <- as.formula(paste(y, "~ T_ +", paste(xs, collapse = " + ")))
+  df <- df[complete.cases(df[, c(y, "T_", xs, "byear_")]), ]
+  m <- glm(f, data = df, family = binomial(link = "probit"))
+  X <- model.matrix(m)
+  xb <- as.vector(X %*% coef(m))
+  ame <- mean(dnorm(xb)) * coef(m)["T_"]
+  list(ame = unname(ame), n = nrow(df), b = coef(m)["T_"])
+}
+ols_b <- function(df, y, xs) {
+  f <- as.formula(paste(y, "~ T_ +", paste(xs, collapse = " + ")))
+  df <- df[complete.cases(df[, c(y, "T_", xs, "byear_")]), ]
+  m <- feols(f, data = df, cluster = ~byear_)
+  list(b = unname(coef(m)["T_"]), n = nobs(m))
+}
+safe <- function(expr) tryCatch(expr, error = function(e) { message("ERROR: ", conditionMessage(e)); NULL })
+
+res <- list()
+
+# Panel A
+a1 <- safe(probit_ame(base, "commoner_", ctrl))
+a2 <- safe(probit_ame(base, "heir_", ctrl))
+land <- base[!is.na(base$sdif_) & !is.na(base$absdif_), ]
+message("landholdings rows: ", nrow(land))
+a3 <- safe(ols_b(land, "absdif_", ctrl))
+a4 <- safe(ols_b(land, "sdif_", ctrl))
+a5 <- safe(probit_ame(land, "down_", ctrl))
+
+# Never married sample
+nm_res <- safe({
+  v_never <- nm[grepl("never|spinster|unmarr", nm, ignore.case = TRUE)]
+  v_nmarr <- findcol(c("nmarriages"))
+  v_nthis <- findcol(c("nthismarriage"))
+  nmarr <- num(d[[v_nmarr]])
+  if (length(v_never) > 0) {
+    d$never_ <- num(d[[v_never[1]]])
+  } else {
+    d$never_ <- ifelse(is.na(nmarr), NA, as.numeric(nmarr == 0))
+  }
+  # one row per woman: first marriage or never married
+  keep <- rep(TRUE, nrow(d))
+  if (!is.null(v_nthis)) {
+    nth <- num(d[[v_nthis]])
+    keep <- (d$never_ == 1) | (!is.na(nth) & nth == 1)
+    keep[is.na(keep)] <- FALSE
+  }
+  # women only
+  v_fem <- findcol(c("female", "woman", "women", "daughter"))
+  v_male <- findcol(c("male", "man"))
+  v_sex <- findcol(c("sex", "gender"))
+  if (!is.null(v_fem)) {
+    fem <- num(d[[v_fem]]) == 1
+  } else if (!is.null(v_male)) {
+    fem <- num(d[[v_male]]) == 0
+  } else if (!is.null(v_sex)) {
+    s <- tolower(as.character(d[[v_sex]]))
+    fem <- s %in% c("f", "female", "2", "0") & !(s %in% c("m", "male"))
+    if (all(s %in% c("1", "2", NA))) fem <- s == "2"
+  } else {
+    fem <- rep(TRUE, nrow(d))
+  }
+  fem[is.na(fem)] <- FALSE
+  # death before 35
+  v_dage <- findcol(c("dage", "agedeath", "age_death", "deathage"))
+  v_dyear <- findcol(c("dyear", "deathyear", "yod"))
+  alive35 <- rep(TRUE, nrow(d))
+  if (!is.null(v_dage)) {
+    da <- num(d[[v_dage]]); alive35 <- is.na(da) | da >= 35
+  } else if (!is.null(v_dyear)) {
+    dy <- num(d[[v_dyear]]); alive35 <- is.na(dy) | (dy - d$byear_) >= 35
+  } else {
+    v_ddate <- findcol(c("ddate", "deathdate"))
+    if (!is.null(v_ddate)) {
+      dd <- d[[v_ddate]]
+      dy <- if (inherits(dd, "Date")) as.numeric(format(dd, "%Y")) else floor(num(dd) / 365.25) + 1960
+      alive35 <- is.na(dy) | (dy - d$byear_) >= 35
+    }
+  }
+  # peers' daughters: father's rank observed
+  pd <- !is.na(d$dme_) & !is.na(d$eng_)
+  samp <- d[keep & fem & alive35 & pd & !is.na(d$age61_) & d$age61_ >= 15 & d$age61_ <= 35, ]
+  if (!is.null(v_base)) {
+    # exclude women married to foreigners / royals / second marriages as in the baseline:
+    # married women must belong to the baseline sample
+    bs <- num(samp[[v_base]])
+    samp <- samp[samp$never_ == 1 | (!is.na(bs) & bs == 1), ]
+  }
+  message("never-married sample rows: ", nrow(samp), "; never=1: ", sum(samp$never_ == 1, na.rm = TRUE))
+  probit_ame(samp, "never_", ctrl)
+})
+
+# Panel B
+ctrlB <- c(ctrl, "dist_")
+baseB <- base[!is.na(base$dist_), ]
+landB <- land[!is.na(land$dist_), ]
+b1 <- safe(probit_ame(baseB, "commoner_", ctrlB))
+b2 <- safe(probit_ame(baseB, "heir_", ctrlB))
+b3 <- safe(ols_b(landB, "absdif_", ctrlB))
+b4 <- safe(ols_b(landB, "sdif_", ctrlB))
+
+g <- function(x, field) if (is.null(x)) NA else x[[field]]
+
+out <- c(
+  treatment_married_commoner_table2_panelA_col1 = g(a1, "ame"),
+  treatment_married_heir_table2_panelA_col2 = g(a2, "ame"),
+  treatment_landholdings_diff_abs_table2_panelA_col3 = g(a3, "b"),
+  treatment_landholdings_diff_husband_minus_wife_table2_panelA_col4 = g(a4, "b"),
+  treatment_married_down_table2_panelA_col5 = g(a5, "ame"),
+  treatment_never_married_table2_panelA_col6 = g(nm_res, "ame"),
+  treatment_married_commoner_table2_panelB_col1 = g(b1, "ame"),
+  treatment_married_heir_table2_panelB_col2 = g(b2, "ame"),
+  treatment_landholdings_diff_abs_table2_panelB_col3 = g(b3, "b"),
+  treatment_landholdings_diff_husband_minus_wife_table2_panelB_col4 = g(b4, "b"),
+  n_obs_table2_panelA_baseline = g(a1, "n"),
+  n_obs_table2_panelA_landholdings = g(a3, "n"),
+  n_obs_table2_panelA_never_married = g(nm_res, "n")
+)
+
+for (k in names(out)) cat(sprintf("RESULT:%s=%s\n", k, format(out[[k]], digits = 8)))
+```
+
+## Error / Unexpected Output
+```
+N rows final-data: 30414; cols: 360
+Columns matching dif/land/acre/tot/pct/rank: rankstrg, sexdeath, byear, dyear, spouserank, widowrank, fatherrank, motherrank, mgfrank, sbyear, sdyear, dage, sdage, rankspo, prankspo, rank, hrank, prank, hrankspo, crank, crankspo, grank, grankspo, ownrank, age1861, fatotal, sfatotal, fATot, sfATot, acrestotal, valuetotal, acres1, acres2, acres3, acres4, acres5, acres6, acres7, acres8, acres9, acres10, acres11, acres12, acres13, acres14, sacrestotal, svaluetotal, sacres1, sacres2, sacres3, sacres4, sacres5, sacres6, sacres7, sacres8, sacres9, sacres10, sacres11, sacres12, sacres13, sacres14, base_sample, marital_rates_sample
+Constructing ranks from: wife=fatotal husband=NONE
+base_sample rows: 644
+landholdings rows: 0
+ERROR: in feols(f, data = df, cluster = ~byear_): 
+The data set contains 0 observation: the estimation cannot be done.
+ERROR: in feols(f, data = df, cluster = ~byear_): 
+The data set contains 0 observation: the estimation cannot be done.
+
+ *** caught segfault ***
+address 0x1, cause 'memory not mapped'
+
+Traceback:
+ 1: dev.resids(y, mu, weights)
+ 2: glm.fit(x = numeric(0), y = numeric(0), weights = NULL, start = NULL,     etastart = NULL, mustart = NULL, offset = NULL, family = list(        family = "binomial", link = "probit", linkfun = function (mu)         qnorm(mu), linkinv = function (eta)         {            thresh <- -qnorm(.Machine$double.eps)            eta <- pmin(pmax(eta, -thresh), thresh)            pnorm(eta)        }, variance = function (mu)         mu * (1 - mu), dev.resids = function (y, mu, wt)         .Call(C_binomial_dev_resids, y, mu, wt), aic = function (y,             n, mu, wt, dev)         {            m <- if (any(n > 1))                 n            else wt            -2 * sum(ifelse(m > 0, (wt/m), 0) * dbinom(round(m *                 y), round(m), mu, log = TRUE))        }, mu.eta = function (eta)         pmax(dnorm(eta), .Machine$double.eps), initialize = {            if (NCOL(y) == 1) {                if (is.factor(y))                   y <- y != levels(y)[1L]                n <- rep.int(1, nobs)                y[weights == 0] <- 0                if (any(y < 0 | y > 1))                   stop("y values must be 0 <= y <= 1")                mustart <- (weights * y + 0.5)/(weights + 1)                m <- weights * y                if ("binomial" == "binomial" && any(abs(m - round(m)) >                   0.001))                   warning(gettextf("non-integer #successes in a %s glm!",                     "binomial"), domain = NA)            }            else if (NCOL(y) == 2) {                if ("binomial" == "binomial" && any(abs(y - round(y)) >                   0.001))                   warning(gettextf("non-integer counts in a %s glm!",                     "binomial"), domain = NA)                n <- (y1 <- y[, 1L]) + y[, 2L]                y <- y1/n                if (any(n0 <- n == 0))                   y[n0] <- 0                weights <- weights * n                mustart <- (n * y + 0.5)/(n + 1)            }            else stop(gettextf("for the '%s' family, y must be a vector of 0 and 1's\nor a 2 column matrix where col 1 is no. successes and col 2 is no. failures",                 "binomial"), domain = NA)        }, validmu = function (mu)         all(is.finite(mu)) && all(mu > 0 & mu < 1), valideta = function (eta)         TRUE, simulate = function (object, nsim)         {            ftd <- fitted(object)            n <- length(ftd)            ntot <- n * nsim            wts <- object$prior.weights            if (any(wts%%1 != 0))                 stop("cannot simulate from non-integer prior.weights")            if (!is.null(m <- object$model)) {                y <- model.response(m)                if (is.factor(y)) {                  yy <- factor(1 + rbinom(ntot, size = 1, prob = ftd),                     labels = levels(y))                  split(yy, rep(seq_len(nsim), each = n))                }                else if (is.matrix(y) && ncol(y) == 2) {                  yy <- vector("list", nsim)                  for (i in seq_len(nsim)) {                    Y <- rbinom(n, size = wts, prob = ftd)                    YY <- cbind(Y, wts - Y)                    colnames(YY) <- colnames(y)                    yy[[i]] <- YY                  }                  yy                }                else rbinom(ntot, size = wts, prob = ftd)/wts            }            else rbinom(ntot, size = wts, prob = ftd)/wts        }, dispersion = 1), control = list(epsilon = 1e-08, maxit = 25,         trace = FALSE), intercept = TRUE, singular.ok = TRUE)
+ 3: eval(call(if (is.function(method)) "method" else method, x = X,     y = Y, weights = weights, start = start, etastart = etastart,     mustart = mustart, offset = offset, family = family, control = control,     intercept = attr(mt, "intercept") > 0L, singular.ok = singular.ok))
+ 4: eval(call(if (is.function(method)) "method" else method, x = X,     y = Y, weights = weights, start = start, etastart = etastart,     mustart = mustart, offset = offset, family = family, control = control,     intercept = attr(mt, "intercept") > 0L, singular.ok = singular.ok))
+ 5: glm(f, data = df, family = binomial(link = "probit"))
+ 6: probit_ame(land, "down_", ctrl)
+ 7: doTryCatch(return(expr), name, parentenv, handler)
+ 8: tryCatchOne(expr, names, parentenv, handlers[[1L]])
+ 9: tryCatchList(expr, classes, parentenv, handlers)
+10: tryCatch(expr, error = function(e) {    message("ERROR: ", conditionMessage(e))    NULL})
+11: safe(probit_ame(land, "down_", ctrl))
+An irrecoverable exception occurred. R is aborting now ...
+
+```
+
+## Task
+Fix specifically the identified problem above. Do not rewrite the entire approach unless necessary.
+
+## Reminder: Output Convention
+The fixed R code MUST emit each reproduced metric on its own line using EXACTLY this format:
+    RESULT:<metric_name>=<numeric_value>
+For example:  cat('RESULT:beta=0.342\n')
+Use snake_case metric names.
+
+## Reminder: Constraints
+- The dataset is a directory tree at '<repo>/.cache/datasets/goni_2022_assortative_matching_london_season.script-free' — see the file listing under Dataset Information.  Load the actual data file(s) by the exact paths listed there (readr::read_csv() for .csv, haven::read_dta() for Stata .dta, load() for .RData/.rda, which creates the objects listed for the file under exactly those names: use them, do not guess others; readRDS() for .rds).
+- Installed packages (no network; nothing else can be installed): jsonlite, fixest, lfe, AER, ivreg, plm, estimatr, lme4, quantreg, car, sandwich, lmtest, clubSandwich, multiwayvcov, marginaleffects, MatchIt, optmatch, CBPS, WeightIt, cobalt, did, rdrobust, rddensity, Synth, modelsummary, stargazer, texreg, broom, tidyverse, dplyr, tidyr, readr, stringr, lubridate, data.table, haven, readxl, janitor, zoo, ggplot2, ggridges, ggrepel, gridExtra, cowplot, gtable, extrafont, sf, MASS, nnet, survival, splines, Matrix, boot, stats, utils.
+- Prefer fixest for fixed effects, IV and clustered SEs; use the other installed packages where the paper's method calls for them.
+- Do NOT access the internet.
+- Do NOT call system() / system2().
+- Use set.seed(42) for reproducibility.
+- Print all RESULT: lines at the end via cat().
+
+Output ONLY the corrected R code — no explanation, no markdown fences.

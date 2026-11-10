@@ -1,0 +1,336 @@
+==== station_list 
+Classes ‘data.table’ and 'data.frame':	654 obs. of  6 variables:
+ $ pm10_n     : num  175 322 323 324 325 326 327 328 333 854 ...
+  ..- attr(*, "label")= chr "PM10 station number"
+  ..- attr(*, "format.stata")= chr "%8.0g"
+ $ code_city  : num  110100 110100 110100 110100 110100 ...
+  ..- attr(*, "label")= chr "code of city"
+  ..- attr(*, "format.stata")= chr "%8.0g"
+ $ phase      : num  1 1 1 1 1 1 1 1 1 1 ...
+  ..- attr(*, "label")= chr "automation wave"
+  ..- attr(*, "format.stata")= chr "%8.0g"
+ $ auto_date  : num  19264 19264 19264 19264 19264 ...
+  ..- attr(*, "label")= chr "automation date"
+  ..- attr(*, "format.stata")= chr "%9.0g"
+ $ station_lon: num  116 116 116 116 116 ...
+  ..- attr(*, "label")= chr "latitude of station (shifted)"
+  ..- attr(*, "format.stata")= chr "%9.2f"
+ $ station_lat: num  39.8 39.9 39.9 40 39.9 ...
+  ..- attr(*, "label")= chr "longitude of station (shifted)"
+  ..- attr(*, "format.stata")= chr "%9.2f"
+ - attr(*, ".internal.selfref")=<pointer: 0xaaaaf92b1a70> 
+   pm10_n code_city phase auto_date station_lon station_lat
+    <num>     <num> <num>     <num>       <num>       <num>
+1:    175    110100     1     19264    116.2834    39.84415
+2:    322    110100     1     19264    116.3634    39.86415
+3:    323    110100     1     19264    116.4234    39.94415
+4:    324    110100     1     19264    116.4634    39.96415
+     pm10_n         code_city          phase         auto_date    
+ Min.   :  46.0   Min.   :110100   Min.   :1.000   Min.   :19060  
+ 1st Qu.: 475.0   1st Qu.:230100   1st Qu.:1.000   1st Qu.:19348  
+ Median : 845.5   Median :370300   Median :1.000   Median :19359  
+ Mean   : 896.8   Mean   :358314   Mean   :1.393   Mean   :19448  
+ 3rd Qu.:1312.5   3rd Qu.:441200   3rd Qu.:2.000   3rd Qu.:19632  
+ Max.   :1837.0   Max.   :650200   Max.   :2.000   Max.   :19724  
+  station_lon      station_lat   
+ Min.   : 84.12   Min.   :19.94  
+ 1st Qu.:111.49   1st Qu.:28.33  
+ Median :114.40   Median :32.09  
+ Mean   :114.49   Mean   :32.86  
+ 3rd Qu.:119.36   3rd Qu.:37.99  
+ Max.   :129.64   Max.   :47.37  
+==== city_info 
+Classes ‘data.table’ and 'data.frame':	123 obs. of  3 variables:
+ $ code_city: num  110100 120100 130100 130200 130300 ...
+  ..- attr(*, "label")= chr "code of city"
+  ..- attr(*, "format.stata")= chr "%8.0g"
+ $ city_en  : chr  "Beijing" "Tianjin" "Shijiazhuang" "Tangshan" ...
+  ..- attr(*, "label")= chr "city name"
+  ..- attr(*, "format.stata")= chr "%12s"
+ $ phase    : num  1 1 1 1 1 1 1 1 2 2 ...
+  ..- attr(*, "label")= chr "automation wave"
+  ..- attr(*, "format.stata")= chr "%8.0g"
+ - attr(*, ".internal.selfref")=<pointer: 0xaaaaf92b1a70> 
+   code_city      city_en phase
+       <num>       <char> <num>
+1:    110100      Beijing     1
+2:    120100      Tianjin     1
+3:    130100 Shijiazhuang     1
+4:    130200     Tangshan     1
+   code_city           city_en        phase      
+ Min.   :110100   Length   :123   Min.   :1.000  
+ 1st Qu.:320350   N.unique :123   1st Qu.:1.000  
+ Median :371100   N.blank  :  0   Median :2.000  
+ Mean   :380522   Min.nchar:  4   Mean   :1.512  
+ 3rd Qu.:450250   Max.nchar: 12   3rd Qu.:2.000  
+ Max.   :650200                   Max.   :2.000  
+==== search_sale 
+Classes ‘data.table’ and 'data.frame':	467 obs. of  15 variables:
+ $ code_city      : num  110100 110100 110100 110100 110100 ...
+  ..- attr(*, "label")= chr "code of city"
+  ..- attr(*, "format.stata")= chr "%8.0g"
+ $ year           : num  2013 2013 2013 2013 2013 ...
+  ..- attr(*, "format.stata")= chr "%9.0g"
+ $ month          : num  4 5 6 7 8 9 10 10 11 12 ...
+  ..- attr(*, "format.stata")= chr "%9.0g"
+ $ wind_speed     : num  4.39 3.46 2.76 2.69 2.87 ...
+  ..- attr(*, "label")= chr "m/s"
+  ..- attr(*, "format.stata")= chr "%9.0g"
+ $ rain           : num  0.182 0.545 4.828 4.975 3.724 ...
+  ..- attr(*, "label")= chr "precipitation in mm"
+  ..- attr(*, "format.stata")= chr "%9.0g"
+ $ temp           : num  12.6 21.8 23.7 26.6 26.2 ...
+  ..- attr(*, "label")= chr "temperature in Celsius Degree"
+  ..- attr(*, "format.stata")= chr "%9.0g"
+ $ rh             : num  35.1 44.7 69 67.8 62.3 ...
+  ..- attr(*, "label")= chr "relative humidity in %"
+  ..- attr(*, "format.stata")= chr "%9.0g"
+ $ mask           : num  178.5 97.5 83.5 78 73.6 ...
+  ..- attr(*, "label")= chr "search index for mask"
+  ..- attr(*, "format.stata")= chr "%9.0g"
+ $ filter         : num  252 248 260 208 190 ...
+  ..- attr(*, "label")= chr "search index for filter"
+  ..- attr(*, "format.stata")= chr "%9.0g"
+ $ l_mask         : num  5.19 4.59 4.44 4.37 4.31 ...
+  ..- attr(*, "label")= chr "logarithm of mask search index"
+  ..- attr(*, "format.stata")= chr "%9.0g"
+ $ l_filter       : num  5.53 5.52 5.56 5.34 5.25 ...
+  ..- attr(*, "label")= chr "logarithm of filter search index"
+  ..- attr(*, "format.stata")= chr "%9.0g"
+ $ taobao_mask    : num  4825 1014 429 457 414 ...
+  ..- attr(*, "label")= chr "sales index for mask"
+  ..- attr(*, "format.stata")= chr "%8.0g"
+ $ taobao_filter  : num  158 169 174 198 210 ...
+  ..- attr(*, "label")= chr "sales index for filter"
+  ..- attr(*, "format.stata")= chr "%8.0g"
+ $ l_taobao_mask  : num  8.48 6.92 6.06 6.13 6.03 ...
+  ..- attr(*, "label")= chr "logarithm of mask sales index"
+  ..- attr(*, "format.stata")= chr "%9.0g"
+ $ l_taobao_filter: num  5.07 5.14 5.16 5.29 5.35 ...
+  ..- attr(*, "label")= chr "logarithm of filter sales index"
+  ..- attr(*, "format.stata")= chr "%9.0g"
+ - attr(*, ".internal.selfref")=<pointer: 0xaaaaf92b1a70> 
+   code_city  year month wind_speed      rain     temp       rh      mask
+       <num> <num> <num>      <num>     <num>    <num>    <num>     <num>
+1:    110100  2013     4   4.389744 0.1816049 12.64836 35.13523 178.46666
+2:    110100  2013     5   3.456706 0.5449383 21.83630 44.67673  97.53333
+3:    110100  2013     6   2.764421 4.8282719 23.68231 68.97197  83.50000
+4:    110100  2013     7   2.690751 4.9750619 26.57862 67.76519  78.03333
+     filter   l_mask l_filter taobao_mask taobao_filter l_taobao_mask
+      <num>    <num>    <num>       <num>         <num>         <num>
+1: 251.8667 5.189990 5.532862        4825           158      8.481773
+2: 247.6333 4.590395 5.515979        1014           169      6.922644
+3: 259.8000 4.436751 5.563754         429           174      6.063785
+4: 208.4333 4.369870 5.344406         457           198      6.126869
+   l_taobao_filter
+             <num>
+1:        5.068904
+2:        5.135798
+3:        5.164786
+4:        5.293305
+   code_city           year          month          wind_speed    
+ Min.   :110100   Min.   :2013   Min.   : 1.000   Min.   :0.6417  
+ 1st Qu.:230100   1st Qu.:2013   1st Qu.: 4.000   1st Qu.:2.3382  
+ Median :370200   Median :2013   Median : 6.000   Median :2.8064  
+ Mean   :378209   Mean   :2013   Mean   : 6.253   Mean   :2.9465  
+ 3rd Qu.:500100   3rd Qu.:2014   3rd Qu.: 9.000   3rd Qu.:3.4924  
+ Max.   :650100   Max.   :2014   Max.   :12.000   Max.   :6.7285  
+      rain              temp               rh             mask       
+ Min.   : 0.0000   Min.   :-18.779   Min.   :28.37   Min.   :  1.90  
+ 1st Qu.: 0.4717   1st Qu.:  8.782   1st Qu.:53.09   1st Qu.: 25.32  
+ Median : 2.0367   Median : 17.189   Median :64.96   Median : 38.97  
+ Mean   : 3.4135   Mean   : 15.377   Mean   :63.03   Mean   : 42.43  
+ 3rd Qu.: 4.9183   3rd Qu.: 22.908   3rd Qu.:74.67   3rd Qu.: 54.47  
+ Max.   :23.0100   Max.   : 32.498   Max.   :89.04   Max.   :231.07  
+     filter            l_mask         l_filter      taobao_mask     
+ Min.   :  5.767   Min.   :1.065   Min.   :1.912   Min.   :    0.0  
+ 1st Qu.: 57.100   1st Qu.:3.270   1st Qu.:4.062   1st Qu.:   47.5  
+ Median : 68.567   Median :3.688   Median :4.242   Median :  153.0  
+ Mean   : 84.209   Mean   :3.568   Mean   :4.284   Mean   :  631.8  
+ 3rd Qu.: 87.167   3rd Qu.:4.016   3rd Qu.:4.479   3rd Qu.:  415.5  
+ Max.   :681.967   Max.   :5.447   Max.   :6.526   Max.   :37030.0  
+ taobao_filter    l_taobao_mask    l_taobao_filter
+ Min.   :   0.0   Min.   : 0.000   Min.   :0.000  
+ 1st Qu.:  11.0   1st Qu.: 3.882   1st Qu.:2.485  
+ Median :  38.0   Median : 5.037   Median :3.664  
+ Mean   : 102.6   Mean   : 4.985   Mean   :3.512  
+ 3rd Qu.: 106.0   3rd Qu.: 6.032   3rd Qu.:4.673  
+ Max.   :3013.0   Max.   :10.520   Max.   :8.011  
+==== aod_month 
+Classes ‘data.table’ and 'data.frame':	47088 obs. of  4 variables:
+ $ pm10_n: num  46 46 46 46 46 46 46 46 46 46 ...
+  ..- attr(*, "format.stata")= chr "%10.0g"
+ $ year  : num  2011 2011 2011 2011 2011 ...
+  ..- attr(*, "format.stata")= chr "%10.0g"
+ $ month : num  1 2 3 4 5 6 7 8 9 10 ...
+  ..- attr(*, "format.stata")= chr "%10.0g"
+ $ aod   : num  NA NA NA NA NA ...
+  ..- attr(*, "format.stata")= chr "%9.0g"
+ - attr(*, ".internal.selfref")=<pointer: 0xaaaaf92b1a70> 
+   pm10_n  year month   aod
+    <num> <num> <num> <num>
+1:     46  2011     1    NA
+2:     46  2011     2    NA
+3:     46  2011     3    NA
+4:     46  2011     4    NA
+     pm10_n            year          month            aod          
+ Min.   :  46.0   Min.   :2011   Min.   : 1.00   Min.   :0.005906  
+ 1st Qu.: 474.0   1st Qu.:2012   1st Qu.: 3.75   1st Qu.:0.311024  
+ Median : 845.5   Median :2014   Median : 6.50   Median :0.537402  
+ Mean   : 896.8   Mean   :2014   Mean   : 6.50   Mean   :0.541337  
+ 3rd Qu.:1313.0   3rd Qu.:2015   3rd Qu.: 9.25   3rd Qu.:0.767717  
+ Max.   :1837.0   Max.   :2016   Max.   :12.00   Max.   :1.000000  
+                                                 NAs    :19940     
+
+  1   2 
+397 257 
+         
+            1   2
+  2022-03  29   0
+  2022-06   2   0
+  2022-08   5   0
+  2022-09  20   0
+  2022-10   7   0
+  2022-11  75   0
+  2022-12  41   2
+  2023-01 218  24
+  2023-05   0   2
+  2023-10   0 101
+  2023-12   0   5
+  2024-01   0 123
+   phase     dl     n ncity
+   <num> <lgcl> <int> <int>
+1:     1  FALSE   397    60
+2:     2  FALSE   257    63
+
+ 1  2 
+60 63 
+==== pollution
+Classes ‘data.table’ and 'data.frame':	1433568 obs. of  6 variables:
+ $ station_n: num  46 46 46 46 46 46 46 46 46 46 ...
+  ..- attr(*, "label")= chr "PM10 station number"
+  ..- attr(*, "format.stata")= chr "%10.0g"
+ $ code_city: num  440300 440300 440300 440300 440300 ...
+  ..- attr(*, "label")= chr "code of city"
+  ..- attr(*, "format.stata")= chr "%8.0g"
+ $ date     : num  18628 18629 18630 18631 18632 ...
+  ..- attr(*, "format.stata")= chr "%9.0g"
+ $ pm10     : num  NA NA NA NA NA ...
+  ..- attr(*, "label")= chr "ug/m3"
+  ..- attr(*, "format.stata")= chr "%9.1f"
+ $ no2      : num  NA NA NA NA NA ...
+  ..- attr(*, "label")= chr "ppb"
+  ..- attr(*, "format.stata")= chr "%9.1f"
+ $ so2      : num  NA NA NA NA NA ...
+  ..- attr(*, "label")= chr "ppb"
+  ..- attr(*, "format.stata")= chr "%9.1f"
+ - attr(*, ".internal.selfref")=<pointer: 0xaaaaf92b1a70> 
+   station_n        code_city           date            pm10        
+ Min.   :  46.0   Min.   :110100   Min.   :18628   Min.   :   0.00  
+ 1st Qu.: 474.0   1st Qu.:230100   1st Qu.:19176   1st Qu.:  49.50  
+ Median : 845.5   Median :370300   Median :19724   Median :  77.70  
+ Mean   : 896.8   Mean   :358314   Mean   :19724   Mean   :  95.05  
+ 3rd Qu.:1313.0   3rd Qu.:441200   3rd Qu.:20271   3rd Qu.: 120.25  
+ Max.   :1837.0   Max.   :650200   Max.   :20819   Max.   :1000.00  
+                                                   NAs    :365743   
+      no2              so2          
+ Min.   :  0.00   Min.   :  0.0318  
+ 1st Qu.: 11.50   1st Qu.:  4.4240  
+ Median : 18.17   Median :  8.4605  
+ Mean   : 20.54   Mean   : 12.9317  
+ 3rd Qu.: 26.87   3rd Qu.: 15.9669  
+ Max.   :401.43   Max.   :437.6053  
+ NAs    :311504   NAs    :307909    
+nonmissing pm10 1067825 
+==== weather
+Classes ‘data.table’ and 'data.frame':	1433568 obs. of  6 variables:
+ $ station_n : num  46 46 46 46 46 46 46 46 46 46 ...
+  ..- attr(*, "format.stata")= chr "%10.0g"
+ $ date      : num  18628 18629 18630 18631 18632 ...
+  ..- attr(*, "format.stata")= chr "%9.0g"
+ $ wind_speed: num  2.57 2.76 2.99 1.96 2.16 ...
+  ..- attr(*, "label")= chr "m/s"
+  ..- attr(*, "format.stata")= chr "%9.1f"
+ $ rain      : num  0 0.00797 0.67122 3.08747 0.52162 ...
+  ..- attr(*, "label")= chr "precipitation in mm"
+  ..- attr(*, "format.stata")= chr "%9.1f"
+ $ temp      : num  14.38 13.61 9.86 10.25 14.07 ...
+  ..- attr(*, "label")= chr "temperature in Celsius Degree"
+  ..- attr(*, "format.stata")= chr "%9.1f"
+ $ rh        : num  50.3 54.1 75.6 82.9 74.2 ...
+  ..- attr(*, "label")= chr "relative humidity in %"
+  ..- attr(*, "format.stata")= chr "%9.1f"
+ - attr(*, ".internal.selfref")=<pointer: 0xaaaaf92b1a70> 
+   station_n           date         wind_speed          rain       
+ Min.   :  46.0   Min.   :18628   Min.   : 0.000   Min.   :  0.00  
+ 1st Qu.: 474.0   1st Qu.:19176   1st Qu.: 1.632   1st Qu.:  0.00  
+ Median : 845.5   Median :19724   Median : 2.286   Median :  0.00  
+ Mean   : 896.8   Mean   :19724   Mean   : 2.594   Mean   :  3.39  
+ 3rd Qu.:1313.0   3rd Qu.:20271   3rd Qu.: 3.182   3rd Qu.:  1.60  
+ Max.   :1837.0   Max.   :20819   Max.   :25.143   Max.   :290.00  
+                                  NAs    :10323    NAs    :13107   
+      temp               rh         
+ Min.   :-29.538   Min.   :  4.982  
+ 1st Qu.:  7.667   1st Qu.: 52.967  
+ Median : 17.272   Median : 68.125  
+ Mean   : 15.189   Mean   : 65.483  
+ 3rd Qu.: 24.000   3rd Qu.: 79.945  
+ Max.   : 37.417   Max.   :110.717  
+ NAs    :13494     NAs    :13410    
+==== mfs
+Classes ‘data.table’ and 'data.frame':	712088 obs. of  4 variables:
+ $ code_city: num  110100 110100 110100 110100 110100 ...
+  ..- attr(*, "format.stata")= chr "%8.0g"
+ $ date     : num  18628 18629 18630 18631 18632 ...
+  ..- attr(*, "format.stata")= chr "%9.0g"
+ $ filter   : num  102 140 157 188 158 151 159 101 106 170 ...
+  ..- attr(*, "label")= chr "search index for air filter"
+  ..- attr(*, "format.stata")= chr "%10.0g"
+ $ pmmask   : num  0 0 0 0 0 0 0 0 0 0 ...
+  ..- attr(*, "label")= chr "search index for anti-haze mask"
+  ..- attr(*, "format.stata")= chr "%10.0g"
+ - attr(*, ".internal.selfref")=<pointer: 0xaaaaf92b1a70> 
+   code_city           date           filter            pmmask        
+ Min.   :110100   Min.   :18628   Min.   :   0.00   Min.   :   0.000  
+ 1st Qu.:321100   1st Qu.:19161   1st Qu.:   0.00   1st Qu.:   0.000  
+ Median :411650   Median :19694   Median :   0.00   Median :   0.000  
+ Mean   :399109   Mean   :19694   Mean   :  24.48   Mean   :   2.784  
+ 3rd Qu.:511300   3rd Qu.:20226   3rd Qu.:  57.00   3rd Qu.:   0.000  
+ Max.   :659004   Max.   :20759   Max.   :3608.00   Max.   :2596.000  
+                                  NAs    :2148      NAs    :1         
+[1] 654
+[1] 654
+[1]  46  55 101 111 122 123
+[1] 175 322 323 324 325 326
+[1] TRUE
+[1] TRUE
+[1] 654
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+-1090.0  -247.0   345.0   310.4   848.0  1759.0 
+n with pm10: 1067825 
+      yr    pre   post
+   <int>  <int>  <int>
+1:  2021 172533      0
+2:  2022 159241  13410
+3:  2023  26392 117092
+4:  2024      0 195907
+5:  2025      0 192745
+6:  2026      0 189999
+7:  2027      0    506
+[1] 654
+      
+       FALSE
+  2013   331
+  2014   136
+[1] 334
+[1] 18628 20759
+   code_city  date filter pmmask
+       <num> <num>  <num>  <num>
+1:    110100 18628    102      0
+2:    110100 18629    140      0
+3:    110100 18630    157      0
+4:    110100 18631    188      0
+5:    110100 18632    158      0
+6:    110100 18633    151      0
+city-months 23714 23714 23643 
+[1] 123
