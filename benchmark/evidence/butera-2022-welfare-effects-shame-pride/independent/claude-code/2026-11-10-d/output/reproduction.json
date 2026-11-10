@@ -1,0 +1,30 @@
+{
+  "schema": 1,
+  "entry_id": "butera-2022-welfare-effects-shame-pride",
+  "mode": "independent",
+  "run_id": "2026-11-10-d",
+  "reproducer": "claude-code",
+  "language": "r",
+  "final": {"script": "script.R", "stdout": "stdout.txt", "stderr": "stderr.txt", "exit_code": 0},
+  "attempts": [
+    {"dir": "attempt-1", "exit_code": 0, "kind": ""},
+    {"dir": "attempt-2", "exit_code": 0, "kind": ""},
+    {"dir": "attempt-3", "exit_code": 0, "kind": ""},
+    {"dir": "attempt-4", "exit_code": 0, "kind": ""},
+    {"dir": "attempt-5", "exit_code": 0, "kind": "claim"},
+    {"dir": "attempt-6", "exit_code": 0, "kind": ""},
+    {"dir": "attempt-7", "exit_code": 0, "kind": ""},
+    {"dir": "attempt-8", "exit_code": 0, "kind": ""}
+  ],
+  "deviations": [
+    "The paper does not define 'incoherent' preferences for the charity experiments beyond 'analogous to the YMCA analysis'. Final rule, applied to the yes/no recognition choices over the 18 intervals: coherent = weakly increasing (0...01...1, incl. constant) or single-peaked with an interior peak (0..01..10..0); everything else (multiple switches, or recognition wanted only at low scores, 1..10..0) is incoherent. This reproduces the paper's incoherent counts (40 among attention-passers in Prolific, 11 Berkeley, 2 BU), the ~1.0/1.8/1.7% non-monotone shares, and the Table 5 control means (807.9, 989.8, 815.9).",
+    "Prolific: two participants with a round score above 3000 points (3493/3501 and 3202; every other score in all samples is at most 2521) are dropped as implausible. The paper does not mention this; it was inferred because it yields the paper's final N (968) and control mean (807.9) exactly.",
+    "Attention check: a participant passes when attention_check is missing (data dictionary).",
+    "Signed WTP = pref_rec_X_1 if preference_X == 1, else -pref_anom_X_1 (budget-capped answers; the hypothetical _10 columns are not used). Table 6 col (4): OLS of WTP on interval midpoint (hundreds of points) and its square, intervals 0-1699 only, clustered by participant.",
+    "Table 7 Berkeley: gamma1 = sqrt(r1^2 - 4 r0 r2); rho = (gamma1 - r1)/(2 r2 abar) with abar = anonymous-round mean + Table 5 PR effect (hundreds of points); c = (r1 + 2 r2 (a0 + tau))/tau; predicted financial-incentive effect = 0.50/c ($0.50 per 100 points). The bootstrap in the script (200 participant-block reps) is informational only; the paper uses 1000."
+  ],
+  "notes": "Attempts 1-4 and 6-8 were exploratory (looking at the data and at candidate exclusion rules; no RESULT lines). Attempt 5 was the first full estimate. Its exclusion rule was based on WTP shape and left Prolific at N=966. I compared it with the claims using check_attempt; only the panel (c) prediction was off target (2.363 vs 2.33). I then revised the exclusion rule using paper-text statistics that are not claims (incoherent counts, non-monotone shares, Table 5 control means). The final run reproduces Ns of 2904/1152/354, the Table 5 control means exactly, and the Table 6 column (4) coefficients (0.379, -0.004, -3.325). The BU public-recognition coefficient is 115.8 vs 103.6 in the paper, even though the BU sample mean matches; the cause is unknown. Only the task mount, paper.txt and my scratch directory were used. Mount files read: the CSV data, README.pdf and the data dictionary xlsx (documentation only). No scripts were opened. No sandbox run hung.",
+  "files_read_outside_mount": [],
+  "started_at": "2026-11-10T14:26:35Z",
+  "finished_at": "2026-11-10T14:35:30Z"
+}

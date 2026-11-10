@@ -1,0 +1,28 @@
+{
+  "schema": 1,
+  "entry_id": "butera-2022-welfare-effects-shame-pride",
+  "mode": "independent",
+  "run_id": "2026-11-10-a",
+  "reproducer": "claude-code",
+  "language": "r",
+  "final": {"script": "script.R", "stdout": "stdout.txt", "stderr": "stderr.txt", "exit_code": 0},
+  "attempts": [
+    {"dir": "attempt-1", "exit_code": 0, "kind": ""},
+    {"dir": "attempt-2", "exit_code": 0, "kind": ""},
+    {"dir": "attempt-3", "exit_code": 0, "kind": ""},
+    {"dir": "attempt-4", "exit_code": 0, "kind": ""},
+    {"dir": "attempt-5", "exit_code": 0, "kind": ""},
+    {"dir": "attempt-6", "exit_code": 0, "kind": ""}
+  ],
+  "deviations": [
+    "The 'incoherent preferences' exclusion is not defined operationally in the paper text. I defined coherent as a 0/1 preference-for-recognition pattern over the 18 intervals that is weakly increasing (incl. constant) or single-peaked (0..1..0); decreasing, dipped, or multi-reversal patterns are incoherent. This reproduces the paper's incoherent counts exactly (40 Prolific, 11 Berkeley, 2 BU among attention-check passers) and the 1.0/1.8/1.7% non-monotonic shares among the coherent.",
+    "Prolific: after attention-check and incoherence exclusions 970 participants remain vs 968 in the paper; I additionally dropped the 2 participants with a missing public-recognition group assignment or missing practice-round record (both scored 0-1 points in the public round). This rule is my guess, not stated in the paper. Prolific anonymous-round mean is 809.7 vs paper 807.9 and Table 6 Prolific estimates are close but not identical, so the Prolific sample likely differs slightly from the authors'.",
+    "BU sample taken to be the BU QM222 file (121 completes, matching the paper); QM221 is not used.",
+    "Round-order dummies: position (1st/2nd/3rd) of each round taken from the Condition string (e.g. 'RAE'); dummies for 2nd and 3rd with 1st omitted.",
+    "Table 7 bootstrapped confidence intervals not computed (only point estimates are claimed)."
+  ],
+  "notes": "Data: Raw Data/{prolific,berkeley,bu_qm222}_survey_data.csv. Exclusions: failed attention check (non-missing attention_check) and incoherent preferences (see deviations); final N 968/384/118. Table 5: OLS (fixest) of points on public-recognition and paid-round indicators plus round-position dummies, SE clustered by participant; N 2904/1152/354 match. Table 6 col 4 (Berkeley) reproduced exactly: r0=-3.3246, r1=0.3790, r2=-0.00404 (WTP = +pref_rec_X_1 if preference 1, -pref_anom_X_1 if 0; interval midpoints in hundreds of points; >=1700 interval excluded). Berkeley and BU control means (989.8, 815.9) match the paper exactly, yet Table 5 coefficients differ somewhat (Berkeley PR 134.74 vs 134.41; BU PR 115.79 vs 103.61, FI 132.26 vs 118.33), suggesting the authors' order-dummy coding differs from my position coding. Structural Berkeley action-signaling parameters from Appendix F.1: gamma1 = sqrt(r1^2-4 r0 r2), rho = (sqrt(r1^2-4 r2 r0)-r1)/(2 abar r2) with abar = anonymous mean + PR effect, c = (r1+2 r2(a0+tau))/tau, predicted FI effect = 0.5/c (5 cents/10 points = $0.50 per hundred points). Six exploratory runs (attempts 1-6, no RESULT lines) were used to work out the exclusion rule. After the first scored run I ran check_attempt once (reported all claims within tolerance) and did not change the script, so that run is the final run and is not recorded as a claim attempt. Also read (inside the mount, not scripts): Packet/README.pdf and the data dictionary.xlsx strings. No run hung.",
+  "files_read_outside_mount": [],
+  "started_at": "2026-11-10T14:26:37Z",
+  "finished_at": "2026-11-10T14:31:30Z"
+}

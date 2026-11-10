@@ -1,0 +1,147 @@
+=== Prolific: 1017 rows
+  points columns: AnomPts EarnPts RecogPts 
+  order parsed from Condition ; parsed share: 1 
+  preference values: 0, 1 
+  share rec amount answered | pref==1: 1; share anom amount answered: 0
+  WTP non-missing share: 1 
+  mean WTP by interval: -0.56 -0.5 -0.38 -0.36 -0.16 0.14 0.24 0.29 0.35 0.36 0.48 0.51 0.6 0.65 0.72 0.77 0.82 0.99 
+  flag attention_check==4 : keeps 2 
+  flag attention_check==3 : keeps 1 
+  flag attention_check==5 : keeps 3 
+  flag attention_check==3,4 : keeps 1 
+  flag attention_check nonmissing : keeps 7 
+  flag dedup prolific_experience : keeps 101 
+  flag all points > 0 : keeps 958 
+  flag wtp weakly increasing : keeps 674 
+  flag wtp monotone : keeps 731 
+  flag wtp corr>0 : keeps 466 
+Prolific final participants: 958 using all points > 0 (target 968 )
+DEVIATION: Prolific sample restricted by data-derived screen 'all points > 0' (paper's exact exclusion rule not available in provided text)
+OLS estimation, Dep. Var.: points
+Observations: 2,874
+Standard-errors: Clustered (id) 
+            Estimate Std. Error   t value  Pr(>|t|)    
+(Intercept) 832.0040    16.4777 50.492800 < 2.2e-16 ***
+pub         103.1424    11.6813  8.829686 < 2.2e-16 ***
+fin         168.9615    12.6009 13.408707 < 2.2e-16 ***
+pos2         16.4982    11.7116  1.408704   0.15925    
+pos3         12.7261    13.7273  0.927068   0.35412    
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+RMSE: 490.2   Adj. R2: 0.018615
+=== Berkeley: 407 rows
+  points columns: AnomPts EarnPts RecogPts 
+  order parsed from Condition ; parsed share: 1 
+  preference values: 0, 1 
+  share rec amount answered | pref==1: 1; share anom amount answered: 0
+  WTP non-missing share: 1 
+  mean WTP by interval: -2.85 -2.53 -2.08 -1.95 -1.42 -1.17 -0.99 -0.62 -0.46 -0.12 0.46 0.66 0.85 1.2 1.44 1.64 1.56 1.93 
+  flag attention_check==4 : keeps 3 
+  flag attention_check==5 : keeps 7 
+  flag attention_check==3 : keeps 2 
+  flag attention_check nonmissing : keeps 12 
+  flag all points > 0 : keeps 392 
+  flag wtp weakly increasing : keeps 280 
+  flag wtp monotone : keeps 306 
+  flag wtp corr>0 : keeps 224 
+Berkeley final participants: 392 using all points > 0 (target 384 )
+DEVIATION: Berkeley sample restricted by data-derived screen 'all points > 0' (paper's exact exclusion rule not available in provided text)
+OLS estimation, Dep. Var.: points
+Observations: 1,176
+Standard-errors: Clustered (id) 
+            Estimate Std. Error  t value   Pr(>|t|)    
+(Intercept) 948.9517    28.2987 33.53337  < 2.2e-16 ***
+pub         154.0538    21.1683  7.27757 1.8781e-12 ***
+fin         183.0623    21.6556  8.45335 5.6746e-16 ***
+pos2         42.9550    20.3187  2.11406 3.5143e-02 *  
+pos3         79.5483    21.9634  3.62186 3.3102e-04 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+RMSE: 470.3   Adj. R2: 0.029625
+=== BU: 178 rows
+  points columns: AnomPts EarnPts RecogPts 
+  order parsed from Condition ; parsed share: 1 
+  preference values: 0, 1 
+  share rec amount answered | pref==1: 1; share anom amount answered: 0
+  WTP non-missing share: 1 
+  mean WTP by interval: -3.62 -3.28 -3.2 -3.04 -2.82 -2.31 -2.17 -1.89 -1.42 -0.98 -0.28 0.26 0.45 0.63 0.9 1.02 1.16 1.89 
+  flag attention_check==5 : keeps 2 
+  flag attention_check==1 : keeps 1 
+  flag attention_check==4 : keeps 1 
+  flag attention_check nonmissing : keeps 4 
+  flag Sample==BU QM221 : keeps 57 
+  flag Sample==BU : keeps 121 
+  flag all points > 0 : keeps 160 
+  flag wtp weakly increasing : keeps 100 
+  flag wtp monotone : keeps 114 
+  flag wtp corr>0 : keeps 112 
+  flag group bu221 : keeps 57 
+  flag group bu222 : keeps 121 
+BU final participants: 121 using Sample==BU (target 118 )
+DEVIATION: BU sample restricted by data-derived screen 'Sample==BU' (paper's exact exclusion rule not available in provided text)
+OLS estimation, Dep. Var.: points
+Observations: 363
+Standard-errors: Clustered (id) 
+            Estimate Std. Error  t value   Pr(>|t|)    
+(Intercept) 767.0880    55.0013 13.94673  < 2.2e-16 ***
+pub         121.6358    43.2625  2.81158 0.00576022 ** 
+fin         133.3041    38.2131  3.48844 0.00067999 ***
+pos2         95.7605    41.5724  2.30346 0.02297384 *  
+pos3         56.9033    43.6771  1.30282 0.19513160    
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+RMSE: 586.1   Adj. R2: 0.00284
+Window (hundreds of points): 4.174276 ; WTP points kept: 2844 of 6664 ; participants: 391 
+DEVIATION: Berkeley structural WTP profile restricted to intervals whose midpoint is within one SD of the change in performance (4.174 hundred points) of the participant's public-recognition score, the online analogue of the paper's within-4-visits restriction
+OLS estimation, Dep. Var.: wtp
+Observations: 2,844
+Standard-errors: Clustered (id) 
+             Estimate Std. Error   t value Pr(>|t|)    
+(Intercept) -4.036952   1.618411 -2.494393  0.01303 *  
+m            0.479938   0.293829  1.633391  0.10319    
+m2          -0.004706   0.012974 -0.362696  0.71703    
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+RMSE: 8.23353   Adj. R2: 0.031378
+Tobit censoring bounds (WTP elicitation range observed in data): -25 25 ; share at lower: 0.028 ; share at upper: 0.014 
+
+Call:
+AER::tobit(formula = wtp ~ m + m2, left = lo, right = hi, data = WL)
+
+Observations:
+         Total  Left-censored     Uncensored Right-censored 
+          2844             79           2726             39 
+
+Coefficients:
+             Estimate Std. Error z value Pr(>|z|)    
+(Intercept) -4.235286   0.819204  -5.170 2.34e-07 ***
+m            0.500640   0.172681   2.899  0.00374 ** 
+m2          -0.005189   0.008738  -0.594  0.55259    
+Log(scale)   2.147925   0.013762 156.075  < 2e-16 ***
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+Scale: 8.567 
+
+Gaussian distribution
+Number of Newton-Raphson Iterations: 3 
+Log-likelihood: -9918 on 4 Df
+Wald-statistic: 91.84 on 2 Df, p-value: < 2.22e-16 
+
+DEVIATION: Berkeley WTP profile estimated by Tobit with censoring bounds set to observed min/max WTP (-25, 25) since exact bounds are not stated in provided text
+WTP profile coefs (OLS): -4.036952 0.4799376 -0.004705677  (used): -4.235286 0.50064 -0.005189396 
+Berkeley: anon mean (hundreds) = 9.896224  tau = 1.540538  abar = 11.43676 
+gamma2 = -0.005189396 
+RESULT:public_recognition_points_prolific_table5_col1=103.142362
+RESULT:financial_incentives_points_prolific_table5_col1=168.961548
+RESULT:n_obs_prolific_table5_col1=2874.000000
+RESULT:public_recognition_points_berkeley_table5_col2=154.053843
+RESULT:financial_incentives_points_berkeley_table5_col2=183.062275
+RESULT:n_obs_berkeley_table5_col2=1176.000000
+RESULT:public_recognition_points_bu_table5_col3=121.635804
+RESULT:financial_incentives_points_bu_table5_col3=133.304116
+RESULT:n_obs_bu_table5_col3=363.000000
+RESULT:action_signaling_gamma1_berkeley_table7_panelA=0.403393
+RESULT:action_signaling_rho_berkeley_table7_panelA=0.819266
+RESULT:cost_parameter_c_berkeley_table7_panelA=0.247926
+RESULT:predicted_financial_incentive_effect_berkeley_table7_panelC=2.016727

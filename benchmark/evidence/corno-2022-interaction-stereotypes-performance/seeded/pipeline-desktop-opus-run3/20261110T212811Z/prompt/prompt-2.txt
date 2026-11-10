@@ -1,0 +1,285 @@
+You are refining R code that reproduces results from an econometrics paper.
+The code RAN SUCCESSFULLY but the reproduced values do not match the
+paper's claims within the allowed tolerance.  Identify what is causing
+the gap and adjust the code to close it.
+
+## Paper
+Title: Interaction, Stereotypes and Performance.
+Methodology: - **Design / identification**: Natural experiment using the University of Cape Town policy of random allocation of first-year students to residences and (in 8 residences with double rooms where wardens stated they randomized) to same-gender roommates. Treatment `MixRoom` = 1 if at baseline the student was assigned a roommate of a different race; the initial assignment is always used, so estimates are intention-to-treat (19% changed roommate, but only 2 moved from mixed to non-mixed, none the reverse; no LATE reported). Randomization checked via balance tests (Table 1), regressions of MixRoom on baseline characteristics (Table 2, panels A–B), an undirected dyadic sorting regression SameRoom_ij = α + β|X_i − X_j| + γ(X_i + X_j) + ε_ij (Table 2, panel C), 10,000-replication simulated random pairings (Table A5), and placebo regressions on lagged outcomes (Table A6).
+
+- **Data and sample**: One cohort of 2012 freshmen; baseline survey February 2012 (first week of the year) and follow-up September 2012 (before final exams). Of 621 baseline respondents with non-missing IAT scores, 499 were traced at follow-up (80%); working sample = students with baseline and follow-up data and non-missing Race and Academic IAT (499: 157 mixed, 342 same-race; 332 black, 117 white, 18 coloured, 32 Indian/Asian/other). Two residences (9 obs) with very few double rooms and no white students in doubles were dropped. Attrition checked in Table A1 (no differential attrition by MixRoom or IAT).
+
+- **Outcomes and preprocessing**: (i) Race IAT and Academic IAT scores (coded so lower = more negative stereotypes towards black relative to white; IATs administered first in each session); (ii) administrative academic outcomes for year 1 (and year 2 in Table A10): GPA standardized to mean 0, SD 1 within each year; number of exams passed (0–9); "Eligible to continue" dummy; and a summary performance index = first principal component of the three; (iii) 15 attitudinal/behavioral outcomes aggregated into three indices (friendship, explicit attitudes, prosocial behaviour, incl. a prisoner's dilemma game). UCT admission score (APS, out of 600) rescaled by dividing by 1000. Household wealth = PCA index of durable-goods ownership per capita; consumption = last-month spending. Missing values of controls (other than the baseline IAT) are replaced with the mean, and missing-value indicator dummies are added.
+
+- **Estimating equation (eq. 2), OLS, levels (no logs)**: Y_ijkt = α·Y_ijk0 + β·MixRoom_ik0 + Race_i + X_ik0 + X_jk0 + RaceGrp_i × δ_k + ε_ijkt, where Y_ijk0 is the baseline value of the outcome (lagged dependent variable; omitted when not available, e.g. GPA and lab games). Race_i = dummies for White, Coloured, Indian/Asian/Other (Black omitted). X_ik0 (own) and X_jk0 (roommate) controls: gender, UCT admission score, household wealth index, monthly consumption expenditure, non-South-African dummy. Fixed effects: race-group (Black, White, residual) × residence dummies in the full sample; residence dummies only in race subsamples. Academic-performance regressions add academic-program fixed effects; prisoner's dilemma regressions add a dummy for knowing the matched player. Coefficient of interest β.
+
+- **Samples estimated**: IAT outcomes (Table 3) estimated separately for white and black subsamples (simplified eq. 2 without race dummies, residence FE only), since prejudice reduction implies opposite signs by group. Academic, attitudinal and behavioural outcomes (Tables 4, 6) estimated for full sample and white and black subsamples. Headline coefficients are in the raw units of the outcome (IAT score points; GPA in SD units because GPA itself is standardized; number of exams; percentage-point eligibility); the paper converts them to SD effects in the text (e.g. Race IAT effect for whites 0.316 = 0.63 SD; black GPA effect 0.257 ≈ 0.27 SD; exams passed +0.65 ≈ 0.23 SD; eligibility +15.2 pp; performance index +0.44 for blacks, +0.29 SD full sample).
+
+- **Inference**: Standard errors clustered at the room level. Westfall–Young (1993) free step-down resampling p-values for family-wise error rate with 10,000 replications (re-randomizing mixed/non-mixed status and assigning roommates within residence and gender); families = Race and Academic IAT per subsample (Table 3), GPA/exams passed/eligible to continue (Table 4), friendship/attitudes/prosocial indices (Table 6). Anderson FDR q-values reported as similar. SUR test of equal MixRoom effects on Race vs Academic IAT (p = 0.03). Ordered logit used for categorical ordered attitudinal variables.
+
+- **Robustness / mechanisms**: Table A7 / A9 drop roommate controls; Table A8 splits treatment by roommate's race; Table A10 second-year academic outcomes; Table A11 interacts MixRoom with same-faculty and shared-course indicators and examines studying together; interaction of MixRoom with roommate's admission score tested for IAT outcome. No train/test split, cross-validation or ML hyperparameters (not applicable).
+
+
+## Current Code
+```r
+suppressPackageStartupMessages({
+  library(haven)
+  library(dplyr)
+  library(fixest)
+})
+
+set.seed(42)
+
+base_dir <- "<repo>/.cache/datasets/corno_2022_interaction_stereotypes_performance"
+data_file <- file.path(base_dir, "ForJournals_a", "Data", "Clean", "uctdata_balanced.dta")
+
+d <- haven::read_dta(data_file)
+d <- haven::zap_labels(d)
+d <- haven::zap_formats(d)
+d <- as.data.frame(d)
+
+cat("Loaded uctdata_balanced:", nrow(d), "rows,", ncol(d), "cols\n")
+
+# ---------------------------------------------------------------
+# Panel identifier (Stata: xtset individual round)
+# ---------------------------------------------------------------
+id_var <- if ("individual" %in% names(d)) "individual" else "nstudent"
+cat("Panel id variable:", id_var, "\n")
+d$pid <- d[[id_var]]
+d$round <- as.numeric(d$round)
+
+# Lag operator: value of the same individual at round - 1
+make_lag <- function(df, v) {
+  key_cur <- paste(df$pid, df$round, sep = "_")
+  key_prev <- paste(df$pid, df$round - 1, sep = "_")
+  vals <- df[[v]]
+  idx <- match(key_prev, key_cur)
+  out <- vals[idx]
+  out
+}
+d$L_DscoreraceIAT <- make_lag(d, "DscoreraceIAT")
+d$L_DscoreacaIAT <- make_lag(d, "DscoreacaIAT")
+
+# ---------------------------------------------------------------
+# Control lists (from 1_main_tables.do)
+# ---------------------------------------------------------------
+controls_full <- c("white", "coloured", "Else", "Female", "Falseuct2012", "missfalse",
+                   "Foreign", "foreign_missing", "privateschool_nomiss", "privateschool_miss",
+                   "durpcabas_nomiss", "durpcabas_miss", "consbas_nomiss", "consbas_miss")
+controls_sub <- c("Female", "Falseuct2012", "missfalse", "Foreign", "foreign_missing",
+                  "privateschool_nomiss", "privateschool_miss", "durpcabas_nomiss",
+                  "durpcabas_miss", "consbas_nomiss", "consbas_miss")
+rocontrols <- c("roFalseuct2012", "missrofalse", "roForeign_bas", "roforeign_missingbas",
+                "roprivschool_nomiss", "roprivschool_miss", "rodurpcabas_nomiss",
+                "rodurpcabas_miss", "roconsbas_nomiss", "roconsbas_miss")
+
+keep_present <- function(vars) {
+  miss <- setdiff(vars, names(d))
+  if (length(miss) > 0) cat("WARNING: variables not found in data (dropped):", paste(miss, collapse = ", "), "\n")
+  intersect(vars, names(d))
+}
+controls_full <- keep_present(controls_full)
+controls_sub <- keep_present(controls_sub)
+rocontrols <- keep_present(rocontrols)
+
+# Fixed-effect variables as factors (Stata i.Res_base, i.blackRes, i.whiteRes, i.regprogram)
+for (v in c("Res_base", "blackRes", "whiteRes", "regprogram")) {
+  if (v %in% names(d)) {
+    d[[paste0(v, "_f")]] <- ifelse(is.na(d[[v]]), NA, as.character(d[[v]]))
+  } else {
+    cat("WARNING: FE variable not found:", v, "\n")
+  }
+}
+
+for (v in c("white", "black", "mixracebas", "roomnum_base")) {
+  if (!v %in% names(d)) cat("WARNING: key variable missing:", v, "\n")
+}
+
+d2 <- d[d$round == 2 & !is.na(d$round), ]
+d2_white <- d2[!is.na(d2$white) & d2$white == 1, ]
+d2_black <- d2[!is.na(d2$black) & d2$black == 1, ]
+cat("Round 2 rows:", nrow(d2), " whites:", nrow(d2_white), " blacks:", nrow(d2_black), "\n")
+
+# ---------------------------------------------------------------
+# Estimation helper
+# ---------------------------------------------------------------
+bq <- function(x) paste0("`", x, "`")
+
+run_reg <- function(data, y, rhs, fes, label) {
+  rhs_str <- paste(bq(rhs), collapse = " + ")
+  fe_str <- paste(fes, collapse = " + ")
+  fml <- as.formula(paste0(bq(y), " ~ ", rhs_str, " | ", fe_str))
+  res <- tryCatch({
+    m <- feols(fml, data = data, cluster = ~roomnum_base, fixef.rm = "none", warn = FALSE, notes = FALSE)
+    b <- unname(coef(m)["mixracebas"])
+    se <- unname(sqrt(diag(vcov(m)))["mixracebas"])
+    n <- nobs(m)
+    cat(sprintf("[%s] beta(mixracebas)=%.4f se=%.4f N=%d\n", label, b, se, n))
+    list(b = b, se = se, n = n)
+  }, error = function(e) {
+    cat(sprintf("[%s] ERROR: %s\n", label, conditionMessage(e)))
+    list(b = NA_real_, se = NA_real_, n = NA_integer_)
+  })
+  res
+}
+
+# ---------------------------------------------------------------
+# Table 3: Race IAT, whites and blacks
+# reg DscoreraceIAT mixracebas L.DscoreraceIAT controls_subsample rocontrols i.Res_base
+#     if round==2 & white==1, cluster(roomnum_base)
+# ---------------------------------------------------------------
+t3_w <- run_reg(d2_white, "DscoreraceIAT",
+                c("mixracebas", "L_DscoreraceIAT", controls_sub, rocontrols),
+                c("Res_base_f"), "T3 race IAT whites")
+t3_b <- run_reg(d2_black, "DscoreraceIAT",
+                c("mixracebas", "L_DscoreraceIAT", controls_sub, rocontrols),
+                c("Res_base_f"), "T3 race IAT blacks")
+# Academic IAT (for reference on sample sizes)
+t3_w_aca <- run_reg(d2_white, "DscoreacaIAT",
+                    c("mixracebas", "L_DscoreacaIAT", controls_sub, rocontrols),
+                    c("Res_base_f"), "T3 academic IAT whites")
+t3_b_aca <- run_reg(d2_black, "DscoreacaIAT",
+                    c("mixracebas", "L_DscoreacaIAT", controls_sub, rocontrols),
+                    c("Res_base_f"), "T3 academic IAT blacks")
+
+# ---------------------------------------------------------------
+# Table 4: academic performance
+# Subsamples: controls_subsample rocontrols i.Res_base i.regprogram
+# Full: controls rocontrols i.blackRes i.whiteRes i.Res_base i.regprogram
+# ---------------------------------------------------------------
+t4 <- list()
+for (y in c("GPA", "examspassed", "continue", "PCAperf")) {
+  if (!y %in% names(d2)) {
+    cat("WARNING: outcome not found:", y, "\n")
+    t4[[paste0(y, "_w")]] <- list(b = NA, se = NA, n = NA)
+    t4[[paste0(y, "_b")]] <- list(b = NA, se = NA, n = NA)
+    t4[[paste0(y, "_f")]] <- list(b = NA, se = NA, n = NA)
+    next
+  }
+  t4[[paste0(y, "_w")]] <- run_reg(d2_white, y, c("mixracebas", controls_sub, rocontrols),
+                                   c("Res_base_f", "regprogram_f"), paste("T4", y, "whites"))
+  t4[[paste0(y, "_b")]] <- run_reg(d2_black, y, c("mixracebas", controls_sub, rocontrols),
+                                   c("Res_base_f", "regprogram_f"), paste("T4", y, "blacks"))
+  t4[[paste0(y, "_f")]] <- run_reg(d2, y, c("mixracebas", controls_full, rocontrols),
+                                   c("blackRes_f", "whiteRes_f", "Res_base_f", "regprogram_f"),
+                                   paste("T4", y, "full"))
+}
+
+# ---------------------------------------------------------------
+# Output
+# ---------------------------------------------------------------
+fmt <- function(x) ifelse(is.na(x), "NA", format(signif(x, 8), scientific = FALSE))
+
+cat(sprintf("RESULT:race_iat_mixed_room_whites_table3_col1=%s\n", fmt(t3_w$b)))
+cat(sprintf("RESULT:race_iat_mixed_room_blacks_table3_col2=%s\n", fmt(t3_b$b)))
+cat(sprintf("RESULT:n_obs_table3_whites=%s\n", fmt(t3_w$n)))
+cat(sprintf("RESULT:n_obs_table3_blacks=%s\n", fmt(t3_b$n)))
+cat(sprintf("RESULT:gpa_mixed_room_blacks_table4_panelB_col1=%s\n", fmt(t4$GPA_b$b)))
+cat(sprintf("RESULT:exams_passed_mixed_room_blacks_table4_panelB_col2=%s\n", fmt(t4$examspassed_b$b)))
+cat(sprintf("RESULT:eligible_mixed_room_blacks_table4_panelB_col3=%s\n", fmt(t4$continue_b$b)))
+cat(sprintf("RESULT:performance_index_mixed_room_blacks_table4_panelB_col4=%s\n", fmt(t4$PCAperf_b$b)))
+cat(sprintf("RESULT:gpa_mixed_room_whites_table4_panelA_col1=%s\n", fmt(t4$GPA_w$b)))
+cat(sprintf("RESULT:gpa_mixed_room_full_table4_panelC_col1=%s\n", fmt(t4$GPA_f$b)))
+cat(sprintf("RESULT:exams_passed_mixed_room_full_table4_panelC_col2=%s\n", fmt(t4$examspassed_f$b)))
+cat(sprintf("RESULT:performance_index_mixed_room_full_table4_panelC_col4=%s\n", fmt(t4$PCAperf_f$b)))
+cat(sprintf("RESULT:n_obs_table4_panelC_cols1_2=%s\n", fmt(t4$GPA_f$n)))
+```
+
+## What the code produced
+  race_iat_mixed_room_whites_table3_col1 = 0.321486
+  race_iat_mixed_room_blacks_table3_col2 = -0.09496739
+  n_obs_table3_whites = 117.0
+  n_obs_table3_blacks = 332.0
+  gpa_mixed_room_blacks_table4_panelB_col1 = 0.2717969
+  exams_passed_mixed_room_blacks_table4_panelB_col2 = 0.6693998
+  eligible_mixed_room_blacks_table4_panelB_col3 = 0.1582645
+  performance_index_mixed_room_blacks_table4_panelB_col4 = 0.4644468
+  gpa_mixed_room_whites_table4_panelA_col1 = -0.04191979
+  gpa_mixed_room_full_table4_panelC_col1 = 0.1518715
+  exams_passed_mixed_room_full_table4_panelC_col2 = 0.452716
+  performance_index_mixed_room_full_table4_panelC_col4 = 0.2959801
+  n_obs_table4_panelC_cols1_2 = 499.0
+
+## Last run's stdout (excerpt: first/last 3000 characters)
+```
+Loaded uctdata_balanced: 998 rows, 89 cols
+Panel id variable: individual 
+WARNING: variables not found in data (dropped): roconsbas_miss 
+Round 2 rows: 499  whites: 117  blacks: 332 
+[T3 race IAT whites] beta(mixracebas)=0.3215 se=0.1399 N=117
+[T3 race IAT blacks] beta(mixracebas)=-0.0950 se=0.0688 N=332
+[T3 academic IAT whites] beta(mixracebas)=0.0140 se=0.1085 N=117
+[T3 academic IAT blacks] beta(mixracebas)=-0.0146 se=0.0596 N=332
+[T4 GPA whites] beta(mixracebas)=-0.0419 se=0.2430 N=117
+[T4 GPA blacks] beta(mixracebas)=0.2718 se=0.1235 N=332
+[T4 GPA full] beta(mixracebas)=0.1519 se=0.1029 N=499
+[T4 examspassed whites] beta(mixracebas)=-0.1505 se=0.5199 N=117
+[T4 examspassed blacks] beta(mixracebas)=0.6694 se=0.2439 N=332
+[T4 examspassed full] beta(mixracebas)=0.4527 se=0.2049 N=499
+[T4 continue whites] beta(mixracebas)=0.0497 se=0.0653 N=117
+[T4 continue blacks] beta(mixracebas)=0.1583 se=0.0399 N=332
+[T4 continue full] beta(mixracebas)=0.1072 se=0.0318 N=498
+[T4 PCAperf whites] beta(mixracebas)=0.0056 se=0.2562 N=117
+[T4 PCAperf blacks] beta(mixracebas)=0.4644 se=0.1395 N=332
+[T4 PCAperf full] beta(mixracebas)=0.2960 se=0.1145 N=498
+RESULT:race_iat_mixed_room_whites_table3_col1=0.321486
+RESULT:race_iat_mixed_room_blacks_table3_col2=-0.09496739
+RESULT:n_obs_table3_whites=117
+RESULT:n_obs_table3_blacks=332
+RESULT:gpa_mixed_room_blacks_table4_panelB_col1=0.2717969
+RESULT:exams_passed_mixed_room_blacks_table4_panelB_col2=0.6693998
+RESULT:eligible_mixed_room_blacks_table4_panelB_col3=0.1582645
+RESULT:performance_index_mixed_room_blacks_table4_panelB_col4=0.4644468
+RESULT:gpa_mixed_room_whites_table4_panelA_col1=-0.04191979
+RESULT:gpa_mixed_room_full_table4_panelC_col1=0.1518715
+RESULT:exams_passed_mixed_room_full_table4_panelC_col2=0.452716
+RESULT:performance_index_mixed_room_full_table4_panelC_col4=0.2959801
+RESULT:n_obs_table4_panelC_cols1_2=499
+```
+
+## Claims still failing
+1. gpa_mixed_room_blacks_table4_panelB_col1: paper claims 0.257 standard deviations of first-year GPA (coefficient), your code produced 0.271797, tolerance 0.02, gap 5.76% relative
+2. exams_passed_mixed_room_blacks_table4_panelB_col2: paper claims 0.645 number of exams passed in the first year (coefficient), your code produced 0.6694, tolerance 0.02, gap 3.78% relative
+3. eligible_mixed_room_blacks_table4_panelB_col3: paper claims 0.152 change in the probability of being eligible to continue (coefficient), your code produced 0.158265, tolerance 0.02, gap 4.12% relative
+4. performance_index_mixed_room_blacks_table4_panelB_col4: paper claims 0.443 units of the academic performance index (first principal component) (coefficient), your code produced 0.464447, tolerance 0.02, gap 4.84% relative
+5. gpa_mixed_room_whites_table4_panelA_col1: paper claims -0.028 standard deviations of first-year GPA (coefficient), your code produced -0.0419198, tolerance 0.02, gap 49.71% relative
+6. gpa_mixed_room_full_table4_panelC_col1: paper claims 0.147 standard deviations of first-year GPA (coefficient), your code produced 0.151871, tolerance 0.02, gap 3.31% relative
+7. performance_index_mixed_room_full_table4_panelC_col4: paper claims 0.289 units of the academic performance index (first principal component) (coefficient), your code produced 0.29598, tolerance 0.02, gap 2.42% relative
+
+## Previous attempts (oldest first)
+  Attempt 1: race_iat_mixed_room_whites_table3_col1=0.321486, race_iat_mixed_room_blacks_table3_col2=-0.09496739, n_obs_table3_whites=117.0, n_obs_table3_blacks=332.0, gpa_mixed_room_blacks_table4_panelB_col1=0.2717969, exams_passed_mixed_room_blacks_table4_panelB_col2=0.6693998, eligible_mixed_room_blacks_table4_panelB_col3=0.1582645, performance_index_mixed_room_blacks_table4_panelB_col4=0.4644468, gpa_mixed_room_whites_table4_panelA_col1=-0.04191979, gpa_mixed_room_full_table4_panelC_col1=0.1518715, exams_passed_mixed_room_full_table4_panelC_col2=0.452716, performance_index_mixed_room_full_table4_panelC_col4=0.2959801, n_obs_table4_panelC_cols1_2=499.0
+
+These attempts have already been tried.  Do not repeat a strategy
+that has already produced the same values.
+
+## Task
+Adjust the code minimally to close the gap on the failing claims.
+Prefer changes that align more closely with the paper's stated methodology:
+re-read the methodology summary above and check the model specification,
+covariate selection, fixed effects, clustering, and seed against what the
+paper actually specifies.  In econometrics papers, common gap-closers are:
+  - getting the cluster-robust SE right (vcovCL / cluster_var argument)
+  - matching the paper's exact fixed-effects structure
+  - using the same sample-restriction filters the paper applied
+  - matching the paper's weighting scheme (weights= argument)
+
+## Deviation reporting
+If you must change something the paper did NOT specify in order to close
+the gap, emit a ``DEVIATION:`` line via cat() describing the change:
+
+    cat('DEVIATION: Used HC1 robust SE because the paper does not specify but the default did not converge\n')
+
+## When to give up
+If after re-reading the methodology and the previous attempts you judge
+the gap cannot be closed without unreasonable deviation, return the SAME
+R CODE you were given, BYTE-FOR-BYTE unchanged.  The pipeline will record
+the claim as unreproducible.
+
+## Output convention (unchanged)
+Emit every metric as ``cat('RESULT:<name>=<value>\n')``.
+The dataset is a directory tree at '<repo>/.cache/datasets/corno_2022_interaction_stereotypes_performance' — see the file listing under Dataset Information.  Load the actual data file(s) by the exact paths listed there (readr::read_csv() for .csv, haven::read_dta() for Stata .dta, load() for .RData/.rda, which creates the objects listed for the file under exactly those names: use them, do not guess others; readRDS() for .rds).
+Installed packages (no network; nothing else can be installed): jsonlite, fixest, lfe, AER, ivreg, plm, estimatr, lme4, quantreg, car, sandwich, lmtest, clubSandwich, multiwayvcov, marginaleffects, MatchIt, optmatch, CBPS, WeightIt, cobalt, did, rdrobust, rddensity, Synth, modelsummary, stargazer, texreg, broom, tidyverse, dplyr, tidyr, readr, stringr, lubridate, data.table, haven, readxl, janitor, zoo, ggplot2, ggridges, ggrepel, gridExtra, cowplot, gtable, extrafont, sf, MASS, nnet, survival, splines, Matrix, boot, stats, utils.
+Prefer fixest for fixed effects, IV and clustered SEs; use the other installed packages where the paper's method calls for them.
+No network, no system().  set.seed(42).
+
+Output ONLY the R code — no explanation, no markdown fences.

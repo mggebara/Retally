@@ -1,0 +1,90 @@
+[prolific] completed=1017 attention_fail=7 incoherent(among passers)=40
+[prolific] dropped for missing group/practice record: 2
+[prolific] final N subjects = 968
+[berkeley] completed=407 attention_fail=12 incoherent(among passers)=11
+[berkeley] final N subjects = 384
+[bu] completed=121 attention_fail=1 incoherent(among passers)=2
+[bu] final N subjects = 118
+OLS estimation, Dep. Var.: points
+Observations: 2,904
+Standard-errors: Clustered (id) 
+             Estimate Std. Error   t value  Pr(>|t|)    
+(Intercept) 812.59172    16.7632 48.474815 < 2.2e-16 ***
+pr          109.26428    12.2661  8.907840 < 2.2e-16 ***
+fin         182.95917    13.1273 13.937265 < 2.2e-16 ***
+pos::2        1.43988    12.2353  0.117682   0.90634    
+pos::3       -9.84241    14.2516 -0.690617   0.48997    
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+RMSE: 501.9   Adj. R2: 0.020666
+[prolific] control mean (anonymous round) = 809.7
+OLS estimation, Dep. Var.: points
+Observations: 1,152
+Standard-errors: Clustered (id) 
+            Estimate Std. Error  t value   Pr(>|t|)    
+(Intercept) 956.9348    28.0828 34.07542  < 2.2e-16 ***
+pr          134.7423    22.5282  5.98105 5.0885e-09 ***
+fin         177.1164    22.0162  8.04482 1.0929e-14 ***
+pos::2       31.4825    21.2985  1.47816 1.4019e-01    
+pos::3       66.9170    23.6599  2.82829 4.9258e-03 ** 
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+RMSE: 479.2   Adj. R2: 0.023974
+[berkeley] control mean (anonymous round) = 989.8
+OLS estimation, Dep. Var.: points
+Observations: 354
+Standard-errors: Clustered (id) 
+            Estimate Std. Error  t value   Pr(>|t|)    
+(Intercept) 762.7367    55.3303 13.78515  < 2.2e-16 ***
+pr          115.7881    43.9263  2.63596 0.00952763 ** 
+fin         132.2573    39.1496  3.37825 0.00099137 ***
+pos::2       96.2550    42.5800  2.26057 0.02563511 *  
+pos::3       51.7693    44.3302  1.16781 0.24525697    
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+RMSE: 579.4   Adj. R2: 0.002543
+[bu] control mean (anonymous round) = 815.9
+OLS estimation, Dep. Var.: wtp
+Observations: 16,456
+Standard-errors: Clustered (id) 
+             Estimate Std. Error  t value   Pr(>|t|)    
+(Intercept) -0.729081   0.121408 -6.00520 2.7014e-09 ***
+x            0.157580   0.017933  8.78722  < 2.2e-16 ***
+I(I(x^2))   -0.003749   0.000810 -4.62637 4.2273e-06 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+RMSE: 3.60179   Adj. R2: 0.016391
+OLS estimation, Dep. Var.: wtp
+Observations: 6,528
+Standard-errors: Clustered (id) 
+             Estimate Std. Error  t value   Pr(>|t|)    
+(Intercept) -3.324570   0.420286 -7.91026 2.7824e-14 ***
+x            0.378981   0.070188  5.39954 1.1748e-07 ***
+I(I(x^2))   -0.004038   0.003557 -1.13530 2.5696e-01    
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+RMSE: 8.16159   Adj. R2: 0.033344
+OLS estimation, Dep. Var.: wtp
+Observations: 2,006
+Standard-errors: Clustered (id) 
+             Estimate Std. Error   t value   Pr(>|t|)    
+(Intercept) -5.075569   0.810106 -6.265317 6.4023e-09 ***
+x            0.308508   0.116417  2.650017 9.1620e-03 ** 
+I(I(x^2))    0.002293   0.005739  0.399530 6.9023e-01    
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+RMSE: 8.61973   Adj. R2: 0.036608
+Berkeley: r0=-3.3246 r1=0.3790 r2=-0.00404 a0=9.8976 tau=1.3474 gamma1=0.2999 gamma2=-0.00404 rho=0.8710 c=0.2139 pred=2.3379 actual=1.7712
+RESULT:public_recognition_points_prolific_table5_col1=109.2643
+RESULT:financial_incentives_points_prolific_table5_col1=182.9592
+RESULT:public_recognition_points_berkeley_table5_col2=134.7423
+RESULT:financial_incentives_points_berkeley_table5_col2=177.1164
+RESULT:public_recognition_points_bu_table5_col3=115.7881
+RESULT:financial_incentives_points_bu_table5_col3=132.2573
+RESULT:n_obs_prolific_table5_col1=2904
+RESULT:n_obs_berkeley_table5_col2=1152
+RESULT:n_obs_bu_table5_col3=354
+RESULT:action_signaling_gamma1_berkeley_table7_panelA=0.2999
+RESULT:action_signaling_rho_berkeley_table7_panelA=0.8710
+RESULT:cost_parameter_c_berkeley_table7_panelA=0.2139
+RESULT:predicted_financial_incentive_effect_berkeley_table7_panelC=2.3379

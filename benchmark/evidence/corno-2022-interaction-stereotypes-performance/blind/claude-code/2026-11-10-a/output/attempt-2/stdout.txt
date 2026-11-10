@@ -1,0 +1,89 @@
+GPA max distinct within student: 1 
+examspassed max distinct within student: 1 
+continue max distinct within student: 1 
+PCAperf max distinct within student: 1 
+mixracebas max distinct within student: 1 
+DscoreraceIATbas max distinct within student: 1 
+DscoreacaIATbas max distinct within student: 1 
+Res_base max distinct within student: 1 
+roomnum_base max distinct within student: 1 
+Falseuct2012 max distinct within student: 1 
+consbas_nomiss max distinct within student: 1 
+durpcabas_nomiss max distinct within student: 1 
+privateschool_nomiss max distinct within student: 1 
+Foreign max distinct within student: 1 
+roFalseuct2012 max distinct within student: 1 
+rodurpcabas_nomiss max distinct within student: 1 
+roconsbas_nomiss max distinct within student: 1 
+roForeign_bas max distinct within student: 1 
+roprivschool_nomiss max distinct within student: 1 
+regprogram max distinct within student: 1 
+Female max distinct within student: 1 
+Race max distinct within student: 1 
+IAT bas == round1 IAT: Attributes: < target is NULL, current is list > 
+GPA sd r2: 1.004878 mean: -0.01050301 
+
+FALSE 
+  499 
+
+  3439556   3139558  29395511   3139556   2939559   2939566   3439566  29395610   2939558  30395513  29395613   3039556  30395510  31395118   3039567   3239557  31395116   3039557  30395614   3039577 
+       48        46        45        40        39        32        30        20        18        18        11        11        10         9         8         8         7         6         6         6 
+ 31395117  29395612   2939568   3039566 313951012  31395513  31395712  29395611   2939575  30395514  30395610   2939567   3039565 313951010   3140566   3239558   2939576   3139567   3139569   3339569 
+        6         5         5         5         5         5         5         4         4         4         4         3         3         3         3         3         2         2         2         2 
+ 29395513  29395614   2939569 313951013   3140558   3140575 
+        1         1         1         1         1         1 
+   
+      0   1
+  1 257  75
+  2   0  18
+  3  78  39
+  4   7  20
+  5   0   5
+
+  1   2 
+181 159 
+
+  1   2 
+181 159 
+roomnum across res: 340 340 
+                  PC1        PC2        PC3
+GPA         0.6243464 -0.1442225  0.7677184
+examspassed 0.5260257  0.8041924 -0.2767155
+continue    0.5774847 -0.5766059 -0.5779594
+cor own PC1 vs PCAperf: 0.9948925 
+
+Call:
+lm(formula = r2$PCAperf[ok] ~ p$x[, 1])
+
+Residuals:
+     Min       1Q   Median       3Q      Max 
+-0.28843 -0.08173  0.00211  0.05851  0.45453 
+
+Coefficients:
+            Estimate Std. Error t value Pr(>|t|)    
+(Intercept) 0.019203   0.005218    3.68 0.000258 ***
+p$x[, 1]    0.845514   0.003852  219.51  < 2e-16 ***
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+Residual standard error: 0.1164 on 496 degrees of freedom
+Multiple R-squared:  0.9898,	Adjusted R-squared:  0.9898 
+F-statistic: 4.818e+04 on 1 and 496 DF,  p-value: < 2.2e-16
+
+sd PCAperf: 1.152371 sd own: 1.355963 
+ roForeign_bas    roprivschool_nomiss roforeign_missingbas roprivschool_miss  missrofalse      rodurpcabas_miss roconsbas_missing
+ Min.   :0.0000   Min.   :0.0000      Min.   :0.00000      Min.   :0.0000    Min.   :0.00000   Min.   :0.0000   Min.   :0.0000   
+ 1st Qu.:0.0000   1st Qu.:0.0000      1st Qu.:0.00000      1st Qu.:0.0000    1st Qu.:0.00000   1st Qu.:0.0000   1st Qu.:0.0000   
+ Median :0.0000   Median :1.0000      Median :0.00000      Median :0.0000    Median :0.00000   Median :0.0000   Median :0.0000   
+ Mean   :0.0891   Mean   :0.6249      Mean   :0.04208      Mean   :0.1303    Mean   :0.07816   Mean   :0.3567   Mean   :0.3507   
+ 3rd Qu.:0.0000   3rd Qu.:1.0000      3rd Qu.:0.00000      3rd Qu.:0.0000    3rd Qu.:0.00000   3rd Qu.:1.0000   3rd Qu.:1.0000   
+ Max.   :1.0000   Max.   :1.0000      Max.   :1.00000      Max.   :1.0000    Max.   :1.00000   Max.   :1.0000   Max.   :1.0000   
+
+  0   2   4   5   6   7   8   9  10 
+167  16   6   5  16 100  85  84  20 
+
+  0   2   4   6   7   8   9  10 
+382   4   2   5  38  15  21  32 
+
+FALSE  TRUE 
+  493     6 

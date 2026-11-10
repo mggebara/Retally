@@ -1,0 +1,17 @@
+{
+  "schema": 1,
+  "entry_id": "butera-2022-welfare-effects-shame-pride",
+  "mode": "seeded",
+  "run_id": "2026-11-10-b",
+  "reproducer": "claude-code",
+  "language": "r",
+  "final": {"script": "script.R", "stdout": "stdout.txt", "stderr": "stderr.txt", "exit_code": 0},
+  "attempts": [],
+  "deviations": [
+    "Table 7 parameters are reported as full-sample point estimates only; the 1000-rep cluster bootstrap used for the paper's percentile CIs was not run (no CI is claimed)."
+  ],
+  "notes": "Single run. Rebuilt the charity data from the raw CSVs following Prolific_Build/University_Build/Gen_Vars (attention-check flag = non-missing attention_check; consistent_b from preference switches; WTP = -anonymous slider WTP, else recognition slider WTP). Table 5: dropped participants with any round > 3000 points, kept flag_attention_check == 0 & consistent_b == 1, reshaped long by round, regressed pts on SR, ownpay and order dummies o1, o2 (order mapping from Label_Rounds.do) with id-clustered SEs, for Prolific, Berkeley, BU (bu_qm222). Table 7 Berkeley: as in welfare_estimates.do param_effort: tau and anonymous mean from pts/100; reduced-form PRU from OLS of WTP on interval midpoint (hundreds) and its square, intervals 0-16 (1700+ excluded), data long by id x round x interval as in the do-file; gamma2 = r2, gamma1 = sqrt(r1^2 - 4 r2 r0), rho = (gamma1 - r1)/(2 gamma2 pts_im), c = (r1 + 2 r2 pts_im)/tau, predicted FI effect = 0.5/c. All 13 values match the claims at reported precision. No result comparison led to script changes. Initial data inspection (column names, sample labels, conditions, attention-check counts) was done by reading the raw CSVs with a small host Python script, not R.",
+  "files_read_outside_mount": [],
+  "started_at": "2026-11-10T14:26:51Z",
+  "finished_at": "2026-11-10T14:35:00Z"
+}

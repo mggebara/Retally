@@ -1,0 +1,131 @@
+Columns:
+ [1] "round"                "DscoreacaIAT"         "DscoreraceIAT"       
+ [4] "charity_amount"       "talk"                 "hangdiff"            
+ [7] "hanglast"             "community"            "gender"              
+[10] "roommate_study"       "falseuct2012"         "examspassed"         
+[13] "continue"             "continue2013"         "examspassed2013"     
+[16] "GPA2013"              "individual"           "Res_base"            
+[19] "Female"               "Race"                 "coloured"            
+[22] "white"                "black"                "Cooperate"           
+[25] "Pris_coopbelief"      "StudyOth"             "LeisuOth"            
+[28] "roRace"               "same_course"          "Else"                
+[31] "rocoloured"           "rowhite"              "roother"             
+[34] "roblack"              "roElse"               "mixracebas"          
+[37] "stillinres"           "roomnum_base"         "Falseuct2012"        
+[40] "missfalse"            "roFalseuct2012"       "missrofalse"         
+[43] "Foreign"              "foreign_missing"      "roForeign_bas"       
+[46] "roforeign_missingbas" "privateschool_nomiss" "privateschool_miss"  
+[49] "consbas_nomiss"       "consbas_miss"         "DscoreacaIATbas"     
+[52] "DscoreraceIATbas"     "excomfort"            "Abolishaffirm_dis"   
+[55] "dancinganotherrace"   "boyfriendanotherrace" "GPA"                 
+[58] "pctFriendsdiff_net"   "pctStudydiffer_net"   "roprivschool_nomiss" 
+[61] "roprivschool_miss"    "durpcabas_nomiss"     "durpcabas_miss"      
+[64] "PCAattitude"          "LPCAattitude"         "rodurpcabas_nomiss"  
+[67] "rodurpcabas_miss"     "roconsbas_nomiss"     "roconsbas_missing"   
+[70] "knowP"                "PCAperf"              "PCAperf2013"         
+[73] "PCAfriend"            "PCAcomm"              "PCAsocial"           
+[76] "PCAatt_nomiss1"       "PCAfriend_nomiss1"    "PCAcomm_nomiss1"     
+[79] "PCAsocial_nomiss1"    "blackRes"             "whiteRes"            
+[82] "Inresmix_yr2"         "Same_ro_yr2"          "mixsamecourse"       
+[85] "samefaculty"          "mixsamefaculty"       "order"               
+[88] "nstudent"             "regprogram"          
+Round values:
+
+  1   2 
+499 499 
+Rows after selecting follow-up: 499 
+Room cluster variable: roomnum_base 
+Program FE variable: NA 
+GPA variable: GPA 
+Working sample: 499 
+Existing missing dummies: missfalse, missrofalse, foreign_missing, roforeign_missingbas, privateschool_miss, consbas_miss, roprivschool_miss, durpcabas_miss, rodurpcabas_miss, roconsbas_missing 
+Controls: c_Female, c_Falseuct2012, c_durpcabas_nomiss, c_consbas_nomiss, c_Foreign, c_privateschool_nomiss, c_roFalseuct2012, c_rodurpcabas_nomiss, c_roconsbas_nomiss, c_roForeign_bas, c_roprivschool_nomiss, d_missfalse, d_missrofalse, d_roforeign_missingbas, d_consbas_miss, d_roprivschool_miss, d_durpcabas_miss, d_rodurpcabas_miss, d_roconsbas_missing 
+OLS estimation, Dep. Var.: y_race_iat
+Observations: 117
+Fixed-effects: res_fe: 7
+Standard-errors: Clustered (cluster_id) 
+                        Estimate Std. Error   t value Pr(>|t|)    
+treat                   0.315851   0.139662  2.261539 0.026135 *  
+y_race_iat_bl           0.089623   0.100083  0.895488 0.372915    
+c_Female                0.032806   0.145929  0.224811 0.822636    
+c_Falseuct2012         -0.959083   1.373012 -0.698525 0.486650    
+c_durpcabas_nomiss      0.050798   0.035908  1.414675 0.160614    
+c_consbas_nomiss       -0.061915   0.056108 -1.103491 0.272756    
+c_Foreign              -0.172629   0.255908 -0.674573 0.501676    
+c_privateschool_nomiss -0.174853   0.154466 -1.131986 0.260647    
+c_roFalseuct2012        1.220657   1.606606  0.759773 0.449376    
+c_rodurpcabas_nomiss    0.021329   0.031187  0.683899 0.495796    
+c_roconsbas_nomiss     -0.048609   0.046844 -1.037668 0.302205    
+c_roForeign_bas        -0.107139   0.243372 -0.440229 0.660827    
+c_roprivschool_nomiss   0.209368   0.129643  1.614964 0.109819    
+d_missfalse             0.140012   0.209821  0.667292 0.506293    
+d_missrofalse           0.062713   0.179125  0.350107 0.727077    
+d_roforeign_missingbas  0.038878   0.372280  0.104433 0.917058    
+d_consbas_miss         -0.148725   0.167578 -0.887499 0.377176    
+d_roprivschool_miss    -0.301964   0.207465 -1.455488 0.149013    
+d_durpcabas_miss        0.142808   0.180852  0.789639 0.431814    
+d_rodurpcabas_miss      0.138762   0.194861  0.712110 0.478239    
+d_roconsbas_missing    -0.103579   0.208623 -0.496490 0.620759    
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+RMSE: 0.448888     Adj. R2: -0.019961
+                 Within R2:  0.185536
+OLS estimation, Dep. Var.: y_race_iat
+Observations: 332
+Fixed-effects: res_fe: 8
+Standard-errors: Clustered (cluster_id) 
+                        Estimate Std. Error   t value Pr(>|t|)    
+treat                  -0.094447   0.069317 -1.362537 0.174306    
+y_race_iat_bl           0.047802   0.054330  0.879846 0.379823    
+c_Female               -0.107988   0.147363 -0.732803 0.464394    
+c_Falseuct2012          0.320763   0.571171  0.561588 0.574921    
+c_durpcabas_nomiss      0.025252   0.013745  1.837179 0.067420 .  
+c_consbas_nomiss        0.027952   0.039163  0.713752 0.476074    
+c_Foreign               0.098633   0.102780  0.959660 0.338192    
+c_privateschool_nomiss -0.068361   0.055275 -1.236756 0.217387    
+c_roFalseuct2012        0.521889   0.617844  0.844693 0.399123    
+c_rodurpcabas_nomiss   -0.016399   0.012702 -1.291076 0.197919    
+c_roconsbas_nomiss     -0.045370   0.042236 -1.074195 0.283814    
+c_roForeign_bas        -0.106384   0.113576 -0.936675 0.349867    
+c_roprivschool_nomiss  -0.032983   0.061689 -0.534656 0.593383    
+d_missfalse            -0.026850   0.145032 -0.185131 0.853282    
+d_missrofalse           0.052165   0.187626  0.278029 0.781229    
+d_roforeign_missingbas -0.213833   0.231847 -0.922305 0.357296    
+d_consbas_miss         -0.038531   0.091840 -0.419538 0.675198    
+d_roprivschool_miss    -0.191165   0.115385 -1.656767 0.098873 .  
+d_durpcabas_miss       -0.063916   0.089416 -0.714818 0.475416    
+d_rodurpcabas_miss      0.141503   0.079717  1.775061 0.077155 .  
+d_roconsbas_missing    -0.015324   0.079689 -0.192303 0.847667    
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+RMSE: 0.461944     Adj. R2: 0.013894
+                 Within R2: 0.06814 
+       Estimate Std. Error t value  Pr(>|t|)
+treat 0.1883494  0.1207275 1.56012 0.1200492
+       Estimate Std. Error  t value Pr(>|t|)
+treat 0.5464669  0.3736391 1.462553 0.144898
+        Estimate Std. Error  t value   Pr(>|t|)
+treat 0.07748604 0.03998714 1.937774 0.05382391
+       Estimate Std. Error  t value   Pr(>|t|)
+treat 0.3002497  0.1387217 2.164403 0.03141999
+         Estimate Std. Error    t value  Pr(>|t|)
+treat -0.06245817  0.1770424 -0.3527866 0.7250733
+        Estimate Std. Error   t value  Pr(>|t|)
+treat 0.07104378 0.09615293 0.7388623 0.4605018
+       Estimate Std. Error   t value  Pr(>|t|)
+treat 0.2796133  0.2842774 0.9835934 0.3260169
+       Estimate Std. Error  t value  Pr(>|t|)
+treat 0.1277266  0.1106138 1.154708 0.2490259
+RESULT:race_iat_mixed_room_whites_table3_col1=0.315851
+RESULT:race_iat_mixed_room_blacks_table3_col2=-0.094447
+RESULT:n_obs_table3_whites=117
+RESULT:n_obs_table3_blacks=332
+RESULT:gpa_mixed_room_blacks_table4_panelB_col1=0.188349
+RESULT:exams_passed_mixed_room_blacks_table4_panelB_col2=0.546467
+RESULT:eligible_mixed_room_blacks_table4_panelB_col3=0.077486
+RESULT:performance_index_mixed_room_blacks_table4_panelB_col4=0.300250
+RESULT:gpa_mixed_room_whites_table4_panelA_col1=-0.062458
+RESULT:gpa_mixed_room_full_table4_panelC_col1=0.071044
+RESULT:exams_passed_mixed_room_full_table4_panelC_col2=0.279613
+RESULT:performance_index_mixed_room_full_table4_panelC_col4=0.127727
+RESULT:n_obs_table4_panelC_cols1_2=499

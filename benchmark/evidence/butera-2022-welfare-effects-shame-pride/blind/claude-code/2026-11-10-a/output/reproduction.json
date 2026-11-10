@@ -1,0 +1,27 @@
+{
+  "schema": 1,
+  "entry_id": "butera-2022-welfare-effects-shame-pride",
+  "mode": "blind",
+  "run_id": "2026-11-10-a",
+  "reproducer": "claude-code",
+  "language": "r",
+  "final": {"script": "script.R", "stdout": "stdout.txt", "stderr": "stderr.txt", "exit_code": 0},
+  "attempts": [
+    {"dir": "attempt-1", "exit_code": 0, "kind": ""},
+    {"dir": "attempt-2", "exit_code": 0, "kind": ""},
+    {"dir": "attempt-3", "exit_code": 0, "kind": ""},
+    {"dir": "attempt-4", "exit_code": 0, "kind": ""},
+    {"dir": "attempt-5", "exit_code": 0, "kind": ""},
+    {"dir": "attempt-6", "exit_code": 0, "kind": ""}
+  ],
+  "deviations": [
+    "Prolific final sample is 972 participants under the stated exclusions (attention check + incoherent preferences); the paper reports 968. The 4 extra exclusions could not be identified from the paper's description, so none were applied (n_obs Prolific = 2916).",
+    "The 'incoherent' rule is not spelled out in the paper. Used: the signed WTP profile's strict preferences (non-zero WTP) must be weakly monotone increasing across the 18 intervals, i.e. a participant may never strictly prefer recognition at a lower interval and strictly prefer anonymity at a higher one; zero WTP is treated as indifference. This rule reproduces exactly the paper's stated incoherent counts (40 Prolific, 11 Berkeley, 2 BU), Berkeley N=384, BU N=118, QM221 N=52, and the stated 1.8% / 1.7% non-monotonic shares among the remaining Berkeley / BU participants.",
+    "For rho, abar is the average performance with public recognition (anonymous-round mean + Table 5 col 2 PR effect, in hundreds of points), as the quantity definition says; Appendix eq. (22) writes this term as abar0_pop.",
+    "Point estimates only; the bootstrapped confidence intervals in Table 7 were not computed."
+  ],
+  "notes": "Data: Packet/Raw Data/{prolific,berkeley,bu_qm222}_survey_data.csv. The BU sample is the QM222 class (121 completers, as in the paper); QM221 is not used. Attention check: attention_check non-missing = fail. Signed WTP per interval = pref_rec_X_1 if preference_X==1, otherwise -pref_anom_X_1. Table 5: long data with 3 rounds per participant (AnomPts, EarnPts, RecogPts), OLS of points on PR and financial-incentive round dummies plus round-position dummies taken from Condition (position 1 omitted), SEs clustered by participant (fixest). Table 6 col 4 (Berkeley): OLS of WTP on the interval midpoint in hundreds of points (0.5..16.5) and its square, with the 1700+ interval dropped (6528 obs, the same count as the paper). Structural (Appendix F.1): gamma1 = sqrt(r1^2 - 4 r0 r2), rho = (sqrt(r1^2 - 4 r0 r2) - r1)/(2 abar r2), c = (r1 + 2 r2 (a0 + tau))/tau, predicted FI effect = p/c with p = $0.50 per 100 points. Attempts 1-6 were exploratory (counts of exclusions under candidate incoherence rules, group sizes, data checks) and printed no RESULT lines. Besides paper.txt, I read the mount's documentation files: Packet/README.docx (text only, for the data provenance and the list of programs) and Packet/data dictionary.xlsx (variable definitions). I opened no scripts, logs, tables or PDFs from the package. While working, I saw the paper's non-withheld Table 6 Berkeley column (4) curvature and constant; my estimates differ from them slightly, and the specification was not adjusted toward them. No run hung.",
+  "files_read_outside_mount": [],
+  "started_at": "2026-11-10T14:26:38Z",
+  "finished_at": "2026-11-10T14:35:00Z"
+}

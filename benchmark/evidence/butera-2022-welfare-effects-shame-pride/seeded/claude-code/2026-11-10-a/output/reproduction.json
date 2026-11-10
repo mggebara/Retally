@@ -1,0 +1,18 @@
+{
+  "schema": 1,
+  "entry_id": "butera-2022-welfare-effects-shame-pride",
+  "mode": "seeded",
+  "run_id": "2026-11-10-a",
+  "reproducer": "claude-code",
+  "language": "r",
+  "final": {"script": "script.R", "stdout": "stdout.txt", "stderr": "stderr.txt", "exit_code": 0},
+  "attempts": [],
+  "deviations": [
+    "Participant ids are row indices instead of the build's random runiformint ids (used only as cluster identifiers; no effect on point estimates or N).",
+    "Only the full-sample point estimates of Table 7 are computed; the 1000-rep cluster bootstrap for percentile CIs is not run, since the claims are full-sample point estimates."
+  ],
+  "notes": "Translated the authors' build (University_Build/Prolific_Build/Gen_Vars/Label_Rounds) and analysis scripts. Table 5 (charity_reduced_form_analysis.do): points on SR, ownpay and order dummies o1 o2, per sample, excluding failed attention checks and consistent_b == 0, after dropping participants with any round > 3000 points, clustered by participant. Table 7 (welfare_estimates.do, param_effort, Berkeley, inc = 0.5): tau and financial effect from the pts/100 regression, anonymous-round mean, quadratic WTP regression on interval midpoints (hundreds) excluding 1700+, then gamma1 = sqrt(r1^2 - 4 r2 r0), rho = (gamma1 - r1)/(2 r2 pts_im), c = (r1 + 2 r2 pts_im)/tau, prediction = 0.5/c. Single sandbox run; all 13 values match the paper at its reported precision; no claim comparison was used to change the script. Before writing the script, the raw CSVs were inspected on the host with a short Python read (Sample/Condition values, missing points, counts > 3000); no R was run on the host.",
+  "files_read_outside_mount": [],
+  "started_at": "2026-11-10T11:37:02Z",
+  "finished_at": "2026-11-10T14:29:00Z"
+}

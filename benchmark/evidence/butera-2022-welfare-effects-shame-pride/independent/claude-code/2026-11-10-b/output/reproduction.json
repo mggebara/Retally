@@ -1,0 +1,27 @@
+{
+  "schema": 1,
+  "entry_id": "butera-2022-welfare-effects-shame-pride",
+  "mode": "independent",
+  "run_id": "2026-11-10-b",
+  "reproducer": "claude-code",
+  "language": "r",
+  "final": {"script": "script.R", "stdout": "stdout.txt", "stderr": "stderr.txt", "exit_code": 0},
+  "attempts": [
+    {"dir": "attempt-1", "exit_code": 0, "kind": ""},
+    {"dir": "attempt-2", "exit_code": 0, "kind": ""},
+    {"dir": "attempt-3", "exit_code": 0, "kind": ""},
+    {"dir": "attempt-4", "exit_code": 0, "kind": ""},
+    {"dir": "attempt-5", "exit_code": 0, "kind": "claim"},
+    {"dir": "attempt-6", "exit_code": 0, "kind": ""},
+    {"dir": "attempt-7", "exit_code": 0, "kind": ""}
+  ],
+  "deviations": [
+    "The paper does not spell out the charitable-experiment 'incoherent preference' rule beyond 'analogous to the YMCA analysis' (coherent = monotonically increasing, monotonically decreasing, or single-peaked). Implemented: coherent if the binary preference for recognition is weakly increasing across the 18 intervals, or if the signed WTP profile (WTP for recognition if preferred, minus WTP to avoid it otherwise; budget-limited '_1' answers) is non-constant and weakly decreasing or weakly single-peaked. This yields exactly the paper's exclusion counts for Berkeley (11) and BU (2) but 44 instead of 40 for Prolific (final N 966 vs 968, 2898 vs 2904 observations), and the selected Berkeley/BU individuals evidently differ in part from the authors' (anonymous-round means 985.8 vs 989.8 Berkeley, 830.9 vs 815.9 BU).",
+    "BU sample = bu_qm222_survey_data.csv (121 completers, matching the paper's BU count); QM221 file not used.",
+    "Rho uses the average performance under public recognition (anonymous mean + Table 5 col 2 effect) as the reference average, per the claim description; c = (r1 + 2 r2 (a0 + tau)) / tau (Appendix eq. 27); prediction = $0.50 per 100 points / c. Bootstrap CIs not computed (not claimed)."
+  ],
+  "notes": "Attempts 1-4 were exploratory (data dictionary, attention-check / coherence-rule counts, inspection of non-monotone preference profiles); none printed RESULT lines. Attempt 5 was the first and only estimating script; after comparing it with the claims (check_attempt: only the Berkeley predicted financial-incentive effect off, 2.363 vs 2.33), attempts 6-7 explored by brute force which Berkeley/BU exclusions would reproduce the paper's Table 5 numbers; no exclusion set within the attention-passing samples matched exactly (for BU no pair of exclusions reproduces both the control mean and coefficients), so the script was not changed and the final run is a copy of attempt 5's files. Table 5: OLS of points on public-recognition and financial-incentive round dummies plus round-position dummies, participant-clustered SEs (fixest). Table 6 col 4 (Berkeley): OLS of signed WTP on interval midpoint (hundreds of points) and its square, 1700+ interval excluded, 6528 obs. Structural action-signaling mapping from Appendix F.1.3-F.1.4. No hangs.",
+  "files_read_outside_mount": [],
+  "started_at": "2026-11-10T14:26:40Z",
+  "finished_at": "2026-11-10T14:35:00Z"
+}

@@ -1,0 +1,135 @@
+BU qm221 raw rows: 57 
+  attention_check non-missing share: 0.05263158 
+  attention_check values: 5=2; 1=1 
+  attention_check mostly missing; dropping only explicit failures
+BU qm221 after attention: 56 
+BU qm222 raw rows: 121 
+  attention_check non-missing share: 0.008264463 
+  attention_check values: 4=1 
+  attention_check mostly missing; dropping only explicit failures
+BU qm222 after attention: 121 
+BU columns only in qm221:  
+BU columns only in qm222:  
+Dataset pro rows: 1017 
+Dataset ber rows: 407 
+Dataset bu rows: 177 
+
+====  Prolific  ====
+  attention_check non-missing share: 0.006882989 
+  attention_check values: 5=3; 4=2; 3=1; 34=1 
+  attention_check mostly missing; dropping only explicit failures
+  N raw: 1017  pass attention: 1013 
+    pref_rec_0_1: nonmiss=298 mean=2.487 min=0.000 max=10.000
+    pref_rec_0_10: nonmiss=27 mean=11.667 min=10.000 max=50.000
+    pref_anom_0_1: nonmiss=715 mean=1.824 min=0.000 max=10.000
+    pref_anom_0_10: nonmiss=32 mean=12.975 min=10.000 max=50.000
+     preference_0 values: 0=715; 1=298 
+    pref_rec_1000_1: nonmiss=552 mean=2.487 min=0.000 max=10.000
+    pref_rec_1000_10: nonmiss=31 mean=11.452 min=10.000 max=50.000
+    pref_anom_1000_1: nonmiss=461 mean=1.917 min=0.000 max=10.000
+    pref_anom_1000_10: nonmiss=24 mean=13.133 min=10.000 max=50.000
+     preference_1000 values: 0=461; 1=552 
+  WTP matrix: nonmissing = 18234  mean = 0.2810683  share positive = 0.3436437 
+  coherent: 854  dropped incoherent: 159 
+
+====  Berkeley  ====
+  attention_check non-missing share: 0.02948403 
+  attention_check values: 5=7; 4=3; 3=2 
+  attention_check mostly missing; dropping only explicit failures
+  N raw: 407  pass attention: 402 
+    pref_rec_0_1: nonmiss=86 mean=4.006 min=0.000 max=25.000
+    pref_rec_0_10: nonmiss=4 mean=31.250 min=25.000 max=50.000
+    pref_anom_0_1: nonmiss=316 mean=4.703 min=0.000 max=25.000
+    pref_anom_0_10: nonmiss=15 mean=36.667 min=25.000 max=100.000
+     preference_0 values: 0=316; 1=86 
+    pref_rec_1000_1: nonmiss=206 mean=5.163 min=0.000 max=25.000
+    pref_rec_1000_10: nonmiss=4 mean=33.750 min=25.000 max=60.000
+    pref_anom_1000_1: nonmiss=196 mean=4.477 min=0.000 max=25.000
+    pref_anom_1000_10: nonmiss=11 mean=40.909 min=25.000 max=100.000
+     preference_1000 values: 0=196; 1=206 
+  WTP matrix: nonmissing = 7236  mean = -0.2463378  share positive = 0.3072139 
+  coherent: 362  dropped incoherent: 40 
+
+====  BU  ====
+  attention_check non-missing share: 0.01694915 
+  attention_check values: 5=2; 4=1 
+  attention_check mostly missing; dropping only explicit failures
+  N raw: 177  pass attention: 176 
+    pref_rec_0_1: nonmiss=33 mean=4.621 min=0.000 max=25.000
+    pref_rec_0_10: nonmiss=3 mean=50.000 min=25.000 max=100.000
+    pref_anom_0_1: nonmiss=143 mean=5.570 min=0.000 max=25.000
+    pref_anom_0_10: nonmiss=9 mean=25.333 min=25.000 max=28.000
+     preference_0 values: 0=143; 1=33 
+    pref_rec_1000_1: nonmiss=92 mean=4.929 min=0.000 max=25.000
+    pref_rec_1000_10: nonmiss=1 mean=50.000 min=50.000 max=50.000
+    pref_anom_1000_1: nonmiss=84 mean=5.994 min=0.000 max=25.000
+    pref_anom_1000_10: nonmiss=5 mean=25.000 min=25.000 max=25.000
+     preference_1000 values: 0=84; 1=92 
+  WTP matrix: nonmissing = 3168  mean = -1.043403  share positive = 0.3065025 
+  coherent: 150  dropped incoherent: 26 
+  points columns: anon=AnomPts; paid=EarnPts; public=RecogPts 
+  order assignment from timer columns: aer=130; are=143; ear=132; era=146; rae=150; rea=153 
+OLS estimation, Dep. Var.: points
+Observations: 2,562
+Standard-errors: Clustered (pid) 
+             Estimate Std. Error   t value   Pr(>|t|)    
+(Intercept) 833.96813    17.7966 46.861021  < 2.2e-16 ***
+public      100.15763    13.1708  7.604513 7.5477e-14 ***
+paid        182.55200    13.4677 13.554794  < 2.2e-16 ***
+position2     5.67383    12.7258  0.445852 6.5582e-01    
+position3    -3.15318    14.8037 -0.212999 8.3138e-01    
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+RMSE: 490.0   Adj. R2: 0.021214
+  points columns: anon=AnomPts; paid=EarnPts; public=RecogPts 
+  order assignment from timer columns: aer=60; are=61; ear=52; era=66; rae=61; rea=62 
+OLS estimation, Dep. Var.: points
+Observations: 1,086
+Standard-errors: Clustered (pid) 
+            Estimate Std. Error  t value   Pr(>|t|)    
+(Intercept) 979.0545    28.0416 34.91437  < 2.2e-16 ***
+public      131.7492    22.9743  5.73465 2.0674e-08 ***
+paid        179.4162    22.5241  7.96550 2.1703e-14 ***
+position2    23.3131    22.0691  1.05637 2.9151e-01    
+position3    50.9132    23.4483  2.17130 3.0559e-02 *  
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+RMSE: 470.7   Adj. R2: 0.023423
+  points columns: anon=AnomPts; paid=EarnPts; public=RecogPts 
+  order assignment from timer columns: aer=23; are=25; ear=16; era=30; rae=30; rea=26 
+OLS estimation, Dep. Var.: points
+Observations: 450
+Standard-errors: Clustered (pid) 
+            Estimate Std. Error  t value   Pr(>|t|)    
+(Intercept) 855.7593    48.9094 17.49682  < 2.2e-16 ***
+public      109.9956    40.3845  2.72371 7.2270e-03 ** 
+paid        138.6816    33.1387  4.18489 4.8567e-05 ***
+position2    71.8397    38.4806  1.86691 6.3879e-02 .  
+position3    62.7586    37.7718  1.66152 9.8712e-02 .  
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+RMSE: 564.1   Adj. R2: 0.005328
+OLS estimation, Dep. Var.: wtp
+Observations: 6,154
+Standard-errors: Clustered (pid) 
+             Estimate Std. Error  t value   Pr(>|t|)    
+(Intercept) -3.179903   0.452634 -7.02533 1.0693e-11 ***
+m            0.385328   0.071859  5.36226 1.4703e-07 ***
+I(I(m^2))   -0.006156   0.003336 -1.84555 6.5777e-02 .  
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+RMSE: 8.10873   Adj. R2: 0.027883
+abar0 = 10.04334  delta = 1.317492  abar1 = 11.36084 
+RESULT:public_recognition_points_prolific_table5_col1=100.157629
+RESULT:financial_incentives_points_prolific_table5_col1=182.551999
+RESULT:public_recognition_points_berkeley_table5_col2=131.749248
+RESULT:financial_incentives_points_berkeley_table5_col2=179.416192
+RESULT:public_recognition_points_bu_table5_col3=109.995595
+RESULT:financial_incentives_points_bu_table5_col3=138.681597
+RESULT:n_obs_prolific_table5_col1=2562
+RESULT:n_obs_berkeley_table5_col2=1086
+RESULT:n_obs_bu_table5_col3=450
+RESULT:action_signaling_gamma1_berkeley_table7_panelA=0.264900
+RESULT:action_signaling_rho_berkeley_table7_panelA=0.860929
+RESULT:cost_parameter_c_berkeley_table7_panelA=0.186298
+RESULT:predicted_financial_incentive_effect_berkeley_table7_panelC=2.683867

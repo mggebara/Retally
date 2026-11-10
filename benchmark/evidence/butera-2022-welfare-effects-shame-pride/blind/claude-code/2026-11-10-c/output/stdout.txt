@@ -1,0 +1,72 @@
+prolific_survey_data.csv: n=1017, fail attention=7, incoherent among attention-passers=40
+berkeley_survey_data.csv: n=407, fail attention=12, incoherent among attention-passers=11
+bu_qm222_survey_data.csv: n=121, fail attention=1, incoherent among attention-passers=2
+
+== Table 5, prolific 
+OLS estimation, Dep. Var.: points
+Observations: 2,910
+Standard-errors: Clustered (id) 
+             Estimate Std. Error   t value  Pr(>|t|)    
+(Intercept) 813.45111    16.7714 48.502356 < 2.2e-16 ***
+recog       106.14388    12.4401  8.532390 < 2.2e-16 ***
+fin         182.48683    13.1103 13.919350 < 2.2e-16 ***
+position::2   1.52461    12.4117  0.122836   0.90226    
+position::3  -8.77462    14.3152 -0.612957   0.54005    
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+RMSE: 502.3   Adj. R2: 0.020422
+
+== Table 5, berkeley 
+OLS estimation, Dep. Var.: points
+Observations: 1,152
+Standard-errors: Clustered (id) 
+            Estimate Std. Error  t value   Pr(>|t|)    
+(Intercept) 956.9348    28.0828 34.07542  < 2.2e-16 ***
+recog       134.7423    22.5282  5.98105 5.0885e-09 ***
+fin         177.1164    22.0162  8.04482 1.0929e-14 ***
+position::2  31.4825    21.2985  1.47816 1.4019e-01    
+position::3  66.9170    23.6599  2.82829 4.9258e-03 ** 
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+RMSE: 479.2   Adj. R2: 0.023974
+
+== Table 5, bu 
+OLS estimation, Dep. Var.: points
+Observations: 354
+Standard-errors: Clustered (id) 
+            Estimate Std. Error  t value   Pr(>|t|)    
+(Intercept) 762.7367    55.3303 13.78515  < 2.2e-16 ***
+recog       115.7881    43.9263  2.63596 0.00952763 ** 
+fin         132.2573    39.1496  3.37825 0.00099137 ***
+position::2  96.2550    42.5800  2.26057 0.02563511 *  
+position::3  51.7693    44.3302  1.16781 0.24525697    
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+RMSE: 579.4   Adj. R2: 0.002543
+
+== Table 6 col (4), Berkeley
+OLS estimation, Dep. Var.: wtp
+Observations: 6,528
+Standard-errors: Clustered (id) 
+             Estimate Std. Error  t value   Pr(>|t|)    
+(Intercept) -3.324570   0.420286 -7.91026 2.7824e-14 ***
+a            0.378981   0.070188  5.39954 1.1748e-07 ***
+I(I(a^2))   -0.004038   0.003557 -1.13530 2.5696e-01    
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+RMSE: 8.16159   Adj. R2: 0.033344
+
+Berkeley: r0=-3.3246 r1=0.3790 r2=-0.0040 a0=9.8976 tau=1.3474 gamma1=0.2999 gamma2=-0.0040 rho=0.8710 c=0.2139 p/c=2.3379
+RESULT:public_recognition_points_prolific_table5_col1=106.143881
+RESULT:financial_incentives_points_prolific_table5_col1=182.486830
+RESULT:public_recognition_points_berkeley_table5_col2=134.742261
+RESULT:financial_incentives_points_berkeley_table5_col2=177.116363
+RESULT:public_recognition_points_bu_table5_col3=115.788106
+RESULT:financial_incentives_points_bu_table5_col3=132.257258
+RESULT:n_obs_prolific_table5_col1=2910
+RESULT:n_obs_berkeley_table5_col2=1152
+RESULT:n_obs_bu_table5_col3=354
+RESULT:action_signaling_gamma1_berkeley_table7_panelA=0.299882
+RESULT:action_signaling_rho_berkeley_table7_panelA=0.871013
+RESULT:cost_parameter_c_berkeley_table7_panelA=0.213866
+RESULT:predicted_financial_incentive_effect_berkeley_table7_panelC=2.337910

@@ -1,0 +1,17 @@
+{
+  "schema": 1,
+  "entry_id": "corno-2022-interaction-stereotypes-performance",
+  "mode": "seeded",
+  "run_id": "2026-11-10-b",
+  "reproducer": "claude-code",
+  "language": "r",
+  "final": {"script": "script.R", "stdout": "stdout.txt", "stderr": "stderr.txt", "exit_code": 0},
+  "attempts": [
+    {"dir": "attempt-1", "exit_code": 0, "kind": ""}
+  ],
+  "deviations": [],
+  "notes": "attempt-1 was exploratory (variable listing, no RESULT lines). Final script translates 1_main_tables.do Table 3 (DscoreraceIAT on mixracebas, lagged round-1 DscoreraceIAT, own and roommate controls, Res_base FE; round 2, whites/blacks) and Table 4 (GPA, examspassed, continue, PCAperf on mixracebas, controls, Res_base + regprogram FE for whites/blacks; full sample adds white/coloured/Else dummies and blackRes + whiteRes + Res_base + regprogram FE) using fixest::feols with fixef.rm='none' and SEs clustered by roomnum_base, on uctdata_balanced.dta. The do-file's 'roconsbas_miss' is a Stata abbreviation of the dataset variable roconsbas_missing, used here. Collinear dummies (foreign_missing, privateschool_miss, and white/Else in the full sample, absorbed by the race x residence FE) are dropped by fixest, as Stata would omit them. All 13 RESULT values match the claimed values at the reported precision; no claim-driven revisions were made. The run was done in a scratch directory and the files copied here.",
+  "files_read_outside_mount": [],
+  "started_at": "2026-11-10T14:34:16Z",
+  "finished_at": "2026-11-10T14:35:30Z"
+}

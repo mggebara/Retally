@@ -1,0 +1,61 @@
+[prolific] completed=1017  attention-fail=7  incoherent(all)=40  final=972
+[berkeley] completed=407  attention-fail=12  incoherent(all)=11  final=384
+[bu] completed=121  attention-fail=1  incoherent(all)=2  final=118
+
+[prolific] Table 5: N obs=2916, subjects=972, control mean=813.4 (SE 16.8)
+              Estimate Std. Error    t value      Pr(>|t|)
+(Intercept) 815.117476   16.76215 48.6284676 1.856241e-262
+public      106.420824   12.38230  8.5945902  3.301114e-17
+financial   180.970463   13.04759 13.8700299  4.833827e-40
+order::2      2.268408   12.35883  0.1835455  8.544083e-01
+order::3     -7.112945   14.23269 -0.4997609  6.173566e-01
+attr(,"vcov_type")
+[1] "Clustered (pid)"
+
+[berkeley] Table 5: N obs=1152, subjects=384, control mean=989.3 (SE 27.3)
+             Estimate Std. Error   t value      Pr(>|t|)
+(Intercept) 954.53272   28.36363 33.653400 1.888938e-116
+public      136.17051   22.49158  6.054287  3.366275e-09
+financial   183.21741   22.36084  8.193674  3.839005e-15
+order::2     36.83893   21.53612  1.710565  8.797130e-02
+order::3     67.00313   23.65560  2.832443  4.863473e-03
+attr(,"vcov_type")
+[1] "Clustered (pid)"
+
+[bu] Table 5: N obs=354, subjects=118, control mean=830.9 (SE 53.0)
+             Estimate Std. Error   t value     Pr(>|t|)
+(Intercept) 777.44072   55.48997 14.010473 8.750281e-27
+public      115.11824   44.03590  2.614191 1.011992e-02
+financial   130.77468   39.26844  3.330274 1.161097e-03
+order::2     96.61553   42.64443  2.265607 2.531478e-02
+order::3     53.44905   44.44254  1.202655 2.315380e-01
+attr(,"vcov_type")
+[1] "Clustered (pid)"
+
+[berkeley] Table 6 col 4: N obs=6528
+                Estimate  Std. Error    t value     Pr(>|t|)
+(Intercept) -3.214658902 0.410121384 -7.8383109 4.565474e-14
+pts          0.351797990 0.067689942  5.1971974 3.297590e-07
+pts2        -0.002489613 0.003427806 -0.7262993 4.680989e-01
+attr(,"vcov_type")
+[1] "Clustered (pid)"
+
+[berkeley] r0=-3.2147 r1=0.3518 r2=-0.00249 a0=9.8929 tau=1.3617 abar=11.2546
+[berkeley] gamma1=0.3029 gamma2=-0.00249 rho=0.8726 c=0.2172 pred=2.3021 actual FI (00s)=1.8322
+
+DEVIATION: Prolific final sample has 972 participants under the stated exclusions (paper reports 968); no further unexplained exclusions applied.
+DEVIATION: rho uses the average with-PR performance (anonymous mean + Table 5 col 2 PR effect) as abar, per the quantity definition.
+
+RESULT:public_recognition_points_prolific_table5_col1=106.420824
+RESULT:financial_incentives_points_prolific_table5_col1=180.970463
+RESULT:public_recognition_points_berkeley_table5_col2=136.170507
+RESULT:financial_incentives_points_berkeley_table5_col2=183.217412
+RESULT:public_recognition_points_bu_table5_col3=115.118243
+RESULT:financial_incentives_points_bu_table5_col3=130.774676
+RESULT:n_obs_prolific_table5_col1=2916.000000
+RESULT:n_obs_berkeley_table5_col2=1152.000000
+RESULT:n_obs_bu_table5_col3=354.000000
+RESULT:action_signaling_gamma1_berkeley_table7_panelA=0.302901
+RESULT:action_signaling_rho_berkeley_table7_panelA=0.872559
+RESULT:cost_parameter_c_berkeley_table7_panelA=0.217198
+RESULT:predicted_financial_incentive_effect_berkeley_table7_panelC=2.302052

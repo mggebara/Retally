@@ -1,0 +1,22 @@
+suppressPackageStartupMessages({library(haven); library(dplyr)})
+base <- "<repo>/benchmark/.cache/claude-code/corno-2022-interaction-stereotypes-performance/blind/2026-11-10-c/mount/corno_2022_interaction_stereotypes_performance/ForJournals_a/Data/Clean"
+d <- read_dta(file.path(base,"uctdata_balanced.dta"))
+print(table(d$round))
+print(with(d, table(Race, black + 2*white + 3*coloured + 4*Else)))
+print(attr(d$Race, "labels")); print(attr(d$Res_base, "labels"))
+# constancy within student
+chk <- d %>% group_by(nstudent) %>% summarise(n=n(), gpa=n_distinct(GPA), ex=n_distinct(examspassed), bas=n_distinct(DscoreraceIATbas), mix=n_distinct(mixracebas), room=n_distinct(roomnum_base), res=n_distinct(Res_base), prog=n_distinct(regprogram), fem=n_distinct(Female), fu=n_distinct(DscoreraceIAT))
+print(summary(chk))
+r1 <- d %>% filter(round==1); r2 <- d %>% filter(round==2)
+cat("round1: IAT==IATbas share", mean(abs(r1$DscoreraceIAT - r1$DscoreraceIATbas) < 1e-9), "\n")
+cat("round2: IAT==IATbas share", mean(abs(r2$DscoreraceIAT - r2$DscoreraceIATbas) < 1e-9), "\n")
+print(table(r2$Race)); print(table(r2$mixracebas, r2$Race))
+print(table(r2$Res_base, r2$Race))
+# rooms: how many students per room id, per res-room
+print(table(table(r2$roomnum_base))); print(table(table(paste(r2$Res_base, r2$roomnum_base))))
+print(table(r2$regprogram == "")); cat("nprog", n_distinct(r2$regprogram), "\n")
+print(table(is.na(r2$continue))); print(summary(r2$PCAperf))
+cat("GPA mean/sd r2:", mean(r2$GPA), sd(r2$GPA), "\n")
+print(summary(r2[, c("Falseuct2012","roFalseuct2012","durpcabas_nomiss","consbas_nomiss","roForeign_bas","roprivschool_nomiss","rodurpcabas_nomiss","roconsbas_nomiss")]))
+print(table(r2$roForeign_bas)); print(table(r2$roprivschool_nomiss))
+print(table(r2$roRace, useNA="a"))
