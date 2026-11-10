@@ -1,0 +1,434 @@
+# Original paper: Lopez, C., Sautmann, A., & Schaner, S. (2022). "Does
+#   Patient Demand Contribute to the Overuse of Prescription Drugs?"
+#   American Economic Journal: Applied Economics, 14(1), 225-260.
+#   doi:10.1257/app.20190722 (January 2022 issue; Crossref issued
+#   2022-01-01, DOI created 2021-12-29).
+#
+# Reproduction report: I4R First Meta Database replication team 23 (31
+#   rows under the paper title, entered 2023-12-01).  No I4R discussion
+#   paper was found for this report (IDEAS RePEc:zbw:i4rdps and EconStor
+#   web searches, 2026-11-09; the only malaria-related I4R DP, No. 331, is
+#   on a different paper).  Verdict: reproducible — the team's survey
+#   answer is "Analysis and cleaning code produce the same output as
+#   presented in the paper" (best_describe_compreprod), perfect_reproduction
+#   is "Yes" (why_not_perfect_repro "Perfect Reproduction"), the run took
+#   1-2 hours in Stata and the team rated it 10 of 10.  All 30 rows with
+#   an original value are ROBUSTNESS variants, not plain recomputations:
+#   15 against Table 3 and 15 against online Appendix Table B8, every one
+#   "Including observations who took advantage of the voucher but were not
+#   treated for Malaria (omitted by original authors)" (the Appendix B3
+#   sample), the B8 rows also with no additional controls; 10 of each
+#   table's rows are the Patient / Doctor Voucher coefficients with SEs and
+#   5 are "Difference in means" rows (the paper's beta_P minus beta_D,
+#   without SE).  So the replicator values that differ from the paper
+#   (0.33 vs 0.35, 0.25 vs 0.26, 0.055 vs 0.052) are a different sample,
+#   not failed reproductions.  coding_correction is "Not done by
+#   replicators" and result_same is blank on every row.
+#
+# Why this paper:
+#   1. A within-clinic randomized field experiment (Mali, 60 clinics, six
+#      observation days each) with two treatment arms against control,
+#      date fixed effects and clinic-clustered SEs — and the covariates
+#      chosen by post-double-selection lasso (Belloni, Chernozhukov and
+#      Hansen 2014) from clinic dummies, patient / respondent
+#      characteristics, squares and all pairwise interactions: an
+#      estimator no other catalog entry uses.
+#   2. A manually placed openICPSR package (data_access: manual) of 25 MB
+#      with one ready-made 56 MB analysis .dta, and every table shipped as
+#      a generated .tex (all regression tables stripped in independent /
+#      blind mode).
+#
+# What original_claims pins: Table 3 (the paper's main results table),
+#   the Patient Voucher and Doctor Voucher coefficients with SEs in all
+#   five columns (voucher use, any malaria treatment prescribed /
+#   purchased, severe malaria treatment prescribed / purchased) and the
+#   two N rows (column 1; columns 2-5).  12 claims, values exactly as
+#   printed (2 or 3 decimals).  Tables 4 and 5 are not pinned: no
+#   published value of theirs could be checked against the open text
+#   (see notes).
+#
+# Paper text: the published article is paywalled and no open copy of it
+#   was found (AEA, IDEAS, J-PAL, author pages; web search 2026-11-09).
+#   The source is the open World Bank Policy Research Working Paper 9482
+#   (November 2020), whose Table 3 prints the published value in every
+#   cell the meta-database records: all 10 coefficients and SEs equal
+#   o_coeff_dbl / o_std_err_dbl cell for cell, and the 5 "difference in
+#   means" rows equal beta_P - beta_D of the WP's own cells.  The 9
+#   meta-database values that do not occur in the WP are online Appendix
+#   Table B8 cells (the WP has no appendix); the published online
+#   appendix (AEA, dated January 22, 2021, open) prints B8 exactly as the
+#   meta-database does.  See notes.
+
+id: lopez-2022-patient-demand-prescription-overuse
+i4r_report_url: https://github.com/I4Replication/I4R-First-Meta-Paper
+# Target language for regeneration (the original is Stata 14 with
+# pdslasso / rlasso and estout; Retally generates R and reads the .dta
+# files with haven).
+language: r
+outcome_label: reproducible
+# Pipeline tuning is frozen; this is an evaluation paper.
+split: holdout
+# Contamination bookkeeping.  publication_date is the FIRST public
+# version: NBER Working Paper 25284, "The Contribution of Patients and
+# Providers to the Overuse of Prescription Drugs" (November 2018; PDF
+# CreationDate 2018-11-19), with the same experiment and Table 3 layout
+# but different estimates (fixed controls, not lasso; e.g. 0.061 (0.026)
+# where the published column 2 prints 0.052 (0.025)).  A J-PAL-hosted
+# version is dated May 2019 (file name; not opened), and the World Bank
+# WP 9482 (the catalog source) is dated November 2020 (PDF CreationDate
+# 2020-11-24).  The journal version: Crossref issued 2022-01-01 (DOI
+# created 2021-12-29).  package_release_date is the DataCite registration
+# of doi:10.3886/E126722V1 (registered 2021-12-17T18:51:53Z, DataCite API
+# 2026-11-09); openICPSR itself needs a login.  The package README is
+# dated January 2021 (PDF CreationDate 2021-01-25) and the analysis file
+# name carries 2020-11-08.
+publication_date: "2018-11"
+package_release_date: "2021-12-17"
+
+paper:
+  # World Bank Policy Research Working Paper 9482 (November 2020), open
+  # PDF; checked 2026-11-09: 200 application/pdf, 53 pp., 829,345 bytes,
+  # md5 f669aff5fc2bd967b2a1e544cf4d9a36 (the http://documents.worldbank.org
+  # form of the URL listed in the candidates file answers 403; the
+  # documents1 host serves the same document).  A working-paper version,
+  # not the published article: its Table 3 equals the published Table 3
+  # in every cell the I4R meta-database records (see notes).
+  source: https://documents1.worldbank.org/curated/en/780321606314613926/pdf/Does-Patient-Demand-Contribute-to-the-Overuse-of-Prescription-Drugs.pdf
+  title: "Does Patient Demand Contribute to the Overuse of Prescription Drugs?"
+  authors:
+    - Carolina Lopez
+    - Anja Sautmann
+    - Simone Schaner
+
+dataset:
+  source: benchmark/manual-packages/T23/126722-V1.zip
+  data_access: manual
+  access_notes: >
+    AEA Data and Code Repository on openICPSR, project 126722, version V1
+    (doi:10.3886/E126722V1); login and terms-of-use click-through required,
+    so the zip was downloaded by hand (2026-11-09) and placed unchanged at
+    benchmark/manual-packages/T23/126722-V1.zip (24,908,445 bytes, md5
+    ad52d4e4b8fa1d6e28f305feca4989c5; SOURCE.txt beside it).  V1 is the
+    only version.  71 entries (61 files, 72,933,936 bytes uncompressed,
+    all deflate), no nested archives, all under
+    Lopez_Sautmann_Schaner_2020/: 1_README.pdf (5 pp., January 2021; data
+    sources, software (Stata 13.1+, pdslasso, rlasso, estout, coefplot,
+    grc1leg), run time about 3 h 20 min, file-to-table map, no
+    estimates); Data/ with three Stata .dta files —
+    LSS_analysis_datasets_20201108.dta (56 MB, the patient-level analysis
+    file for Tables 2-5 and the appendix regressions), LSS_CSComCensus.dta
+    (clinic census) and LSS_DoctorEndlineInterview.dta (provider endline)
+    — and an empty Data/_bootstrap/; Do_Files/ with 18 Stata do-files
+    (LSS_master_data_analysis.do, "Stata admin files"/ with the table
+    programs, package installer and bootstrap sampler, Tables/ and
+    Figures/ subfolders); Tables/ with 22 generated .tex tables (every
+    main and appendix table, esttab-style) and two LaTeX wrappers
+    (LSS_Main_Replication.tex, LSS_Appendix_Replication.tex) that \input
+    them, with no compiled PDF; Figures/ with 9 figure PDFs (two
+    non-empirical diagrams and the lpoly / bar plots, axis labels only);
+    "Survey Instruments"/ with 6 questionnaire PDFs (patient interview
+    176 pp., home follow-up 96 pp., doctor endline, clinic census in
+    French, morning clinic ID, intervention notes).  Raw data are on the
+    J-PAL Dataverse (doi:10.7910/DVN/CLGN7Z, guestbook; not needed).  The
+    script-free copy (independent / blind) withholds 36 files
+    (benchmark.strip_rule.classify_tree on the extracted package,
+    2026-11-09): the 18 .do files by suffix and 18 .tex tables by content
+    as regression tables (Tables 2-5 and B3-B16, including Table 3).
+    Kept: the README, the data, the figure and questionnaire PDFs, the two
+    wrappers and four descriptive .tex tables (1_control_group,
+    A1_theory_table, B1_clinic_census, B2_means_doctor), none of which
+    prints a pinned value or SE (text of every kept PDF and .tex grepped,
+    2026-11-09).  Project page:
+    https://www.openicpsr.org/openicpsr/project/126722/version/V1/view
+
+original_claims:
+  # ---- Table 3: impacts on malaria treatment outcomes ----
+  - description: voucher_used_patient_voucher_table3_col1
+    value: 0.35
+    claim_type: coefficient
+    standard_error: 0.030
+    unit: change in the probability of using a voucher (share of patients)
+    location: "Table 3, column (1) Used Voucher, beta_P: Patient Voucher"
+    context: >
+      Table 3 ("Impacts on Malaria Treatment Outcomes"), column (1).
+      Linear probability model of an indicator that the patient redeemed
+      a voucher for a free course of ACT tablets (simple malaria
+      treatment), from the administrative voucher records, on dummies for
+      Patient Voucher days (vouchers handed to patients on arrival, before
+      the consultation) and Doctor Voucher days (vouchers given to the
+      health workers to assign at their discretion), relative to Control
+      days, with clinic visit date fixed effects and additional controls
+      chosen by post-double-selection lasso (Belloni, Chernozhukov and
+      Hansen 2014) from clinic dummies, symptom dummies, illness duration
+      (top-coded at the 99th percentile) and its square, patient age and
+      its square, an under-five dummy, patient gender, pregnancy, whether
+      the patient answered the survey, respondent gender, Bambara
+      ethnicity, French speaking, literacy, primary education or less, a
+      home follow-up survey dummy, and all pairwise interactions of the
+      patient and respondent controls; missing values recoded to the
+      sample mean and dummied out.  Sample: acutely ill patients
+      interviewed at the study clinics in Bamako, Mali.  The entry is the
+      Patient Voucher coefficient.  Standard errors clustered by clinic.
+  - description: voucher_used_doctor_voucher_table3_col1
+    value: 0.26
+    claim_type: coefficient
+    standard_error: 0.024
+    unit: change in the probability of using a voucher (share of patients)
+    location: "Table 3, column (1) Used Voucher, beta_D: Doctor Voucher"
+    context: >
+      Table 3, column (1): the same lasso-controlled regression of voucher
+      use on the Patient Voucher and Doctor Voucher day dummies with date
+      fixed effects.  The entry is the Doctor Voucher coefficient (voucher
+      use relative to Control days, where no vouchers were available).
+      Standard errors clustered by clinic.
+  - description: any_malaria_treatment_prescribed_patient_voucher_table3_col2
+    value: 0.052
+    claim_type: coefficient
+    standard_error: 0.025
+    unit: change in the probability of an antimalarial prescription
+    location: "Table 3, column (2) Any Malaria Treatment, Prescribed, beta_P: Patient Voucher"
+    context: >
+      Table 3, column (2).  Linear probability model of an indicator that
+      the patient was prescribed any malaria treatment (simple or severe)
+      at the consultation, on the Patient Voucher and Doctor Voucher day
+      dummies with clinic visit date fixed effects and the
+      post-double-selection lasso controls of column (1).  The entry is
+      the Patient Voucher coefficient.  Standard errors clustered by
+      clinic.
+  - description: any_malaria_treatment_prescribed_doctor_voucher_table3_col2
+    value: 0.016
+    claim_type: coefficient
+    standard_error: 0.025
+    unit: change in the probability of an antimalarial prescription
+    location: "Table 3, column (2) Any Malaria Treatment, Prescribed, beta_D: Doctor Voucher"
+    context: >
+      Table 3, column (2): any malaria treatment prescribed, same
+      specification (date fixed effects, lasso-selected controls,
+      clinic-clustered standard errors).  The entry is the Doctor Voucher
+      coefficient.
+  - description: any_malaria_treatment_purchased_patient_voucher_table3_col3
+    value: 0.14
+    claim_type: coefficient
+    standard_error: 0.027
+    unit: change in the probability of purchasing an antimalarial
+    location: "Table 3, column (3) Any Malaria Treatment, Purchased, beta_P: Patient Voucher"
+    context: >
+      Table 3, column (3).  Linear probability model of an indicator that
+      the patient purchased (obtained) any malaria treatment at the
+      clinic, on the Patient Voucher and Doctor Voucher day dummies with
+      clinic visit date fixed effects and the post-double-selection lasso
+      controls.  The entry is the Patient Voucher coefficient.  Standard
+      errors clustered by clinic.
+  - description: any_malaria_treatment_purchased_doctor_voucher_table3_col3
+    value: 0.085
+    claim_type: coefficient
+    standard_error: 0.025
+    unit: change in the probability of purchasing an antimalarial
+    location: "Table 3, column (3) Any Malaria Treatment, Purchased, beta_D: Doctor Voucher"
+    context: >
+      Table 3, column (3): any malaria treatment purchased, same
+      specification.  The entry is the Doctor Voucher coefficient;
+      standard errors clustered by clinic.
+  - description: severe_malaria_treatment_prescribed_patient_voucher_table3_col4
+    value: -0.046
+    claim_type: coefficient
+    standard_error: 0.018
+    unit: change in the probability of a severe malaria treatment prescription
+    location: "Table 3, column (4) Severe Malaria Treatment, Prescribed, beta_P: Patient Voucher"
+    context: >
+      Table 3, column (4).  Linear probability model of an indicator that
+      the patient was prescribed severe malaria treatment (the more
+      expensive treatment, usually an injection or IV drip), on the
+      Patient Voucher and Doctor Voucher day dummies with clinic visit
+      date fixed effects and the post-double-selection lasso controls.
+      The entry is the Patient Voucher coefficient.  Standard errors
+      clustered by clinic.
+  - description: severe_malaria_treatment_prescribed_doctor_voucher_table3_col4
+    value: -0.054
+    claim_type: coefficient
+    standard_error: 0.021
+    unit: change in the probability of a severe malaria treatment prescription
+    location: "Table 3, column (4) Severe Malaria Treatment, Prescribed, beta_D: Doctor Voucher"
+    context: >
+      Table 3, column (4): severe malaria treatment prescribed, same
+      specification.  The entry is the Doctor Voucher coefficient;
+      standard errors clustered by clinic.
+  - description: severe_malaria_treatment_purchased_patient_voucher_table3_col5
+    value: -0.022
+    claim_type: coefficient
+    standard_error: 0.020
+    unit: change in the probability of purchasing severe malaria treatment
+    location: "Table 3, column (5) Severe Malaria Treatment, Purchased, beta_P: Patient Voucher"
+    context: >
+      Table 3, column (5).  Linear probability model of an indicator that
+      the patient purchased severe malaria treatment at the clinic, on
+      the Patient Voucher and Doctor Voucher day dummies with clinic visit
+      date fixed effects and the post-double-selection lasso controls.
+      The entry is the Patient Voucher coefficient.  Standard errors
+      clustered by clinic.
+  - description: severe_malaria_treatment_purchased_doctor_voucher_table3_col5
+    value: -0.050
+    claim_type: coefficient
+    standard_error: 0.019
+    unit: change in the probability of purchasing severe malaria treatment
+    location: "Table 3, column (5) Severe Malaria Treatment, Purchased, beta_D: Doctor Voucher"
+    context: >
+      Table 3, column (5): severe malaria treatment purchased, same
+      specification.  The entry is the Doctor Voucher coefficient;
+      standard errors clustered by clinic.
+  - description: n_obs_table3_col1
+    value: 2055
+    claim_type: count
+    unit: patients
+    location: "Table 3, N, column (1)"
+    context: >
+      Number of observations in Table 3, column (1) (voucher use): all
+      patients interviewed in the in-clinic survey.
+  - description: n_obs_table3_cols2_5
+    value: 2053
+    claim_type: count
+    unit: patients
+    location: "Table 3, N, columns (2)-(5)"
+    context: >
+      Number of observations in Table 3, columns (2) through (5) (malaria
+      treatment prescribed and purchased): the in-clinic survey patients
+      with prescription and purchase outcomes recorded.
+
+# Every Table 3 coefficient has one meta-database row, and each is a
+# robustness variant (the sample with the voucher users who were not treated
+# for malaria added back, Appendix B3), not a recomputation.  As in
+# molina-garzon-2022 and dancygier-2022, each finding records the paper's
+# own value under the team's blanket verdict ("Analysis and cleaning code
+# produce the same output as presented in the paper"; perfect_reproduction
+# "Yes") and quotes the robustness value in the note.  The two N claims have
+# no row and carry no finding; they are scored against the paper.
+i4r_replicator_findings:
+  - claim_id: 0
+    reproduced_value: 0.35
+    outcome: matches
+    notes: Blanket I4R verdict (team 23); the row adds back non-malaria voucher users, 0.33 (0.029).
+  - claim_id: 1
+    reproduced_value: 0.26
+    outcome: matches
+    notes: Blanket I4R verdict; the row adds back non-malaria voucher users, 0.25 (0.023).
+  - claim_id: 2
+    reproduced_value: 0.052
+    outcome: matches
+    notes: Blanket I4R verdict; the row adds back non-malaria voucher users, 0.055 (0.025).
+  - claim_id: 3
+    reproduced_value: 0.016
+    outcome: matches
+    notes: Blanket I4R verdict; the row adds back non-malaria voucher users, 0.017 (0.026).
+  - claim_id: 4
+    reproduced_value: 0.14
+    outcome: matches
+    notes: Blanket I4R verdict; the row adds back non-malaria voucher users, 0.14 (0.028).
+  - claim_id: 5
+    reproduced_value: 0.085
+    outcome: matches
+    notes: Blanket I4R verdict; the row adds back non-malaria voucher users, 0.083 (0.026).
+  - claim_id: 6
+    reproduced_value: -0.046
+    outcome: matches
+    notes: Blanket I4R verdict; the row adds back non-malaria voucher users, -0.045 (0.019).
+  - claim_id: 7
+    reproduced_value: -0.054
+    outcome: matches
+    notes: Blanket I4R verdict; the row adds back non-malaria voucher users, -0.057 (0.023).
+  - claim_id: 8
+    reproduced_value: -0.022
+    outcome: matches
+    notes: Blanket I4R verdict; the row adds back non-malaria voucher users, -0.022 (0.021).
+  - claim_id: 9
+    reproduced_value: -0.050
+    outcome: matches
+    notes: Blanket I4R verdict; the row adds back non-malaria voucher users, -0.052 (0.021).
+notes: >
+  Headline findings (Table 3): on Patient Voucher days voucher use was
+  0.35 (0.030) higher than on Control days, against 0.26 (0.024) on Doctor
+  Voucher days (the abstract's "35 percent" is the 9-point gap relative to
+  the Doctor Voucher level, not the coefficient); any malaria treatment
+  prescribed 0.052 (0.025) PV vs 0.016 (0.025) DV, purchased 0.14 (0.027)
+  vs 0.085 (0.025); severe malaria treatment prescribed -0.046 (0.018) vs
+  -0.054 (0.021), purchased -0.022 (0.020) vs -0.050 (0.019).  N 2,055 in
+  column 1, 2,053 in columns 2-5.
+
+  Paper text and how it was verified.  No open copy of the published
+  article was found; the catalog source is World Bank PRWP 9482
+  (November 2020).  Its Table 3 is identical to the published Table 3 in
+  every cell the I4R meta-database records for "table 3": the 10
+  coefficient / SE pairs 0.35/0.030, 0.26/0.024, 0.052/0.025,
+  0.016/0.025, 0.14/0.027, 0.085/0.025, -0.046/0.018, -0.054/0.021,
+  -0.022/0.020, -0.050/0.019 equal o_coeff_dbl / o_std_err_dbl, and the 5
+  "difference in means" rows without SE (0.090, 0.036, 0.055, 0.008,
+  0.028) equal beta_P - beta_D in each WP column.  The other 15 rows are
+  "table b8" (online Appendix Table B8, no additional controls; 0.35/0.031,
+  0.27/0.025, 0.067/0.027, 0.023/0.026, 0.15/0.031, 0.092/0.027,
+  -0.033/0.019, -0.058/0.023, -0.011/0.021, -0.051/0.020 and five
+  differences); the WP carries no appendix, which is why 9 of the 30
+  paired values do not occur in it (the B8 values that do occur in the WP
+  are tokens of other cells, not B8).  The published online
+  appendix (https://aeaweb.org/content/file?id=15897, open, dated January
+  22, 2021, 30 pp.) prints B8 exactly as the meta-database, with the N row
+  2055 / 2053 and the control means of Table 3, so B8 is the published
+  appendix and the published Table 3 sample is the WP's.  The package's
+  generated Tables/3_mal_tmt_overall_new_lso.tex is cell-for-cell the WP's
+  Table 3 (N row included), and its Tables 4 and 5 equal the WP's Tables
+  4 and 5; but no published value of Tables 4 or 5 is recorded anywhere
+  open, so they are not pinned.  The N claims are not in the
+  meta-database; they are pinned from the WP Table 3 / package table and
+  the published appendix's identical N rows.  The NBER WP 25284 (2018)
+  prints a different Table 3 (fixed controls instead of lasso) and was
+  not used.
+
+  Curation pass (2026-11-09).  12 claims.  Left out: the beta_P = beta_D
+  p-values and mechanism rows, the control-group means (descriptive),
+  Tables 1-2 (descriptive and balance), Table 4 (heterogeneity by
+  predicted malaria risk, bootstrapped SEs with a generated regressor)
+  and Table 5 (expected match), neither verifiable against a published
+  value, and all appendix tables.
+
+  Package-only facts (never in contexts).  LSS_master_data_analysis.do,
+  "TABLE 3": use LSS_analysis_datasets_20201108.dta, drop if dropme==1;
+  outcomes used_vouchers_admin, RXtreat_sev_simple_mal,
+  treat_sev_simple_mal, RXtreat_severe_mal, treat_severe_mal; program
+  docpat_theory_lso ("Stata admin files"/LSS_TablePrograms.do) runs
+  pdslasso <y> patient_voucher doctor_voucher (DD1-DD35 CL1-CL59 CC*),
+  clu(cscomnum) partial(DD1-DD35) — date dummies DD* partialled out
+  (always kept), clinic dummies CL* and the prepared patient-control
+  block CC* (levels, squares, interactions, missing dummies) eligible for
+  selection; then test patient_voucher = doctor_voucher.  README: Stata/MP
+  14.0, about 3 h 20 min for the whole master file (most of it the
+  bootstrap sets for Table 4 and B9/B11, which Table 3 does not need).
+
+  Blind-mode exposure (step 6, 2026-11-09).  The blind generation prompt
+  states no pinned value or SE at printed precision or rounded, and no
+  script text (the one hit, "cscomnum", is a data column name in the
+  listing).  Its "abstract" is the World Bank series boilerplate (the
+  parser takes the cover line "Policy Research Working Paper" as the
+  title), so the paper's own abstract ("increased discount use by 35
+  percent", a ratio of the voucher-use gap to the Doctor Voucher level)
+  does not reach it.  The paper text given to the methodology summariser
+  does carry that abstract, the interview count that is the column (1)
+  N ("we completed 2,055 interviews"), and Section 4.2's percentage-point
+  statements of three Table 3 estimates; the summariser is told to leave
+  results out, and the README's blind-mode caveat covers this.  The R
+  sandbox has no lasso package (no glmnet or hdm), so a reproduction must
+  code the double-selection lasso by hand or approximate it.
+
+  What was read.  WP 9482 pp. 1-29 and Tables 1-5 (pp. 46-53); NBER WP
+  25284 Tables 3-5; the published online appendix Tables B8 and B10; the
+  31 meta-database rows; the package README, the Table 3 block of the
+  master do-file and the docpat_theory_lso program; the strip-rule
+  classification of the extracted package and the text of every kept PDF
+  and .tex.
+
+  What could not be verified.  The published article itself (its Table
+  3 notes and wording) was not read.  The authors' Stata code was not run
+  (no Stata here) and no R cross-check of the lasso specification was
+  made; an R reproduction must approximate pdslasso (rlasso with
+  cluster-robust penalty loadings) without a lasso package, so selected
+  controls may differ.
+
+  Original analysis in Stata 14 (pdslasso, rlasso, estout); language: r
+  is the reproduction target.
