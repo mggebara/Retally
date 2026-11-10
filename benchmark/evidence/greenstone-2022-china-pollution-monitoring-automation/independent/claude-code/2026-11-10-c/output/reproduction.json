@@ -1,0 +1,29 @@
+{
+  "schema": 1,
+  "entry_id": "greenstone-2022-china-pollution-monitoring-automation",
+  "mode": "independent",
+  "run_id": "2026-11-10-c",
+  "reproducer": "claude-code",
+  "language": "r",
+  "final": {"script": "script.R", "stdout": "stdout.txt", "stderr": "stderr.txt", "exit_code": 0},
+  "attempts": [
+    {"dir": "attempt-1", "exit_code": 0, "kind": ""},
+    {"dir": "attempt-2", "exit_code": 0, "kind": ""},
+    {"dir": "attempt-3", "exit_code": 0, "kind": ""},
+    {"dir": "attempt-4", "exit_code": 0, "kind": ""},
+    {"dir": "attempt-5", "exit_code": 1, "kind": "error"},
+    {"dir": "attempt-6", "exit_code": 1, "kind": "error"},
+    {"dir": "attempt-7", "exit_code": 0, "kind": ""},
+    {"dir": "attempt-8", "exit_code": 0, "kind": "claim"}
+  ],
+  "deviations": [
+    "Matched event-study sample (Table 1 Panel B cols 3 and 5): each Wave-1 deadline station (automated 2013-01-01) is matched to its nearest Wave-2 deadline station (automated 2014-01-01) by great-circle distance; the final sample keeps the Wave-1 stations plus the distinct set of matched Wave-2 stations, each once (136,886 obs vs the paper's 186,499). Attempt 8 used the pair-stacked version with duplicated controls (231,990 obs, col3 = 51.8); this was changed after comparing with the claimed 66.5. Neither construction reproduces the paper's observation count.",
+    "Wave-1 'deadline' stations are those automated on 2013-01-01 regardless of nominal wave (218 phase-1 + 24 phase-2 stations = 242, matching the paper's count); Wave-2 deadline = automated 2014-01-01 (123 stations). This gives 73 cities for Table 1 col 5, whereas the text mentions 84, but the col 5 bandwidth (184 days) and effective N (86,042) match the paper exactly.",
+    "rdrobust is run with masspoints='off' (city-clustered, triangular kernel, p=1, mserd); this reproduces the paper's reported bandwidths and effective sample sizes exactly (e.g. 109/263 days, 91,470/232,326 obs; AOD 7 months, 5,851 obs).",
+    "Search RD: daily Baidu PC indices averaged to city-month; city weather = mean across the city's stations; running variable = calendar-month difference from the city's automation date (the date shared by most of its stations, since 15 cities have stations with different dates). Mask sample 8,661 obs (paper 8,661), filter 8,589 (paper 8,590). Residualized estimates are 10.00 (claimed 11.03) and 8.21 (claimed 8.73)."
+  ],
+  "notes": "Data: pollution_1116 + weather_1116 (station-day), station_list, aod_month, mask_filter_search, city_info. Table 1 Panel A: rdrobust on raw PM10 (col 1) and on residuals from feols(pm10 ~ temp+rh+rain+wind | station + month-of-year) estimated on all 1,049,325 station-days with PM10 and weather (col 2; cols 3-5 subset these residuals by wave / deadline). All Panel A PM10 estimates, bandwidths and N match the paper (34.7, 34.9, 27.5, 64.7, 57.1). AOD: station-month AOD residualized on station FE, month FE, monthly-average weather; RD in months from automation: -0.0049 (paper -0.005). Panel B: deadline sample 2012-01-01..2013-12-31, treated x period-bin indicators (ref 1-2 months before), weather controls, station FE + month FE (col 1: 60.3) or year-month FE (col 2: 31.4), city-clustered; N = 176,426 matches. Matched sample is the one unresolved part (see deviations): col 3 = 67.9, col 5 log = 0.226. Search RDs (AER:I Table 2 / WP Table 3 Panel A col 2): 10.00 and 8.21. Exploratory runs: attempts 1-4 and 7 (data inspection, sample counts, matching-construction obs counts, rdrobust timing on no2). README.pdf in the mount was read for data descriptions; no script files were opened. No hung runs.",
+  "files_read_outside_mount": [],
+  "started_at": "2026-11-10T06:02:08Z",
+  "finished_at": "2026-11-10T06:12:30Z"
+}

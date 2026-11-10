@@ -1,0 +1,1 @@
+Crash: feols dropped 19 fixed-effect singletons in the AOD residualization, so resid() returned 26964 values for 26983 rows ("Supplied 26964 items to be assigned to 26983 items of column res"). Fix: assign residuals only to the observations used by the model (obs()), dropping singletons as reghdfe does.

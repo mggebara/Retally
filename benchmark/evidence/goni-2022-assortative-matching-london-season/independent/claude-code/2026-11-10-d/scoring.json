@@ -1,0 +1,723 @@
+{
+  "how": "recomputed: ResultComparator().compare_all(catalog claims, RESULT lines of output/stdout.txt, mode) - the comparator and claim conversion benchmark.runner.score_reproduction uses; row: the results row's claim_details entry as written by the run (tolerance, tolerance_source and rel_err come from there unchanged).",
+  "claims": [
+    {
+      "name": "treatment_married_commoner_table2_panelA_col1",
+      "ground_truth": {
+        "value": 0.005,
+        "standard_error": 0.002,
+        "unit": "change in the probability of marrying a commoner per percentage point of synthetic probability",
+        "claim_type": "coefficient",
+        "location": "Table 2, Panel A (Baseline), column (1) Married a commoner, Treatment",
+        "context": "Table 2 (\"The Season's Interruption and Marriage Outcomes, Probit, and OLS Estimation\"), Panel A, column (1).  Probit of an indicator for marrying a commoner (a husband classed as a commoner rather than a peer, a peer's son or a member of the gentry) on the treatment: a woman's synthetic probability (in percent) to marry during the interruption of the London Season (1861-1863), the sum of the percentages of women marrying at her ages in 1861, 1862 and 1863 in \"normal times\", computed from a benchmark cohort of peers' daughters born 1815-1830 (excluding those who married after 1861 or died before age 30).  Controls: indicators for dukes', marquesses' and earls' daughters and for English peerages, and birth order excluding heirs.  Baseline sample: all peers' daughters aged 15-35 in 1861 who ever married, excluding second marriages, women married to foreigners and royals.  The entry is the marginal effect of the treatment on the probability (the paper reads it as a percentage- point change in the probability per percentage point of synthetic probability).  Standard errors clustered by birth year.\n",
+        "decimals": 3,
+        "sample_size": null
+      },
+      "i4r": {
+        "reproduced_value": 0.005,
+        "outcome": "matches",
+        "notes": "DP47 Table 2 col 1 (replicates paper Table 2 Panel A col 1) 0.005 (0.002), N 644.",
+        "reproduced_within_band": true
+      },
+      "rule": {
+        "mode": "independent",
+        "type_relative_tolerance": 0.02,
+        "se_multiplier": 1.0,
+        "se_band_relative": 0.4,
+        "printed_half_unit": 0.0005
+      },
+      "row": {
+        "description": "treatment_married_commoner_table2_panelA_col1",
+        "claim_type": "coefficient",
+        "claimed": 0.005,
+        "reproduced": 0.004534,
+        "tolerance": 0.4,
+        "rel_err": 0.09320000000000005,
+        "passed": true,
+        "passed_first_attempt": false,
+        "passed_first_scored": true,
+        "tolerance_source": "se_band"
+      },
+      "recomputed": {
+        "result_name": "treatment_married_commoner_table2_panelA_col1",
+        "reproduced": 0.004534,
+        "band_source": "se_band",
+        "band_relative": 0.4,
+        "band_absolute": 0.002,
+        "abs_err": 0.00046600000000000027,
+        "rel_err": 0.09320000000000005,
+        "margin": 0.23300000000000012,
+        "passed": true,
+        "notes": ""
+      },
+      "agrees_with_row": true,
+      "verdict": "PASS"
+    },
+    {
+      "name": "treatment_married_heir_table2_panelA_col2",
+      "ground_truth": {
+        "value": -0.004,
+        "standard_error": 0.002,
+        "unit": "change in the probability of marrying a peer's heir per percentage point of synthetic probability",
+        "claim_type": "coefficient",
+        "location": "Table 2, Panel A (Baseline), column (2) Married an heir, Treatment",
+        "context": "Table 2, Panel A, column (2): the same probit as column (1) with an indicator for marrying an heir (a husband who would inherit a peerage title) as the outcome; marginal effect of the synthetic probability to marry during the interruption.  Same controls, baseline sample and birth-year clustered standard errors.\n",
+        "decimals": 3,
+        "sample_size": null
+      },
+      "i4r": {
+        "reproduced_value": -0.004,
+        "outcome": "matches",
+        "notes": "DP47 Table 2 col 2 (replicates Panel A col 2) -0.004 (0.002), N 644.",
+        "reproduced_within_band": true
+      },
+      "rule": {
+        "mode": "independent",
+        "type_relative_tolerance": 0.02,
+        "se_multiplier": 1.0,
+        "se_band_relative": 0.5,
+        "printed_half_unit": 0.0005
+      },
+      "row": {
+        "description": "treatment_married_heir_table2_panelA_col2",
+        "claim_type": "coefficient",
+        "claimed": -0.004,
+        "reproduced": -0.003631,
+        "tolerance": 0.5,
+        "rel_err": 0.09224999999999998,
+        "passed": true,
+        "passed_first_attempt": false,
+        "passed_first_scored": true,
+        "tolerance_source": "se_band"
+      },
+      "recomputed": {
+        "result_name": "treatment_married_heir_table2_panelA_col2",
+        "reproduced": -0.003631,
+        "band_source": "se_band",
+        "band_relative": 0.5,
+        "band_absolute": 0.002,
+        "abs_err": 0.00036899999999999997,
+        "rel_err": 0.09224999999999998,
+        "margin": 0.18449999999999997,
+        "passed": true,
+        "notes": ""
+      },
+      "agrees_with_row": true,
+      "verdict": "PASS"
+    },
+    {
+      "name": "treatment_landholdings_diff_abs_table2_panelA_col3",
+      "ground_truth": {
+        "value": 0.524,
+        "standard_error": 0.196,
+        "unit": "percentile ranks of family landholdings per percentage point of synthetic probability",
+        "claim_type": "coefficient",
+        "location": "Table 2, Panel A (Baseline), column (3) Spouses' landholdings, Difference (absolute value), Treatment",
+        "context": "Table 2, Panel A, column (3).  OLS of the absolute difference between the spouses' birth families' landholdings, measured as percentile ranks in acres (Bateman 1883), on the synthetic probability to marry during the interruption and the Table 2 controls.  Sample: the baseline sample restricted to marriages for which Bateman lists both spouses' family landholdings.  Larger values mean less sorting.  Standard errors clustered by birth year.\n",
+        "decimals": 3,
+        "sample_size": null
+      },
+      "i4r": {
+        "reproduced_value": 0.524,
+        "outcome": "matches",
+        "notes": "Blanket DP47 verdict; DB rows are variants, e.g. 1861-only 1.288 (0.485) DP Table 3, ages 15-26 0.480 (0.352) DP Table 6.",
+        "reproduced_within_band": true
+      },
+      "rule": {
+        "mode": "independent",
+        "type_relative_tolerance": 0.02,
+        "se_multiplier": 1.0,
+        "se_band_relative": 0.37404580152671757,
+        "printed_half_unit": 0.0005
+      },
+      "row": {
+        "description": "treatment_landholdings_diff_abs_table2_panelA_col3",
+        "claim_type": "coefficient",
+        "claimed": 0.524,
+        "reproduced": 0.524469,
+        "tolerance": 0.37404580152671757,
+        "rel_err": 0.00089503816793882,
+        "passed": true,
+        "passed_first_attempt": false,
+        "passed_first_scored": true,
+        "tolerance_source": "se_band"
+      },
+      "recomputed": {
+        "result_name": "treatment_landholdings_diff_abs_table2_panelA_col3",
+        "reproduced": 0.524469,
+        "band_source": "se_band",
+        "band_relative": 0.37404580152671757,
+        "band_absolute": 0.196,
+        "abs_err": 0.0004689999999999417,
+        "rel_err": 0.00089503816793882,
+        "margin": 0.0023928571428568452,
+        "passed": true,
+        "notes": ""
+      },
+      "agrees_with_row": true,
+      "verdict": "PASS"
+    },
+    {
+      "name": "treatment_landholdings_diff_husband_minus_wife_table2_panelA_col4",
+      "ground_truth": {
+        "value": -0.516,
+        "standard_error": 0.225,
+        "unit": "percentile ranks of family landholdings per percentage point of synthetic probability",
+        "claim_type": "coefficient",
+        "location": "Table 2, Panel A (Baseline), column (4) Spouses' landholdings, Difference (husband - wife), Treatment",
+        "context": "Table 2, Panel A, column (4): OLS as in column (3) with the signed difference in family-landholdings percentile ranks, husband minus wife, as the outcome (negative values are women marrying poorer husbands).  Same landholdings sample, controls and birth-year clustered standard errors.\n",
+        "decimals": 3,
+        "sample_size": null
+      },
+      "i4r": {
+        "reproduced_value": -0.516,
+        "outcome": "matches",
+        "notes": "Blanket DP47 verdict; DB rows are variants, e.g. 1861-only -0.786 (0.529) DP Table 3, ages 15-26 -0.254 (0.317) DP Table 6.",
+        "reproduced_within_band": true
+      },
+      "rule": {
+        "mode": "independent",
+        "type_relative_tolerance": 0.02,
+        "se_multiplier": 1.0,
+        "se_band_relative": 0.436046511627907,
+        "printed_half_unit": 0.0005
+      },
+      "row": {
+        "description": "treatment_landholdings_diff_husband_minus_wife_table2_panelA_col4",
+        "claim_type": "coefficient",
+        "claimed": -0.516,
+        "reproduced": -0.516195,
+        "tolerance": 0.436046511627907,
+        "rel_err": 0.0003779069767440799,
+        "passed": true,
+        "passed_first_attempt": false,
+        "passed_first_scored": true,
+        "tolerance_source": "se_band"
+      },
+      "recomputed": {
+        "result_name": "treatment_landholdings_diff_husband_minus_wife_table2_panelA_col4",
+        "reproduced": -0.516195,
+        "band_source": "se_band",
+        "band_relative": 0.436046511627907,
+        "band_absolute": 0.225,
+        "abs_err": 0.00019499999999994522,
+        "rel_err": 0.0003779069767440799,
+        "margin": 0.0008666666666664231,
+        "passed": true,
+        "notes": ""
+      },
+      "agrees_with_row": true,
+      "verdict": "PASS"
+    },
+    {
+      "name": "treatment_married_down_table2_panelA_col5",
+      "ground_truth": {
+        "value": 0.009,
+        "standard_error": 0.003,
+        "unit": "change in the probability of marrying down per percentage point of synthetic probability",
+        "claim_type": "coefficient",
+        "location": "Table 2, Panel A (Baseline), column (5) Married down, Treatment",
+        "context": "Table 2, Panel A, column (5): probit of an indicator for marrying down (a husband from a family with smaller landholdings than the wife's) on the synthetic probability to marry during the interruption and the Table 2 controls, in the landholdings sample of columns (3)-(4); marginal effect of the treatment on the probability.  Standard errors clustered by birth year.\n",
+        "decimals": 3,
+        "sample_size": null
+      },
+      "i4r": {
+        "reproduced_value": 0.009,
+        "outcome": "matches",
+        "notes": "Blanket DP47 verdict; DB rows are variants, e.g. county FE 0.009 (0.005) DP Table 1, 1861-only 0.011 (0.006) DP Table 3.",
+        "reproduced_within_band": true
+      },
+      "rule": {
+        "mode": "independent",
+        "type_relative_tolerance": 0.02,
+        "se_multiplier": 1.0,
+        "se_band_relative": 0.33333333333333337,
+        "printed_half_unit": 0.0005
+      },
+      "row": {
+        "description": "treatment_married_down_table2_panelA_col5",
+        "claim_type": "coefficient",
+        "claimed": 0.009,
+        "reproduced": 0.008983,
+        "tolerance": 0.33333333333333337,
+        "rel_err": 0.0018888888888888506,
+        "passed": true,
+        "passed_first_attempt": false,
+        "passed_first_scored": true,
+        "tolerance_source": "se_band"
+      },
+      "recomputed": {
+        "result_name": "treatment_married_down_table2_panelA_col5",
+        "reproduced": 0.008983,
+        "band_source": "se_band",
+        "band_relative": 0.33333333333333337,
+        "band_absolute": 0.003,
+        "abs_err": 1.6999999999999654e-05,
+        "rel_err": 0.0018888888888888506,
+        "margin": 0.005666666666666552,
+        "passed": true,
+        "notes": ""
+      },
+      "agrees_with_row": true,
+      "verdict": "PASS"
+    },
+    {
+      "name": "treatment_never_married_table2_panelA_col6",
+      "ground_truth": {
+        "value": 0.002,
+        "standard_error": 0.002,
+        "unit": "change in the probability of never marrying per percentage point of synthetic probability",
+        "claim_type": "coefficient",
+        "location": "Table 2, Panel A (Baseline), column (6) Never married, Treatment",
+        "context": "Table 2, Panel A, column (6): probit of an indicator for never marrying on the synthetic probability to marry during the interruption and the Table 2 controls; marginal effect on the probability.  Sample: peers' daughters aged 15-35 in 1861 whether they married or not, excluding those who died before age 35.  The paper notes the effect is not statistically different from zero. Standard errors clustered by birth year.\n",
+        "decimals": 3,
+        "sample_size": null
+      },
+      "i4r": {
+        "reproduced_value": 0.002,
+        "outcome": "matches",
+        "notes": "Blanket DP47 verdict; DB rows are variants, e.g. 1861-only 0.002 (0.005) DP Table 3, ages 27-35 0.011 (0.003) DP Table 7.",
+        "reproduced_within_band": true
+      },
+      "rule": {
+        "mode": "independent",
+        "type_relative_tolerance": 0.02,
+        "se_multiplier": 1.0,
+        "se_band_relative": 1.0,
+        "printed_half_unit": 0.0005
+      },
+      "row": {
+        "description": "treatment_never_married_table2_panelA_col6",
+        "claim_type": "coefficient",
+        "claimed": 0.002,
+        "reproduced": 0.002085,
+        "tolerance": 1.0,
+        "rel_err": 0.0425,
+        "passed": true,
+        "passed_first_attempt": false,
+        "passed_first_scored": true,
+        "tolerance_source": "se_band"
+      },
+      "recomputed": {
+        "result_name": "treatment_never_married_table2_panelA_col6",
+        "reproduced": 0.002085,
+        "band_source": "se_band",
+        "band_relative": 1.0,
+        "band_absolute": 0.002,
+        "abs_err": 8.5e-05,
+        "rel_err": 0.0425,
+        "margin": 0.0425,
+        "passed": true,
+        "notes": ""
+      },
+      "agrees_with_row": true,
+      "verdict": "PASS"
+    },
+    {
+      "name": "treatment_married_commoner_table2_panelB_col1",
+      "ground_truth": {
+        "value": 0.006,
+        "standard_error": 0.002,
+        "unit": "change in the probability of marrying a commoner per percentage point of synthetic probability",
+        "claim_type": "coefficient",
+        "location": "Table 2, Panel B (Controlling for distance to London), column (1) Married a commoner, Treatment",
+        "context": "Table 2, Panel B, column (1): the Panel A column (1) probit with the distance between the woman's family seat and London added as a control, which restricts the sample to women with a family seat recorded in Burke (1826).  Marginal effect of the synthetic probability to marry during the interruption; standard errors clustered by birth year.\n",
+        "decimals": 3,
+        "sample_size": null
+      },
+      "i4r": {
+        "reproduced_value": 0.006,
+        "outcome": "matches",
+        "notes": "DP47 Table 2 Panel B col 1 0.006 (0.003), N 484; SE prints (0.003) vs the paper's (0.002) (package output 0.0025).",
+        "reproduced_within_band": true
+      },
+      "rule": {
+        "mode": "independent",
+        "type_relative_tolerance": 0.02,
+        "se_multiplier": 1.0,
+        "se_band_relative": 0.3333333333333333,
+        "printed_half_unit": 0.0005
+      },
+      "row": {
+        "description": "treatment_married_commoner_table2_panelB_col1",
+        "claim_type": "coefficient",
+        "claimed": 0.006,
+        "reproduced": 0.006195,
+        "tolerance": 0.3333333333333333,
+        "rel_err": 0.03249999999999997,
+        "passed": true,
+        "passed_first_attempt": false,
+        "passed_first_scored": true,
+        "tolerance_source": "se_band"
+      },
+      "recomputed": {
+        "result_name": "treatment_married_commoner_table2_panelB_col1",
+        "reproduced": 0.006195,
+        "band_source": "se_band",
+        "band_relative": 0.3333333333333333,
+        "band_absolute": 0.002,
+        "abs_err": 0.00019499999999999986,
+        "rel_err": 0.03249999999999997,
+        "margin": 0.09749999999999993,
+        "passed": true,
+        "notes": ""
+      },
+      "agrees_with_row": true,
+      "verdict": "PASS"
+    },
+    {
+      "name": "treatment_married_heir_table2_panelB_col2",
+      "ground_truth": {
+        "value": -0.005,
+        "standard_error": 0.002,
+        "unit": "change in the probability of marrying a peer's heir per percentage point of synthetic probability",
+        "claim_type": "coefficient",
+        "location": "Table 2, Panel B (Controlling for distance to London), column (2) Married an heir, Treatment",
+        "context": "Table 2, Panel B, column (2): the married-an-heir probit with the distance from the family seat to London as an added control (women with a recorded family seat).  Marginal effect of the treatment; standard errors clustered by birth year.\n",
+        "decimals": 3,
+        "sample_size": null
+      },
+      "i4r": {
+        "reproduced_value": -0.005,
+        "outcome": "matches",
+        "notes": "DP47 Table 2 Panel B col 2 -0.005 (0.002), N 484.",
+        "reproduced_within_band": true
+      },
+      "rule": {
+        "mode": "independent",
+        "type_relative_tolerance": 0.02,
+        "se_multiplier": 1.0,
+        "se_band_relative": 0.4,
+        "printed_half_unit": 0.0005
+      },
+      "row": {
+        "description": "treatment_married_heir_table2_panelB_col2",
+        "claim_type": "coefficient",
+        "claimed": -0.005,
+        "reproduced": -0.004689,
+        "tolerance": 0.4,
+        "rel_err": 0.0622000000000001,
+        "passed": true,
+        "passed_first_attempt": false,
+        "passed_first_scored": true,
+        "tolerance_source": "se_band"
+      },
+      "recomputed": {
+        "result_name": "treatment_married_heir_table2_panelB_col2",
+        "reproduced": -0.004689,
+        "band_source": "se_band",
+        "band_relative": 0.4,
+        "band_absolute": 0.002,
+        "abs_err": 0.0003110000000000005,
+        "rel_err": 0.0622000000000001,
+        "margin": 0.15550000000000025,
+        "passed": true,
+        "notes": ""
+      },
+      "agrees_with_row": true,
+      "verdict": "PASS"
+    },
+    {
+      "name": "treatment_landholdings_diff_abs_table2_panelB_col3",
+      "ground_truth": {
+        "value": 0.512,
+        "standard_error": 0.213,
+        "unit": "percentile ranks of family landholdings per percentage point of synthetic probability",
+        "claim_type": "coefficient",
+        "location": "Table 2, Panel B (Controlling for distance to London), column (3) Difference (absolute value), Treatment",
+        "context": "Table 2, Panel B, column (3): the column (3) OLS of the absolute difference in spouses' family-landholdings percentile ranks with the distance from the family seat to London added (landholdings sample, women with a recorded family seat).  Standard errors clustered by birth year.\n",
+        "decimals": 3,
+        "sample_size": null
+      },
+      "i4r": {
+        "reproduced_value": 0.512,
+        "outcome": "matches",
+        "notes": "Blanket DP47 verdict; DB rows are variants, e.g. 1862-only 1.300 (0.671) DP Table 4, ages 15-26 0.417 (0.370) DP Table 6.",
+        "reproduced_within_band": true
+      },
+      "rule": {
+        "mode": "independent",
+        "type_relative_tolerance": 0.02,
+        "se_multiplier": 1.0,
+        "se_band_relative": 0.416015625,
+        "printed_half_unit": 0.0005
+      },
+      "row": {
+        "description": "treatment_landholdings_diff_abs_table2_panelB_col3",
+        "claim_type": "coefficient",
+        "claimed": 0.512,
+        "reproduced": 0.511759,
+        "tolerance": 0.416015625,
+        "rel_err": 0.0004707031250000913,
+        "passed": true,
+        "passed_first_attempt": false,
+        "passed_first_scored": true,
+        "tolerance_source": "se_band"
+      },
+      "recomputed": {
+        "result_name": "treatment_landholdings_diff_abs_table2_panelB_col3",
+        "reproduced": 0.511759,
+        "band_source": "se_band",
+        "band_relative": 0.416015625,
+        "band_absolute": 0.213,
+        "abs_err": 0.00024100000000004673,
+        "rel_err": 0.0004707031250000913,
+        "margin": 0.0011314553990612523,
+        "passed": true,
+        "notes": ""
+      },
+      "agrees_with_row": true,
+      "verdict": "PASS"
+    },
+    {
+      "name": "treatment_landholdings_diff_husband_minus_wife_table2_panelB_col4",
+      "ground_truth": {
+        "value": -0.537,
+        "standard_error": 0.221,
+        "unit": "percentile ranks of family landholdings per percentage point of synthetic probability",
+        "claim_type": "coefficient",
+        "location": "Table 2, Panel B (Controlling for distance to London), column (4) Difference (husband - wife), Treatment",
+        "context": "Table 2, Panel B, column (4): the column (4) OLS of the husband- minus-wife difference in family-landholdings percentile ranks with the distance from the family seat to London added.  Standard errors clustered by birth year.\n",
+        "decimals": 3,
+        "sample_size": null
+      },
+      "i4r": {
+        "reproduced_value": -0.537,
+        "outcome": "matches",
+        "notes": "Blanket DP47 verdict; DB rows are variants, e.g. county FE -0.502 (0.326) DP Table 1, 1861-only -0.800 (0.520) DP Table 3.",
+        "reproduced_within_band": true
+      },
+      "rule": {
+        "mode": "independent",
+        "type_relative_tolerance": 0.02,
+        "se_multiplier": 1.0,
+        "se_band_relative": 0.4115456238361266,
+        "printed_half_unit": 0.0005
+      },
+      "row": {
+        "description": "treatment_landholdings_diff_husband_minus_wife_table2_panelB_col4",
+        "claim_type": "coefficient",
+        "claimed": -0.537,
+        "reproduced": -0.537401,
+        "tolerance": 0.4115456238361266,
+        "rel_err": 0.0007467411545623551,
+        "passed": true,
+        "passed_first_attempt": false,
+        "passed_first_scored": true,
+        "tolerance_source": "se_band"
+      },
+      "recomputed": {
+        "result_name": "treatment_landholdings_diff_husband_minus_wife_table2_panelB_col4",
+        "reproduced": -0.537401,
+        "band_source": "se_band",
+        "band_relative": 0.4115456238361266,
+        "band_absolute": 0.221,
+        "abs_err": 0.0004009999999999847,
+        "rel_err": 0.0007467411545623551,
+        "margin": 0.0018144796380089806,
+        "passed": true,
+        "notes": ""
+      },
+      "agrees_with_row": true,
+      "verdict": "PASS"
+    },
+    {
+      "name": "n_obs_table2_panelA_baseline",
+      "ground_truth": {
+        "value": 644.0,
+        "standard_error": null,
+        "unit": "women (peers' daughters who ever married)",
+        "claim_type": "count",
+        "location": "Table 2, Panel A, Observations, columns (1)-(2)",
+        "context": "Number of observations in Table 2, Panel A, columns (1) and (2): the baseline sample of peers' daughters aged 15-35 in 1861 who ever married, excluding second marriages, women married to foreigners and royals.\n",
+        "decimals": 0,
+        "sample_size": null
+      },
+      "i4r": {
+        "reproduced_value": 644.0,
+        "outcome": "matches",
+        "notes": "DP47 Table 2 cols 1-2 Observations 644.",
+        "reproduced_within_band": true
+      },
+      "rule": {
+        "mode": "independent",
+        "type_relative_tolerance": 0.05,
+        "se_multiplier": 1.0,
+        "se_band_relative": null,
+        "printed_half_unit": 0.5
+      },
+      "row": {
+        "description": "n_obs_table2_panelA_baseline",
+        "claim_type": "count",
+        "claimed": 644.0,
+        "reproduced": 644.0,
+        "tolerance": 0.05,
+        "rel_err": 0.0,
+        "passed": true,
+        "passed_first_attempt": false,
+        "passed_first_scored": true,
+        "tolerance_source": "relative"
+      },
+      "recomputed": {
+        "result_name": "n_obs_table2_panelA_baseline",
+        "reproduced": 644.0,
+        "band_source": "relative",
+        "band_relative": 0.05,
+        "band_absolute": 32.2,
+        "abs_err": 0.0,
+        "rel_err": 0.0,
+        "margin": 0.0,
+        "passed": true,
+        "notes": ""
+      },
+      "agrees_with_row": true,
+      "verdict": "PASS"
+    },
+    {
+      "name": "n_obs_table2_panelA_landholdings",
+      "ground_truth": {
+        "value": 324.0,
+        "standard_error": null,
+        "unit": "marriages",
+        "claim_type": "count",
+        "location": "Table 2, Panel A, Observations, columns (3)-(5)",
+        "context": "Number of observations in Table 2, Panel A, columns (3) to (5): the baseline marriages for which Bateman (1883) lists both spouses' family landholdings.\n",
+        "decimals": 0,
+        "sample_size": null
+      },
+      "i4r": {
+        "reproduced_value": 324.0,
+        "outcome": "matches",
+        "notes": "Blanket DP47 verdict; DP Tables 3-5 Panel A (same baseline specification by year) print 324 in cols 3-5.",
+        "reproduced_within_band": true
+      },
+      "rule": {
+        "mode": "independent",
+        "type_relative_tolerance": 0.05,
+        "se_multiplier": 1.0,
+        "se_band_relative": null,
+        "printed_half_unit": 0.5
+      },
+      "row": {
+        "description": "n_obs_table2_panelA_landholdings",
+        "claim_type": "count",
+        "claimed": 324.0,
+        "reproduced": 324.0,
+        "tolerance": 0.05,
+        "rel_err": 0.0,
+        "passed": true,
+        "passed_first_attempt": false,
+        "passed_first_scored": true,
+        "tolerance_source": "relative"
+      },
+      "recomputed": {
+        "result_name": "n_obs_table2_panelA_landholdings",
+        "reproduced": 324.0,
+        "band_source": "relative",
+        "band_relative": 0.05,
+        "band_absolute": 16.2,
+        "abs_err": 0.0,
+        "rel_err": 0.0,
+        "margin": 0.0,
+        "passed": true,
+        "notes": ""
+      },
+      "agrees_with_row": true,
+      "verdict": "PASS"
+    },
+    {
+      "name": "n_obs_table2_panelA_never_married",
+      "ground_truth": {
+        "value": 765.0,
+        "standard_error": null,
+        "unit": "women (peers' daughters, married or not)",
+        "claim_type": "count",
+        "location": "Table 2, Panel A, Observations, column (6)",
+        "context": "Number of observations in Table 2, Panel A, column (6): peers' daughters aged 15-35 in 1861 including those who never married, excluding those who died before age 35.\n",
+        "decimals": 0,
+        "sample_size": null
+      },
+      "i4r": {
+        "reproduced_value": 765.0,
+        "outcome": "matches",
+        "notes": "Blanket DP47 verdict; DP Tables 3-5 Panel A print 765 in col 6.",
+        "reproduced_within_band": true
+      },
+      "rule": {
+        "mode": "independent",
+        "type_relative_tolerance": 0.05,
+        "se_multiplier": 1.0,
+        "se_band_relative": null,
+        "printed_half_unit": 0.5
+      },
+      "row": {
+        "description": "n_obs_table2_panelA_never_married",
+        "claim_type": "count",
+        "claimed": 765.0,
+        "reproduced": 765.0,
+        "tolerance": 0.05,
+        "rel_err": 0.0,
+        "passed": true,
+        "passed_first_attempt": false,
+        "passed_first_scored": true,
+        "tolerance_source": "relative"
+      },
+      "recomputed": {
+        "result_name": "n_obs_table2_panelA_never_married",
+        "reproduced": 765.0,
+        "band_source": "relative",
+        "band_relative": 0.05,
+        "band_absolute": 38.25,
+        "abs_err": 0.0,
+        "rel_err": 0.0,
+        "margin": 0.0,
+        "passed": true,
+        "notes": ""
+      },
+      "agrees_with_row": true,
+      "verdict": "PASS"
+    }
+  ],
+  "row_only_claims": [],
+  "summary": {
+    "n_claims": 13,
+    "row_passed": 13,
+    "recomputed_passed": 13,
+    "disagreements": []
+  },
+  "cell": {
+    "entry_id": "goni-2022-assortative-matching-london-season",
+    "mode": "independent",
+    "reproducer": "claude-code",
+    "label": "claude-code",
+    "model": null,
+    "oracle": false,
+    "run": "2026-11-10-d",
+    "results_file": "claude-code-run4-1paper-indep-blind-2026-11-09.json",
+    "also_in": [],
+    "artifacts_dir": "benchmark/results/artifacts/goni-2022-assortative-matching-london-season/independent/claude-code/20261110T053313Z",
+    "run_dir": "benchmark/reproductions/goni-2022-assortative-matching-london-season/independent/2026-11-10-d",
+    "date": "2026-11-10T05:45:00Z",
+    "data_access": "manual",
+    "retally_ran": true,
+    "error": null,
+    "n_claims": 13,
+    "final": 13,
+    "first_scored": 13,
+    "first_scored_index": 1,
+    "first_attempt": 0,
+    "n_refinements": 0,
+    "n_error_refinements": 0,
+    "n_claim_refinements": 0,
+    "n_executions": 2,
+    "n_files_stripped": 120,
+    "agrees_with_i4r": true,
+    "deviations_manifest": [],
+    "deviations_stdout": [],
+    "notes": "attempt-1 was exploratory: it printed variable labels and summaries of data/final-data.dta and no RESULT lines. The final script uses the prepared flags base_sample (644) and marital_rates_sample (765), syntheticT as the treatment, and these outcomes: cOut, mheir, fmissmatch (absolute difference), fmissmatch2 (husband minus wife), fdown, and never married (nthismarriage==0, which is identical to celibacy). Controls are pr4 (duke/marquess/earl daughter), hengpee (English peerage) and biorder (birth order excluding heirs). Panel B adds distlondon. Probit columns report the average marginal effect of syntheticT, with delta-method SEs from a vcovCL birth-year cluster. OLS columns use feols with SEs clustered by byear. All claimed coefficients and Ns match on the first scored run, and the clustered SEs also match Table 2. No claim comparison or repair was needed. The bootstrap-t p-values were not computed because they were not claimed. No runs hung.",
+    "files_read_outside_mount": [],
+    "paper_text": "paper.txt",
+    "complete": true,
+    "missing": []
+  }
+}

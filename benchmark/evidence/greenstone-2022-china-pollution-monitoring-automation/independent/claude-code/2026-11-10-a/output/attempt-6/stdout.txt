@@ -1,0 +1,50 @@
+[   4.8s] loaded
+pm10 nonmissing: 1067825 
+daily RD sample (pm10 + weather complete): 1049325 
+[   5.7s] daily panel built
+PM10 daily, no controls, all             coef=  34.7172 se= 10.6821 h= 109.32 N_h=36684+54786=91470
+[   6.4s] col1 done
+PM10 daily, resid, all                   coef=  34.8934 se=  5.7856 h= 263.89 N_h=98257+134069=232326
+[   8.0s] col2 done
+PM10 daily, resid, wave 1                coef=  29.9800 se=  9.9315 h= 145.68 N_h=42386+42501=84887
+PM10 daily, resid, wave 2                coef=  60.5455 se=  9.5679 h= 243.51 N_h=19354+51960=71314
+DIAG wave1 full-sample resid             coef=  27.5453 se=  9.8149 h= 140.26 N_h=40857+41093=81950
+DIAG wave2 full-sample resid             coef=  64.6527 se=  9.8893 h= 234.32 N_h=18477+49979=68456
+DIAG station on own-phase deadline fullres coef=  55.2398 se=  8.6419 h= 187.98 N_h=30247+50172=80419
+DIAG station auto in DL fullres          coef=  57.1385 se=  8.6098 h= 184.82 N_h=33307+52735=86042
+deadline cities: 68  stations: 341 
+PM10 daily, resid, deadline              coef=  49.3286 se=  8.2761 h= 215.55 N_h=36433+58411=94844
+[  12.0s] panel A PM10 done
+AOD station-month sample: 26983 
+AOD obs after FE residualization: 26964 
+AOD monthly, resid, all                  coef=  -0.0049 se=  0.0207 h=   7.65 N_h=2744+3107=5851
+[  12.3s] AOD done
+event-study stations: treated 242  control 123 
+                                 m1                  m2
+Dependent Var.:                pm10                pm10
+                                                       
+b712                -8.550. (4.723)     -17.23* (6.729)
+b56                   6.827 (5.976)     -19.22* (9.279)
+b34                  -6.376 (5.645)     -12.01. (6.923)
+a12                60.31*** (11.00)     31.44** (11.10)
+a34                45.01*** (7.844)    33.56*** (8.757)
+a56                28.12*** (6.717)     22.20** (8.024)
+a712               39.98*** (6.090)       9.776 (8.840)
+temp              1.850*** (0.3054)   1.720*** (0.3079)
+rh                  0.1368 (0.1217)     0.1481 (0.1216)
+rain            -0.4708*** (0.0877) -0.4787*** (0.0884)
+wind_speed        -8.139*** (1.354)   -7.969*** (1.299)
+Fixed-Effects:  ------------------- -------------------
+station_n                       Yes                 Yes
+moy                             Yes                  No
+ym                               No                 Yes
+_______________ ___________________ ___________________
+S.E.: Clustered       by: code_city       by: code_city
+Observations                176,426             176,426
+R2                          0.34153             0.35004
+Within R2                   0.11872             0.05117
+---
+Signif. codes: 0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+matched control stations used: 27 
+matched sample obs: 231990 
+DIAG unique (treated city, control station)   N=144818 a12=63.768

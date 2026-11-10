@@ -1,0 +1,53 @@
+Loaded final-data.dta: 30414 rows, 360 cols
+Variables: syntheticT cOut mheir fdown celibacy distlondon base_sample byear pr4 hengpee biorder crank crankspo age1861 fatotal sfatotal 
+Landholdings (fdown non-missing) N = 324 
+Columns containing 'fatotal'/'acre'/'land': fatotal sfatotal acrestotal acres1 acres2 acres3 acres4 acres5 acres6 acres7 acres8 acres9 acres10 acres11 acres12 acres13 acres14 sacrestotal sacres1 sacres2 sacres3 sacres4 sacres5 sacres6 sacres7 sacres8 sacres9 sacres10 sacres11 sacres12 sacres13 sacres14 
+Columns containing 'spo': spousefnames spousesurname spousecomment spousechild spouseparent spouserank spouseaddress rankspo prankspo hrankspo crankspo grankspo peeragespo ppeeragespo hpeeragespo countryseatspo countyspo countryseat2spo county2spo countryseat3spo county3spo countryseat4spo county4spo countryseat5spo county5spo wgslatspo wgslonspo wgslat2spo wgslon2spo wgslat3spo wgslon3spo wgslat4spo wgslon4spo wgslat5spo wgslon5spo 
+Pair rank / rankspo: N=324 range=[1.000, 5.000] unique=5
+Pair prank / prankspo: N=324 range=[1.000, 5.000] unique=5
+Pair hrank / hrankspo: N=324 range=[1.000, 5.000] unique=5
+Pair grank / grankspo: N=324 range=[1.000, 5.000] unique=5
+Pair peerage / peeragespo: N=324 range=[1.000, 4.000] unique=4
+Pair ppeerage / ppeeragespo: N=324 range=[1.000, 4.000] unique=4
+Pair hpeerage / hpeeragespo: N=324 range=[1.000, 4.000] unique=4
+Landholdings sample N = 324 
+Summary wife acres (land):
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+   2012    9172   17368   32608   34776 1358545 
+Summary husband acres (land):
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+   2064    6474   11904   24142   26912  460108 
+DEVIATION: Percentile ranks of family acres computed on the pooled wife+husband distribution within the landholdings sample
+Summary diff_hw (land):
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+-97.222 -33.102  -8.488  -8.241  15.586  91.821 
+         base_sample marital_rates_sample             base_cel 
+                 644                  765                  644 
+             age_cel 
+                2512 
+Celibacy sample definition: marital_rates_sample N = 765 
+N base = 644 ; N land = 324 ; N cel = 765 
+N base B = 484 ; N land B = 260 
+Probit com: AME=0.00453 (SE 0.00208), raw coef=0.01280, N=644
+Probit heir: AME=-0.00363 (SE 0.00168), raw coef=-0.01172, N=644
+OLS diff_abs: b=0.5708 (SE 0.1863), N=324
+OLS diff_hw: b=-0.4626 (SE 0.2356), N=324
+Probit down: AME=0.00898 (SE 0.00264), raw coef=0.02425, N=324
+Probit cel: AME=0.00209 (SE 0.00165), raw coef=0.00713, N=765
+Probit com: AME=0.00620 (SE 0.00248), raw coef=0.01707, N=484
+Probit heir: AME=-0.00469 (SE 0.00184), raw coef=-0.01470, N=484
+OLS diff_abs: b=0.5556 (SE 0.2048), N=260
+OLS diff_hw: b=-0.4907 (SE 0.2357), N=260
+RESULT:treatment_married_commoner_table2_panelA_col1=0.004534
+RESULT:treatment_married_heir_table2_panelA_col2=-0.003631
+RESULT:treatment_landholdings_diff_abs_table2_panelA_col3=0.570804
+RESULT:treatment_landholdings_diff_husband_minus_wife_table2_panelA_col4=-0.462640
+RESULT:treatment_married_down_table2_panelA_col5=0.008983
+RESULT:treatment_never_married_table2_panelA_col6=0.002085
+RESULT:treatment_married_commoner_table2_panelB_col1=0.006195
+RESULT:treatment_married_heir_table2_panelB_col2=-0.004689
+RESULT:treatment_landholdings_diff_abs_table2_panelB_col3=0.555599
+RESULT:treatment_landholdings_diff_husband_minus_wife_table2_panelB_col4=-0.490665
+RESULT:n_obs_table2_panelA_baseline=644.000000
+RESULT:n_obs_table2_panelA_landholdings=324.000000
+RESULT:n_obs_table2_panelA_never_married=765.000000
