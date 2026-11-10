@@ -1,0 +1,22 @@
+suppressPackageStartupMessages({library(haven); library(data.table)})
+base <- "<repo>/benchmark/.cache/claude-code/greenstone-2022-china-pollution-monitoring-automation/independent/2026-11-10-d/mount/greenstone_2022_china_pollution_monitoring_automation/China_Pollution_Monitoring/Data"
+for (f in c("station_list","city_info","search_sale","aod_month","pm10_corrected_reference","mask_filter_search")) {
+  d <- as.data.table(read_dta(file.path(base, paste0(f, ".dta"))))
+  cat("=====", f, nrow(d), "\n"); str(d); print(summary(d)); print(head(d, 3))
+}
+st <- as.data.table(read_dta(file.path(base,"station_list.dta")))
+print(st[, .N, by=.(phase, auto_date)][order(phase, auto_date)], nrows=200)
+ci <- as.data.table(read_dta(file.path(base,"city_info.dta")))
+print(table(ci$phase))
+print(st[, .(ncity=uniqueN(code_city), nst=.N), by=phase])
+p <- as.data.table(read_dta(file.path(base,"pollution_1116.dta")))
+str(p); print(summary(p)); print(range(p$date)); print(uniqueN(p$station_n)); print(uniqueN(p$code_city))
+print(sum(!is.na(p$pm10)))
+w <- as.data.table(read_dta(file.path(base,"weather_1116.dta")))
+str(w); print(summary(w))
+print(all(w$station_n == p$station_n & w$date == p$date))
+m <- as.data.table(read_dta(file.path(base,"mask_filter_search.dta")))
+print(uniqueN(m$code_city)); print(range(m$date)); print(sum(unique(m$code_city) %in% ci$code_city))
+print(head(st$pm10_n)); print(head(unique(p$station_n)))
+print(class(st$pm10_n)); print(class(p$station_n))
+cat("pm10 nonmissing by station in sample:", sum(p$station_n %in% st$pm10_n & !is.na(p$pm10)), "\n")

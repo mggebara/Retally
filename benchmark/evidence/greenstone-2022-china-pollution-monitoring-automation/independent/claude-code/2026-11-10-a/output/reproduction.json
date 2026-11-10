@@ -1,0 +1,29 @@
+{
+  "schema": 1,
+  "entry_id": "greenstone-2022-china-pollution-monitoring-automation",
+  "mode": "independent",
+  "run_id": "2026-11-10-a",
+  "reproducer": "claude-code",
+  "language": "r",
+  "final": {"script": "script.R", "stdout": "stdout.txt", "stderr": "stderr.txt", "exit_code": 0},
+  "attempts": [
+    {"dir": "attempt-1", "exit_code": 0, "kind": ""},
+    {"dir": "attempt-2", "exit_code": 1, "kind": "error"},
+    {"dir": "attempt-3", "exit_code": 0, "kind": "claim"},
+    {"dir": "attempt-4", "exit_code": 0, "kind": "claim"},
+    {"dir": "attempt-5", "exit_code": 0, "kind": "claim"},
+    {"dir": "attempt-6", "exit_code": 1, "kind": "error"},
+    {"dir": "attempt-7", "exit_code": 0, "kind": ""}
+  ],
+  "deviations": [
+    "rdrobust run with masspoints='off' (no mass-point adjustment). The R default ('adjust') gave bandwidths of 179/494 days; 'off' reproduces the paper's reported bandwidths (109, 263, 140, 234, 184 days; 7 months for AOD) and effective observation counts exactly, so it was adopted. Clustered variance vce='cr1' by city.",
+    "Panel A columns (3)-(5) use the residuals from the single full-sample residualization (station FE, calendar-month FE, linear weather) rather than re-residualizing within each subsample; this reproduces the paper's reported obs/bandwidths exactly.",
+    "Deadline sample (Panel A col 5) = stations whose automation date is exactly 2013-01-01 or 2014-01-01 (365 stations, 73 cities), the same definition that reproduces Panel B's 242 treated / 123 control stations; the paper says 84 cities, which no definition tried reproduced, but this one reproduces the reported 86,042 obs and 184-day bandwidth.",
+    "Matched event study (Panel B cols 3, 5): each 2013-01-01 station matched to the nearest (haversine) 2014-01-01 station with replacement; matched controls duplicated once per match. This yields 231,990 obs vs the paper's 186,499; several alternative matching constructions tried (common-date pairs, dedup, city-centroid, Euclidean) also failed to reproduce 186,499, so the literal construction was kept.",
+    "Monthly running variable (AOD, searches) = calendar-month difference between the observation month and the automation month (automation month = 0, treated). Search RD uses the earliest station automation date in each city and city-month means of daily Baidu indices and station weather."
+  ],
+  "notes": "All Panel A RD estimates, the AOD RD, the unmatched event-study coefficients and N (176,426) reproduce the paper's reported values/obs/bandwidths. Search RDs: 9.91 (mask) and 7.97 (filter) vs 11.03/8.73; sample sizes (8,661/8,590) match. Matched event-study col 3 is 51.8 vs 66.5 and log col 5 0.18 vs 0.24: the paper's matched-sample construction (186,499 obs) could not be reconstructed. Attempt-1 was data inspection; attempt-2 crashed (fixest dropped obs in AOD residualization); attempts 3-5 compared with claims and changed rdrobust masspoints, residualization scope and deadline definition (choices guided by the paper's reported bandwidths/obs); attempt-6 crashed on an undefined diagnostic column; attempt-7 was a diagnostic of matching variants (none adopted). No run hung. README.pdf in the mount was read (documentation only); no author scripts were present or opened.",
+  "files_read_outside_mount": [],
+  "started_at": "2026-11-10T05:45:53Z",
+  "finished_at": "2026-11-10T05:56:30Z"
+}

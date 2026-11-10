@@ -1,0 +1,20 @@
+{
+  "schema": 1,
+  "entry_id": "goni-2022-assortative-matching-london-season",
+  "mode": "independent",
+  "run_id": "2026-11-10-a",
+  "reproducer": "claude-code",
+  "language": "r",
+  "final": {"script": "script.R", "stdout": "stdout.txt", "stderr": "stderr.txt", "exit_code": 0},
+  "attempts": [
+    {"dir": "attempt-1", "exit_code": 1, "kind": ""},
+    {"dir": "attempt-2", "exit_code": 0, "kind": ""}
+  ],
+  "deviations": [
+    "Probit marginal effects are reported as average marginal effects (mean of phi(xb) times beta); the paper does not state whether margins are average or at the means."
+  ],
+  "notes": "attempt-1 and attempt-2 are the same exploratory script (variable listing and tabulations, no RESULT lines). attempt-1 failed only because my host-side zsh wrapper mangled the -v mount argument ($M:r modifier), so the data path was not mounted; fixed the wrapper (quoted ${M}) and reran unchanged as attempt-2. The final run is the first and only estimation run; no claim comparison led to any script change. Data: data/final-data.dta with the prepared indicators base_sample (N=644), marital_rates_sample (N=765), syntheticT (treatment), cOut, mheir, fdown, celibacy, fmissmatch, fmissmatch2 (landholdings sample = non-missing fmissmatch, N=324). Controls per the Table 2 notes: pr4 (duke/marquess/earl daughter), hengpee (peerage of England), biorder (birth order excluding heirs); Panel B adds distlondon and drops women without a recorded seat (N=484/260/565, matching the paper). Probits via glm(probit) with average marginal effects of syntheticT; OLS via lm; birth-year clustered SEs (sandwich::vcovCL, HC1) with delta-method SEs for the marginal effects, printed for information. Bootstrap-t p-values not reproduced (not claimed). All coefficients, Ns, percent-correct and dependent-variable means match Table 2 to the reported rounding. README.pdf was not read (no pdftotext available); no script files in the package were opened.",
+  "files_read_outside_mount": [],
+  "started_at": "2026-11-10T05:25:44Z",
+  "finished_at": "2026-11-10T05:29:00Z"
+}

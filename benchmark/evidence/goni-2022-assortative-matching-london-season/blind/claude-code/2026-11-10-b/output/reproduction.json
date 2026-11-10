@@ -1,0 +1,24 @@
+{
+  "schema": 1,
+  "entry_id": "goni-2022-assortative-matching-london-season",
+  "mode": "blind",
+  "run_id": "2026-11-10-b",
+  "reproducer": "claude-code",
+  "language": "r",
+  "final": {"script": "script.R", "stdout": "stdout.txt", "stderr": "stderr.txt", "exit_code": 0},
+  "attempts": [
+    {"dir": "attempt-1", "exit_code": 1, "kind": ""},
+    {"dir": "attempt-2", "exit_code": 0, "kind": ""},
+    {"dir": "attempt-3", "exit_code": 0, "kind": ""}
+  ],
+  "deviations": [
+    "Probit marginal effects are average marginal effects of the treatment (Stata margins default); the paper does not say whether effects are evaluated at means or averaged.",
+    "Treatment uses the syntheticT variable shipped in data/final-data.dta (a deterministic function of age in 1861) rather than recomputing p(t) from the 1815-1830 benchmark cohort.",
+    "Samples use the shipped base_sample (644) and marital_rates_sample (765) flags; landholdings sample = base_sample with non-missing fmissmatch/fmissmatch2/fdown (324); Panel B additionally requires non-missing distlondon (484 / 260).",
+    "Clustering by byear gives 22 clusters in the data versus G=21 stated in the paper; this affects only standard errors, which are not reported quantities."
+  ],
+  "notes": "Independent blind reproduction of Table 2 from data/final-data.dta only. Outcomes: cOut (married a commoner), mheir (married an heir), fmissmatch (|husband-wife| landholdings percentile difference), fmissmatch2 (husband-wife), fdown (married down), celibacy (never married). Controls: pr4 (duke/marquess/earl daughter), hengpee (peerage of England), biorder (birth order excluding heirs); Panel B adds distlondon. Probit (cols 1,2,5,6) via glm probit link, reporting AME of treatment; OLS (cols 3,4). SEs clustered by birth year (printed, not scored). Attempts 1-3 were exploratory (variable listing; attempt-1 crashed on a labelled-vector comparison in the listing code; attempt-3 checked sample sizes) and printed no RESULT lines. No author scripts, result tables (.tex/.pdf in results/) or README were opened. No runs hung.",
+  "files_read_outside_mount": [],
+  "started_at": "2026-11-10T05:29:28Z",
+  "finished_at": "2026-11-10T05:33:30Z"
+}

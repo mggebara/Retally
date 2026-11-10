@@ -1,0 +1,150 @@
+You are reproducing results from an econometrics paper for validation purposes.
+Write R code (not Python) — the paper's reference implementation is in R.
+
+## Paper Information
+Title: NBER WORKING PAPER SERIES
+Abstract (first 500 chars): We examine the introduction of automatic air pollution monitoring, which is a central feature of 
+China’s “war on pollution.” Exploiting 654 regression discontinuity designs based on city-level 
+variation in the day that monitoring was automated, we find that reported PM10 concentrations 
+increased by 35% immediately post–automation and were sustained. City-level variation 
+in underreporting is negatively correlated with income per capita and positively correlated with 
+true pre-automation PM10 
+Methodology Summary: - **Design and estimating equation (eq. 1, Table 1 Panel A):** Station-level sharp regression discontinuity in time. P_ict (reported daily PM10 in µg/m3, in levels, not standardised) = β1·I(t ≥ Auto_ic) + f(t − Auto_ic), with separate slopes before and after automation, + weather W + station FE α_i + month FE + u. The running variable is days relative to the city's automation date, and β1 is the headline discontinuity. The sample covers 123 cities and 654 stations, 2011–2016: 60 Wave-1 cities (deadline Jan 1, 2013) and 63 Wave-2 cities (deadline Jan 1, 2014). Wave 3 is excluded because no pre-automation data exist. The full sample has 1,049,325 station-day observations before bandwidth selection.
+- **Estimation method:** The preferred estimator is non-parametric local linear RD with a triangular kernel and the Calonico, Cattaneo & Titiunik (2014) MSE-optimal bandwidth. Col (1) has no covariates (bandwidth 109 days, N = 91,470). Col (2) uses residualised PM10 (bandwidth 263 days, N = 232,326). For col (2), PM10 is first regressed by OLS on station FE, month FE and weather (temperature, precipitation, relative humidity, wind speed), and the RD is run on the residuals (Lee & Lemieux 2010). Headline estimates are 34.7 (SE 10.7) and 34.9 (SE 5.8) µg/m3, about 35% of the post-automation mean of 99.5. Robustness checks: covariate-adjusted RD following Calonico et al. (2019), other kernels, and a parametric polynomial RD (App. B3).
+- **Subsamples and placebo outcomes:** Wave 1 only: 27.5 (bandwidth 140). Wave 2 only: 64.7 (bandwidth 234). Cities that automated exactly on their deadline (84 cities): 57.1 (bandwidth 184); this guards against strategic timing. The same RD is run on monthly MODIS AOD, with the running variable in months (bandwidths of 6–10 months), and finds no discontinuity. Weather variables are tested for continuity at the cutoff. NO2 and SO2 are also tested (App. B6). Each station is matched to its nearest weather station, and stations are geocoded with Google Maps.
+- **Event-study / DiD (eq. 2, Table 1 Panel B):** Daily station PM10 is regressed on period dummies for 7–12, 5–6 and 3–4 months before automation and for 1–2, 3–4, 5–6 and 7–12 months after. The reference period is 1–2 months before. Controls are weather and station FE, plus either month FE (col 1) or year-month FE (cols 2–5). The sample is restricted to deadline cities over Jan 1, 2012 – Dec 31, 2013: Wave-1 deadline stations (242) are treated on Jan 1, 2013, and Wave-2 deadline stations (123) serve as never-treated controls (N = 176,426). Cols (3)–(5) match each Wave-1 station to its geographically nearest Wave-2 station, with replacement (N = 186,499). Col (5) uses log(PM10) and finds post-automation effects of 0.24–0.32.
+- **Standard errors:** Clustered at the city level in all RD and DiD specifications. Table 2's cross-city regressions use heteroskedasticity-robust SEs.
+- **City-specific heterogeneity (Fig. 2, Table 2):** The local linear RD is estimated city by city on monitor-day data. 49 cities with more than 2 months of missing pre-automation PM10 are set aside, and 5 cities with more than 6 months missing are dropped entirely. The main sample is 74 cities. Manipulation is then regressed on per-1-SD standardised regressors: ln(2012 GDP per capita), ANN-corrected 2012 PM10, and a corruption index (Nie et al. 2018). Each regressor enters alone (cols 1–3) and all three enter together (col 4). Manipulation is defined three ways:
+  - (A) a dummy for an RD estimate that is positive and significant at 5%, N = 74;
+  - (B) a dummy that also uses the 44 cities with missing data, flagged if their Jan–Jun 2014 vs Jan–Jun 2013 PM10 increase is at least 35 µg/m3, N = 118;
+  - (C) the continuous RD coefficient, in a regression weighted by 1/SE, N = 74.
+- **ANN correction of pre-automation PM10 (App. B10):** An artificial neural network (Stata BRAIN module) is trained on post-automation data to predict PM10 from AOD and weather. It explains 81% of post-automation PM10 variation and is then used to predict pre-automation PM10. The corrected pre-period mean is 24.4 µg/m3 (29%) higher than the reported one.
+- **Welfare outcomes (Table 3):** The outcomes are monthly city-level Baidu PC search indices for "anti-haze face masks" and "air filters", in levels and as log(1+x). Panel A uses the same triangular-kernel RD, with and without residualising on city FE, month FE and weather. It is run on the full sample (8,661 mask and 8,590 filter observations) and separately for "normal" and "manipulating" cities. Panel B is a DiD with city FE and year-month FE, plus weather in some columns, on 39 Wave-1 deadline (treated) cities and 32 Wave-2 deadline (control) cities. SEs are clustered by city.
+
+
+## Claims to Reproduce
+1. rd_pm_daily_no_controls_table1_panelA_col1: 34.7 (micrograms per cubic meter of PM₁₀) [type: coefficient]
+   Location: Table 1, Panel A (RD Estimates), RD in PM₁₀ (Daily), column (1)
+   Context: Table 1 ("Automating Air Quality Monitoring System and PM₁₀ Concentrations"), Panel A, column (1). Non-parametric local linear regression discontinuity estimate of the jump in reported daily PM₁₀ concentrations at the date a city's air quality monitoring was automated; the running variable is days from the automation date, with separate slopes before and after. Triangle kernel, bandwidth chosen by the Calonico, Cattaneo and Titiunik (2014) optimal bandwidth method. No fixed effects or covariates. Sample: all monitoring stations in the Wave 1 and Wave 2 cities with pollution data before and aft…
+2. rd_pm_daily_controls_table1_panelA_col2: 34.9 (micrograms per cubic meter of PM₁₀) [type: coefficient]
+   Location: Table 1, Panel A (RD Estimates), RD in PM₁₀ (Daily), column (2)
+   Context: Table 1, Panel A, column (2), the paper's headline estimate: the column (1) local linear RD in reported daily PM₁₀ at the automation date with station fixed effects, month fixed effects and weather controls (temperature, relative humidity, precipitation, wind speed), entered by first residualizing PM₁₀ on them and running the RD on the residuals. Triangle kernel, optimal bandwidth (Calonico et al. 2014), all Wave 1 and Wave 2 stations; standard errors clustered by city.
+3. rd_pm_daily_wave1_table1_panelA_col3: 27.5 (micrograms per cubic meter of PM₁₀) [type: coefficient]
+   Location: Table 1, Panel A (RD Estimates), RD in PM₁₀ (Daily), column (3) Wave 1
+   Context: Table 1, Panel A, column (3): the column (2) residualized RD (station FE, month FE, weather controls; triangle kernel, optimal bandwidth) restricted to stations in Wave 1 cities (required to automate by January 1, 2013). Standard errors clustered by city.
+4. rd_pm_daily_wave2_table1_panelA_col4: 64.7 (micrograms per cubic meter of PM₁₀) [type: coefficient]
+   Location: Table 1, Panel A (RD Estimates), RD in PM₁₀ (Daily), column (4) Wave 2
+   Context: Table 1, Panel A, column (4): the column (2) residualized RD restricted to stations in Wave 2 cities (required to automate by January 1, 2014). Standard errors clustered by city.
+5. rd_pm_daily_deadline_table1_panelA_col5: 57.1 (micrograms per cubic meter of PM₁₀) [type: coefficient]
+   Location: Table 1, Panel A (RD Estimates), RD in PM₁₀ (Daily), column (5) Deadline
+   Context: Table 1, Panel A, column (5): the column (2) residualized RD restricted to stations in cities that automated exactly on their wave's deadline (from both waves), where the automation date was not chosen strategically. Standard errors clustered by city.
+6. rd_aod_monthly_controls_table1_panelA_col2: -0.005 (aerosol optical depth (unitless)) [type: coefficient]
+   Location: Table 1, Panel A (RD Estimates), RD in AOD, column (2)
+   Context: Table 1, Panel A, column (2), second row: the same residualized RD (station FE, month FE, weather controls) fitted to satellite aerosol optical depth (MODIS, Terra and Aqua) at the station by month, with months from automation as the running variable, as a check that true air quality did not change at automation; the paper calls it precisely zero. Triangle kernel, optimal bandwidth, all stations; standard errors clustered by city.
+7. event_study_pm_1_2_months_after_deadline_month_fe_table1_panelB_col1: 60.3 (micrograms per cubic meter of PM₁₀) [type: coefficient]
+   Location: Table 1, Panel B (Event-Study Estimates), 1-2 Months after, column (1)
+   Context: Table 1, Panel B, column (1). Event-study regression of reported daily PM₁₀ on treated-city indicators for 7-12, 5-6 and 3-4 months before and 1-2, 3-4, 5-6 and 7-12 months after automation (1-2 months before is the reference period), with station fixed effects, month fixed effects and weather controls (temperature, relative humidity, precipitation, wind speed). Sample: stations in cities that automated at their deadline, January 2012 to December 2013; treated stations are in Wave 1 cities (automated January 1, 2013), controls in Wave 2 cities (not automated during the period). The entry is th…
+8. event_study_pm_1_2_months_after_deadline_year_month_fe_table1_panelB_col2: 31.4 (micrograms per cubic meter of PM₁₀) [type: coefficient]
+   Location: Table 1, Panel B (Event-Study Estimates), 1-2 Months after, column (2)
+   Context: Table 1, Panel B, column (2): the column (1) deadline-sample event study with year-by-month fixed effects in place of month fixed effects (station FE and weather controls kept). The entry is the 1-2 months after coefficient; standard errors clustered by city.
+9. event_study_pm_1_2_months_after_matched_month_fe_table1_panelB_col3: 66.5 (micrograms per cubic meter of PM₁₀) [type: coefficient]
+   Location: Table 1, Panel B (Event-Study Estimates), 1-2 Months after, column (3) +Matching
+   Context: Table 1, Panel B, column (3): the column (1) event study (station FE, month FE, weather controls) on a matched sample in which each Wave 1 deadline station is paired with its geographically nearest Wave 2 deadline station, with replacement. The entry is the 1-2 months after coefficient; standard errors clustered by city.
+10. event_study_log_pm_1_2_months_after_matched_table1_panelB_col5: 0.24 (log points of PM₁₀) [type: coefficient]
+   Location: Table 1, Panel B (Event-Study Estimates), 1-2 Months after, column (5) Log(PM₁₀)
+   Context: Table 1, Panel B, column (5): the matched-sample event study with the natural logarithm of reported daily PM₁₀ as the outcome, station fixed effects, year-by-month fixed effects and weather controls (the paper reads the coefficients as approximate percentage changes). The entry is the 1-2 months after coefficient; standard errors clustered by city.
+11. n_obs_table1_panelB_deadline_cols1_2: 176426.0 (station-day observations) [type: count]
+   Location: Table 1, Panel B, Obs., columns (1)-(2)
+   Context: Number of observations in Table 1, Panel B, columns (1) and (2): the station-day observations of Wave 1 and Wave 2 deadline-city stations in 2012-2013 used in the unmatched event-study regressions.
+12. rd_face_mask_searches_controls_table2_panelA_col2: 11.03 (Baidu search index points (monthly average)) [type: coefficient]
+   Location: Table 2 (NBER WP Table 3), Panel A (RD Estimates), RD in Face Mask Searches, column (2)
+   Context: Table 2 ("Automating Air Quality Monitoring System and Avoidance Behaviors"), Panel A, column (2). Local linear RD estimate of the jump at automation in a city's monthly Baidu search index for "anti-haze face masks" (PC searches), with months from automation as the running variable, after residualizing the outcome on city fixed effects, month fixed effects and weather controls. Triangle kernel, optimal bandwidth; all sample cities; standard errors clustered by city.
+13. rd_air_filter_searches_controls_table2_panelA_col2: 8.73 (Baidu search index points (monthly average)) [type: coefficient]
+   Location: Table 2 (NBER WP Table 3), Panel A (RD Estimates), RD in Air Filter Searches, column (2)
+   Context: Table 2, Panel A, column (2): the same residualized RD (city FE, month FE, weather controls; triangle kernel, optimal bandwidth, all cities) for the city's monthly Baidu search index for "air filters". Standard errors clustered by city.
+
+## Dataset Information
+Name: greenstone-2022-china-pollution-monitoring-automation
+Local path: <repo>/.cache/datasets/greenstone_2022_china_pollution_monitoring_automation.script-free
+File format: csv
+Files in the dataset directory (paths relative to the local path above):
+- China_Pollution_Monitoring/Data/search_sale.dta (41.4 KB) — 467 rows, 15 columns: year, month, wind_speed, mask, filter, l_mask, l_filter, rh, code_city, taobao_mask, taobao_filter, l_taobao_mask, l_taobao_filter, rain, temp
+- China_Pollution_Monitoring/Data/pollution_1116.dta (38.3 MB) — 1433568 rows, 6 columns: date, pm10, station_n, code_city, no2, so2
+- China_Pollution_Monitoring/Data/station_list.dta (15.1 KB) — 654 rows, 6 columns: auto_date, pm10_n, phase, code_city, station_lon, station_lat
+- China_Pollution_Monitoring/Data/weather_1116.dta (27.4 MB) — 1433568 rows, 6 columns: date, wind_speed, rh, station_n, rain, temp
+- China_Pollution_Monitoring/Data/pm10_corrected_reference.dta (188.4 KB) — 8856 rows, 5 columns: year, month, pm10, code_city, pm10_corrected
+- China_Pollution_Monitoring/Data/mask_filter_search.dta (6.8 MB) — 712088 rows, 4 columns: date, filter, pmmask, code_city
+- China_Pollution_Monitoring/Data/aod_month.dta (421.6 KB) — 47088 rows, 4 columns: year, month, pm10_n, aod
+- China_Pollution_Monitoring/Data/city_info.dta (12.2 KB) — 123 rows, 3 columns: phase, code_city, city_en
+- China_Pollution_Monitoring/Data/pollution.csv (74.5 MB) — columns: station_n,code_city,date,pm10,no2,so2
+- China_Pollution_Monitoring/Results/figures/FigureA1/Cities_color.cpg (5 B)
+- China_Pollution_Monitoring/Results/figures/FigureA1/Cities_color.dbf (412.5 KB)
+- China_Pollution_Monitoring/Results/figures/FigureA1/Cities_color.prj (458 B)
+- China_Pollution_Monitoring/Results/figures/FigureA1/Cities_color.sbn (3.6 KB)
+- China_Pollution_Monitoring/Results/figures/FigureA1/Cities_color.sbx (404 B)
+- China_Pollution_Monitoring/Results/figures/FigureA1/Cities_color.shp (25.5 MB)
+- China_Pollution_Monitoring/Results/figures/FigureA1/Cities_color.shx (2.9 KB)
+- China_Pollution_Monitoring/Results/figures/FigureA1/FigureA1.mxd (574.5 KB)
+- China_Pollution_Monitoring/Results/figures/FigureA1/Taiwan.cpg (5 B)
+- China_Pollution_Monitoring/Results/figures/FigureA1/Taiwan.dbf (187 B)
+- China_Pollution_Monitoring/Results/figures/FigureA1/Taiwan.prj (458 B)
+- China_Pollution_Monitoring/Results/figures/FigureA1/Taiwan.sbn (244 B)
+- China_Pollution_Monitoring/Results/figures/FigureA1/Taiwan.sbx (132 B)
+- China_Pollution_Monitoring/Results/figures/FigureA1/Taiwan.shp (79.8 KB)
+- China_Pollution_Monitoring/Results/figures/FigureA1/Taiwan.shp.xml (5.4 KB)
+- China_Pollution_Monitoring/Results/figures/FigureA1/Taiwan.shx (188 B)
+- China_Pollution_Monitoring/Results/figures/FigureA1/wave1_wave2_station.cpg (5 B)
+- China_Pollution_Monitoring/Results/figures/FigureA1/wave1_wave2_station.dbf (3.1 MB)
+- China_Pollution_Monitoring/Results/figures/FigureA1/wave1_wave2_station.prj (145 B)
+- China_Pollution_Monitoring/Results/figures/FigureA1/wave1_wave2_station.sbn (15.4 KB)
+- China_Pollution_Monitoring/Results/figures/FigureA1/wave1_wave2_station.sbx (756 B)
+- China_Pollution_Monitoring/Results/figures/FigureA1/wave1_wave2_station.shp (70.9 KB)
+- China_Pollution_Monitoring/Results/figures/FigureA1/wave1_wave2_station.shx (13.0 KB)
+- China_Pollution_Monitoring/Results/figures/FigureB5/Cities.cpg (5 B)
+- China_Pollution_Monitoring/Results/figures/FigureB5/Cities.dbf (412.5 KB)
+- China_Pollution_Monitoring/Results/figures/FigureB5/Cities.prj (458 B)
+- China_Pollution_Monitoring/Results/figures/FigureB5/Cities.sbn (3.6 KB)
+- China_Pollution_Monitoring/Results/figures/FigureB5/Cities.sbx (404 B)
+- China_Pollution_Monitoring/Results/figures/FigureB5/Cities.shp (25.5 MB)
+- China_Pollution_Monitoring/Results/figures/FigureB5/Cities.shx (2.9 KB)
+- China_Pollution_Monitoring/Results/figures/FigureB5/FigureB5.mxd (486.5 KB)
+- China_Pollution_Monitoring/Results/figures/FigureB5/RD_color.cpg (5 B)
+- China_Pollution_Monitoring/Results/figures/FigureB5/RD_color.dbf (414.3 KB)
+- China_Pollution_Monitoring/Results/figures/FigureB5/RD_color.sbn (3.6 KB)
+- China_Pollution_Monitoring/Results/figures/FigureB5/RD_color.sbx (404 B)
+- China_Pollution_Monitoring/Results/figures/FigureB5/RD_color.shp (25.5 MB)
+- China_Pollution_Monitoring/Results/figures/FigureB5/RD_color.shx (2.9 KB)
+- China_Pollution_Monitoring/Results/figures/FigureB5/Taiwan.cpg (5 B)
+- China_Pollution_Monitoring/Results/figures/FigureB5/Taiwan.dbf (187 B)
+- China_Pollution_Monitoring/Results/figures/FigureB5/Taiwan.prj (458 B)
+- China_Pollution_Monitoring/Results/figures/FigureB5/Taiwan.sbn (244 B)
+- China_Pollution_Monitoring/Results/figures/FigureB5/Taiwan.sbx (132 B)
+- China_Pollution_Monitoring/Results/figures/FigureB5/Taiwan.shp (79.8 KB)
+- China_Pollution_Monitoring/Results/figures/FigureB5/Taiwan.shp.xml (5.4 KB)
+- China_Pollution_Monitoring/Results/figures/FigureB5/Taiwan.shx (188 B)
+- README.pdf (122.5 KB)
+- metadata.json (241 B)
+
+## Required Output Convention
+Emit each reproduced metric on its own line to stdout using EXACTLY this format:
+    RESULT:<metric_name>=<numeric_value>
+For example:  cat('RESULT:beta=0.342\n')
+Use snake_case metric names matching the claim descriptions.
+
+## Code Requirements
+Write a complete, self-contained R script that runs under Rscript.
+The dataset is a directory tree at '<repo>/.cache/datasets/greenstone_2022_china_pollution_monitoring_automation.script-free' — see the file listing under Dataset Information.  Load the actual data file(s) by the exact paths listed there (readr::read_csv() for .csv, haven::read_dta() for Stata .dta, load() for .RData/.rda, which creates the objects listed for the file under exactly those names: use them, do not guess others; readRDS() for .rds).
+Installed packages (no network; nothing else can be installed): jsonlite, fixest, lfe, AER, ivreg, plm, estimatr, lme4, quantreg, car, sandwich, lmtest, clubSandwich, multiwayvcov, marginaleffects, MatchIt, optmatch, CBPS, WeightIt, cobalt, did, rdrobust, rddensity, Synth, modelsummary, stargazer, texreg, broom, tidyverse, dplyr, tidyr, readr, stringr, lubridate, data.table, haven, readxl, janitor, zoo, ggplot2, ggridges, ggrepel, gridExtra, cowplot, gtable, extrafont, sf, MASS, nnet, survival, splines, Matrix, boot, stats, utils.
+Prefer fixest for fixed effects, IV and clustered SEs; use the other installed packages where the paper's method calls for them.
+Set a deterministic seed with ``set.seed(42)`` for any randomness.
+Do NOT access the internet; the container runs with --network none.
+Do NOT shell out via system() / system2().
+Emit RESULT:<name>=<value> lines to stdout at the end via cat().
+
+## Algorithm Hints
+This paper reports regression coefficients with standard errors. Default to fixest::feols() for OLS with fixed effects; switch to AER::ivreg() for instrumental variables and plm::plm() for panel data.  Use the cluster argument or cluster_var argument in feols() / vcovCL() from sandwich for cluster-robust standard errors.  Extract each coefficient via ``coef(model)['varname']`` and each SE via ``sqrt(diag(vcov(model)))['varname']`` so they can be emitted as separate RESULT: lines.
+
+## Independent Reproduction
+This is an INDEPENDENT reproduction: reconstruct the analysis from the paper's description alone.  The authors' own analysis code is deliberately withheld.  Do NOT open, read, source, or execute any script files that may appear in the dataset directory listing (.do, .ado, .R, .Rmd, .py, .sas, .sps, .m, and similar) — load data files only.  Derive the estimating equation, sample restrictions, fixed effects, and standard-error clustering from the paper information and claims above.
+
+Now write the complete R script. Output ONLY the code — no explanation, no markdown fences.

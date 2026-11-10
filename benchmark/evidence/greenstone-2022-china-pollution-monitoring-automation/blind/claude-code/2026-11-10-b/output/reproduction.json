@@ -1,0 +1,28 @@
+{
+  "schema": 1,
+  "entry_id": "greenstone-2022-china-pollution-monitoring-automation",
+  "mode": "blind",
+  "run_id": "2026-11-10-b",
+  "reproducer": "claude-code",
+  "language": "r",
+  "final": {"script": "script.R", "stdout": "stdout.txt", "stderr": "stderr.txt", "exit_code": 0},
+  "attempts": [
+    {"dir": "attempt-1", "exit_code": 0, "kind": ""},
+    {"dir": "attempt-2", "exit_code": 0, "kind": ""},
+    {"dir": "attempt-3", "exit_code": 1, "kind": "error"},
+    {"dir": "attempt-4", "exit_code": 1, "kind": "error"}
+  ],
+  "deviations": [
+    "rdrobust (R) run with masspoints='off' (no mass-point adjustment), as in the pre-2020 Stata rdrobust the paper would have used; the bandwidths/obs-within-bandwidth reported in the Table 1 notes were seen in an exploratory run and are consistent with this choice. vce='hc1' with cluster=city (rdrobust switches to CR1). Conventional (not bias-corrected) point estimates are reported.",
+    "Panel A col 1 (no controls) is run on the station-days with PM10 and all four weather variables (1,049,325 obs, the count stated in the Table 1 notes), so cols 1 and 2 share a sample.",
+    "Residualization: one OLS of the outcome on station FE, calendar-month (month-of-year) FE and linear temperature, humidity, precipitation, wind speed on the full sample; the wave/deadline RDs use subsets of these full-sample residuals.",
+    "Deadline sample = stations in cities automated exactly on 2013-01-01 or 2014-01-01 (any wave); event-study treated = automated 2013-01-01 (242 stations), controls = automated 2014-01-01 (123 stations), matching the station counts in the Table 1 notes.",
+    "Event-study bins defined by calendar months relative to Jan 2013 (Jan-Jun 2012 = 7-12 before, ..., Nov-Dec 2012 = reference, Jan-Feb 2013 = 1-2 after, Jul-Dec 2013 = 7-12 after); indicators = treated x bin.",
+    "Matched sample: each treated station paired with its nearest (haversine) control station, with replacement; a copy of the control is stacked for every pair, with a pair-specific station FE (231,990 obs; the paper reports 186,499, so the authors' pairing/dedup differs from mine). Log(PM10) drops pm10 = 0.",
+    "AOD and Baidu RDs: running variable = calendar months from the automation month (automation month = 0, treated). Monthly weather = mean of daily station weather; city weather = mean across the city's stations. Baidu monthly index = mean of daily PC index within city-month, restricted to the 123 sample cities. City automation date = modal station automation date (13 cities have stations with differing dates)."
+  ],
+  "notes": "Independent blind reproduction from the redacted paper text and the data files only. Stata date variables are days since 1960-01-01. All 13 quantities are estimated in one script (about 15 s). Two exploratory runs (data inspection; rdrobust timing and bandwidth with and without mass-point adjustment, no RESULT lines). Two crash repairs: (3) fixest dropped FE singletons in the AOD residualization, fixed with fixef.rm='none'; (4) the city automation date was not unique, fixed with the modal date, and in the same repair the matched sample was switched to stacked pairs. Table 1 Panel B coefficients the paper did not withhold were visible in the run logs; the specification was not adjusted toward them. Did not read README.pdf, any scripts, or any result files. No run hung.",
+  "files_read_outside_mount": [],
+  "started_at": "2026-11-10T05:55:57Z",
+  "finished_at": "2026-11-10T06:02:00Z"
+}

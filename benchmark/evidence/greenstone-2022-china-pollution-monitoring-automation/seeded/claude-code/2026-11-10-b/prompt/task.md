@@ -1,0 +1,1408 @@
+# Retally reproduction task: greenstone-2022-china-pollution-monitoring-automation (seeded, run 2026-11-10-b)
+
+You are reproducing quantitative results from an econometrics paper for the
+Retally benchmark.  You will write R code, run it in a network-less Docker
+sandbox, and record what you did as files.  The files are what gets scored.
+
+- Benchmark cell: entry `greenstone-2022-china-pollution-monitoring-automation`, mode `seeded`, run `2026-11-10-b`
+- Paper: Can Technology Solve the Principal-Agent Problem? Evidence from China's War on Air Pollution
+- Paper text (extracted from the PDF; tables may be garbled): `<repo>/benchmark/.cache/claude-code/greenstone-2022-china-pollution-monitoring-automation/seeded/2026-11-10-b/paper.txt`
+- Data (the ONLY data you get): `<repo>/benchmark/.cache/claude-code/greenstone-2022-china-pollution-monitoring-automation/seeded/2026-11-10-b/mount/greenstone_2022_china_pollution_monitoring_automation`
+- Output directory (the ONLY place you write): `<repo>/benchmark/reproductions/greenstone-2022-china-pollution-monitoring-automation/seeded/2026-11-10-b`
+
+## Mode rules
+
+These apply in every mode:
+
+- Write R only.  Run it only inside the sandbox, with the command under
+  "How to run a script"; never run R on the host.
+- No network: do not download anything, do not look the paper or its
+  replication package up online.
+- Use only the files under `<repo>/benchmark/.cache/claude-code/greenstone-2022-china-pollution-monitoring-automation/seeded/2026-11-10-b/mount/greenstone_2022_china_pollution_monitoring_automation` as data, and `<repo>/benchmark/.cache/claude-code/greenstone-2022-china-pollution-monitoring-automation/seeded/2026-11-10-b/paper.txt` as
+  the paper.
+- Do not read anything else in this repository or on this machine: not the
+  catalog YAMLs under `benchmark/papers/`, not `.cache/datasets/`, not
+  `benchmark/results/`, not other reproductions under `benchmark/reproductions/`,
+  not other task directories.  If you nevertheless read any other file, list
+  it in `files_read_outside_mount` in `reproduction.json`, with why.
+- Seeded mode: the authors' own analysis scripts are on disk under the data
+  directory and reproduced below under "Original Replication Scripts".  You
+  may follow them:
+
+  The replication package (the dataset directory) ships the authors' own analysis scripts,
+  reproduced below.  These are the GROUND TRUTH for the exact estimating equation, variable names,
+  sample restrictions, fixed effects, and standard-error clustering — follow them over anything
+  reconstructed from the methodology summary, and prefer them over the paper's text where the two
+  disagree.  Your job is to write R code that implements the SAME SPECIFICATION: translate what the
+  scripts estimate, do not transliterate their syntax line by line (a Stata .do file's regression,
+  e.g. `reghdfe y x controls, absorb(fe) cluster(cl)`, becomes the equivalent fixest::feols() call
+  in R).  Keep only the parts that produce the specific claims being reproduced; skip figure
+  construction and unrelated robustness checks.  The scripts' data-file paths refer to the package's
+  internal layout — resolve them against the dataset directory listed under Dataset Information.
+- You may compare your `RESULT:` values with the claimed values yourself.
+  Every time you do that and then change the script, record the run you
+  compared as an attempt with `kind: "claim"`, and write the comparison you
+  made to that attempt's `feedback.txt`, one line per off-target claim in
+  the form `<name>: reproduced <v>, claimed <c>`.  Produce it with:
+
+      cd <repo> && uv run python -m benchmark.reproducers.check_attempt --run-dir <repo>/benchmark/reproductions/greenstone-2022-china-pollution-monitoring-automation/seeded/2026-11-10-b --stdout <that attempt's stdout.txt>
+
+  At most 3 `kind: "claim"` attempts.
+- At most 3 `kind: "error"` repairs (a run that crashed or
+  printed no `RESULT:` line, followed by a fix).
+
+## Claims to Reproduce
+1. rd_pm_daily_no_controls_table1_panelA_col1: 34.7 (micrograms per cubic meter of PM₁₀) [type: coefficient]
+   Location: Table 1, Panel A (RD Estimates), RD in PM₁₀ (Daily), column (1)
+   Context: Table 1 ("Automating Air Quality Monitoring System and PM₁₀ Concentrations"), Panel A, column (1). Non-parametric local linear regression discontinuity estimate of the jump in reported daily PM₁₀ concentrations at the date a city's air quality monitoring was automated; the running variable is days from the automation date, with separate slopes before and after. Triangle kernel, bandwidth chosen by the Calonico, Cattaneo and Titiunik (2014) optimal bandwidth method. No fixed effects or covariates. Sample: all monitoring stations in the Wave 1 and Wave 2 cities with pollution data before and aft…
+2. rd_pm_daily_controls_table1_panelA_col2: 34.9 (micrograms per cubic meter of PM₁₀) [type: coefficient]
+   Location: Table 1, Panel A (RD Estimates), RD in PM₁₀ (Daily), column (2)
+   Context: Table 1, Panel A, column (2), the paper's headline estimate: the column (1) local linear RD in reported daily PM₁₀ at the automation date with station fixed effects, month fixed effects and weather controls (temperature, relative humidity, precipitation, wind speed), entered by first residualizing PM₁₀ on them and running the RD on the residuals. Triangle kernel, optimal bandwidth (Calonico et al. 2014), all Wave 1 and Wave 2 stations; standard errors clustered by city.
+3. rd_pm_daily_wave1_table1_panelA_col3: 27.5 (micrograms per cubic meter of PM₁₀) [type: coefficient]
+   Location: Table 1, Panel A (RD Estimates), RD in PM₁₀ (Daily), column (3) Wave 1
+   Context: Table 1, Panel A, column (3): the column (2) residualized RD (station FE, month FE, weather controls; triangle kernel, optimal bandwidth) restricted to stations in Wave 1 cities (required to automate by January 1, 2013). Standard errors clustered by city.
+4. rd_pm_daily_wave2_table1_panelA_col4: 64.7 (micrograms per cubic meter of PM₁₀) [type: coefficient]
+   Location: Table 1, Panel A (RD Estimates), RD in PM₁₀ (Daily), column (4) Wave 2
+   Context: Table 1, Panel A, column (4): the column (2) residualized RD restricted to stations in Wave 2 cities (required to automate by January 1, 2014). Standard errors clustered by city.
+5. rd_pm_daily_deadline_table1_panelA_col5: 57.1 (micrograms per cubic meter of PM₁₀) [type: coefficient]
+   Location: Table 1, Panel A (RD Estimates), RD in PM₁₀ (Daily), column (5) Deadline
+   Context: Table 1, Panel A, column (5): the column (2) residualized RD restricted to stations in cities that automated exactly on their wave's deadline (from both waves), where the automation date was not chosen strategically. Standard errors clustered by city.
+6. rd_aod_monthly_controls_table1_panelA_col2: -0.005 (aerosol optical depth (unitless)) [type: coefficient]
+   Location: Table 1, Panel A (RD Estimates), RD in AOD, column (2)
+   Context: Table 1, Panel A, column (2), second row: the same residualized RD (station FE, month FE, weather controls) fitted to satellite aerosol optical depth (MODIS, Terra and Aqua) at the station by month, with months from automation as the running variable, as a check that true air quality did not change at automation; the paper calls it precisely zero. Triangle kernel, optimal bandwidth, all stations; standard errors clustered by city.
+7. event_study_pm_1_2_months_after_deadline_month_fe_table1_panelB_col1: 60.3 (micrograms per cubic meter of PM₁₀) [type: coefficient]
+   Location: Table 1, Panel B (Event-Study Estimates), 1-2 Months after, column (1)
+   Context: Table 1, Panel B, column (1). Event-study regression of reported daily PM₁₀ on treated-city indicators for 7-12, 5-6 and 3-4 months before and 1-2, 3-4, 5-6 and 7-12 months after automation (1-2 months before is the reference period), with station fixed effects, month fixed effects and weather controls (temperature, relative humidity, precipitation, wind speed). Sample: stations in cities that automated at their deadline, January 2012 to December 2013; treated stations are in Wave 1 cities (automated January 1, 2013), controls in Wave 2 cities (not automated during the period). The entry is th…
+8. event_study_pm_1_2_months_after_deadline_year_month_fe_table1_panelB_col2: 31.4 (micrograms per cubic meter of PM₁₀) [type: coefficient]
+   Location: Table 1, Panel B (Event-Study Estimates), 1-2 Months after, column (2)
+   Context: Table 1, Panel B, column (2): the column (1) deadline-sample event study with year-by-month fixed effects in place of month fixed effects (station FE and weather controls kept). The entry is the 1-2 months after coefficient; standard errors clustered by city.
+9. event_study_pm_1_2_months_after_matched_month_fe_table1_panelB_col3: 66.5 (micrograms per cubic meter of PM₁₀) [type: coefficient]
+   Location: Table 1, Panel B (Event-Study Estimates), 1-2 Months after, column (3) +Matching
+   Context: Table 1, Panel B, column (3): the column (1) event study (station FE, month FE, weather controls) on a matched sample in which each Wave 1 deadline station is paired with its geographically nearest Wave 2 deadline station, with replacement. The entry is the 1-2 months after coefficient; standard errors clustered by city.
+10. event_study_log_pm_1_2_months_after_matched_table1_panelB_col5: 0.24 (log points of PM₁₀) [type: coefficient]
+   Location: Table 1, Panel B (Event-Study Estimates), 1-2 Months after, column (5) Log(PM₁₀)
+   Context: Table 1, Panel B, column (5): the matched-sample event study with the natural logarithm of reported daily PM₁₀ as the outcome, station fixed effects, year-by-month fixed effects and weather controls (the paper reads the coefficients as approximate percentage changes). The entry is the 1-2 months after coefficient; standard errors clustered by city.
+11. n_obs_table1_panelB_deadline_cols1_2: 176426.0 (station-day observations) [type: count]
+   Location: Table 1, Panel B, Obs., columns (1)-(2)
+   Context: Number of observations in Table 1, Panel B, columns (1) and (2): the station-day observations of Wave 1 and Wave 2 deadline-city stations in 2012-2013 used in the unmatched event-study regressions.
+12. rd_face_mask_searches_controls_table2_panelA_col2: 11.03 (Baidu search index points (monthly average)) [type: coefficient]
+   Location: Table 2 (NBER WP Table 3), Panel A (RD Estimates), RD in Face Mask Searches, column (2)
+   Context: Table 2 ("Automating Air Quality Monitoring System and Avoidance Behaviors"), Panel A, column (2). Local linear RD estimate of the jump at automation in a city's monthly Baidu search index for "anti-haze face masks" (PC searches), with months from automation as the running variable, after residualizing the outcome on city fixed effects, month fixed effects and weather controls. Triangle kernel, optimal bandwidth; all sample cities; standard errors clustered by city.
+13. rd_air_filter_searches_controls_table2_panelA_col2: 8.73 (Baidu search index points (monthly average)) [type: coefficient]
+   Location: Table 2 (NBER WP Table 3), Panel A (RD Estimates), RD in Air Filter Searches, column (2)
+   Context: Table 2, Panel A, column (2): the same residualized RD (city FE, month FE, weather controls; triangle kernel, optimal bandwidth, all cities) for the city's monthly Baidu search index for "air filters". Standard errors clustered by city.
+
+## Dataset Information
+Name: greenstone_2022_china_pollution_monitoring_automation
+Local path: <repo>/benchmark/.cache/claude-code/greenstone-2022-china-pollution-monitoring-automation/seeded/2026-11-10-b/mount/greenstone_2022_china_pollution_monitoring_automation
+File format: csv
+Files in the dataset directory (paths relative to the local path above):
+- China_Pollution_Monitoring/Data/search_sale.dta (41.4 KB) — 467 rows, 15 columns: year, month, wind_speed, mask, filter, l_mask, l_filter, rh, code_city, taobao_mask, taobao_filter, l_taobao_mask, l_taobao_filter, rain, temp
+- China_Pollution_Monitoring/Data/station_list.dta (15.1 KB) — 654 rows, 6 columns: auto_date, phase, pm10_n, code_city, station_lon, station_lat
+- China_Pollution_Monitoring/Data/weather_1116.dta (27.4 MB) — 1433568 rows, 6 columns: date, wind_speed, rh, station_n, rain, temp
+- China_Pollution_Monitoring/Data/mask_filter_search.dta (6.8 MB) — 712088 rows, 4 columns: date, filter, pmmask, code_city
+- China_Pollution_Monitoring/Data/pollution_1116.dta (38.3 MB) — 1433568 rows, 6 columns: date, station_n, code_city, pm10, no2, so2
+- China_Pollution_Monitoring/Data/pm10_corrected_reference.dta (188.4 KB) — 8856 rows, 5 columns: year, month, code_city, pm10, pm10_corrected
+- China_Pollution_Monitoring/Data/aod_month.dta (421.6 KB) — 47088 rows, 4 columns: year, month, pm10_n, aod
+- China_Pollution_Monitoring/Data/city_info.dta (12.2 KB) — 123 rows, 3 columns: phase, code_city, city_en
+- China_Pollution_Monitoring/Ado/brain.ado (20.7 KB)
+- China_Pollution_Monitoring/Code/FS.do (10.2 KB)
+- China_Pollution_Monitoring/Code/Figures.do (9.0 KB)
+- China_Pollution_Monitoring/Code/MASTER.do (384 B)
+- China_Pollution_Monitoring/Code/Prepare_Data.do (13.2 KB)
+- China_Pollution_Monitoring/Code/TS.do (21.1 KB)
+- China_Pollution_Monitoring/Code/Tables.do (11.8 KB)
+- China_Pollution_Monitoring/Data/pollution.csv (74.5 MB) — columns: station_n,code_city,date,pm10,no2,so2
+- China_Pollution_Monitoring/Results/figures/FigureA1/Cities_color.cpg (5 B)
+- China_Pollution_Monitoring/Results/figures/FigureA1/Cities_color.dbf (412.5 KB)
+- China_Pollution_Monitoring/Results/figures/FigureA1/Cities_color.prj (458 B)
+- China_Pollution_Monitoring/Results/figures/FigureA1/Cities_color.sbn (3.6 KB)
+- China_Pollution_Monitoring/Results/figures/FigureA1/Cities_color.sbx (404 B)
+- China_Pollution_Monitoring/Results/figures/FigureA1/Cities_color.shp (25.5 MB)
+- China_Pollution_Monitoring/Results/figures/FigureA1/Cities_color.shx (2.9 KB)
+- China_Pollution_Monitoring/Results/figures/FigureA1/FigureA1.mxd (574.5 KB)
+- China_Pollution_Monitoring/Results/figures/FigureA1/Taiwan.cpg (5 B)
+- China_Pollution_Monitoring/Results/figures/FigureA1/Taiwan.dbf (187 B)
+- China_Pollution_Monitoring/Results/figures/FigureA1/Taiwan.prj (458 B)
+- China_Pollution_Monitoring/Results/figures/FigureA1/Taiwan.sbn (244 B)
+- China_Pollution_Monitoring/Results/figures/FigureA1/Taiwan.sbx (132 B)
+- China_Pollution_Monitoring/Results/figures/FigureA1/Taiwan.shp (79.8 KB)
+- China_Pollution_Monitoring/Results/figures/FigureA1/Taiwan.shp.xml (5.4 KB)
+- China_Pollution_Monitoring/Results/figures/FigureA1/Taiwan.shx (188 B)
+- China_Pollution_Monitoring/Results/figures/FigureA1/wave1_wave2_station.cpg (5 B)
+- China_Pollution_Monitoring/Results/figures/FigureA1/wave1_wave2_station.dbf (3.1 MB)
+- China_Pollution_Monitoring/Results/figures/FigureA1/wave1_wave2_station.prj (145 B)
+- China_Pollution_Monitoring/Results/figures/FigureA1/wave1_wave2_station.sbn (15.4 KB)
+- China_Pollution_Monitoring/Results/figures/FigureA1/wave1_wave2_station.sbx (756 B)
+- China_Pollution_Monitoring/Results/figures/FigureA1/wave1_wave2_station.shp (70.9 KB)
+- China_Pollution_Monitoring/Results/figures/FigureA1/wave1_wave2_station.shx (13.0 KB)
+- China_Pollution_Monitoring/Results/figures/FigureB5/Cities.cpg (5 B)
+- China_Pollution_Monitoring/Results/figures/FigureB5/Cities.dbf (412.5 KB)
+- China_Pollution_Monitoring/Results/figures/FigureB5/Cities.prj (458 B)
+- China_Pollution_Monitoring/Results/figures/FigureB5/Cities.sbn (3.6 KB)
+- China_Pollution_Monitoring/Results/figures/FigureB5/Cities.sbx (404 B)
+- China_Pollution_Monitoring/Results/figures/FigureB5/Cities.shp (25.5 MB)
+- China_Pollution_Monitoring/Results/figures/FigureB5/Cities.shx (2.9 KB)
+- China_Pollution_Monitoring/Results/figures/FigureB5/FigureB5.mxd (486.5 KB)
+- China_Pollution_Monitoring/Results/figures/FigureB5/RD_color.cpg (5 B)
+- China_Pollution_Monitoring/Results/figures/FigureB5/RD_color.dbf (414.3 KB)
+- China_Pollution_Monitoring/Results/figures/FigureB5/RD_color.sbn (3.6 KB)
+- China_Pollution_Monitoring/Results/figures/FigureB5/RD_color.sbx (404 B)
+- China_Pollution_Monitoring/Results/figures/FigureB5/RD_color.shp (25.5 MB)
+- China_Pollution_Monitoring/Results/figures/FigureB5/RD_color.shx (2.9 KB)
+- China_Pollution_Monitoring/Results/figures/FigureB5/Taiwan.cpg (5 B)
+- China_Pollution_Monitoring/Results/figures/FigureB5/Taiwan.dbf (187 B)
+- China_Pollution_Monitoring/Results/figures/FigureB5/Taiwan.prj (458 B)
+- China_Pollution_Monitoring/Results/figures/FigureB5/Taiwan.sbn (244 B)
+- China_Pollution_Monitoring/Results/figures/FigureB5/Taiwan.sbx (132 B)
+- China_Pollution_Monitoring/Results/figures/FigureB5/Taiwan.shp (79.8 KB)
+- China_Pollution_Monitoring/Results/figures/FigureB5/Taiwan.shp.xml (5.4 KB)
+- China_Pollution_Monitoring/Results/figures/FigureB5/Taiwan.shx (188 B)
+- README.pdf (122.5 KB)
+- metadata.json (241 B)
+
+## Required Output Convention
+Emit each reproduced metric on its own line to stdout using EXACTLY this format:
+    RESULT:<metric_name>=<numeric_value>
+For example:  cat('RESULT:beta=0.342\n')
+Use snake_case metric names matching the claim descriptions.
+
+## Code Requirements
+Write a complete, self-contained R script that runs under Rscript.
+The dataset is a directory tree at '<repo>/benchmark/.cache/claude-code/greenstone-2022-china-pollution-monitoring-automation/seeded/2026-11-10-b/mount/greenstone_2022_china_pollution_monitoring_automation' — see the file listing under Dataset Information.  Load the actual data file(s) by the exact paths listed there (readr::read_csv() for .csv, haven::read_dta() for Stata .dta, load() for .RData/.rda, which creates the objects listed for the file under exactly those names: use them, do not guess others; readRDS() for .rds).
+Installed packages (no network; nothing else can be installed): jsonlite, fixest, lfe, AER, ivreg, plm, estimatr, lme4, quantreg, car, sandwich, lmtest, clubSandwich, multiwayvcov, marginaleffects, MatchIt, optmatch, CBPS, WeightIt, cobalt, did, rdrobust, rddensity, Synth, modelsummary, stargazer, texreg, broom, tidyverse, dplyr, tidyr, readr, stringr, lubridate, data.table, haven, readxl, janitor, zoo, ggplot2, ggridges, ggrepel, gridExtra, cowplot, gtable, extrafont, sf, MASS, nnet, survival, splines, Matrix, boot, stats, utils.
+Prefer fixest for fixed effects, IV and clustered SEs; use the other installed packages where the paper's method calls for them.
+Set a deterministic seed with ``set.seed(42)`` for any randomness.
+Do NOT access the internet; the container runs with --network none.
+Do NOT shell out via system() / system2().
+Emit RESULT:<name>=<value> lines to stdout at the end via cat().
+
+## Original Replication Scripts
+The replication package (the dataset directory) ships the authors' own analysis scripts, reproduced below.  These are the GROUND TRUTH for the exact estimating equation, variable names, sample restrictions, fixed effects, and standard-error clustering — follow them over anything reconstructed from the methodology summary, and prefer them over the paper's text where the two disagree.  Your job is to write R code that implements the SAME SPECIFICATION: translate what the scripts estimate, do not transliterate their syntax line by line (a Stata .do file's regression, e.g. `reghdfe y x controls, absorb(fe) cluster(cl)`, becomes the equivalent fixest::feols() call in R).  Keep only the parts that produce the specific claims being reproduced; skip figure construction and unrelated robustness checks.  The scripts' data-file paths refer to the package's internal layout — resolve them against the dataset directory listed under Dataset Information.
+
+Stata-to-fixest sample matching: feols() drops fixed-effect singletons by default, but Stata's `reg y x i.fe` / `xi:` dummies keep them.  Pass `fixef.rm = "none"` to every feols() call that has fixed effects, otherwise the observation count and the robust SEs drift from the paper's.  Stata's `, r` / `vce(robust)` is `vcov = "hetero"`.
+
+### `China_Pollution_Monitoring/Code/MASTER.do`
+```stata
+*** Master file for China Pollution Monitoring Paper
+*** Instructions: Set path to directory with Codes, Data, and Results folders (including Results/figures folder).
+***				  Then run master file to produce all output.
+global path "<home>/Dropbox/China_Pollution_Monitoring"
+cd "$path/Code"
+
+do Prepare_Data.do
+do Figures.do
+do Tables.do
+do FS.do
+do TS.do
+
+
+***The End
+
+```
+
+### `China_Pollution_Monitoring/Code/Tables.do`
+```stata
+***This is the main program for Tables 1, 2, 3 generated using Stata 15 MP
+
+clear all
+set more off
+
+*global path "<home>/Dropbox/China_Pollution_Monitoring"
+
+*==============================================================================*
+*Table 1A: RD
+*==============================================================================*
+***Row 1. Daily PM10
+use "$path/Data/station_day_1116",clear
+gen T=date-auto_date
+gen month=month(date)
+qui reghdfe pm10 wind_speed rain temp rh, absorb(pm10_n month) res(resid_pm10_smw)
+*raw
+qui rdrobust pm10 T if temp!=. & rain!=. & rh!=. & wind_speed !=., c(0) p(1) q(2) kernel(tri) vce(cluster code_city) masspoints(off)
+outreg2 using "$path/Results/Table1_A1", excel dec(1) replace ctitle(pm10) addtext(Sample, All) addstat(Obs.(Daily), e(N_h_l)+e(N_h_r), Bandwidth (Days), floor(e(h_l)))
+*residual
+qui rdrobust resid_pm10_smw T, c(0) p(1) q(2) kernel(tri) vce(cluster code_city) masspoints(off)
+outreg2 using "$path/Results/Table1_A1", excel dec(1) append ctitle(pm10) addtext(Sample, All, Station FE, Y, Month FE, Y, Weather Controls, Y) addstat(Obs.(Daily), e(N_h_l)+e(N_h_r), Bandwidth (Days), floor(e(h_l)))
+*wave 1
+qui rdrobust resid_pm10_smw T if phase==1, c(0) p(1) q(2) kernel(tri) vce(cluster code_city) masspoints(off)
+outreg2 using "$path/Results/Table1_A1", excel dec(1) append ctitle(pm10) addtext(Sample, Wave 1, Station FE, Y, Month FE, Y, Weather Controls, Y) addstat(Obs.(Daily), e(N_h_l)+e(N_h_r), Bandwidth (Days), floor(e(h_l)))
+*wave 2
+qui rdrobust resid_pm10_smw T if phase==2, c(0) p(1) q(2) kernel(tri) vce(cluster code_city) masspoints(off)
+outreg2 using "$path/Results/Table1_A1", excel dec(1) append ctitle(pm10) addtext(Sample, Wave 2, Station FE, Y, Month FE, Y, Weather Controls, Y) addstat(Obs.(Daily), e(N_h_l)+e(N_h_r), Bandwidth (Days), floor(e(h_l)))
+*deadline
+qui rdrobust resid_pm10_smw T if auto_date==19359 | auto_date==19724, c(0) p(1) q(2) kernel(tri) vce(cluster code_city) masspoints(off)
+outreg2 using "$path/Results/Table1_A1", excel dec(1) append ctitle(pm10) addtext(Sample, Deadline, Station FE, Y, Month FE, Y, Weather Controls, Y) addstat(Obs.(Daily), e(N_h_l)+e(N_h_r), Bandwidth (Days), floor(e(h_l)))
+
+***Row 2: Monthly AOD
+use "$path/Data/station_month.dta",clear
+qui reghdfe aod wind_speed rain temp rh, absorb(pm10_n month) res(resid_aod_smw)
+*raw
+qui rdrobust aod n_month if temp!=. & rain!=. & rh!=. & wind_speed !=. & resid_aod_smw!=., c(0) p(1) q(2) kernel(tri) vce(cluster code_city) masspoints(off)
+outreg2 using "$path/Results/Table1_A2", excel dec(3) append ctitle(aod) addtext(Sample, All) addstat(Obs.(Monthly), e(N_h_l)+e(N_h_r), Bandwidth (Months), floor(e(h_l)))
+*residual
+qui rdrobust resid_aod_smw n_month, c(0) p(1) q(2) kernel(tri) vce(cluster code_city) masspoints(off)
+outreg2 using "$path/Results/Table1_A2", excel dec(3) append ctitle(aod) addtext(Sample, All, Station FE, Y, Month FE, Y, Weather Controls, Y) addstat(Obs.(Monthly), e(N_h_l)+e(N_h_r), Bandwidth (Months), floor(e(h_l)))
+*wave 1
+qui rdrobust resid_aod_smw n_month if phase==1, c(0) p(1) q(2) kernel(tri) vce(cluster code_city) masspoints(off)
+outreg2 using "$path/Results/Table1_A2", excel dec(3) append ctitle(aod) addtext(Sample, Wave 1, Station FE, Y, Month FE, Y, Weather Controls, Y) addstat(Obs.(Monthly), e(N_h_l)+e(N_h_r), Bandwidth (Months), floor(e(h_l)))
+*wave 2
+qui rdrobust resid_aod_smw n_month if phase==2, c(0) p(1) q(2) kernel(tri) vce(cluster code_city) masspoints(off)
+outreg2 using "$path/Results/Table1_A2", excel dec(3) append ctitle(aod) addtext(Sample, Wave 2, Station FE, Y, Month FE, Y, Weather Controls, Y) addstat(Obs.(Monthly), e(N_h_l)+e(N_h_r), Bandwidth (Months), floor(e(h_l)))
+*deadline
+qui rdrobust resid_aod_smw n_month if auto_date==19359 | auto_date==19724, c(0) p(1) q(2) kernel(tri) vce(cluster code_city) masspoints(off)
+outreg2 using "$path/Results/Table1_A2", excel dec(3) append ctitle(aod) addtext(Sample, Deadline, Station FE, Y, Month FE, Y, Weather Controls, Y) addstat(Obs.(Monthly), e(N_h_l)+e(N_h_r), Bandwidth (Months), floor(e(h_l)))
+*==============================================================================*
+*Table 1B: Event-Study Estimates
+*==============================================================================*
+***Deadline
+use "$path/Data/station_day_1116.dta",clear
+gen year=year(date)
+gen month=month(date)
+egen year_month=group(year month)
+keep if year>=2012 & year<=2013
+keep if auto_date==19724 | auto_date==19359
+gen treat=(auto_date==19359)
+gen after2=(year>=2013)
+gen m12_before2=(year==2012 & month>=11 & month<=12)
+gen m34_before2=(year==2012 & month>=9 & month<=10)
+gen m56_before2=(year==2012 & month>=7 & month<=8)
+gen m712_before2=(year==2012 & month>=1 & month<=6)
+gen m12_after2=(year==2013 & month>=1 & month<=2)
+gen m34_after2=(year==2013 & month>=3 & month<=4)
+gen m56_after2=(year==2013 & month>=5 & month<=6)
+gen m712_after2=(year==2013 & month>=7 & month<=12)
+
+foreach v in 12 34 56 712{
+	gen treat_m`v'_before2=treat*m`v'_before2
+	gen treat_m`v'_after2=treat*m`v'_after2
+}
+
+qui reghdfe pm10 treat_m712_before2 treat_m56_before2 treat_m34_before2 treat_m12_after2 treat_m34_after2 treat_m56_after2 treat_m712_after2  wind_speed rain temp rh, absorb(pm10_n month) vce(cluster code_city)
+outreg2 using "$path/Results/Table1_B", excel dec(1) append keep (treat_m712_before2 treat_m56_before2 treat_m34_before2 treat_m12_after2 treat_m34_after2 treat_m56_after2 treat_m712_after2) ctitle(PM10) addtext(Sample, Deadline, Weather Controls, Y, Station FE, Y, Month FE, Y)
+qui reghdfe pm10 treat_m712_before2 treat_m56_before2 treat_m34_before2 treat_m12_after2 treat_m34_after2 treat_m56_after2 treat_m712_after2  wind_speed rain temp rh, absorb(pm10_n year_month) vce(cluster code_city)
+outreg2 using "$path/Results/Table1_B", excel dec(1) append keep (treat_m712_before2 treat_m56_before2 treat_m34_before2 treat_m12_after2 treat_m34_after2 treat_m56_after2 treat_m712_after2) ctitle(PM10) addtext(Sample, Deadline, Weather Controls, Y, Station FE, Y, Year-Month FE, Y)
+
+***nearest matching
+use "$path/Data/did_ddl_match.dta" ,clear
+gen year=year(date)
+gen month=month(date)
+egen year_month=group(year month)
+gen treat=(auto_date==19359)
+gen after2=(year>=2013)
+gen m12_before2=(year==2012 & month>=11 & month<=12)
+gen m34_before2=(year==2012 & month>=9 & month<=10)
+gen m56_before2=(year==2012 & month>=7 & month<=8)
+gen m712_before2=(year==2012 & month>=1 & month<=6)
+gen m12_after2=(year==2013 & month>=1 & month<=2)
+gen m34_after2=(year==2013 & month>=3 & month<=4)
+gen m56_after2=(year==2013 & month>=5 & month<=6)
+gen m712_after2=(year==2013 & month>=7 & month<=12)
+
+foreach v in 12 34 56 712{
+	gen treat_m`v'_before2=treat*m`v'_before2
+	gen treat_m`v'_after2=treat*m`v'_after2
+}
+
+qui reghdfe pm10 treat_m712_before2 treat_m56_before2 treat_m34_before2 treat_m12_after2 treat_m34_after2 treat_m56_after2 treat_m712_after2  wind_speed rain temp rh, absorb(pm10_n month) vce(cluster code_city)
+outreg2 using "$path/Results/Table1_B", excel dec(1) append keep (treat_m712_before2 treat_m56_before2 treat_m34_before2 treat_m12_after2 treat_m34_after2 treat_m56_after2 treat_m712_after2) ctitle(PM10) addtext(Sample, +Matching, Weather Controls, Y, Station FE, Y, Month FE, Y)
+qui reghdfe pm10 treat_m712_before2 treat_m56_before2 treat_m34_before2 treat_m12_after2 treat_m34_after2 treat_m56_after2 treat_m712_after2  wind_speed rain temp rh, absorb(pm10_n year_month) vce(cluster code_city)
+outreg2 using "$path/Results/Table1_B", excel dec(1) append keep (treat_m712_before2 treat_m56_before2 treat_m34_before2 treat_m12_after2 treat_m34_after2 treat_m56_after2 treat_m712_after2) ctitle(PM10) addtext(Sample, +Matching, Weather Controls, Y, Station FE, Y, Year-Month FE, Y)
+*log_pm10
+qui reghdfe l_pm10 treat_m712_before2 treat_m56_before2 treat_m34_before2 treat_m12_after2 treat_m34_after2 treat_m56_after2 treat_m712_after2  wind_speed rain temp rh, absorb(pm10_n year_month) vce(cluster code_city)
+outreg2 using "$path/Results/Table1_B", excel dec(2) append keep (treat_m712_before2 treat_m56_before2 treat_m34_before2 treat_m12_after2 treat_m34_after2 treat_m56_after2 treat_m712_after2) ctitle(log_PM10) addtext(Sample, +Matching, Weather Controls, Y, Station FE, Y, Year-Month FE, Y)
+
+*==============================================================================*
+*Table 2A: City-Month Online Search
+*==============================================================================*
+use "$path/Data/search_city_month.dta",clear
+foreach y in pmmask filter l_pmmask l_filter {
+	qui reghdfe `y' wind_speed rain temp rh, absorb(code_city month) res(resid_`y'_smw)
+	*raw
+	qui rdrobust `y' n_month if temp!=. & rain!=. & rh!=. & wind_speed !=., c(0) p(1) q(2) kernel(tri) vce(cluster code_city) masspoints(off)
+	outreg2 using "$path/Results/Table2_A", excel dec(2) append ctitle(`y') addtext(Sample, All) addstat(Effective Obs, e(N_h_l)+e(N_h_r), Bandwidth, floor(e(h_l)))
+	*residual
+	qui rdrobust resid_`y'_smw n_month, c(0) p(1) q(2) kernel(tri) vce(cluster code_city) masspoints(off)
+	outreg2 using "$path/Results/Table2_A", excel dec(2) append ctitle(`y') addtext(Sample, All, City FE, Y, Month FE, Y, Weather Controls, Y) addstat(Effective Obs, e(N_h_l)+e(N_h_r), Bandwidth, floor(e(h_l)))
+	*normal
+	qui rdrobust resid_`y'_smw n_month if rd==0, c(0) p(1) q(2) kernel(tri) vce(cluster code_city) masspoints(off)
+	outreg2 using "$path/Results/Table2_A", excel dec(2) append ctitle(`y') addtext(Sample, Normal, City FE, Y, Month FE, Y, Weather Controls, Y) addstat(Effective Obs, e(N_h_l)+e(N_h_r), Bandwidth, floor(e(h_l)))
+	*manipulated
+	qui rdrobust resid_`y'_smw n_month if rd==1, c(0) p(1) q(2) kernel(tri) vce(cluster code_city) masspoints(off)
+	outreg2 using "$path/Results/Table2_A", excel dec(2) append ctitle(`y') addtext(Sample, Manipulate, City FE, Y, Month FE, Y, Weather Controls, Y) addstat(Effective Obs, e(N_h_l)+e(N_h_r), Bandwidth, floor(e(h_l)))
+}
+
+*==============================================================================*
+*Table 2B: DID Search for Deadline Cities
+*==============================================================================*
+use "$path/Data/did_ddl_search.dta" ,clear
+gen year=year(date)
+gen month=month(date)
+egen year_month=group(year month)
+gen treat=(auto_date==19359)
+gen after2=(year>=2013)
+gen m12_before2=(year==2012 & month>=11 & month<=12)
+gen m34_before2=(year==2012 & month>=9 & month<=10)
+gen m56_before2=(year==2012 & month>=7 & month<=8)
+gen m712_before2=(year==2012 & month>=1 & month<=6)
+gen m12_after2=(year==2013 & month>=1 & month<=2)
+gen m34_after2=(year==2013 & month>=3 & month<=4)
+gen m56_after2=(year==2013 & month>=5 & month<=6)
+gen m712_after2=(year==2013 & month>=7 & month<=12)
+
+foreach v in 12 34 56 712{
+	gen treat_m`v'_before2=treat*m`v'_before2
+	gen treat_m`v'_after2=treat*m`v'_after2
+}
+
+foreach y of var pmmask filter{
+	*City FE and year-month FE
+	qui xi: areg `y' treat_m712_before2 treat_m56_before2 treat_m34_before2 treat_m12_after2 treat_m34_after2 treat_m56_after2 treat_m712_after2 i.year_month , absorb(code_city) vce(cluster code_city)
+	outreg2 using "$path/Results/Table2_B", excel dec(2) append keep(treat_m712_before2 treat_m56_before2 treat_m34_before2 treat_m12_after2 treat_m34_after2 treat_m56_after2 treat_m712_after2) ctitle(`y') addtext(Sample, Deadline, City FE, Y, Year-Month FE, Y)
+	*City FE and year-month FE +weather
+	qui xi: areg `y' treat_m712_before2 treat_m56_before2 treat_m34_before2 treat_m12_after2 treat_m34_after2 treat_m56_after2 treat_m712_after2  wind_speed rain temp rh  i.year_month , absorb(code_city) vce(cluster code_city)
+	outreg2 using "$path/Results/Table2_B", excel dec(2) append keep(treat_m712_before2 treat_m56_before2 treat_m34_before2 treat_m12_after2 treat_m34_after2 treat_m56_after2 treat_m712_after2) ctitle(`y') addtext(Sample, Deadline, City FE, Y, Year-Month FE, Y, Weather Controls, Y)
+}
+
+
+***The End
+
+```
+
+### `China_Pollution_Monitoring/Code/FS.do`
+```stata
+***This is the main program for appendix figures generated using Stata 15 MP
+
+clear all
+set more off
+
+*global path "<home>/Dropbox/China_Pollution_Monitoring"
+
+*==============================================================================*
+*Figures A1 and B5 are plotted using ArcGIS 10.2 based on city_info_rd.dta
+*==============================================================================*
+*Figure A3: PM10 and AOD Yearly Trends
+*==============================================================================*
+use "$path/Data/station_month.dta",clear
+bysort year phase: egen pm10_y=mean(pm10)
+bysort year phase: egen aod_y=mean(aod)
+duplicates drop year phase,force
+twoway (line pm10_y year if phase==1) (line aod_y year if phase==1, yaxis(2) lpattern(dash) lcol(black)), xtitle("") ytitle("PM10") ytitle("AOD", axis(2)) ///
+	xline(2013, lcol(black)) ylabel(80(20)160) ylabel(0.3(0.1)0.7, axis(2)) legend(pos(6) row(1) label(1 "PM10 in Wave 1") label(2 "AOD in Wave 1")) scheme(plotplainblind)
+graph export "$path/Results/figures/FA3A_aod_pm10_year_1116_wave1.png", as(png) replace
+twoway (line pm10_y year if phase==2, lcol(red)) (line aod_y year if phase==2, yaxis(2) lpattern(dash) lcol(red)), xtitle("") ytitle("PM10") ytitle("AOD", axis(2)) ///
+	xline(2014, lcol(red)) ylabel(80(20)160) ylabel(0.3(0.1)0.7, axis(2)) legend(pos(6) row(1) label(1 "PM10 in Wave 2") label(2 "AOD in Wave 2")) scheme(plotplainblind)
+graph export "$path/Results/figures/FA3B_aod_pm10_year_1116_wave2.png", as(png) replace
+
+*==============================================================================*
+*Figure A4: Examples of PM10 Time Series
+*==============================================================================*
+use "$path/Data/station_day_1116.dta",clear
+twoway (line pm10 date if pm10_n==1316 & date>=18993), ylabel(0(200)800) xline(19359,lpattern(solid) lcolor(red)) ///
+	xlabel(18993 "2012" 19359 "2013" 19724 "2014" 20089 "2015" 20454 "2016" 20820 "2017") legend(pos(6) r(1)) ytitle(PM10(ug/m3)) xtitle("") scheme(plotplainblind)
+graph export "$path/Results/figures/FA4A_Shijiazhuang.png", as(png) replace
+twoway (line pm10 date if pm10_n==541 & date>=18993), ylabel(0(200)800) xline(19478,lpattern(solid) lcolor(red)) ///
+	xlabel(18993 "2012" 19359 "2013" 19724 "2014" 20089 "2015" 20454 "2016" 20820 "2017") legend(pos(6) r(1)) ytitle(PM10(ug/m3)) xtitle("") scheme(plotplainblind)
+graph export "$path/Results/figures/FA4B_Zhuzhou.png", as(png) replace
+twoway (line pm10 date if pm10_n==325 & date>=18993), ylabel(0(200)800) xline(19264,lpattern(solid) lcolor(red)) ///
+	xlabel(18993 "2012" 19359 "2013" 19724 "2014" 20089 "2015" 20454 "2016" 20820 "2017") legend(pos(6) r(1)) ytitle(PM10(ug/m3)) xtitle("") scheme(plotplainblind)
+graph export "$path/Results/figures/FA4C_Beijing.png", as(png) replace
+twoway (line pm10 date if pm10_n==335 & date>=18993), ylabel(0(200)800) xline(19654,lpattern(solid) lcolor(red)) ///
+	xlabel(18993 "2012" 19359 "2013" 19724 "2014" 20089 "2015" 20454 "2016" 20820 "2017") legend(pos(6) r(1)) ytitle(PM10(ug/m3)) xtitle("") scheme(plotplainblind)
+graph export "$path/Results/figures/FA4D_Beihai.png", as(png) replace 
+
+*==============================================================================*
+*Figure A5: Distribution of Automation Time
+*==============================================================================*
+use "$path/Data/station_day_1116.dta" ,clear
+duplicates drop pm10_n,force
+hist auto_date,  w(20) xlabel(18993 "2012" 19267 "Oct." 19359 "2013" 19479 "May" 19632 "Oct." 19724 "2014") xtitle("") scheme(plotplainblind)
+graph export "$path/Results/figures/FA5_auto_time.png", as(png) replace
+
+*==============================================================================*
+*Figure B1:RD Plots Using Raw Daily PM10 in Wave 1 & 2, Deadline, and Monthly PM10 
+*==============================================================================*
+***station-day
+use "$path/Data/station_day_1116.dta",clear
+gen T=date-auto_date
+rdplot pm10 T if T>=-364 & T<=364 & phase==1, lowerend(-364) upperend(364) p(3) kernel(tri) nbins(364 364) ci(95) masspoints(off) ///
+	graph_options(xlabel(-360(60)360) ylabel(0(50)250) legend(off) ytitle(PM10 - Wave 1) xtitle(Days before/after Automation) scheme(plotplainblind))
+graph export "$path/Results/figures/FB1A_rd_pm10_raw_wave1_365d.png", as(png) replace
+rdplot pm10 T if T>=-364 & T<=364 & phase==2, lowerend(-364) upperend(364) p(3) kernel(tri) nbins(364 364) ci(95) masspoints(off) ///
+	graph_options(xlabel(-360(60)360) ylabel(0(50)250) legend(off) ytitle(PM10 - Wave 2) xtitle(Days before/after Automation) scheme(plotplainblind))
+graph export "$path/Results/figures/FB1B_rd_pm10_raw_wave2_365d.png", as(png) replace
+rdplot pm10 T if T>=-364 & T<=364 & (auto_date==19359 | auto_date==19724), lowerend(-364) upperend(364) p(3) kernel(tri) nbins(364 364) ci(95) masspoints(off) ///
+	graph_options(xlabel(-360(60)360) ylabel(0(50)250) legend(off) ytitle(PM10 - Deadline) xtitle(Days before/after Automation) scheme(plotplainblind))
+graph export "$path/Results/figures/FB1C_rd_pm10_raw_deadline_365d.png", as(png) replace
+
+***station-month
+use "$path/Data/station_month.dta" ,clear
+rdplot pm10 n_month if n_month>=-12 & n_month<=12, lowerend(-12) upperend(12) p(2) kernel(tri) nbins(12 12) ci(95) masspoints(off) ///
+	graph_options(xlabel(-12(3)12) ylabel(0(50)200) legend(off)  ytitle(Monthly PM10) xtitle(Months before/after Automation) scheme(plotplainblind))
+graph export "$path/Results/figures/FB1D_rd_pm10_raw_station_12m.png", as(png) replace
+
+*==============================================================================*
+*Figure B2:  Station-Daily Weather
+*==============================================================================*
+use "$path/Data/station_day_1116.dta",clear
+gen T=date-auto_date
+gen month=month(date)
+foreach v in temp rain rh wind_speed{
+	qui reghdfe `v', absorb(pm10_n month) res(resid_`v'_sm)
+}
+rdplot resid_temp_sm T if T>=-364 & T<=364, lowerend(-364) upperend(364) p(3) kernel(tri) nbins(364 364) ci(95) masspoints(off) ///
+	graph_options(xlabel(-360(60)360) legend(off)  ytitle(Residual - Temperature) xtitle(Days before/after Automation) scheme(plotplainblind))
+graph export "$path/Results/figures/FB2A_rd_temp_sm_365d.png", as(png) replace
+rdplot resid_rain_sm T if T>=-364 & T<=364, lowerend(-364) upperend(364) p(3) kernel(tri) nbins(364 364) ci(95) masspoints(off) ///
+	graph_options(xlabel(-360(60)360) legend(off)  ytitle(Residual - Precipitation) xtitle(Days before/after Automation) scheme(plotplainblind))
+graph export "$path/Results/figures/FB2B_rd_rain_sm_365d.png", as(png) replace
+rdplot resid_rh_sm T if T>=-364 & T<=364, lowerend(-364) upperend(364) p(3) kernel(tri) nbins(364 364) ci(95) masspoints(off) ///
+	graph_options(xlabel(-360(60)360) legend(off)  ytitle(Residual - Relative Humidity) xtitle(Days before/after Automation) scheme(plotplainblind))
+graph export "$path/Results/figures/FB2C_rd_rh_sm_365d.png", as(png) replace
+rdplot resid_wind_speed_sm T if T>=-364 & T<=364, lowerend(-364) upperend(364) p(3) kernel(tri) nbins(364 364) ci(95) masspoints(off) ///
+	graph_options(xlabel(-360(60)360) legend(off)  ytitle(Residual - Wind Speed) xtitle(Days before/after Automation) scheme(plotplainblind))
+graph export "$path/Results/figures/FB2D_rd_wdsp_sm_365d.png", as(png) replace
+
+*==============================================================================*
+*Figure B6: RD Plots for PM10 Variability
+*==============================================================================*
+use "$path/Data/station_day_1116.dta",clear
+gen year=year(date)
+gen month=month(date)
+gen T = date - auto_date
+gen n_month=floor(T/30)
+bysort pm10_n n_month: egen sd_pm10=sd(pm10)
+foreach v of var pm10-rh{
+	bysort pm10_n n_month: egen `v'_m=mean(`v')
+	drop `v'
+	rename `v'_m `v'
+}
+duplicates drop pm10_n n_month,force
+qui reghdfe sd_pm10 wind_speed rain temp rh, absorb(pm10_n month) res(resid_sd_pm10_smw)
+rdplot resid_sd_pm10_smw n_month if n_month>=-12 & n_month<=12, lowerend(-12) upperend(12) p(2) kernel(tri) nbins(12 12) ci(95) masspoints(off) ///
+	graph_options(xlabel(-12(3)12) legend(off) ylabel(-20(10)20) ytitle("Residual - PM10 Monthly Standard Deviation") xtitle(Months before/after Automation) scheme(plotplainblind))
+graph export "$path/Results/figures/FB6_rd_sd_PM10_12m.png", as(png) replace
+
+*==============================================================================*
+*Figure C: Correction of Pre-Automation PM10 Data
+*==============================================================================*
+use "$path/Data/city_month.dta" ,clear
+hist  pm10 if after==0 & rd==1,fcolor(none) lp("-") lcolor(black) w(20) start(0) addplot(hist pm10_corrected if after==0 & rd==1 & pm10!=., ///
+	fcolor(none) lcolor(red) w(20) start(0)) scheme(plotplainblind) ylabel(0(0.005)0.015) xtitle("PM10") legend(pos(6) r(1) label(1 "Reported PM10") label(2 "Corrected PM10"))
+graph export "$path/Results/figures/FC_hist_pm_corrected.png", as(png) replace
+*su pm10_corrected if after==0 & rd==1 & pm10!=.
+*su pm10 if after==0 & rd==1
+
+*==============================================================================*
+*Figure D2: RD Plots for Online Searches: January 1st 2015
+*==============================================================================*
+use "$path/Data/search_city_month.dta" ,clear
+egen year_month=group(year month)
+gen n_month2=year_month-49
+
+rdplot pmmask n_month2 if n_month2>=-12 & n_month2<=12, lowerend(-12) upperend(12) p(2) kernel(tri) nbins(12 12) ci(95) masspoints(off) ///
+	graph_options(xlabel(-12(3)12) legend(off) ylabel(0(10)80) ytitle(Baidu Search Index: Anti-Haze Face Mask) xtitle("Months before/after January 1st, 2015") scheme(plotplainblind))
+graph export "$path/Results/figures/FD2A_rd_pmmask_raw_city_month_12m_2015.png", as(png) replace
+rdplot filter n_month2 if n_month2>=-12 & n_month2<=12, lowerend(-12) upperend(12) p(2) kernel(tri) nbins(12 12) ci(95) masspoints(off) ///
+	graph_options(xlabel(-12(3)12) legend(off) ylabel(0(10)80) ytitle(Baidu Search Index: Air Filter) xtitle("Months before/after January 1st, 2015") scheme(plotplainblind))
+graph export "$path/Results/figures/FD2B_rd_filter_raw_city_month_12m_2015.png", as(png) replace
+
+
+***The End
+
+
+```
+
+### `China_Pollution_Monitoring/Code/Prepare_Data.do`
+```stata
+***Prepare Data for Tables/Figures Based on Raw Data using Stata 15 MP
+
+clear all
+set more off
+
+*global path "<home>/Dropbox/China_Pollution_Monitoring"
+
+*==============================================================================*
+*0. Set Up 
+*The most recent package versions are used as of March 2021.
+*The estimates and output format may change slightly using different package versions.
+*==============================================================================*
+*Manually copy brain.ado from https://github.com/ThorstenDoherr/brain
+net install rdrobust, from("https://raw.githubusercontent.com/rdpackages/rdrobust/master/stata") replace
+net install rddensity, from("https://raw.githubusercontent.com/rdpackages/rddensity/master/stata") replace
+local ssc_packages "reghdfe ftools sxpose tsspell geonear plotbeta outreg2 estout"
+if !missing("`ssc_packages'") {
+	foreach pkg in "`ssc_packages'" {
+		* install using ssc, but avoid re-installing if already present
+		capture which `pkg'
+		if _rc == 111 {                 
+		dis "Installing `pkg'"
+		qui ssc install `pkg',replace
+		}
+	}
+}
+
+*==============================================================================*
+*1. Generate station_day_1116.dta
+*==============================================================================*
+use "$path/Data/pollution_1116.dta",clear
+merge 1:1 station_n date using "$path/Data/weather_1116.dta",nogen
+rename station_n pm10_n
+merge m:1 pm10_n using "$path/Data/station_list.dta",nogen
+drop station_lat station_lon
+save "$path/Data/station_day_1116.dta",replace
+
+*==============================================================================*
+*2. Generate did_ddl_match.dta: station-daily PM10 data for deadline stations with distance matching (Table 1B, columns 3-5)
+*==============================================================================*
+use "$path/Data/station_list.dta",clear
+keep if auto_date==19359
+rename pm10_n pm10_n1
+save "$path/Data/temp/station_ddl_1.dta",replace
+
+use "$path/Data/station_list.dta",clear
+keep if auto_date==19724
+save "$path/Data/temp/station_ddl_2.dta",replace
+
+use "$path/Data/temp/station_ddl_1.dta",clear
+geonear pm10_n1 station_lat station_lon using "$path/Data/temp/station_ddl_2.dta", n(pm10_n station_lat station_lon) long ellipsoid
+keep if km_to_pm10_n<=400
+save "$path/Data/temp/station_ddl_match.dta",replace
+
+use "$path/Data/temp/station_ddl_match.dta",clear
+keep pm10_n1
+rename pm10_n1 pm10_n
+gen treat=1
+save "$path/Data/temp/station_ddl_treated.dta",replace
+
+use "$path/Data/temp/station_ddl_match.dta",clear
+keep pm10_n
+gen treat=0
+save "$path/Data/temp/station_ddl_control.dta",replace
+
+use "$path/Data/station_day_1116.dta",clear
+gen year=year(date)
+keep if year==2012 | year==2013
+joinby pm10_n using "$path/Data/temp/station_ddl_treated.dta"
+save "$path/Data/temp/station_day_ddl_treated.dta",replace
+
+use "$path/Data/station_day_1116.dta",clear
+gen year=year(date)
+keep if year==2012 | year==2013
+joinby pm10_n using "$path/Data/temp/station_ddl_control.dta"
+save "$path/Data/temp/station_day_ddl_control.dta",replace
+
+use "$path/Data/temp/station_day_ddl_treated.dta",clear
+append using "$path/Data/temp/station_day_ddl_control.dta"
+drop year so2 no2 phase treat
+gen l_pm10=log(pm10), after(pm10)
+label variable l_pm10 "logarithm of pm10"
+compress
+save "$path/Data/did_ddl_match.dta",replace
+
+*==============================================================================*
+*3. Generate station_month.dta
+*==============================================================================*
+use "$path/Data/station_day_1116.dta",clear
+gen month_date = mofd(date)
+gen month_auto_date = mofd(auto_date)
+format month* %tm
+gen n_month = month_date - month_auto_date
+gen after = (month_date >= month_auto_date)
+drop month_date month_auto_date
+gen year=year(date)
+gen month=month(date)
+foreach v of varlist pm10-rh{
+	bysort pm10_n year month: egen `v'_month=mean(`v')
+	drop `v'
+	rename `v'_month `v'
+}
+duplicates drop pm10_n year month,force
+drop date
+merge m:1 pm10_n year month using "$path/Data/aod_month.dta", keep(match) nogen
+save "$path/Data/station_month.dta",replace
+
+*==============================================================================*
+*4. Generate city_month.dta to be added with corrected PM10 in Section 10 
+*for plotting Appendix Figure C
+*==============================================================================*
+use "$path/Data/station_month.dta",clear
+foreach v of varlist pm10-aod{
+	bysort code_city year month: egen `v'_month=mean(`v')
+	drop `v'
+	rename `v'_month `v'
+}
+gsort code_city year month -auto_date
+duplicates drop code_city year month,force
+drop pm10_n so2 no2
+save "$path/Data/city_month.dta",replace 
+
+*==============================================================================*
+*5. Compare city PM10 in Jan-June in 2013 vs 2014
+*==============================================================================*
+use "$path/Data/city_month.dta",clear
+gen period=0 if year==2013 & month>=1 & month<=6
+replace period=1 if year==2014 & month>=1 & month<=6
+drop if period==.
+collapse (mean) pm10, by(code_city period)
+reshape wide pm10, i(code_city) j(period)
+gen diff_period=pm101-pm100
+drop pm100 pm101
+label variable diff_period "Mean Difference in PM10 between 2014 Jan-June and 2013 Jan-June"
+save "$path/Data/temp/city_period_compare.dta",replace
+
+*==============================================================================*
+*6. Generate RD estimates for each city
+*==============================================================================*
+use "$path/Data/station_day_1116.dta",clear
+levelsof code_city, local (p)
+cap qui erase "$path/Results/rd_pm10_city.txt"
+foreach y of local p{
+	use "$path/Data/station_day_1116.dta",clear
+	qui gen T=date-auto_date
+	qui gen month=month(date)
+	keep if code_city==`y'
+	cap qui reghdfe pm10 wind_speed rain temp rh, absorb(pm10_n month) res(resid_pm10_`y'_smw)
+	cap qui rdrobust resid_pm10_`y'_smw T, c(0) p(1) q(2) kernel(tri) vce(cluster pm10_n) masspoints(off)
+	cap outreg2 using "$path/Results/rd_pm10_city", excel  dec(4) append  ctitle(`y') addtext(Kernel, Tri., Station FE, Y, Month FE, Y, Weather, Y) sortvar(RD_Estimate)
+}
+
+***import the city-level RD estimates
+clear
+import delimited "$path/Results/rd_pm10_city.txt", rowrange(2:5) colrange(2)
+drop in 2
+sxpose, clear
+split _var2, parse("*")
+split _var3, parse("(" ")")
+drop _var3 _var22-_var31
+rename _var1 code_city
+rename _var2 rd_estimate_1116_raw
+rename _var21 rd_estimate_1116
+rename _var32 error_1116
+destring code_city rd_estimate_1116 error_1116, replace
+label variable rd_estimate_1116_raw "Raw RD Estimate"
+label variable rd_estimate_1116 "RD_Estimate_1116"
+label variable error_1116 "Standard error of RD estimate"
+/*City 230100 and 510400 have a large number of missing PM10 prior to automation.
+Some Stata/rdrobust version still generate RD estimates for the two cities with a warning:
+	"Estimates might be unreliable due to low number of effective observations"
+An earlier Stata 15 MP/rdrobust version (Winter 2020) does not generate RD estimates for the two cities with the following warning:
+	"Not enough observations to perform calculations"
+Therefore, we replace the RD estimate for the two cities with missing values for compatibility and consistency.
+*/
+replace rd_estimate_1116_raw="" if rd_estimate_1116_raw!="" & (code_city==230100 | code_city==510400)
+replace rd_estimate_1116=. if rd_estimate_1116!=. & (code_city==230100 | code_city==510400)
+save "$path/Data/temp/city_rd_estimate.dta",replace
+*==============================================================================*
+*7. Generate dummy list_76 indicating cities with fewer missing observations prior to automation
+*==============================================================================*
+use "$path/Data/station_day_1116.dta", clear
+drop no2-rh
+gen T=date-auto_date
+keep if T<0 & T>=-120
+xtset pm10_n date
+tsspell pm10
+keep if pm10==.
+gsort code_city pm10_n -_seq
+duplicates drop pm10_n,force
+sort code_city _seq
+duplicates drop code_city,force
+gen list_76=(_seq<60)
+/*city 650100 has 56 (or 21) missing days pre (or post) automation, with large
+RD estimate and standard error, thus the estimate is unreliable and dropped.  
+*/
+replace list_76=0 if code_city==650100
+keep code_city list_76
+save "$path/Data/temp/city_list_76.dta",replace
+*==============================================================================*
+*8. Merge city characteristics with city-level RD and differences in PM10
+*==============================================================================*
+use "$path/Data/city_info.dta",clear
+merge 1:1 code_city using "$path/Data/temp/city_list_76.dta", nogen
+merge 1:1 code_city using "$path/Data/temp/city_rd_estimate.dta", nogen
+merge 1:1 code_city using "$path/Data/temp/city_period_compare.dta", nogen
+gen sig=(substr(rd_estimate_1116_raw,-2,2)=="**")
+*define RD dummy: also used for Table 2A columns 3-4
+gen rd=1 if list_76==1 & sig==1 & rd_estimate_1116>0, after(phase)
+replace rd=1 if list_76==0 & diff_period>=35 & diff_period!=.
+replace rd=0 if rd==.
+label variable rd "underreporting dummy"
+drop sig
+save "$path/Data/city_info_rd.dta",replace
+
+*==============================================================================*
+*9. Generate city-daily deadline data and city-monthly search data (Table 2A)
+*==============================================================================*
+use "$path/Data/station_day_1116.dta", clear
+foreach v of varlist pm10-rh{
+	bysort code_city date: egen `v'_m=mean(`v')
+	drop `v'
+	rename `v'_m `v'
+}
+gsort code_city date -auto_date
+duplicates drop code_city date,force
+drop pm10_n
+merge 1:1 code_city date using "$path/Data/mask_filter_search.dta", keep(match) nogen
+
+***add city RD dummy info for Table 2A: column 3-4
+merge m:1 code_city using "$path/Data/city_info_rd.dta",nogen
+drop list_76 rd_estimate_1116_raw-diff_period
+save "$path/Data/temp/search_city_day.dta",replace
+
+***generate city-daily search for deadline cities (Table 2B)
+gen year=year(date)
+keep if year>=2012 & year<=2013
+drop year phase pm10-so2 rd
+keep if auto_date==19724 | auto_date==19359
+save "$path/Data/did_ddl_search.dta",replace
+
+***aggregate to city-monthly level (Table 2A)
+use "$path/Data/temp/search_city_day.dta",clear
+gen year=year(date)
+gen month=month(date)
+gen month_date = mofd(date)
+gen month_auto_date = mofd(auto_date)
+format month* %tm
+gen n_month = month_date - month_auto_date
+drop month_date month_auto_date
+
+foreach v of varlist pm10-pmmask {
+	bysort code_city n_month: egen `v'_m=mean(`v')
+	drop `v'
+	rename `v'_m `v'
+}
+duplicates drop code_city n_month,force
+drop date so2 no2
+foreach v of varlist pmmask filter{
+	gen l_`v'=log(`v'+1)
+}
+save "$path/Data/search_city_month.dta",replace
+
+*==============================================================================*
+*10. Correct city-month PM10 using neural network
+*==============================================================================*
+*do "$path/Codes/PM_correction.do"
+set seed 123456
+use "$path/Data/city_month.dta",clear
+foreach v of var aod wind_speed temp rh rain{
+	gen `v'2=`v'^2
+	gen `v'3=`v'^3 
+	gen `v'4=`v'^4 
+}
+*** separate into training (70%) and testing (30%) sets within after data
+gen random = runiform()
+sort after random
+bysort after: gen test_set = (_n < 0.3*_N)
+replace test_set = . if after == 0
+*** save sst as local
+summ pm10 if test_set==1
+scalar pm10mean = r(mean)
+egen sst = sum((pm10-pm10mean)^2) if test_set == 1
+summ sst
+local sst = r(mean)
+*** neural net
+xi: brain define, input(aod aod2 aod3 aod4 temp rain rh wind_speed temp2 rain2 rh2 wind_speed2 temp3 rain3 rh3 wind_speed3 temp4 rain4 rh4 wind_speed4 i.month i.code_city) output(pm10) hidden(20 20)
+brain train if test_set == 0, iter(300) eta(.5)
+brain think pm10_ann
+egen rbrain_ann = sum((pm10-pm10_ann)^2) if test_set==1
+summ rbrain_ann
+local rbrain_ann = r(mean)
+di "R-sq.   brain: " 1-(`rbrain_ann'/`sst')
+***polynomial
+reghdfe pm10 aod aod2 aod3 aod4 temp rain rh wind_speed temp2 rain2 rh2 wind_speed2 temp3 rain3 rh3 wind_speed3 temp4 rain4 rh4 wind_speed4 if test_set == 0, absorb(month code_city) vce(cl code_city)
+predict pm10_ols, xb
+egen r_ols = sum((pm10-pm10_ols)^2) if test_set==1
+summ r_ols
+local r_ols = r(mean)
+di "R-sq.   brain: " 1-`r_ols'/`sst'
+drop _I*
+***Corrected PM10 as appendix data for future use
+gen pm10_corrected=pm10
+replace pm10_corrected=pm10_ann if after==0 & pm10_ann !=.
+drop sst rbrain_ann r_ols
+save "$path/Data/city_month.dta",replace
+
+keep code_city year month pm10 pm10_corrected
+sort code_city year month
+format %9.1f pm10 pm10_corrected
+label variable pm10 "Reported PM10 (ug/m3)"
+label variable pm10_corrected "Corrected PM10 (ug/m3)"
+save "$path/Data/pm10_corrected.dta",replace
+
+*==============================================================================*
+*11. Add city RD dummy to city_month.dta for plotting Appendix Figure C
+*==============================================================================*
+use "$path/Data/city_month.dta",clear
+merge m:1 code_city using "$path/Data/city_info_rd.dta",nogen
+drop list_76 rd_estimate_1116_raw-diff_period
+compress
+save "$path/Data/city_month.dta",replace
+
+
+***The End
+
+```
+
+### `China_Pollution_Monitoring/Code/TS.do`
+```stata
+****This is the main program for appendix tables generated using Stata 15 MP
+
+clear all
+set more off
+
+*global path "<home>/Dropbox/China_Pollution_Monitoring"
+
+*==============================================================================*
+*Table A2. Summary Statistics by Year
+*==============================================================================*
+***AOD
+use "$path/Data/station_month",clear
+qui levelsof year, loc(y)
+qui foreach v of loc y {
+	estpost summ aod if year==`v'
+	est sto y`v'
+}
+esttab * using "$path/Results/Table_A2.csv", cell(mean(fmt(%9.2f)) sd(par)) mti collabels(none) noobs replace
+
+***pollution and weather
+use "$path/Data/station_day_1116",clear
+gen year=year(date)
+qui levelsof year, loc(y)
+qui foreach v of loc y {
+	estpost summ pm10 so2 no2 temp rain rh wind_speed if year==`v'
+	est sto y`v'
+}
+esttab * using "$path/Results/Table_A2.csv", cell(mean(fmt(%9.1f)) sd(par)) mti collabels(none) noobs nonum append
+
+*==============================================================================*
+*Table B2. Changes in Weather Conditions after Automation
+*==============================================================================*
+use "$path/Data/station_day_1116",clear
+gen T=date-auto_date
+gen month=month(date)
+foreach y in temp rain rh wind_speed{
+	qui reghdfe `y', absorb(pm10_n month) res(resid_`y'_sm)
+	*all sample
+	qui rdrobust resid_`y'_sm T if temp!=. & rain!=. & rh!=. & wind_speed !=., c(0) p(1) q(2) kernel(tri) vce(cluster code_city) masspoints(off)
+	outreg2 using "$path/Results/Table_B2", excel dec(2) append ctitle(`y') addtext(Sample, All, Kernel, Tri., Station FE, Y, Month FE, Y)  
+	qui rdrobust resid_`y'_sm T if temp!=. & rain!=. & rh!=. & wind_speed !=., c(0) p(1) q(2) kernel(epa) vce(cluster code_city) masspoints(off)
+	outreg2 using "$path/Results/Table_B2", excel dec(2) append ctitle(`y') addtext(Sample, All, Kernel, Epa., Station FE, Y, Month FE, Y)
+	qui rdrobust resid_`y'_sm T if temp!=. & rain!=. & rh!=. & wind_speed !=., c(0) p(1) q(2) kernel(uni) vce(cluster code_city) masspoints(off)
+	outreg2 using "$path/Results/Table_B2", excel dec(2) append ctitle(`y') addtext(Sample, All, Kernel, Uni., Station FE, Y, Month FE, Y)
+	*no missing PM10
+	qui rdrobust resid_`y'_sm T if temp!=. & rain!=. & rh!=. & wind_speed !=. & pm10 !=., c(0) p(1) q(2) kernel(tri) vce(cluster code_city) masspoints(off)
+	outreg2 using "$path/Results/Table_B2", excel dec(2) append ctitle(`y') addtext(Sample, No Missing PM10, Kernel, Tri., Station FE, Y, Month FE, Y)  
+	qui rdrobust resid_`y'_sm T if temp!=. & rain!=. & rh!=. & wind_speed !=. & pm10 !=., c(0) p(1) q(2) kernel(epa) vce(cluster code_city) masspoints(off)
+	outreg2 using "$path/Results/Table_B2", excel dec(2) append ctitle(`y') addtext(Sample, No Missing PM10, Kernel, Epa., Station FE, Y, Month FE, Y)
+	qui rdrobust resid_`y'_sm T if temp!=. & rain!=. & rh!=. & wind_speed !=. & pm10 !=., c(0) p(1) q(2) kernel(uni) vce(cluster code_city) masspoints(off)
+	outreg2 using "$path/Results/Table_B2", excel dec(2) append ctitle(`y') addtext(Sample, No Missing PM10, Kernel, Uni., Station FE, Y, Month FE, Y)
+}
+
+*==============================================================================*
+*Table B3. RD Estimates Using Alternative Kernel Weightings and Polynomials
+*==============================================================================*
+***Panel A: station-day PM10
+use "$path/Data/station_day_1116",clear
+gen T=date-auto_date
+gen month=month(date)
+gen after=(T>0)
+gen T2=T^2
+gen T3=T^3
+gen T4=T^4
+gen after_T=after*T
+gen after_T2=after*T2
+gen after_T3=after*T3
+gen after_T4=after*T4
+
+qui reghdfe pm10 wind_speed rain temp rh, absorb(pm10_n month) res(resid_pm10_smw)
+*kernel
+qui rdrobust resid_pm10_smw T, c(0) p(1) q(2) kernel(tri) vce(cluster code_city) masspoints(off)
+outreg2 using "$path/Results/Table_B3A_kernel_parametric_day", excel dec(1) append addtext(Kernel/Polynomial, Tri., Station FE, Y, Month FE, Y, Weather Controls, Y) ctitle(pm10) addstat(Obs.(Daily), e(N_h_l)+e(N_h_r), Bandwidth (Days), floor(e(h_l)))
+qui rdrobust resid_pm10_smw T, c(0) p(1) q(2) kernel(epa) vce(cluster code_city) masspoints(off)
+outreg2 using "$path/Results/Table_B3A_kernel_parametric_day", excel dec(1) append addtext(Kernel/Polynomial, Epa., Station FE, Y, Month FE, Y, Weather Controls, Y) ctitle(pm10) addstat(Obs.(Daily), e(N_h_l)+e(N_h_r), Bandwidth (Days), floor(e(h_l)))
+qui rdrobust resid_pm10_smw T, c(0) p(1) q(2) kernel(uni) vce(cluster code_city) masspoints(off)
+outreg2 using "$path/Results/Table_B3A_kernel_parametric_day", excel dec(1) append addtext(Kernel/Polynomial, Uni., Station FE, Y, Month FE, Y, Weather Controls, Y) ctitle(pm10) addstat(Obs.(Daily), e(N_h_l)+e(N_h_r), Bandwidth (Days), floor(e(h_l)))
+*parametric
+qui reghdfe pm10 after T after_T wind_speed rain temp rh, absorb(pm10_n month) vce(cluster code_city)
+outreg2 using "$path/Results/Table_B3A_kernel_parametric_day", excel dec(1) append keep (after) addtext(Kernel/Polynomial, Linear, Station FE, Y, Month FE, Y, Weather Controls, Y) ctitle(pm10) 
+qui reghdfe pm10 after T after_T T2 after_T2 wind_speed rain temp rh, absorb(pm10_n month) vce(cluster code_city)
+outreg2 using "$path/Results/Table_B3A_kernel_parametric_day", excel dec(1) append keep (after) addtext(Kernel/Polynomial, Quadratic, Station FE, Y, Month FE, Y, Weather Controls, Y) ctitle(pm10)
+qui reghdfe pm10 after T after_T T2 after_T2 T3 after_T3 wind_speed rain temp rh, absorb(pm10_n month) vce(cluster code_city)
+outreg2 using "$path/Results/Table_B3A_kernel_parametric_day", excel dec(1) append keep (after) addtext(Kernel/Polynomial, Cubic, Station FE, Y, Month FE, Y, Weather Controls, Y) ctitle(pm10) 
+qui reghdfe pm10 after T after_T T2 after_T2 T3 after_T3 T4 after_T4 wind_speed rain temp rh, absorb(pm10_n month) vce(cluster code_city)
+outreg2 using "$path/Results/Table_B3A_kernel_parametric_day", excel dec(1) append keep (after) addtext(Kernel/Polynomial, Quartic, Station FE, Y, Month FE, Y, Weather Controls, Y) ctitle(pm10) 
+
+***Panel B: station-month PM10 and AOD
+use "$path/Data/station_month.dta",clear
+foreach v in pm10 aod{
+	qui reghdfe `v' wind_speed rain temp rh, absorb(pm10_n month) res(resid_`v'_smw)
+}
+
+gen m2=n_month^2
+gen m3=n_month^3
+gen m4=n_month^4
+gen after_m=after*n_month
+gen after_m2=after*m2
+gen after_m3=after*m3
+gen after_m4=after*m4
+
+foreach y of var pm10 aod {
+	if "`y'" == "pm10" local dec = 1
+	if "`y'" == "aod" local dec = 3
+	*kernel
+	qui rdrobust resid_`y'_smw n_month, c(0) p(1) q(2) kernel(tri) vce(cluster code_city) masspoints(off)
+	outreg2 using "$path/Results/Table_B3B_kernel_parametric_month", excel dec(`dec') append addtext(Kernel/Polynomial, Tri., Station FE, Y, Month FE, Y, Weather Controls, Y) ctitle(`y') addstat(Obs.(Monthly), e(N_h_l)+e(N_h_r), Bandwidth (Months), floor(e(h_l)))
+	qui rdrobust resid_`y'_smw n_month, c(0) p(1) q(2) kernel(epa) vce(cluster code_city) masspoints(off)
+	outreg2 using "$path/Results/Table_B3B_kernel_parametric_month", excel dec(`dec') append addtext(Kernel/Polynomial, Epa., Station FE, Y, Month FE, Y, Weather Controls, Y) ctitle(`y') addstat(Obs.(Monthly), e(N_h_l)+e(N_h_r), Bandwidth (Months), floor(e(h_l)))
+	qui rdrobust resid_`y'_smw n_month, c(0) p(1) q(2) kernel(uni) vce(cluster code_city) masspoints(off)
+	outreg2 using "$path/Results/Table_B3B_kernel_parametric_month", excel dec(`dec') append addtext(Kernel/Polynomial, Uni., Station FE, Y, Month FE, Y, Weather Controls, Y) ctitle(`y') addstat(Obs.(Monthly), e(N_h_l)+e(N_h_r), Bandwidth (Months), floor(e(h_l)))
+	***parametric
+	qui reghdfe `y' after n_month after_m wind_speed rain temp rh, absorb(pm10_n month) vce(cluster code_city)
+	outreg2 using "$path/Results/Table_B3B_kernel_parametric_month", excel dec(`dec') append keep(after) addtext(Kernel/Polynomial, Linear, Station FE, Y, Month FE, Y, Weather Controls, Y) ctitle(`y')
+	qui reghdfe `y' after n_month after_m m2 after_m2 wind_speed rain temp rh, absorb(pm10_n month) vce(cluster code_city)
+	outreg2 using "$path/Results/Table_B3B_kernel_parametric_month", excel dec(`dec') append keep(after) addtext(Kernel/Polynomial, Quadratic, Station FE, Y, Month FE, Y, Weather Controls, Y) ctitle(`y')
+	qui reghdfe `y' after n_month after_m m2 after_m2 m3 after_m3 wind_speed rain temp rh, absorb(pm10_n month) vce(cluster code_city)
+	outreg2 using "$path/Results/Table_B3B_kernel_parametric_month", excel dec(`dec') append keep(after) addtext(Kernel/Polynomial, Cubic, Station FE, Y, Month FE, Y, Weather Controls, Y) ctitle(`y')
+	qui reghdfe `y' after n_month after_m m2 after_m2 m3 after_m3 m4 after_m4 wind_speed rain temp rh, absorb(pm10_n month) vce(cluster code_city)
+	outreg2 using "$path/Results/Table_B3B_kernel_parametric_month", excel dec(`dec') append keep(after) addtext(Kernel/Polynomial, Quartic, Station FE, Y, Month FE, Y, Weather Controls, Y) ctitle(`y')
+}
+
+*==============================================================================*
+*Table B4. Automation and Reported PM10 in 76 Cities
+*==============================================================================* 
+use "$path/Data/station_day_1116",clear
+merge m:1 code_city using "$path/Data/city_info_rd.dta"
+keep if list_76==1
+gen T=date-auto_date
+gen month=month(date)
+qui reghdfe pm10 wind_speed rain temp rh, absorb(pm10_n month) res(resid_pm10_smw)
+*raw
+qui rdrobust pm10 T if temp!=. & rain!=. & rh!=. & wind_speed !=., c(0) p(1) q(2) kernel(tri) vce(cluster code_city) masspoints(off)
+outreg2 using "$path/Results/Table_B4_76", excel dec(1) append ctitle(pm10) addtext(Sample, All) addstat(Obs.(Daily), e(N_h_l)+e(N_h_r), Bandwidth (Days), floor(e(h_l)))
+*residual
+qui rdrobust resid_pm10_smw T, c(0) p(1) q(2) kernel(tri) vce(cluster code_city) masspoints(off)
+outreg2 using "$path/Results/Table_B4_76", excel dec(1) append ctitle(pm10) addtext(Sample, All, Station FE, Y, Month FE, Y, Weather Controls, Y) addstat(Obs.(Daily), e(N_h_l)+e(N_h_r), Bandwidth (Days), floor(e(h_l)))
+*wave 1
+qui rdrobust resid_pm10_smw T if phase==1, c(0) p(1) q(2) kernel(tri) vce(cluster code_city) masspoints(off)
+outreg2 using "$path/Results/Table_B4_76", excel dec(1) append ctitle(pm10) addtext(Sample, Wave 1, Station FE, Y, Month FE, Y, Weather Controls, Y) addstat(Obs.(Daily), e(N_h_l)+e(N_h_r), Bandwidth (Days), floor(e(h_l)))
+*wave 2
+qui rdrobust resid_pm10_smw T if phase==2, c(0) p(1) q(2) kernel(tri) vce(cluster code_city) masspoints(off)
+outreg2 using "$path/Results/Table_B4_76", excel dec(1) append ctitle(pm10) addtext(Sample, Wave 2, Station FE, Y, Month FE, Y, Weather Controls, Y) addstat(Obs.(Daily), e(N_h_l)+e(N_h_r), Bandwidth (Days), floor(e(h_l)))
+*deadline
+qui rdrobust resid_pm10_smw T if auto_date==19359 | auto_date==19724, c(0) p(1) q(2) kernel(tri) vce(cluster code_city) masspoints(off)
+outreg2 using "$path/Results/Table_B4_76", excel dec(1) append ctitle(pm10) addtext(Sample, Deadline, Station FE, Y, Month FE, Y, Weather Controls, Y) addstat(Obs.(Daily), e(N_h_l)+e(N_h_r), Bandwidth (Days), floor(e(h_l)))
+
+*==============================================================================*
+*Table B6. Automation and PM10 Variability
+*==============================================================================* 
+use "$path/Data/station_day_1116.dta",clear
+gen year=year(date)
+gen month=month(date)
+gen T = date - auto_date
+gen n_month=floor(T/30)
+bysort pm10_n n_month: egen sd_pm10=sd(pm10)
+foreach v of var pm10-rh{
+	bysort pm10_n n_month: egen `v'_m=mean(`v')
+	drop `v'
+	rename `v'_m `v'
+}
+duplicates drop pm10_n n_month,force
+qui reghdfe sd_pm10 wind_speed rain temp rh, absorb(pm10_n month) res(resid_sd_pm10_smw)
+*residual
+qui rdrobust resid_sd_pm10_smw n_month, c(0) p(1) q(2) kernel(tri) vce(cluster code_city) masspoints(off)
+outreg2 using "$path/Results/Table_B6_SD", excel dec(1) append ctitle(All) addtext(Station FE, Y, Month FE, Y, Weather Controls, Y, Kernel Function, Tri.) addstat(Obs.(Monthly), e(N_h_l)+e(N_h_r), Bandwidth (Months), floor(e(h_l)))
+*wave1
+qui rdrobust resid_sd_pm10_smw n_month if phase==1, c(0) p(1) q(2) kernel(tri) vce(cluster code_city) masspoints(off)
+outreg2 using "$path/Results/Table_B6_SD", excel dec(1) append ctitle(Wave 1) addtext(Station FE, Y, Month FE, Y, Weather Controls, Y, Kernel Function, Tri.) addstat(Obs.(Monthly), e(N_h_l)+e(N_h_r), Bandwidth (Months), floor(e(h_l)))
+*wave2
+qui rdrobust resid_sd_pm10_smw n_month if phase==2, c(0) p(1) q(2) kernel(tri) vce(cluster code_city) masspoints(off)
+outreg2 using "$path/Results/Table_B6_SD", excel dec(1) append ctitle(Wave 2) addtext(Station FE, Y, Month FE, Y, Weather Controls, Y, Kernel Function, Tri.) addstat(Obs.(Monthly), e(N_h_l)+e(N_h_r), Bandwidth (Months), floor(e(h_l)))
+*deadline
+qui rdrobust resid_sd_pm10_smw n_month if auto_date==19359 | auto_date==19724, c(0) p(1) q(2) kernel(tri) vce(cluster code_city) masspoints(off)
+outreg2 using "$path/Results/Table_B6_SD", excel dec(1) append ctitle(Deadline) addtext(Station FE, Y, Month FE, Y, Weather Controls, Y, Kernel Function, Tri.) addstat(Obs.(Monthly), e(N_h_l)+e(N_h_r), Bandwidth (Months), floor(e(h_l)))
+
+*==============================================================================*
+*Table B7. Automation and Reported SO2 and NO2
+*==============================================================================*
+use "$path/Data/station_day_1116",clear
+gen T=date-auto_date
+gen month=month(date)
+foreach y of var so2 no2{
+	qui reghdfe `y' wind_speed rain temp rh, absorb(pm10_n month) res(resid_`y'_smw)
+	*residual
+	qui rdrobust resid_`y'_smw T, c(0) p(1) q(2) kernel(tri) vce(cluster code_city) masspoints(off)
+	outreg2 using "$path/Results/Table_B7_SO2_NO2", excel dec(2) append ctitle(`y'_All) addtext(Station FE, Y, Month FE, Y, Weather Controls, Y, Kernel Function, Tri.) addstat(`y' Obs., e(N_h_l)+e(N_h_r), `y' Bandwidth, floor(e(h_l)))
+	*wave1
+	qui rdrobust resid_`y'_smw T if phase==1, c(0) p(1) q(2) kernel(tri) vce(cluster code_city) masspoints(off)
+	outreg2 using "$path/Results/Table_B7_SO2_NO2", excel dec(2) append ctitle(`y'_Wave 1) addtext(Station FE, Y, Month FE, Y, Weather Controls, Y, Kernel Function, Tri.) addstat(`y' Obs., e(N_h_l)+e(N_h_r), `y' Bandwidth, floor(e(h_l)))
+	*wave2
+	qui rdrobust resid_`y'_smw T if phase==2, c(0) p(1) q(2) kernel(tri) vce(cluster code_city) masspoints(off)
+	outreg2 using "$path/Results/Table_B7_SO2_NO2", excel dec(2) append ctitle(`y'_Wave 2) addtext(Station FE, Y, Month FE, Y, Weather Controls, Y, Kernel Function, Tri.) addstat(`y' Obs., e(N_h_l)+e(N_h_r), `y' Bandwidth, floor(e(h_l)))
+	*deadline
+	qui rdrobust resid_`y'_smw T if auto_date==19359 | auto_date==19724, c(0) p(1) q(2) kernel(tri) vce(cluster code_city) masspoints(off)
+	outreg2 using "$path/Results/Table_B7_SO2_NO2", excel dec(2) append ctitle(`y'_Deadline) addtext(Station FE, Y, Month FE, Y, Weather Controls, Y, Kernel Function, Tri.) addstat(`y' Obs., e(N_h_l)+e(N_h_r), `y' Bandwidth, floor(e(h_l)))
+}
+
+*==============================================================================*
+*Table B8. Change in PM10 Reporting Standard
+*==============================================================================*
+use "$path/Data/station_day_1116.dta",clear
+gen T=date-auto_date
+gen month=month(date)
+gen miss1=1 if pm10==. & T <0 & T>=-365
+gen miss2=1 if pm10==. & T >=0 & T<365
+gen n1=1 if T <0 & T>=-365
+gen n2=1 if T >=0 & T<365
+
+bysort pm10_n: egen miss_before_y=sum(miss1)
+bysort pm10_n: egen miss_after_y=sum(miss2)
+bysort pm10_n: egen n_before_y=sum(n1)
+bysort pm10_n: egen n_after_y=sum(n2)
+
+gen miss_before_ratio=miss_before_y/n_before_y
+qui reghdfe pm10 wind_speed rain temp rh, absorb(pm10_n month) res(resid_pm10_smw)
+
+foreach v in 10 15 20 25 30{
+	*residual
+	qui rdrobust resid_pm10_smw T if miss_before_ratio<=`v'/100, c(0) p(1) q(2) kernel(tri) vce(cluster code_city) masspoints(off)
+	outreg2 using "$path/Results/Table_B8_miss_before_ratio_1y", excel dec(1) append ctitle(pm10) addtext(Pre-Missing PM10, ≤`v'%, Sample, All, Station FE, Y, Month FE, Y, Weather Controls, Y) addstat(Effective Obs, e(N_h_l)+e(N_h_r), Bandwidth, floor(e(h_l)))
+}
+
+*==============================================================================*
+*Table B9. RD Density Test at Air Quality Thresholds
+*==============================================================================*
+use "$path/Data/station_day_1116.dta",clear
+gen T=date-auto_date
+log using "$path/Data/temp/temp1.log", replace
+foreach v in 50 150 250 350 420 500 600 {
+	rddensity pm10 if T>=0, c(`v') p(1) q(2)  kernel(triangular) nomasspoints
+	rddensity pm10 if T>=0, c(`v') p(1) q(2)  kernel(epanechnikov) nomasspoints
+	rddensity pm10 if T>=0, c(`v') p(1) q(2)  kernel(uniform) nomasspoints
+}
+log close
+
+clear
+infix str3 cutoff 6-18 str12 kernel 69-80 str6  T 24-30  str6 P_value 37-42 using "$path/Data/temp/temp1.log"
+keep if trim(cutoff)=="c =    50.000" |trim(cutoff)=="c =   150.000" |trim(cutoff)=="c =   250.000" |trim(cutoff)=="c =   350.000" |trim(cutoff)=="c =   420.000" |trim(cutoff)=="c =   600.000" |trim(cutoff)=="Robust"| trim(kernel)=="triangular"| trim(kernel)=="epanechnikov"| trim(kernel)=="uniform"
+replace cutoff=cutoff[_n-2] if cutoff=="Robust"
+replace kernel=kernel[_n-1] if kernel==""
+drop if cutoff=="Number of obs" | kernel=="709659"
+export excel using "$path/Results/Table_B9_Threshold", replace firstrow(variables)
+
+*==============================================================================*
+*Table B10. Automation and Association between AOD and PM10 (Standardized)
+*==============================================================================*
+***station-month
+use "$path/Data/station_month.dta",clear
+set matsize 5000
+egen year_month=group(year month)
+
+log using "$path/Data/temp/temp2.log", replace
+pwcorr aod pm10 if after==0, sig
+pcorr aod pm10 temp rh rain wind_speed if after==0
+xi: pcorr aod pm10 temp rh rain wind_speed i.year_month if after==0
+xi: pcorr aod pm10 temp rh rain wind_speed i.year_month i.pm10_n if after==0
+pwcorr aod pm10 if after==1, sig
+pcorr aod pm10 temp rh rain wind_speed if after==1
+xi: pcorr aod pm10 temp rh rain wind_speed i.year_month if after==1
+xi: pcorr aod pm10 temp rh rain wind_speed i.year_month i.pm10_n if after==1
+log close
+
+clear
+infix str4 obs 1-4 str12 thecorr 1-12 str6  partcorr 17-23  str6 thesig 73-78 using "$path/Data/temp/temp2.log"
+keep if trim(thecorr)=="pm10" | trim(obs)=="(obs"
+export excel using "$path/Results/Table_B10_PM10_AOD", replace
+
+*==============================================================================*
+*Table D1. Association between Baidu Search Index and Taobao Sales Index
+*==============================================================================*
+use "$path/Data/search_sale.dta",clear
+foreach v in mask filter{
+	qui reghdfe l_taobao_`v' l_`v' wind_speed rain temp rh, absorb(code_city) vce(cluster code_city)
+	qui outreg2 using "$path/Results/Table_D1_sale_search", excel dec(2) append drop(wind_speed rain temp rh) ctitle(l_taobao_`v') addtext(Weather Controls, Y, City FE, Y)
+	qui reghdfe l_taobao_`v' l_`v' wind_speed rain temp rh, absorb(code_city month) vce(cluster code_city)
+	qui outreg2 using "$path/Results/Table_D1_sale_search", excel dec(2) append drop(wind_speed rain temp rh) ctitle(l_taobao_`v') addtext(Weather Controls, Y, City FE, Y, Month FE, Y)
+}
+
+*==============================================================================*
+*Table D3: City-Month Online Search in Deadline and Non-Deadline Cities
+*==============================================================================*
+use "$path/Data/search_city_month.dta",clear
+foreach y in pmmask filter l_pmmask l_filter {	
+	cap qui reghdfe `y', absorb(code_city month) res(resid_`y'_sm)
+	cap qui reghdfe `y' wind_speed rain temp rh, absorb(code_city month) res(resid_`y'_smw)
+	*ddl in normal and manipulated
+	qui rdrobust resid_`y'_sm n_month if auto_date==19359 | auto_date==19724, c(0) p(1) q(2) kernel(tri) vce(cluster code_city) masspoints(off)
+	outreg2 using "$path/Results/Table_D3_ddl_non_ddl", excel dec(2) append ctitle(`y') addtext(Deadline, Y, Sample, All, City FE, Y, Month FE, Y) addstat(Effective Obs, e(N_h_l)+e(N_h_r), Bandwidth, floor(e(h_l)))
+	qui rdrobust resid_`y'_smw n_month if auto_date==19359 | auto_date==19724, c(0) p(1) q(2) kernel(tri) vce(cluster code_city) masspoints(off)
+	outreg2 using "$path/Results/Table_D3_ddl_non_ddl", excel dec(2) append ctitle(`y') addtext(Deadline, Y, Sample, All, City FE, Y, Month FE, Y, Weather Controls, Y) addstat(Effective Obs, e(N_h_l)+e(N_h_r), Bandwidth, floor(e(h_l)))
+		
+	*non_ddl in normal and manipulated
+	qui rdrobust resid_`y'_sm n_month if auto_date!=19359 & auto_date!=19724, c(0) p(1) q(2) kernel(tri) vce(cluster code_city) masspoints(off)
+	outreg2 using "$path/Results/Table_D3_ddl_non_ddl", excel dec(2) append ctitle(`y') addtext(Deadline, N, Sample, All, City FE, Y, Month FE, Y) addstat(Effective Obs, e(N_h_l)+e(N_h_r), Bandwidth, floor(e(h_l)))
+	qui rdrobust resid_`y'_smw n_month if auto_date!=19359 & auto_date!=19724, c(0) p(1) q(2) kernel(tri) vce(cluster code_city) masspoints(off)
+	outreg2 using "$path/Results/Table_D3_ddl_non_ddl", excel dec(2) append ctitle(`y') addtext(Deadline, N, Sample, All, City FE, Y, Month FE, Y, Weather Controls, Y) addstat(Effective Obs, e(N_h_l)+e(N_h_r), Bandwidth, floor(e(h_l)))
+	}
+	
+
+***The End
+
+```
+
+### `China_Pollution_Monitoring/Code/Figures.do`
+```stata
+***This is the main program for Figures 1 and 2 generated using Stata 15 MP
+
+clear all
+set more off
+
+set matsize 5000
+set scheme plotplain
+
+*global path "<home>/Dropbox/China_Pollution_Monitoring"
+
+*==============================================================================*
+*Figure 1: RD Plots for PM10, AOD and Online Search
+*==============================================================================*
+***Figure 1A & 1B: station-daily raw and residual PM10
+use "$path/Data/station_day_1116.dta",clear
+gen T=date-auto_date
+gen month=month(date)
+qui reghdfe pm10 wind_speed rain temp rh, absorb(pm10_n month) res(resid_pm10_smw)
+rdplot pm10 T if T>=-364 & T<=364, lowerend(-364) upperend(364) p(3) kernel(tri) nbins(364 364) ci(95) masspoints(off) ///
+	graph_options(xlabel(-360(60)360) ylabel(0(50)250) legend(off) ytitle(PM10) xtitle(Days before/after Automation) scheme(plotplainblind)) 
+graph export "$path/Results/figures/F1A_rd_PM10_raw_station_365d.png", as(png) replace
+rdplot resid_pm10_smw T if T>=-364 & T<=364, lowerend(-364) upperend(364) p(3) kernel(tri) nbins(364 364) ci(95) masspoints(off) ///
+	graph_options(xlabel(-360(60)360) ylabel(-75(25)75) legend(off)  ytitle(Residual - PM10) xtitle(Days before/after Automation) scheme(plotplainblind))
+graph export "$path/Results/figures/F1B_rd_PM10_smw_station_365d.png", as(png) replace
+
+***Figure 1C & 1D: station-monthly PM10 and AOD
+use "$path/Data/station_month.dta" ,clear
+qui reghdfe pm10 wind_speed rain temp rh, absorb(pm10_n month) res(resid_pm10_smw)
+rdplot resid_pm10_smw n_month if n_month>=-12 & n_month<=12, lowerend(-12) upperend(12) p(3) kernel(tri) nbins(12 12) ci(95) masspoints(off) ///
+	graph_options(xlabel(-12(3)12) legend(off)  ytitle(Residual - PM10) xtitle(Months before/after Automation) scheme(plotplainblind))
+graph export "$path/Results/figures/F1C_rd_pm10_smw_station_12m.png", as(png) replace
+qui reghdfe aod wind_speed rain temp rh, absorb(pm10_n month) res(resid_aod_smw)
+rdplot resid_aod_smw n_month if n_month>=-12 & n_month<=12, lowerend(-12) upperend(12) p(2) kernel(tri) nbins(12 12) ci(95) masspoints(off) ///
+	graph_options(xlabel(-12(3)12) ylabel(-0.08(0.02)0.08) legend(off)  ytitle(Residual - AOD, margin(none)) xtitle(Months before/after Automation) scheme(plotplainblind))
+graph export "$path/Results/figures/F1D_rd_aod_smw_station_12m.png", as(png) replace
+
+***Figure 1E & 1F: city-monthly search for face mask and air filter
+use "$path/Data/search_city_month.dta",clear
+foreach v in pmmask filter{
+	qui reghdfe `v' wind_speed rain temp rh, absorb(code_city month) res(resid_`v'_smw)
+}
+rdplot resid_pmmask_smw n_month if n_month>=-12 & n_month<=12, lowerend(-12) upperend(12) p(4) kernel(tri) nbins(12 12) ci(95) masspoints(off) ///
+	graph_options(xlabel(-12(3)12) legend(off) ylabel(-20(10)20) ytitle(Baidu Search Index: Anti-Haze Face Mask) xtitle(Months before/after Automation) scheme(plotplainblind))
+graph export "$path/Results/figures/F1E_rd_pmmask_smw_city_month_12m.png", as(png) replace
+rdplot resid_filter_smw n_month if n_month>=-12 & n_month<=12, lowerend(-12) upperend(12) p(3) kernel(tri) nbins(12 12) ci(95) masspoints(off) ///
+	graph_options(xlabel(-12(3)12) legend(off) ylabel(-20(10)20) ytitle(Baidu Search Index: Air Filter) xtitle(Months before/after Automation) scheme(plotplainblind))
+graph export "$path/Results/figures/F1F_rd_filter_smw_city_month_12m.png", as(png) replace
+
+*==============================================================================*
+*Figure 2: City RD for PM10 in 76 Cities
+*==============================================================================*
+use "$path/Data/city_info_rd.dta",clear
+keep if list_76==1
+sort rd_estimate_1116
+gen city_N=_n
+gen l_95_1116=rd_estimate_1116-1.96*error_1116
+gen h_95_1116=rd_estimate_1116+1.96*error_1116
+
+input y1 x1 y2 x2 
+-100 13 -30 13  
+-100 18 -10 18
+-100 25 -10 25
+-100 29 -10 29
+-100 43 15  43
+-100 53 15  53
+-100 57 25  57
+-100 59 25  59
+-100 63 40  63
+-100 73 70  73
+-100 76 71  76
+end
+
+twoway rspike l_95_1116 h_95_1116 city_N, color(black) || scatter rd_estimate_1116 city_N if l_95_1116 >0, msymbol(square) mcolor(cranberry) msize(0.5) ///
+	|| scatter rd_estimate_1116 city_N if l_95_1116 <=0 , mstyle(p1) msize(0.3) color(cranberry) lp(dash) ///
+	|| pcarrow y1 x1 y2 x2, mc(ebblue) msize(0.6) lp(shortdash) lc(ebblue) yline(0,lp(solid) lcol(black)) yline(-100 100, lp(dot)) yline(28.2, lp(dash)) ///
+	ylabel(-100 "-100" 0 "0" 28.2 "Mean" 100 "100" 200 "200",labsize(small)) ///
+	xlabel(13 "Beijing" 18 "Shanghai" 25 "Guangzhou" 29 "Shenzhen" 43 "Chongqing"  53 "Chengdu" 57 "Tianjin" 59 "Shenyang" 63 "Wuhan" 73 "Xi'an" 76 "Shijiazhuang", labsize(tiny) alt) ///
+	ytitle(City-Specific RD Estimates) xtitle(City) legend(ring(0) position(11) col(1) order(2 "RD Estimate Positive and Significant at 5%" 3 "RD Estimate" 1 "95% CI" )) ///
+	plotregion(lcolor(black) fcolor(white)) scheme(plottig)	
+graph export "$path/Results/figures/F2.png", as(png) replace
+graph export "$path/Results/figures/F2.pdf", replace
+
+*==============================================================================*
+*Figure 3: DiD Plots for PM10 and online searches
+*==============================================================================*
+***Figure 3A: PM10
+use "$path/Data/did_ddl_match.dta",clear
+gen year=year(date)
+gen month=month(date)
+egen year_month=group(year month)
+gen treat=(auto_date==19359)
+gen after2=(year>=2013)
+gen m12_before2=(year==2012 & month>=11 & month<=12)
+gen m34_before2=(year==2012 & month>=9 & month<=10)
+gen m56_before2=(year==2012 & month>=7 & month<=8)
+gen m712_before2=(year==2012 & month>=1 & month<=6)
+gen m12_after2=(year==2013 & month>=1 & month<=2)
+gen m34_after2=(year==2013 & month>=3 & month<=4)
+gen m56_after2=(year==2013 & month>=5 & month<=6)
+gen m712_after2=(year==2013 & month>=7 & month<=12)
+
+foreach v in 12 34 56 712{
+	gen treat_m`v'_before2=treat*m`v'_before2
+	gen treat_m`v'_after2=treat*m`v'_after2
+}
+
+qui reghdfe l_pm10 treat_m712_before2 treat_m56_before2 treat_m34_before2 treat_m12_after2 treat_m34_after2 treat_m56_after2 treat_m712_after2 ///
+	wind_speed rain temp rh, absorb(pm10_n year_month) vce(cluster code_city)
+plotbeta treat_m712_before2 | treat_m56_before2 | treat_m34_before2 | 0 | treat_m12_after2 | treat_m34_after2 | treat_m56_after2 | treat_m712_after2, ///
+		vertical level(90) xlab(1 "7-12" 2 "5-6" 3 "3-4" 4 "1-2" 5 "1-2" 6 "3-4" 7 "5-6" 8 "7-12" , labsize(medsmall) labcolor(black) axis(1)) ///
+		xlab(none, axis(2)) xtitle("Months before/after Automation", col(black)) ytitle("Estimated Coefficients: Log(PM10)") yline(0, lp(dash)) xline(4.5, lp(dash)) scheme(plotplainblind)
+graph export "$path/Results/figures/F3A_DiD_pm10.png", as(png) replace
+
+***Figure 3B & 3C: searches for masks and air filters
+use "$path/Data/did_ddl_search.dta" ,clear
+gen year=year(date)
+gen month=month(date)
+egen year_month=group(year month)
+gen treat=(auto_date==19359)
+gen after2=(year>=2013)
+gen m12_before2=(year==2012 & month>=11 & month<=12)
+gen m34_before2=(year==2012 & month>=9 & month<=10)
+gen m56_before2=(year==2012 & month>=7 & month<=8)
+gen m712_before2=(year==2012 & month>=1 & month<=6)
+gen m12_after2=(year==2013 & month>=1 & month<=2)
+gen m34_after2=(year==2013 & month>=3 & month<=4)
+gen m56_after2=(year==2013 & month>=5 & month<=6)
+gen m712_after2=(year==2013 & month>=7 & month<=12)
+
+foreach v in 12 34 56 712{
+	gen treat_m`v'_before2=treat*m`v'_before2
+	gen treat_m`v'_after2=treat*m`v'_after2
+}
+
+qui reghdfe filter treat_m712_before2 treat_m56_before2 treat_m34_before2 treat_m12_after2 treat_m34_after2 treat_m56_after2 treat_m712_after2 ///
+	wind_speed rain temp rh, absorb(code_city year_month) vce(cluster code_city)
+plotbeta treat_m712_before2 | treat_m56_before2 | treat_m34_before2 | 0 | treat_m12_after2 | treat_m34_after2 | treat_m56_after2 | treat_m712_after2, ///
+		vertical level(90) xlab(1 "7-12" 2 "5-6" 3 "3-4" 4 "1-2" 5 "1-2" 6 "3-4" 7 "5-6" 8 "7-12" , labsize(medsmall) labcolor(black) axis(1)) ///
+		xlab(none, axis(2)) xtitle("Months before/after Automation", col(black)) ytitle("Estimated Coefficients: Air Filter Searches") yline(0, lp(dash)) xline(4.5, lp(dash)) scheme(plotplainblind)
+graph export "$path/Results/figures/F3B_filter_DiD.png", as(png) replace
+
+qui reghdfe pmmask treat_m712_before2 treat_m56_before2 treat_m34_before2 treat_m12_after2 treat_m34_after2 treat_m56_after2 treat_m712_after2 ///
+	wind_speed rain temp rh, absorb(code_city year_month) vce(cluster code_city)
+plotbeta treat_m712_before2 | treat_m56_before2 | treat_m34_before2 | 0 | treat_m12_after2 | treat_m34_after2 | treat_m56_after2 | treat_m712_after2, ///
+		vertical level(90) xlab(1 "7-12" 2 "5-6" 3 "3-4" 4 "1-2" 5 "1-2" 6 "3-4" 7 "5-6" 8 "7-12" , labsize(medsmall) labcolor(black) axis(1)) ///
+		xlab(none, axis(2)) xtitle("Months before/after Automation", col(black)) ytitle("Estimated Coefficients: Mask Searches") yline(0, lp(dash)) xline(4.5, lp(dash)) scheme(plotplainblind)
+graph export "$path/Results/figures/F3C_pmmask_DiD.png", as(png) replace
+
+
+***The End
+
+```
+
+## How to run a script
+
+Write each script to a file under the output directory, then run it with
+exactly this command (the data directory is mounted read-only at its own
+path; nothing else from the host is visible; `$SCRIPT` is the absolute path of
+the script you wrote):
+
+    SCRIPT=<repo>/benchmark/reproductions/greenstone-2022-china-pollution-monitoring-automation/seeded/2026-11-10-b/script.R   # or <repo>/benchmark/reproductions/greenstone-2022-china-pollution-monitoring-automation/seeded/2026-11-10-b/attempt-<n>/script.R
+    uv run --directory <repo> python -m benchmark.reproducers.run_sandbox --timeout 300 --label retally.run=claude-code-greenstone-2022-china-pollution-monitoring-automation-seeded-2026-11-10-b --run-dir "$(dirname "$SCRIPT")" -- docker run --rm --label retally.run=claude-code-greenstone-2022-china-pollution-monitoring-automation-seeded-2026-11-10-b --network none --memory 4g --cpus 1.0 --read-only --tmpfs /tmp:size=256m --cap-drop ALL --security-opt no-new-privileges -v "$SCRIPT":/workspace/script.R:ro -v <repo>/benchmark/.cache/claude-code/greenstone-2022-china-pollution-monitoring-automation/seeded/2026-11-10-b/mount/greenstone_2022_china_pollution_monitoring_automation:<repo>/benchmark/.cache/claude-code/greenstone-2022-china-pollution-monitoring-automation/seeded/2026-11-10-b/mount/greenstone_2022_china_pollution_monitoring_automation:ro --workdir /workspace retally-sandbox-r:latest Rscript /workspace/script.R; echo "exit code: $?"
+
+The sandbox time limit is 300 seconds (memory 4g, 1.0 CPU).  The
+command enforces it: `run_sandbox` runs the `docker run` after `--`, writes
+its output to `stdout.txt` and `stderr.txt` next to the script, and writes
+`timing.json` there too (wall-clock seconds, and whether the limit was
+hit).  If the limit is hit it kills the container, appends a line saying
+so to `stderr.txt` and exits with code 124: treat the run as a crash.  Do
+not add your own timeout, do not redirect its output yourself, and do not
+delete `timing.json`; keep it with the run's other files.
+
+If a `docker run` produces no output for more than ten minutes (no
+container output, no error, the command does not return), the Docker
+daemon is probably wedged.  Stop: kill the command, and do not restart
+Docker Desktop or the Docker daemon yourself.  The hung attempt is not
+counted: do not save it as an `attempt-<n>` directory or as the final run,
+and say in `notes` that it hung.  Report it in your final message (which
+step hung, and for how long) instead of retrying.
+
+## Output contract
+
+The output directory `<repo>/benchmark/reproductions/greenstone-2022-china-pollution-monitoring-automation/seeded/2026-11-10-b` already holds `render.json`; leave it
+there.  Add:
+
+```
+<repo>/benchmark/reproductions/greenstone-2022-china-pollution-monitoring-automation/seeded/2026-11-10-b/
+  script.R  stdout.txt  stderr.txt  timing.json   # the FINAL run: its RESULT: lines are what is scored
+  attempt-1/  attempt-2/  ...           # every execution BEFORE the final one, in order
+    script.R  stdout.txt  stderr.txt  timing.json  feedback.txt   # feedback.txt when kind is not ""
+  reproduction.json                     # written LAST
+```
+
+- `attempt-<n>` directories are every execution before the final one, in
+  the order they ran; the final files at the top are the run whose
+  `RESULT:` lines are scored.  If you go back to an earlier attempt, copy
+  that attempt's files to the top level as the final run.
+- `feedback.txt` holds what you acted on before the next attempt: the error
+  you fixed (`kind: "error"`) or the `check_attempt` comparison
+  (`kind: "claim"`).
+- Exploratory runs (inspecting variables, counting rows, checking a filter;
+  no estimate of a listed quantity) are attempts with `kind: ""` and need no
+  `feedback.txt`.  They must NOT print any `RESULT:` line, not even a
+  placeholder: the first run that prints one is scored as your first scored
+  attempt.  Print `RESULT:` lines only from a script that estimates the
+  listed quantities, and `kind: "error"` only for a run that crashed or
+  that was meant to print them and did not.
+- Write `reproduction.json` last, in this schema:
+
+```
+reproduction.json (schema 1), written last by the agent into its run directory
+benchmark/reproductions/<entry_id>/<mode>/<run_id>/:
+
+{
+  "schema": 1,
+  "entry_id": "montero-2022-cooperative-property-rights",
+  "mode": "independent",
+  "run_id": "2026-10-22-a",
+  "reproducer": "claude-code",
+  "language": "r",
+  "final": {"script": "script.R", "stdout": "stdout.txt", "stderr": "stderr.txt", "exit_code": 0},
+  "attempts": [
+    {"dir": "attempt-1", "exit_code": 1, "kind": "error"},
+    {"dir": "attempt-2", "exit_code": 0, "kind": "claim"}
+  ],
+  "deviations": [],
+  "notes": "free text: what the agent did, what it could not do",
+  "files_read_outside_mount": [],
+  "started_at": "2026-10-22T10:00:00Z",
+  "finished_at": "2026-10-22T10:40:00Z"
+}
+
+* entry_id, mode and run_id must match the directory the file sits in.
+* final: the run that is scored -- script.R, stdout.txt, stderr.txt at the
+  run-dir root, and its exit code.  If the agent reverts to an earlier
+  attempt it copies that attempt's files there.
+* attempts: every execution before the final one, oldest first.  Each
+  attempt-<n>/ holds script.R, stdout.txt, stderr.txt, and feedback.txt
+  when kind is not "".  kind is the refinement that followed it:
+  "error" (it crashed or printed no RESULT: line; the agent repaired it),
+  "claim" (the agent compared its RESULT: values with the claimed values
+  and changed the script; never allowed in blind mode), or "" (neither).
+* All paths are relative to the run directory; absolute paths and ".."
+  are rejected.
+* deviations: free-text methodology changes, in addition to any
+  DEVIATION: lines in the final stdout.
+* The numbers scored are the RESULT: lines of the files, never anything
+  written in this JSON.
+```
+
+End your final message with the final run's `RESULT:` lines and a short
+note.  Nothing needed for scoring may live only in the message: the files
+are the record.
+
+Do not edit any file in the repository; your only writes are under `<repo>/benchmark/reproductions/greenstone-2022-china-pollution-monitoring-automation/seeded/2026-11-10-b`.

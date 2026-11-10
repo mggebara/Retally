@@ -1,0 +1,15 @@
+{
+  "schema": 1,
+  "entry_id": "goni-2022-assortative-matching-london-season",
+  "mode": "seeded",
+  "run_id": "2026-11-10-b",
+  "reproducer": "claude-code",
+  "language": "r",
+  "final": {"script": "script.R", "stdout": "stdout.txt", "stderr": "stderr.txt", "exit_code": 0},
+  "attempts": [],
+  "deviations": [],
+  "notes": "Translated the Table 2 block of programs/02_analysis/master-analysis.do. Loaded data/final-data.dta (the authors' final dataset, as the do-file allows). Columns 1-5 use base_sample==1, column 6 uses marital_rates_sample==1; controls pr4 biorder hengpee, plus distlondon in Panel B. Probits (cOut, mheir, fdown, celibacy) are estimated with glm probit and reported as average marginal effects of syntheticT (Stata margins, dydx(*) predict(pr)); columns 3-4 (fmissmatch, fmissmatch2) are OLS coefficients. Birth-year clustering only affects standard errors, which are not claimed, so it was not computed. Single run, no attempts before the final run; the results match the published values at reported precision.",
+  "files_read_outside_mount": [],
+  "started_at": "2026-11-10T05:29:44Z",
+  "finished_at": "2026-11-10T05:32:00Z"
+}

@@ -1,0 +1,21 @@
+{
+  "schema": 1,
+  "entry_id": "greenstone-2022-china-pollution-monitoring-automation",
+  "mode": "seeded",
+  "run_id": "2026-11-10-b",
+  "reproducer": "claude-code",
+  "language": "r",
+  "final": {"script": "script.R", "stdout": "stdout.txt", "stderr": "stderr.txt", "exit_code": 0},
+  "attempts": [
+    {"dir": "attempt-1", "exit_code": 0, "kind": ""}
+  ],
+  "deviations": [
+    "rdrobust: R package rdrobust 4.1.1 with vce='cr1' + cluster=code_city as the equivalent of Stata rdrobust vce(cluster code_city); p=1, q=2, triangular kernel, masspoints='off', default mserd bandwidth.",
+    "geonear (ellipsoid) nearest-neighbour matching reimplemented with a WGS84 Vincenty inverse distance; nearest Wave-2 deadline station per Wave-1 deadline station, kept if <= 400 km, controls replicated per match (joinby).",
+    "City-day aggregation for the search data takes auto_date/phase from the station with the latest auto_date (gsort -auto_date); ties broken by station id."
+  ],
+  "notes": "Translated Prepare_Data.do (station_day, station_month, did_ddl_match, search_city_month) and Tables.do (Table 1 Panels A/B, Table 2 Panel A col 2) to R with data.table/fixest/rdrobust. attempt-1 was exploratory (column orders, timing; no RESULT lines). The single scored run (final) reproduced all 13 claims to the reported precision (e.g. 34.7, 34.9, 27.5, 64.7, 57.1, -0.005, 60.3, 31.4, 66.5, 0.24, N=176426, 11.03, 8.73); effective Ns and bandwidths also match the paper (e.g. 232,326 obs, h=263). No claim-comparison refinement was made.",
+  "files_read_outside_mount": [],
+  "started_at": "2026-11-10T05:51:51Z",
+  "finished_at": "2026-11-10T05:57:00Z"
+}

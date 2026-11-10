@@ -1,0 +1,3 @@
+Run crashed (exit 1) before any RESULT line: merging city-month search data with city automation dates failed (data.table cartesian-join error) because 15 cities have stations with more than one automation date in station_list.
+Fix: one automation date per city (the date shared by most of its stations, ties -> earliest).
+Also in the repair (justified by the paper's reported bandwidths/obs, not by claimed estimates; diagnostics printed in this run): rdrobust masspoints='off' with city clustering reproduces the paper's bandwidths (109/263 days) and effective obs (91,470/232,326), so all RD calls now use masspoints='off'.

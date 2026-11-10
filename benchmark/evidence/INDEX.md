@@ -349,6 +349,54 @@ Built by `python -m benchmark.evidence`; see `benchmark/README.md` ("Evidence bu
 - [blind · pipeline-desktop-opus-run3 · 20261103T010557Z](gagliarducci-2022-gender-cooperation-congress/blind/pipeline-desktop-opus-run3/20261103T010557Z/CELL.md) — 7/13
 - [blind · pipeline-desktop-opus-run4 · 20261108T013503Z](gagliarducci-2022-gender-cooperation-congress/blind/pipeline-desktop-opus-run4/20261108T013503Z/CELL.md) — 7/13
 
+## [goni-2022-assortative-matching-london-season](goni-2022-assortative-matching-london-season/REPORT.md)
+
+- [seeded · claude-code · 2026-11-10-a](goni-2022-assortative-matching-london-season/seeded/claude-code/2026-11-10-a/CELL.md) — 13/13
+- [seeded · claude-code · 2026-11-10-b](goni-2022-assortative-matching-london-season/seeded/claude-code/2026-11-10-b/CELL.md) — 13/13
+- [seeded · pipeline-desktop-opus · 20261110T053231Z](goni-2022-assortative-matching-london-season/seeded/pipeline-desktop-opus/20261110T053231Z/CELL.md) — 13/13
+- [seeded · pipeline-desktop-opus-run2 · 20261110T053855Z](goni-2022-assortative-matching-london-season/seeded/pipeline-desktop-opus-run2/20261110T053855Z/CELL.md) — 13/13
+- [seeded · pipeline-desktop-opus-run3 · 20261110T053957Z](goni-2022-assortative-matching-london-season/seeded/pipeline-desktop-opus-run3/20261110T053957Z/CELL.md) — 13/13
+- [independent · claude-code · 2026-11-10-a](goni-2022-assortative-matching-london-season/independent/claude-code/2026-11-10-a/CELL.md) — 13/13
+- [independent · claude-code · 2026-11-10-b](goni-2022-assortative-matching-london-season/independent/claude-code/2026-11-10-b/CELL.md) — 13/13
+- [independent · claude-code · 2026-11-10-c](goni-2022-assortative-matching-london-season/independent/claude-code/2026-11-10-c/CELL.md) — 13/13
+- [independent · claude-code · 2026-11-10-d](goni-2022-assortative-matching-london-season/independent/claude-code/2026-11-10-d/CELL.md) — 13/13
+- [independent · pipeline-desktop-opus · 20261110T053231Z](goni-2022-assortative-matching-london-season/independent/pipeline-desktop-opus/20261110T053231Z/CELL.md) — 13/13
+- [independent · pipeline-desktop-opus-run2 · 20261110T053855Z](goni-2022-assortative-matching-london-season/independent/pipeline-desktop-opus-run2/20261110T053855Z/CELL.md) — 13/13
+- [independent · pipeline-desktop-opus-run3 · 20261110T053957Z](goni-2022-assortative-matching-london-season/independent/pipeline-desktop-opus-run3/20261110T053957Z/CELL.md) — 12/13
+- [independent · pipeline-desktop-opus-run4 · 20261110T054433Z](goni-2022-assortative-matching-london-season/independent/pipeline-desktop-opus-run4/20261110T054433Z/CELL.md) — 13/13
+- [blind · claude-code · 2026-11-10-a](goni-2022-assortative-matching-london-season/blind/claude-code/2026-11-10-a/CELL.md) — 13/13
+- [blind · claude-code · 2026-11-10-b](goni-2022-assortative-matching-london-season/blind/claude-code/2026-11-10-b/CELL.md) — 13/13
+- [blind · claude-code · 2026-11-10-c](goni-2022-assortative-matching-london-season/blind/claude-code/2026-11-10-c/CELL.md) — 13/13
+- [blind · claude-code · 2026-11-10-d](goni-2022-assortative-matching-london-season/blind/claude-code/2026-11-10-d/CELL.md) — 13/13
+- [blind · pipeline-desktop-opus · 20261110T052937Z](goni-2022-assortative-matching-london-season/blind/pipeline-desktop-opus/20261110T052937Z/CELL.md) — 13/13
+- [blind · pipeline-desktop-opus-run2 · 20261110T053855Z](goni-2022-assortative-matching-london-season/blind/pipeline-desktop-opus-run2/20261110T053855Z/CELL.md) — 12/13
+- [blind · pipeline-desktop-opus-run3 · 20261110T053957Z](goni-2022-assortative-matching-london-season/blind/pipeline-desktop-opus-run3/20261110T053957Z/CELL.md) — 12/13
+- [blind · pipeline-desktop-opus-run4 · 20261110T053718Z](goni-2022-assortative-matching-london-season/blind/pipeline-desktop-opus-run4/20261110T053718Z/CELL.md) — 12/13
+
+## [greenstone-2022-china-pollution-monitoring-automation](greenstone-2022-china-pollution-monitoring-automation/REPORT.md)
+
+- [seeded · claude-code · 2026-11-10-a](greenstone-2022-china-pollution-monitoring-automation/seeded/claude-code/2026-11-10-a/CELL.md) — 13/13
+- [seeded · claude-code · 2026-11-10-b](greenstone-2022-china-pollution-monitoring-automation/seeded/claude-code/2026-11-10-b/CELL.md) — 13/13
+- [seeded · pipeline-desktop-opus · 20261110T055807Z](greenstone-2022-china-pollution-monitoring-automation/seeded/pipeline-desktop-opus/20261110T055807Z/CELL.md) — 13/13
+- [seeded · pipeline-desktop-opus-run2 · 20261110T060636Z](greenstone-2022-china-pollution-monitoring-automation/seeded/pipeline-desktop-opus-run2/20261110T060636Z/CELL.md) — 13/13
+- [seeded · pipeline-desktop-opus-run3 · 20261110T060758Z](greenstone-2022-china-pollution-monitoring-automation/seeded/pipeline-desktop-opus-run3/20261110T060758Z/CELL.md) — 13/13
+- [independent · claude-code · 2026-11-10-a](greenstone-2022-china-pollution-monitoring-automation/independent/claude-code/2026-11-10-a/CELL.md) — 12/13
+- [independent · claude-code · 2026-11-10-b](greenstone-2022-china-pollution-monitoring-automation/independent/claude-code/2026-11-10-b/CELL.md) — 12/13
+- [independent · claude-code · 2026-11-10-c](greenstone-2022-china-pollution-monitoring-automation/independent/claude-code/2026-11-10-c/CELL.md) — 13/13
+- [independent · claude-code · 2026-11-10-d](greenstone-2022-china-pollution-monitoring-automation/independent/claude-code/2026-11-10-d/CELL.md) — 12/13
+- [independent · pipeline-desktop-opus · 20261110T061446Z](greenstone-2022-china-pollution-monitoring-automation/independent/pipeline-desktop-opus/20261110T061446Z/CELL.md) — 13/13
+- [independent · pipeline-desktop-opus-run2 · 20261110T061535Z](greenstone-2022-china-pollution-monitoring-automation/independent/pipeline-desktop-opus-run2/20261110T061535Z/CELL.md) — 13/13
+- [independent · pipeline-desktop-opus-run3 · 20261110T061323Z](greenstone-2022-china-pollution-monitoring-automation/independent/pipeline-desktop-opus-run3/20261110T061323Z/CELL.md) — 13/13
+- [independent · pipeline-desktop-opus-run4 · 20261110T062806Z](greenstone-2022-china-pollution-monitoring-automation/independent/pipeline-desktop-opus-run4/20261110T062806Z/CELL.md) — 12/13
+- [blind · claude-code · 2026-11-10-a](greenstone-2022-china-pollution-monitoring-automation/blind/claude-code/2026-11-10-a/CELL.md) — 12/13
+- [blind · claude-code · 2026-11-10-b](greenstone-2022-china-pollution-monitoring-automation/blind/claude-code/2026-11-10-b/CELL.md) — 12/13
+- [blind · claude-code · 2026-11-10-c](greenstone-2022-china-pollution-monitoring-automation/blind/claude-code/2026-11-10-c/CELL.md) — 12/13
+- [blind · claude-code · 2026-11-10-d](greenstone-2022-china-pollution-monitoring-automation/blind/claude-code/2026-11-10-d/CELL.md) — 11/13
+- [blind · pipeline-desktop-opus · 20261110T055406Z](greenstone-2022-china-pollution-monitoring-automation/blind/pipeline-desktop-opus/20261110T055406Z/CELL.md) — 10/13
+- [blind · pipeline-desktop-opus-run2 · 20261110T060037Z](greenstone-2022-china-pollution-monitoring-automation/blind/pipeline-desktop-opus-run2/20261110T060037Z/CELL.md) — 10/13
+- [blind · pipeline-desktop-opus-run3 · 20261110T055857Z](greenstone-2022-china-pollution-monitoring-automation/blind/pipeline-desktop-opus-run3/20261110T055857Z/CELL.md) — 10/13
+- [blind · pipeline-desktop-opus-run4 · 20261110T063528Z](greenstone-2022-china-pollution-monitoring-automation/blind/pipeline-desktop-opus-run4/20261110T063528Z/CELL.md) — 11/13
+
 ## [grier-2023-sugar-roll-call-voting](grier-2023-sugar-roll-call-voting/REPORT.md)
 
 - [seeded · claude-code · 2026-10-21-b](grier-2023-sugar-roll-call-voting/seeded/claude-code/2026-10-21-b/CELL.md) — 10/11

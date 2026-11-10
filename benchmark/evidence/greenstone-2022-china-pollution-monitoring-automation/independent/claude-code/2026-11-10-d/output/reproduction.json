@@ -1,0 +1,26 @@
+{
+  "schema": 1,
+  "entry_id": "greenstone-2022-china-pollution-monitoring-automation",
+  "mode": "independent",
+  "run_id": "2026-11-10-d",
+  "reproducer": "claude-code",
+  "language": "r",
+  "final": {"script": "script.R", "stdout": "stdout.txt", "stderr": "stderr.txt", "exit_code": 0},
+  "attempts": [
+    {"dir": "attempt-1", "exit_code": 0, "kind": ""},
+    {"dir": "attempt-2", "exit_code": 0, "kind": ""},
+    {"dir": "attempt-3", "exit_code": 0, "kind": ""},
+    {"dir": "attempt-4", "exit_code": 0, "kind": ""},
+    {"dir": "attempt-5", "exit_code": 0, "kind": "claim"},
+    {"dir": "attempt-6", "exit_code": 0, "kind": "claim"}
+  ],
+  "deviations": [
+    "Matched event study (Panel B cols 3/5): nearest Wave-2 deadline station by great-circle distance on the package's (shifted) station coordinates, with replacement, pairs stacked so reused controls repeat (231,990 obs vs paper's 186,499). The paper's matched sample could not be reconstructed exactly; an unstacked unique-control variant (136,886 obs) gives 67.9 for col 3 and is printed only as a diagnostic.",
+    "Search RD (Table 2): city automation date taken as the date on which most of the city's stations automated (ties -> earliest); running variable = calendar-month difference from that month, automation month coded as post.",
+    "rdrobust run with masspoints='off' (the older Stata rdrobust behaviour); this reproduces the paper's bandwidths and effective N exactly for Table 1 Panel A."
+  ],
+  "notes": "Attempts 1-4 were exploratory (data structure, sample counts, matching variants; no estimates printed). Daily RD sample = station-days with PM10 and all four weather variables (1,049,325, matching the paper). RD: rdrobust, triangular kernel, mserd bandwidth, cluster by city, conventional estimate; covariate columns residualize PM10 on station FE + month-of-year FE + weather (fixest) on the full sample, and the Wave 1 / Wave 2 / Deadline columns run the RD on those full-sample residuals within the subsample (deadline = stations automated on 2013-01-01 or 2014-01-01). AOD: station-month, weather averaged to station-month, months-from-automation running variable. Event study: deadline stations (242 treated automated 2013-01-01, 123 controls automated 2014-01-01), 2012-2013, treated x period bins with Nov-Dec 2012 as reference, station FE + month FE (or year-month FE) + weather, city-clustered; reproduces Panel B cols 1-2 and Obs exactly. Search: daily Baidu index averaged to city-month for the 123 sample cities, merged with city-month weather (8,661 mask / 8,590 filter obs, matching the paper), residualized on city FE + month FE + weather. Attempt-5 used rdrobust's default mass-point adjustment and per-subsample residualization; after the claim comparison I switched to masspoints='off' (attempt-6), which matched the paper's reported bandwidths (109/263 days) and N, then to full-sample residuals for the subsamples, which matched the reported bandwidths/N for columns 3-5. No run hung.",
+  "files_read_outside_mount": [],
+  "started_at": "2026-11-10T06:02:06Z",
+  "finished_at": "2026-11-10T06:10:00Z"
+}

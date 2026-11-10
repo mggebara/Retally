@@ -1,0 +1,180 @@
+    vce = "nn", cluster = NULL, nnmatch = 3, level = 95, scalepar = 1, 
+            c("y", "x", "covs", "cluster", "fuzzy", "weights", 
+        cluster <- .vars$cluster
+    .rdrobust_check_length(cluster, "cluster", n_orig)
+    if (!is.null(cluster)) {
+            cluster <- cluster[subset]
+        if (length(cluster) != length(x)) 
+            stop("cluster must have the same length as y and x.")
+        na.ok <- na.ok & complete.cases(cluster)
+    if (!is.null(cluster)) 
+        cluster = as.matrix(cluster[na.ok])
+    vce <- rdrobust_norm_opt(vce)
+    if (vce == "nn" | masspoints == "check" | masspoints == "adjust") {
+        if (!is.null(cluster)) 
+            cluster = cluster[order_x, , drop = FALSE]
+    if (!is.null(cluster)) {
+        C_l = cluster[ind_l, , drop = FALSE]
+        C_r = cluster[ind_r, , drop = FALSE]
+    if (vce == "nn") {
+    valid_vce <- c("nn", "hc0", "hc1", "hc2", "hc3", "cr1", "cr2", 
+    if (!vce %in% valid_vce) {
+        warning(sprintf("vce incorrectly specified (received '%s'); allowed: nn, hc0, hc1, hc2, hc3, cr1, cr2, cr3.", 
+            vce))
+    if (!is.null(cluster)) {
+        if (vce %in% c("nn", "")) {
+            vce = "cr1"
+        else if (vce %in% c("hc0", "hc1")) {
+            warning(paste0("vce='", vce, "' is not a cluster option. Switching to vce='cr1'."))
+            vce = "cr1"
+        else if (vce == "hc2") {
+            warning("vce='hc2' is not a cluster option. Switching to vce='cr2'.")
+            vce = "cr2"
+        else if (vce == "hc3") {
+            warning("vce='hc3' is not a cluster option. Switching to vce='cr3'.")
+            vce = "cr3"
+        else if (!vce %in% c("cr1", "cr2", "cr3")) {
+            warning(paste0("vce='", vce, "' is not a valid cluster option. Switching to vce='cr1'."))
+            vce = "cr1"
+        if (vce == "cr1") {
+            warning("vce='cr1' requires a cluster variable. Falling back to vce='hc1'.")
+            vce = "hc1"
+        else if (vce == "cr2") {
+            warning("vce='cr2' requires a cluster variable. Falling back to vce='hc2'.")
+            vce = "hc2"
+        else if (vce == "cr3") {
+            warning("vce='cr3' requires a cluster variable. Falling back to vce='hc3'.")
+            vce = "hc3"
+    vce_type = "NN"
+    if (vce == "hc0") 
+        vce_type = "HC0"
+    if (vce == "hc1") 
+        vce_type = "HC1"
+    if (vce == "hc2") 
+        vce_type = "HC2"
+    if (vce == "hc3") 
+        vce_type = "HC3"
+    if (vce == "cr1") {
+        vce_type = "CR1"
+        vce = "hc1"
+    if (vce == "cr2") {
+        vce_type = "CR2"
+        vce = "crv2"
+    if (vce == "cr3") {
+        vce_type = "CR3"
+        vce = "crv3"
+    crv3 = (vce == "crv3") & !is.null(cluster)
+    crv2 = (vce == "crv2") & !is.null(cluster)
+            0, vce, nnmatch, kernel, dups_l, dupsid_l, covs_drop_coll, 
+            0, vce, nnmatch, kernel, dups_r, dupsid_r, covs_drop_coll, 
+                h_B = d_bw_l, scaleregul, vce, nnmatch, kernel, 
+                h_B = d_bw_r, scaleregul, vce, nnmatch, kernel, 
+                h_B = b_bw_l, scaleregul, vce, nnmatch, kernel, 
+                h_B = b_bw_r, scaleregul, vce, nnmatch, kernel, 
+                h_B = d_bw_s, scaleregul, vce, nnmatch, kernel, 
+                h_B = d_bw_s, scaleregul, vce, nnmatch, kernel, 
+                h_B = b_bw_s, scaleregul, vce, nnmatch, kernel, 
+                h_B = b_bw_s, scaleregul, vce, nnmatch, kernel, 
+                h_B = d_bw_d, scaleregul, vce, nnmatch, kernel, 
+                h_B = d_bw_d, scaleregul, vce, nnmatch, kernel, 
+                h_B = b_bw_d, scaleregul, vce, nnmatch, kernel, 
+                h_B = b_bw_d, scaleregul, vce, nnmatch, kernel, 
+        if (!is.null(cluster)) 
+    if (!is.null(cluster)) {
+            warning(sprintf(paste0("Only %d (left) and %d (right) clusters within the bandwidth. ", 
+                "With p+1 = %d or fewer clusters on a side, cluster-robust inference ", 
+            warning(sprintf(paste0("Only %d (left) and %d (right) clusters within the bandwidth. ", 
+                "Cluster-robust standard errors are unreliable with fewer than 10 clusters on a side."), 
+    if (vce == "nn") {
+    if (!is.null(cluster)) {
+        cidx_l = .rdrobust_cluster_idx(eC_l)
+        cidx_r = .rdrobust_cluster_idx(eC_r)
+    if ((vce == "hc0" | vce == "hc1" | vce == "hc2" | vce == 
+        "hc3") & !crv3) {
+        if (vce == "hc2" | vce == "hc3") {
+    else if (crv3 | crv2) {
+        hii_p_l, vce, nnmatch, edups_l, edupsid_l, p + 1, crv3 = crv3, 
+        crv2 = crv2, has_cluster = !is.null(cluster))
+        hii_p_r, vce, nnmatch, edups_r, edupsid_r, p + 1, crv3 = crv3, 
+        crv2 = crv2, has_cluster = !is.null(cluster))
+    if (vce == "nn") {
+            hii_q_l, vce, nnmatch, edups_l, edupsid_l, q + 1, 
+            crv3 = crv3, crv2 = crv2, has_cluster = !is.null(cluster))
+            hii_q_r, vce, nnmatch, edups_r, edupsid_r, q + 1, 
+            crv3 = crv3, crv2 = crv2, has_cluster = !is.null(cluster))
+    if (crv3 | crv2) {
+    crv_invG_l = if (crv3 | crv2) 
+    crv_invG_r = if (crv3 | crv2) 
+    V_Y_cl_l = invG_p_l %*% rdrobust_vce(dT + dZ, s_Y, as.matrix(R_p_l * 
+        W_h_l), res_h_l, eC_l, cluster_idx = cidx_l, invG = crv_invG_l, 
+        sqrtRX = sqrtRX_p_l, crv2 = crv2) %*% invG_p_l
+    V_Y_cl_r = invG_p_r %*% rdrobust_vce(dT + dZ, s_Y, as.matrix(R_p_r * 
+        W_h_r), res_h_r, eC_r, cluster_idx = cidx_r, invG = crv_invG_r, 
+        sqrtRX = sqrtRX_p_r, crv2 = crv2) %*% invG_p_r
+    if (hb_match & (crv3 | crv2)) {
+        V_Y_rb_l = invG_q_l %*% rdrobust_vce(dT + dZ, s_Y, as.matrix(R_q_l * 
+            W_h_l), res_b_l, eC_l, cluster_idx = cidx_l, invG = invG_q_l, 
+            sqrtRX = sqrtRX_q_l, crv2 = crv2) %*% invG_q_l
+        V_Y_rb_r = invG_q_r %*% rdrobust_vce(dT + dZ, s_Y, as.matrix(R_q_r * 
+            W_h_r), res_b_r, eC_r, cluster_idx = cidx_r, invG = invG_q_r, 
+            sqrtRX = sqrtRX_q_r, crv2 = crv2) %*% invG_q_r
+    else if (hb_match & !is.null(cluster)) {
+        V_Y_rb_l = invG_q_l %*% rdrobust_vce(dT + dZ, s_Y, as.matrix(R_q_l * 
+            W_h_l), res_b_l, eC_l, cluster_idx = cidx_l, invG = NULL, 
+            sqrtRX = NULL, crv2 = FALSE) %*% invG_q_l
+        V_Y_rb_r = invG_q_r %*% rdrobust_vce(dT + dZ, s_Y, as.matrix(R_q_r * 
+            W_h_r), res_b_r, eC_r, cluster_idx = cidx_r, invG = NULL, 
+            sqrtRX = NULL, crv2 = FALSE) %*% invG_q_r
+    else if (crv3 | crv2) {
+        M_rb_l = .rdrobust_vce_qq_cluster(Q_q_l, R_q_l, W_b_l, 
+            invG_q_l, res_b_l, eC_l, cluster_idx = cidx_l, crv2 = crv2, 
+        M_rb_r = .rdrobust_vce_qq_cluster(Q_q_r, R_q_r, W_b_r, 
+            invG_q_r, res_b_r, eC_r, cluster_idx = cidx_r, crv2 = crv2, 
+        V_Y_rb_l = invG_p_l %*% rdrobust_vce(dT + dZ, s_Y, as.matrix(Q_q_l), 
+            res_b_l, eC_l, cluster_idx = cidx_l, invG = NULL, 
+            sqrtRX = NULL, crv2 = FALSE, k_override = q + 1) %*% 
+        V_Y_rb_r = invG_p_r %*% rdrobust_vce(dT + dZ, s_Y, as.matrix(Q_q_r), 
+            res_b_r, eC_r, cluster_idx = cidx_r, invG = NULL, 
+            sqrtRX = NULL, crv2 = FALSE, k_override = q + 1) %*% 
+        V_T_cl_l = invG_p_l %*% rdrobust_vce(dT + dZ, sV_T, as.matrix(R_p_l * 
+            W_h_l), res_h_l, eC_l, cluster_idx = cidx_l, invG = crv_invG_l, 
+            sqrtRX = sqrtRX_p_l, crv2 = crv2) %*% invG_p_l
+        V_T_cl_r = invG_p_r %*% rdrobust_vce(dT + dZ, sV_T, as.matrix(R_p_r * 
+            W_h_r), res_h_r, eC_r, cluster_idx = cidx_r, invG = crv_invG_r, 
+            sqrtRX = sqrtRX_p_r, crv2 = crv2) %*% invG_p_r
+        if (hb_match & (crv3 | crv2)) {
+            V_T_rb_l = invG_q_l %*% rdrobust_vce(dT + dZ, sV_T, 
+                as.matrix(R_q_l * W_h_l), res_b_l, eC_l, cluster_idx = cidx_l, 
+                invG = invG_q_l, sqrtRX = sqrtRX_q_l, crv2 = crv2) %*% 
+            V_T_rb_r = invG_q_r %*% rdrobust_vce(dT + dZ, sV_T, 
+                as.matrix(R_q_r * W_h_r), res_b_r, eC_r, cluster_idx = cidx_r, 
+                invG = invG_q_r, sqrtRX = sqrtRX_q_r, crv2 = crv2) %*% 
+        else if (hb_match & !is.null(cluster)) {
+            V_T_rb_l = invG_q_l %*% rdrobust_vce(dT + dZ, sV_T, 
+                as.matrix(R_q_l * W_h_l), res_b_l, eC_l, cluster_idx = cidx_l, 
+                invG = NULL, sqrtRX = NULL, crv2 = FALSE) %*% 
+            V_T_rb_r = invG_q_r %*% rdrobust_vce(dT + dZ, sV_T, 
+                as.matrix(R_q_r * W_h_r), res_b_r, eC_r, cluster_idx = cidx_r, 
+                invG = NULL, sqrtRX = NULL, crv2 = FALSE) %*% 
+        else if (crv3 | crv2) {
+            M_T_rb_l = .rdrobust_vce_qq_cluster(Q_q_l, R_q_l, 
+                W_b_l, invG_q_l, res_b_l, eC_l, cluster_idx = cidx_l, 
+                crv2 = crv2, s = sV_T, d = dT + dZ)
+            M_T_rb_r = .rdrobust_vce_qq_cluster(Q_q_r, R_q_r, 
+                W_b_r, invG_q_r, res_b_r, eC_r, cluster_idx = cidx_r, 
+                crv2 = crv2, s = sV_T, d = dT + dZ)
+            V_T_rb_l = invG_p_l %*% rdrobust_vce(dT + dZ, sV_T, 
+                as.matrix(Q_q_l), res_b_l, eC_l, cluster_idx = cidx_l, 
+                invG = NULL, sqrtRX = NULL, crv2 = FALSE, k_override = q + 
+            V_T_rb_r = invG_p_r %*% rdrobust_vce(dT + dZ, sV_T, 
+                as.matrix(Q_q_r), res_b_r, eC_r, cluster_idx = cidx_r, 
+                invG = NULL, sqrtRX = NULL, crv2 = FALSE, k_override = q + 
+    if (!is.null(cluster)) {
+        rdmodel <- paste0(rdmodel, " Std. errors are clustered (", 
+            g_l + g_r, " clusters).")
+            vce = vce_type, bwselect = bwselect, level = level, 
+            vce = vce_type, bwselect = bwselect, level = level, 
+N nonmissing pm10: 1067825 
+   user  system elapsed 
+  1.195   0.071   1.283 
+h 230.1683 230.1683 N_h 84699 116994 
