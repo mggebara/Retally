@@ -1,0 +1,20 @@
+{
+  "schema": 1,
+  "entry_id": "lopez-2022-patient-demand-prescription-overuse",
+  "mode": "blind",
+  "run_id": "2026-11-10-d",
+  "reproducer": "claude-code",
+  "language": "r",
+  "final": {"script": "script.R", "stdout": "stdout.txt", "stderr": "stderr.txt", "exit_code": 0},
+  "attempts": [
+    {"dir": "attempt-1", "exit_code": 0, "kind": ""}
+  ],
+  "deviations": [
+    "Post-double-selection lasso implemented by hand (no glmnet/hdm/lassopack in the sandbox): rigorous plug-in penalty lambda = 2*1.1*sqrt(N)*qnorm(1-gamma/(2p)), gamma = 0.1/log(number of clinics), cluster-robust (clinic) penalty loadings, initial residuals from OLS on the 5 most correlated regressors, loadings iterated with post-lasso residuals (up to 15 iterations). Exact Stata (pdslasso/rlasso) penalty conventions may differ, which can change the selected control set.",
+    "Date fixed effects partialled out (within-date demeaning) of outcome, treatments and candidates before the lasso steps; they enter the final OLS unpenalised."
+  ],
+  "notes": "Sample: dropme==0 (2,055 patients; 60 clinics; 36 dates). Treatments: patient_voucher (PV and PI-PV days) and doctor_voucher (DV and PI-DV days); control-group omitted category. Outcomes: col1 used_vouchers_admin, col2 RXtreat_sev_simple_mal, col3 treat_sev_simple_mal, col4 RXtreat_severe_mal, col5 treat_severe_mal (2 obs missing prescription records -> N=2053). Candidate controls: 59 clinic dummies (CL*), 23 prepared individual controls with missings mean-recoded and missing dummies (CC1..CC41), and the 249 prepared pairwise interactions (CCaxCCb) in the analysis file. Union of controls selected by lasso of y, PV and DV on candidates; final OLS via fixest with date FE, SEs clustered by clinic (cscomnum_OS). attempt-1 was an exploratory variable listing (no RESULT lines). No runs hung.",
+  "files_read_outside_mount": [],
+  "started_at": "2026-11-10T06:44:38Z",
+  "finished_at": "2026-11-10T07:20:00Z"
+}

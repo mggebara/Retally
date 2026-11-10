@@ -1,0 +1,37 @@
+{
+  "schema": 1,
+  "entry_id": "ambuehl-2022-deliberative-competence-financial-choice",
+  "mode": "independent",
+  "run_id": "2026-11-10-a",
+  "reproducer": "claude-code",
+  "language": "r",
+  "final": {"script": "script.R", "stdout": "stdout.txt", "stderr": "stderr.txt", "exit_code": 0},
+  "attempts": [
+    {"dir": "attempt-1", "exit_code": 1, "kind": "error"},
+    {"dir": "attempt-2", "exit_code": 0, "kind": ""},
+    {"dir": "attempt-3", "exit_code": 0, "kind": ""},
+    {"dir": "attempt-4", "exit_code": 1, "kind": "error"},
+    {"dir": "attempt-5", "exit_code": 0, "kind": ""},
+    {"dir": "attempt-6", "exit_code": 0, "kind": ""},
+    {"dir": "attempt-7", "exit_code": 0, "kind": ""},
+    {"dir": "attempt-8", "exit_code": 0, "kind": ""},
+    {"dir": "attempt-9", "exit_code": 1, "kind": "error"},
+    {"dir": "attempt-10", "exit_code": 0, "kind": ""},
+    {"dir": "attempt-11", "exit_code": 0, "kind": ""},
+    {"dir": "attempt-12", "exit_code": 0, "kind": ""},
+    {"dir": "attempt-13", "exit_code": 0, "kind": ""},
+    {"dir": "attempt-14", "exit_code": 0, "kind": ""},
+    {"dir": "attempt-15", "exit_code": 0, "kind": ""}
+  ],
+  "deviations": [
+    "Analysis data rebuilt from the raw Qualtrics CSVs. Exp A conditions are identified from the batch (batches 1,2,4,5 = Treatment/Control; 3,6,7,8 = Substance-Only/Rhetoric-Only) and from which video-check question was answered. Substance-Only vs Rhetoric-Only was assigned using the compound-interest test results (only one arm covers the rule of 72).",
+    "Multiple switchers are defined as subjects with any non-monotone choice (future reward chosen at a higher immediate amount and immediate amount chosen at a lower one) in any of the 40 price lists. This excludes 53 of 504 in Exp A (paper: 49) and 54 of 401 in Exp B (paper: 53), so N = 214 / 347 / 4510, against 215 / 348 / 4550 in the paper.",
+    "Exp B: one Qualtrics survey-preview row (Status == 1, a test worker ID) was dropped, leaving 401 completers. A worker ID that appears twice in Exp B (one unfinished Control row at 97% progress and one finished Treatment row) was kept twice.",
+    "Valuation = midpoint of the $0.20 interval from the iterated price list (2*s - 0.2*n2 - 0.1). It is normalized by the Table 2 reward R (rule-of-72 amount) for both frames. Normalizing by the exact compounded amounts was tried in diagnostics but not adopted.",
+    "Test answer keys were inferred from the question texts (no answer keys in the data). Compound questions: test1=2, test2=4, test3=4, test4=7, test5=6. Exp A control-module questions: 3,4,2,3,3. Exp B control-module questions: 4,5,5,5,1."
+  ],
+  "notes": "Independent reproduction in R using fixest. Table 4 = OLS of the score on a Treatment dummy with iid SEs. Table 7 = no-constant OLS of deliberative competence on condition dummies, with SEs clustered by subject. Fifteen exploratory runs (no RESULT lines) were used to understand the raw Qualtrics layout, the price-list coding, the multiple-switching rule, the answer keys and the valuation levels. In those runs, intermediate statistics were compared with values the paper reports (Table 4 levels, Table 5/9 valuation levels, Table 7 levels, and the 49/53 switcher counts) to choose between candidate keys and rules. Three of those exploratory runs crashed and were fixed (kind 'error'). The final script is the only run that printed RESULT lines; no check_attempt comparison was made. Remaining gaps: sample sizes are 1-4 subjects short of the paper because the exact switching rule could not be pinned down. Deliberative-competence levels are 0.3 to 1.3 pp less negative than reported, and the gap is largest for the Exp B Treatment arm. Diagnostics show complexly framed valuations at the 72-day delay running about 1 to 2 pp above the paper's Table 5, which points to a different valuation or normalization detail that could not be identified. No docker run hung. Files outside the mount and paper.txt that were read: only this cell's task.md, which is the task specification (readMe.pdf is inside the mount).",
+  "files_read_outside_mount": [],
+  "started_at": "2026-11-10T06:47:55Z",
+  "finished_at": "2026-11-10T07:20:00Z"
+}

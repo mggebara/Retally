@@ -1,0 +1,3383 @@
+# Retally reproduction task: ambuehl-2022-deliberative-competence-financial-choice (seeded, run 2026-11-10-a)
+
+You are reproducing quantitative results from an econometrics paper for the
+Retally benchmark.  You will write R code, run it in a network-less Docker
+sandbox, and record what you did as files.  The files are what gets scored.
+
+- Benchmark cell: entry `ambuehl-2022-deliberative-competence-financial-choice`, mode `seeded`, run `2026-11-10-a`
+- Paper: Evaluating Deliberative Competence: A Simple Method with an Application to Financial Choice
+- Paper text (extracted from the PDF; tables may be garbled): `<repo>/benchmark/.cache/claude-code/ambuehl-2022-deliberative-competence-financial-choice/seeded/2026-11-10-a/paper.txt`
+- Data (the ONLY data you get): `<repo>/benchmark/.cache/claude-code/ambuehl-2022-deliberative-competence-financial-choice/seeded/2026-11-10-a/mount/ambuehl_2022_deliberative_competence_financial_choice`
+- Output directory (the ONLY place you write): `<repo>/benchmark/reproductions/ambuehl-2022-deliberative-competence-financial-choice/seeded/2026-11-10-a`
+
+## Mode rules
+
+These apply in every mode:
+
+- Write R only.  Run it only inside the sandbox, with the command under
+  "How to run a script"; never run R on the host.
+- No network: do not download anything, do not look the paper or its
+  replication package up online.
+- Use only the files under `<repo>/benchmark/.cache/claude-code/ambuehl-2022-deliberative-competence-financial-choice/seeded/2026-11-10-a/mount/ambuehl_2022_deliberative_competence_financial_choice` as data, and `<repo>/benchmark/.cache/claude-code/ambuehl-2022-deliberative-competence-financial-choice/seeded/2026-11-10-a/paper.txt` as
+  the paper.
+- Do not read anything else in this repository or on this machine: not the
+  catalog YAMLs under `benchmark/papers/`, not `.cache/datasets/`, not
+  `benchmark/results/`, not other reproductions under `benchmark/reproductions/`,
+  not other task directories.  If you nevertheless read any other file, list
+  it in `files_read_outside_mount` in `reproduction.json`, with why.
+- Seeded mode: the authors' own analysis scripts are on disk under the data
+  directory and reproduced below under "Original Replication Scripts".  You
+  may follow them:
+
+  The replication package (the dataset directory) ships the authors' own analysis scripts,
+  reproduced below.  These are the GROUND TRUTH for the exact estimating equation, variable names,
+  sample restrictions, fixed effects, and standard-error clustering — follow them over anything
+  reconstructed from the methodology summary, and prefer them over the paper's text where the two
+  disagree.  Your job is to write R code that implements the SAME SPECIFICATION: translate what the
+  scripts estimate, do not transliterate their syntax line by line (a Stata .do file's regression,
+  e.g. `reghdfe y x controls, absorb(fe) cluster(cl)`, becomes the equivalent fixest::feols() call
+  in R).  Keep only the parts that produce the specific claims being reproduced; skip figure
+  construction and unrelated robustness checks.  The scripts' data-file paths refer to the package's
+  internal layout — resolve them against the dataset directory listed under Dataset Information.
+- You may compare your `RESULT:` values with the claimed values yourself.
+  Every time you do that and then change the script, record the run you
+  compared as an attempt with `kind: "claim"`, and write the comparison you
+  made to that attempt's `feedback.txt`, one line per off-target claim in
+  the form `<name>: reproduced <v>, claimed <c>`.  Produce it with:
+
+      cd <repo> && uv run python -m benchmark.reproducers.check_attempt --run-dir <repo>/benchmark/reproductions/ambuehl-2022-deliberative-competence-financial-choice/seeded/2026-11-10-a --stdout <that attempt's stdout.txt>
+
+  At most 3 `kind: "claim"` attempts.
+- At most 3 `kind: "error"` repairs (a run that crashed or
+  printed no `RESULT:` line, followed by a fix).
+
+## Claims to Reproduce
+1. test_score_compounding_treatment_minus_control_expA_table4_col1: 1.442 (correct answers out of 5 (compound-interest questions)) [type: coefficient]
+   Location: Table 4, column (1) Test score compounding, Experiment A, Difference
+   Context: Table 4 ("Performance in exam-style test"), column (1). OLS regression of the number of correct answers on the five incentivized exam-style questions about compound interest on a Treatment indicator, Experiment A, Treatment and Control conditions only (the Substance-Only and Rhetoric-Only arms are excluded), one observation per subject; the sample is subjects who completed the study and did not switch more than once in any price list. The entry is the Difference row (Treatment minus Control). Standard errors in parentheses.
+2. test_score_compounding_treatment_minus_control_expB_table4_col2: 1.601 (correct answers out of 5 (compound-interest questions)) [type: coefficient]
+   Location: Table 4, column (2) Test score compounding, Experiment B, Difference
+   Context: Table 4, column (2): the column (1) regression of the compound-interest test score on the Treatment indicator for Experiment B (Treatment with practice and feedback vs. a portfolio diversification Control), one observation per subject, multiple switchers excluded. The entry is the Difference row (Treatment minus Control). Standard errors in parentheses.
+3. test_score_control_module_treatment_minus_control_expA_table4_col3: -1.058 (correct answers out of 5 (control-module questions)) [type: coefficient]
+   Location: Table 4, column (3) Test score control module, Experiment A, Difference
+   Context: Table 4, column (3): the same OLS regression with the score on the five exam-style questions about the material of the Control intervention (index funds in Experiment A) as the outcome, Experiment A Treatment and Control subjects, multiple switchers excluded. The entry is the Difference row (Treatment minus Control). Standard errors in parentheses.
+4. test_score_control_module_treatment_minus_control_expB_table4_col4: -0.374 (correct answers out of 5 (control-module questions)) [type: coefficient]
+   Location: Table 4, column (4) Test score control module, Experiment B, Difference
+   Context: Table 4, column (4): the score on the five questions about the Control intervention's material (portfolio diversification in Experiment B) regressed on the Treatment indicator, Experiment B subjects, multiple switchers excluded. The entry is the Difference row (Treatment minus Control). Standard errors in parentheses.
+5. n_obs_table4_expA_cols1_3: 215.0 (subjects) [type: count]
+   Location: Table 4, Observations, columns (1) and (3), Experiment A
+   Context: Number of observations in Table 4, columns (1) and (3): Experiment A subjects in the Treatment and Control conditions who completed the study and did not switch more than once in any price list, one observation per subject.
+6. n_obs_table4_expB_cols2_4: 348.0 (subjects) [type: count]
+   Location: Table 4, Observations, columns (2) and (4), Experiment B
+   Context: Number of observations in Table 4, columns (2) and (4): Experiment B subjects (Treatment and Control) who completed the study and did not switch more than once in any price list, one observation per subject.
+7. deliberative_competence_control_expA_table7_col1: -24.448 (percentage points of the future reward (minus the absolute valuation gap)) [type: coefficient]
+   Location: Table 7, column (1) both delays, Experiment A, Levels, Control
+   Context: Table 7 ("Deliberative Competence"), column (1). OLS regression, without a constant, of deliberative competence on indicators for the four Experiment A conditions (Control, Treatment, Substance-Only, Rhetoric-Only), so each coefficient is a condition's mean level. Deliberative competence for a subject and a pair of equivalent valuation tasks (same future reward and delay, 36 or 72 days) is minus the absolute difference between the complexly framed and the simply framed valuation, each expressed as a percentage of the future reward (0 to 100); one observation per subject and task pair, both del…
+8. deliberative_competence_treatment_expA_table7_col1: -22.864 (percentage points of the future reward (minus the absolute valuation gap)) [type: coefficient]
+   Location: Table 7, column (1) both delays, Experiment A, Levels, Treatment
+   Context: Table 7, column (1): the same no-constant regression of deliberative competence on the four Experiment A condition indicators (both delays, subject-clustered standard errors). The entry is the Treatment level (the full financial education video without practice and feedback).
+9. deliberative_competence_substance_only_expA_table7_col1: -22.012 (percentage points of the future reward (minus the absolute valuation gap)) [type: coefficient]
+   Location: Table 7, column (1) both delays, Experiment A, Levels, Substance-Only
+   Context: Table 7, column (1): the Substance-Only level (the video's substantive material without the rhetoric) from the no-constant regression of deliberative competence on the four Experiment A condition indicators, both delays, standard errors clustered by subject.
+10. deliberative_competence_rhetoric_only_expA_table7_col1: -19.797 (percentage points of the future reward (minus the absolute valuation gap)) [type: coefficient]
+   Location: Table 7, column (1) both delays, Experiment A, Levels, Rhetoric-Only
+   Context: Table 7, column (1): the Rhetoric-Only level (the video's rhetorical material and introductory explanation without the rule of 72) from the same Experiment A regression, both delays, standard errors clustered by subject.
+11. deliberative_competence_control_expB_table7_col2: -25.673 (percentage points of the future reward (minus the absolute valuation gap)) [type: coefficient]
+   Location: Table 7, column (2) both delays, Experiment B, Levels, Control
+   Context: Table 7, column (2): no-constant OLS regression of deliberative competence (minus the absolute gap between paired complexly and simply framed valuations, percentage points of the future reward) on the two Experiment B condition indicators, one observation per subject and task pair, both delays, Experiment B subjects who did not switch more than once. The entry is the Control level (portfolio diversification module). Standard errors clustered by subject.
+12. deliberative_competence_treatment_expB_table7_col2: -18.569 (percentage points of the future reward (minus the absolute valuation gap)) [type: coefficient]
+   Location: Table 7, column (2) both delays, Experiment B, Levels, Treatment
+   Context: Table 7, column (2): the Treatment level (the compound-interest education with practice problems and automated feedback) from the same Experiment B regression, both delays, standard errors clustered by subject.
+13. n_obs_table7_expA_col1: 4550.0 (subject-by-task-pair observations) [type: count]
+   Location: Table 7, Observations, column (1) Experiment A
+   Context: Number of observations in Table 7, column (1): subject-by-task-pair observations (both delays) of all four Experiment A conditions, multiple switchers excluded.
+
+## Dataset Information
+Name: ambuehl_2022_deliberative_competence_financial_choice
+Local path: <repo>/benchmark/.cache/claude-code/ambuehl-2022-deliberative-competence-financial-choice/seeded/2026-11-10-a/mount/ambuehl_2022_deliberative_competence_financial_choice
+File format: csv
+Files in the dataset directory (paths relative to the local path above):
+- data/raw/expAbatch1.csv (200.0 KB) — columns: ﻿V1,V2,V3,V4,V5,V6,V7,V8,V9,V10,SC0_0,SC0_1,SC0_2,test_payment,treatment,line1,line2,amt1,amt2,decision_index,payment_test,payment_for_test,one,T1,T2,T3,T4,T5,T6,T7,T8,T9,T10,T11,T12,T13,T14,T15,T16,T17,T18,T19,T20,switch1,switch2,switch3,s…
+- data/raw/expAbatch2.csv (567.2 KB) — columns: ﻿V1,V2,V3,V4,V5,V6,V7,V8,V9,V10,SC0_0,SC0_1,SC0_2,test_payment,treatment,line1,line2,amt1,amt2,decision_index,payment_test,payment_for_test,one,T1,T2,T3,T4,T5,T6,T7,T8,T9,T10,T11,T12,T13,T14,T15,T16,T17,T18,T19,T20,excluded,switch1,switch2,…
+- data/raw/expAbatch3.csv (898.5 KB) — columns: ﻿V1,V2,V3,V4,V5,V6,V7,V8,V9,V10,SC0_0,SC0_1,SC0_2,test_payment,treatment,line1,line2,amt1,amt2,decision_index,payment_test,payment_for_test,one,T1,T2,T3,T4,T5,T6,T7,T8,T9,T10,T11,T12,T13,T14,T15,T16,T17,T18,T19,T20,excluded,switch1,switch2,…
+- data/raw/expAbatch4.csv (262.3 KB) — columns: ﻿V1,V2,V3,V4,V5,V6,V7,V8,V9,V10,SC0_0,SC0_1,SC0_2,test_payment,treatment,line1,line2,amt1,amt2,decision_index,payment_test,payment_for_test,one,T1,T2,T3,T4,T5,T6,T7,T8,T9,T10,T11,T12,T13,T14,T15,T16,T17,T18,T19,T20,excluded,switch1,switch2,…
+- data/raw/expAbatch5.csv (1.4 MB) — columns: ﻿V1,V2,V3,V4,V5,V6,V7,V8,V9,V10,SC0_0,SC0_1,SC0_2,test_payment,treatment,line1,line2,amt1,amt2,decision_index,payment_test,payment_for_test,one,T1,T2,T3,T4,T5,T6,T7,T8,T9,T10,T11,T12,T13,T14,T15,T16,T17,T18,T19,T20,excluded,switch1,switch2,…
+- data/raw/expAbatch6.csv (1.9 MB) — columns: ﻿V1,V2,V3,V4,V5,V6,V7,V8,V9,V10,SC0_0,SC0_1,SC0_2,test_payment,treatment,line1,line2,amt1,amt2,decision_index,payment_test,payment_for_test,one,T1,T2,T3,T4,T5,T6,T7,T8,T9,T10,T11,T12,T13,T14,T15,T16,T17,T18,T19,T20,excluded,switch1,switch2,…
+- data/raw/expAbatch7.csv (508.3 KB) — columns: ﻿V1,V2,V3,V4,V5,V6,V7,V8,V9,V10,SC0_0,SC0_1,SC0_2,test_payment,treatment,line1,line2,amt1,amt2,decision_index,payment_test,payment_for_test,one,T1,T2,T3,T4,T5,T6,T7,T8,T9,T10,T11,T12,T13,T14,T15,T16,T17,T18,T19,T20,excluded,switch1,switch2,…
+- data/raw/expAbatch8.csv (361.3 KB) — columns: ﻿V1,V2,V3,V4,V5,V6,V7,V8,V9,V10,SC0_0,SC0_1,SC0_2,test_payment,line1,line2,amt1,amt2,decision_index,payment_test,payment_for_test,one,T1,T2,T3,T4,T5,T6,T7,T8,T9,T10,T11,T12,T13,T14,T15,T16,T17,T18,T19,T20,excluded,treatment,switch1,switch2,…
+- data/raw/expBbatch1.csv (5.6 MB) — columns: StartDate,EndDate,Status,IPAddress,Progress,Duration (in seconds),Finished,RecordedDate,ResponseId,RecipientLastName,RecipientFirstName,RecipientEmail,ExternalReference,LocationLatitude,LocationLongitude,DistributionChannel,UserLanguage,amt…
+- data/raw/expBbatch2.csv (14.7 MB) — columns: StartDate,EndDate,Status,IPAddress,Progress,Duration (in seconds),Finished,RecordedDate,ResponseId,RecipientLastName,RecipientFirstName,RecipientEmail,ExternalReference,LocationLatitude,LocationLongitude,DistributionChannel,UserLanguage,amt…
+- doFiles/analysis.do (59.6 KB)
+- doFiles/dataManagementExpA.do (16.9 KB)
+- doFiles/dataManagementExpB.do (14.3 KB)
+- doFiles/master.do (243 B)
+- doFiles/setup.do (41 B)
+- metadata.json (240 B)
+- readMe.pdf (123.3 KB)
+
+## Required Output Convention
+Emit each reproduced metric on its own line to stdout using EXACTLY this format:
+    RESULT:<metric_name>=<numeric_value>
+For example:  cat('RESULT:beta=0.342\n')
+Use snake_case metric names matching the claim descriptions.
+
+## Code Requirements
+Write a complete, self-contained R script that runs under Rscript.
+The dataset is a directory tree at '<repo>/benchmark/.cache/claude-code/ambuehl-2022-deliberative-competence-financial-choice/seeded/2026-11-10-a/mount/ambuehl_2022_deliberative_competence_financial_choice' — see the file listing under Dataset Information.  Load the actual data file(s) by the exact paths listed there (readr::read_csv() for .csv, haven::read_dta() for Stata .dta, load() for .RData/.rda, which creates the objects listed for the file under exactly those names: use them, do not guess others; readRDS() for .rds).
+Installed packages (no network; nothing else can be installed): jsonlite, fixest, lfe, AER, ivreg, plm, estimatr, lme4, quantreg, car, sandwich, lmtest, clubSandwich, multiwayvcov, marginaleffects, MatchIt, optmatch, CBPS, WeightIt, cobalt, did, rdrobust, rddensity, Synth, modelsummary, stargazer, texreg, broom, tidyverse, dplyr, tidyr, readr, stringr, lubridate, data.table, haven, readxl, janitor, zoo, ggplot2, ggridges, ggrepel, gridExtra, cowplot, gtable, extrafont, sf, MASS, nnet, survival, splines, Matrix, boot, stats, utils.
+Prefer fixest for fixed effects, IV and clustered SEs; use the other installed packages where the paper's method calls for them.
+Set a deterministic seed with ``set.seed(42)`` for any randomness.
+Do NOT access the internet; the container runs with --network none.
+Do NOT shell out via system() / system2().
+Emit RESULT:<name>=<value> lines to stdout at the end via cat().
+
+## Original Replication Scripts
+The replication package (the dataset directory) ships the authors' own analysis scripts, reproduced below.  These are the GROUND TRUTH for the exact estimating equation, variable names, sample restrictions, fixed effects, and standard-error clustering — follow them over anything reconstructed from the methodology summary, and prefer them over the paper's text where the two disagree.  Your job is to write R code that implements the SAME SPECIFICATION: translate what the scripts estimate, do not transliterate their syntax line by line (a Stata .do file's regression, e.g. `reghdfe y x controls, absorb(fe) cluster(cl)`, becomes the equivalent fixest::feols() call in R).  Keep only the parts that produce the specific claims being reproduced; skip figure construction and unrelated robustness checks.  The scripts' data-file paths refer to the package's internal layout — resolve them against the dataset directory listed under Dataset Information.
+
+Stata-to-fixest sample matching: feols() drops fixed-effect singletons by default, but Stata's `reg y x i.fe` / `xi:` dummies keep them.  Pass `fixef.rm = "none"` to every feols() call that has fixed effects, otherwise the observation count and the robust SEs drift from the paper's.  Stata's `, r` / `vce(robust)` is `vcov = "hetero"`.
+
+### `doFiles/analysis.do`
+```stata
+clear all
+
+// Data management 
+if 1 {
+
+	use "data/dataExpB.dta"
+
+	gen fl_high = fl_score_compound == 1
+
+	gen discount_unframed = v_unframed/amount * 100
+	gen discount_framed = v_framed/amount_precise * 100
+	gen discount_framed_72 = v_framed/amount * 100
+
+	sort id delay
+	by id delay: egen min_discount_unframed = min(discount_unframed)
+	by id delay: egen max_discount_unframed = max(discount_unframed)
+
+	gen diff = discount_framed - discount_unframed
+	gen diff72 = discount_framed - discount_unframed
+	gen absDiff = abs(discount_framed - discount_unframed)
+
+
+	// generate treatment dummies
+	gen contNew = fined == 0 // Control
+	gen fullNew = fined == 1 // Full
+
+	gen sample = "new"
+
+	append using "data/dataExpA.dta"
+	gen sqDiff = abs(discount_framed^2 - discount_unframed^2) / 100
+
+		
+	replace sample = "old" if sample == ""
+	replace absDiff = abs(discount_framed - discount_unframed)
+
+	replace Full = 0 if sample == "new"
+	replace Cont = 0 if sample == "new"
+	replace Rule72 = 0 if sample == "new"
+	replace Rhetoric = 0 if sample == "new"
+	replace fullNew = 0 if sample == "old"
+	replace contNew = 0 if sample == "old"
+
+	gen condition = .
+	replace condition = 0 if Control  == 1
+	replace condition = 1 if contNew  == 1
+	replace condition = 2 if Full     == 1
+	replace condition = 3 if fullNew  == 1
+	replace condition = 4 if Rule72   == 1
+	replace condition = 5 if Rhetoric == 1
+	la de condition 0 "C old" 1 "C new" 2 "Tr old" 3 "Tr new" 4 "Subst. only" 5 "Rhet. only"
+	la val condition condition
+
+	// attrition: 1 subject in Treatment, 1 subject in Control
+
+	su score_compounding  	if Full == 1
+	su score_compounding  	if Control == 1
+
+
+
+	reg score_compounding  	contNew fullNew if sample == "new" & multi == 0, nocons cl(id)
+	reg discount_unframed  	contNew fullNew if sample == "new" & multi == 0, nocons cl(id)
+	reg discount_framed  	contNew fullNew if sample == "new" & multi == 0, nocons cl(id)
+	reg absDiff  			contNew fullNew if sample == "new" & multi == 0, nocons cl(id)
+	reg sqDiff  			contNew fullNew if sample == "new" & multi == 0, nocons cl(id)
+	reg diff  				contNew fullNew if sample == "new" & multi == 0, nocons cl(id)
+
+	reg absDiff  			fullNew if sample == "new" & multi == 0, cl(id)
+	reg sqDiff  			fullNew if sample == "new" & multi == 0, cl(id)
+	reg diff  				fullNew if sample == "new" & multi == 0, cl(id)
+
+
+	reg discount_framed  	fullNew if sample == "new" & multi == 0, cl(id)
+	reg discount_framed  	Full if sample == "old" & multi == 0 & (Full == 1 | Control == 1), cl(id)
+
+
+	reg absDiff  Full	 	if  multi == 0 & (Full == 1 | fullNew == 1),  cl(id)
+
+	reg absDiff  		  	if  multi == 0 & Full == 1 ,  cl(id)
+	reg absDiff  		  	if  multi == 0 & fullNew == 1 ,  cl(id)
+
+
+
+	// get individual-specific means 
+
+	bysort id: egen vSimple  = mean(discount_unfr)
+	bysort id: egen vComplex = mean(discount_framed)
+
+	gen dRaw = vComplex - vSimple
+	gen dAbs = abs(dRaw)
+	gen dSq  = dAbs^2	
+	
+	
+	replace id = 10000 + id if sample == "old"
+	replace id = 20000 + id if sample == "new"
+
+	cap drop tag 
+	egen tag = tag(id)
+	
+	cap drop r72report
+	gen r72report = rule72 == 1
+	
+	cap drop r72invReport
+	gen r72invReport = rule72_inv == 1
+	
+	
+	// keep single-switchers only
+	keep if multi == 0	
+
+	
+	bysort id: egen meanVsimple36_i = mean(discount_unframed) if delay == 36
+	bysort id: egen meanVsimple72_i = mean(discount_unframed) if delay == 72
+
+	bysort id: egen meanVsimple36 = mean(meanVsimple36_i) 
+	bysort id: egen meanVsimple72 = mean(meanVsimple72_i) 
+
+	replace meanVsimple36 = meanVsimple36 / 100
+	replace meanVsimple72 = meanVsimple72 / 100
+
+	gen delta = meanVsimple72 / meanVsimple36
+	gen beta = meanVsimple36^2 / meanVsimple72
+	
+	gen meanVsimple = 100 * (meanVsimple36 + meanVsimple72)/2
+	
+	
+
+	bysort id: egen meanVsimple36first_i = mean(discount_unframed) if delay == 36 & treatment <= 5
+	bysort id: egen meanVsimple72first_i = mean(discount_unframed) if delay == 72 & treatment <= 5
+
+	bysort id: egen meanVsimple36first = mean(meanVsimple36first_i) 
+	bysort id: egen meanVsimple72first = mean(meanVsimple72first_i) 
+	
+	replace meanVsimple36first = meanVsimple36first / 100
+	replace meanVsimple72first = meanVsimple72first / 100
+
+	gen deltaFirst = meanVsimple72first / meanVsimple36first
+	gen betaFirst = meanVsimple36first^2 / meanVsimple72first
+	
+
+	bysort id: egen meanVsimple36second_i = mean(discount_unframed) if delay == 36 & treatment > 5
+	bysort id: egen meanVsimple72second_i = mean(discount_unframed) if delay == 72 & treatment > 5
+
+	bysort id: egen meanVsimple36second = mean(meanVsimple36second_i) 
+	bysort id: egen meanVsimple72second = mean(meanVsimple72second_i) 
+	
+	
+	
+	replace meanVsimple36second = meanVsimple36second / 100
+	replace meanVsimple72second = meanVsimple72second / 100
+
+	gen deltaSecond = meanVsimple72second / meanVsimple36second
+	gen betaSecond = meanVsimple36second^2 / meanVsimple72second
+	
+	
+	
+	
+	
+	
+	bysort id: egen meanVcomplex36_i = mean(discount_framed) if delay == 36
+	bysort id: egen meanVcomplex72_i = mean(discount_framed) if delay == 72
+
+	bysort id: egen meanVcomplex36 = mean(meanVcomplex36_i) 
+	bysort id: egen meanVcomplex72 = mean(meanVcomplex72_i) 
+
+	replace meanVcomplex36 = meanVcomplex36 / 100
+	replace meanVcomplex72 = meanVcomplex72 / 100
+
+	gen meanVcomplex = 100 * (meanVcomplex36 + meanVcomplex72)/2
+
+	replace income = . if income < 0
+	replace income = 1000*income if sample == "old"
+		
+	save "data/managedData.dta", replace
+	
+}
+	
+
+// Mentioned in main text
+if 1 {
+	forvalues i = 1 / 5 {
+		noisily: tab finlit`i'
+	}
+}
+	
+// Graphs
+if 1 {
+
+	// CDF
+	if 1 {
+		local scale = 1.3
+		local aspect = 0.8
+		
+		preserve
+			keep if sample == "old"
+			replace diff = 100 if diff>100
+			replace diff = -100 if diff < -100
+			distplot diff if fined <= 1, over(fined) ///
+				scheme(s2mono) ///
+				legend(order(1 "Control A" 2 "Treatment A") col(1) ring(0) pos(11)) ///
+				xtitle("Valuation difference (complex minus simple)") ///
+				ytitle("Cumulative probability") xlabel(-100(50)100) ///
+				bgcolor(white) graphregion(color(white)) ///	
+				scale(*`scale') aspect(`aspect')
+			graph export "graphs/cdfExpA.pdf", replace
+		restore
+
+
+		
+		preserve
+			keep if sample == "new"
+			replace diff = -100 if diff < -100
+			replace diff = 100  if diff >  100
+			distplot diff , over(condition) ///
+				scheme(s2mono) ///
+				legend(order(1 "Control B" 2 "Treatment B") col(1) ring(0) pos(11)) ///
+				xtitle("Valuation difference (complex minus simple)") ///
+				ytitle("Cumulative probability") xlabel(-100(50)100) ///
+				bgcolor(white) graphregion(color(white)) ///	
+				scale(*`scale') aspect(`aspect')
+			graph export "graphs/cdfExpB.pdf", replace
+		restore
+		
+		
+		
+	}
+	
+	// CDFs with simple frame superimposed
+	if 1 {
+		
+		bysort id delay: egen vSimple12_i = mean(discount_unframed) if amount == 12
+		bysort id delay: egen vSimple14_i = mean(discount_unframed) if amount == 14
+		bysort id delay: egen vSimple16_i = mean(discount_unframed) if amount == 16
+		bysort id delay: egen vSimple18_i = mean(discount_unframed) if amount == 18
+		bysort id delay: egen vSimple20_i = mean(discount_unframed) if amount == 20
+
+		bysort id delay: egen vSimple12 = mean(vSimple12_i) 
+		bysort id delay: egen vSimple14 = mean(vSimple14_i) 
+		bysort id delay: egen vSimple16 = mean(vSimple16_i) 
+		bysort id delay: egen vSimple18 = mean(vSimple18_i) 
+		bysort id delay: egen vSimple20 = mean(vSimple20_i) 
+
+		gen simpleDiff = . 
+		replace simpleDiff = discount_unframed - vSimple14 if amount == 12
+		replace simpleDiff = discount_unframed - vSimple16 if amount == 18
+		replace simpleDiff = discount_unframed - vSimple12 if amount == 14
+		replace simpleDiff = discount_unframed - vSimple18 if amount == 16
+
+		local scale = 1.1
+		local aspect = 0.8
+		preserve
+			keep if sample == "new"
+			keep if fined == 0 
+			stack diff simpleDiff, into(depVar) clear
+			keep if depVar ~= . 
+			save "data/temp.dta", replace
+		restore
+		
+		preserve
+			keep if sample == "new"
+			keep if fined == 1 
+			stack diff simpleDiff, into(depVar) clear
+			replace _stack = 5 if _stack == 1
+			append using "data/temp.dta"
+			replace _stack = 3 if _stack == 2
+			replace _stack = 2 if _stack == 5
+			keep if depVar ~= .
+			replace depVar = 100 if depVar>100
+			replace depVar = -100 if depVar < -100
+			distplot depVar, over(_stack) ///
+				scheme(s2mono) ///
+				legend(order(1 "Control B" 2 "Treatment B" 3 "Simple frame B") col(1) ring(0) pos(11)) ///
+				xtitle(" ") ///
+				ytitle(" ") xlabel(-100(50)100) ///
+				bgcolor(white) graphregion(color(white)) ///	
+				scale(*`scale') aspect(`aspect')
+			graph export "graphs/cdfBWithSimple.pdf", replace
+		restore
+		
+		
+		
+		local scale = 1.1
+		local aspect = 0.8
+		preserve
+			keep if sample == "old"
+			keep if fined == 0 
+			stack diff simpleDiff, into(depVar) clear
+			keep if depVar ~= . 
+			save "data/temp.dta", replace
+		restore
+		
+		preserve
+			keep if sample == "old"
+			keep if fined == 1 
+			stack diff simpleDiff, into(depVar) clear
+			replace _stack = 5 if _stack == 1
+			append using "data/temp.dta"
+			replace _stack = 3 if _stack == 2
+			replace _stack = 2 if _stack == 5
+			keep if depVar ~= .
+			replace depVar = 100 if depVar>100
+			replace depVar = -100 if depVar < -100
+			distplot depVar, over(_stack) ///
+				scheme(s2mono) ///
+				legend(order(1 "Control A" 2 "Treatment A" 3 "Simple frame A") col(1) ring(0) pos(11)) ///
+				xtitle(" ") ///
+				ytitle(" ") xlabel(-100(50)100) ///
+				bgcolor(white) graphregion(color(white)) ///	
+				scale(*`scale') aspect(`aspect')
+			graph export "graphs/cdfAWithSimple.pdf", replace
+		restore
+	}
+	
+	// Bar graphs
+	if 1 {
+		
+		preserve
+		
+			local var = "score_compounding"
+			local scale = 1.3
+			local aspect = 0.8
+			local lwidth = 0.2
+			
+			keep if Full == 1 | Control == 1 | fullNew == 1 | contNew == 1
+		
+			gen tr = .
+			replace tr = 1 if Control == 1
+			replace tr = 2 if Full == 1
+			replace tr = 3 if contNew == 1
+			replace tr = 4 if fullNew == 1
+			
+			
+			xi, noomit: reg `var' i.tr, nocons cl(id)
+				local s1 = _se[_Itr_1]
+				local s2 = _se[_Itr_2]
+				local s3 = _se[_Itr_3]
+				local s4 = _se[_Itr_4]
+		
+			collapse `var', by(tr)
+			
+			gen top = . 
+			replace top = `var' + `s1'*1.96 if tr == 1
+			replace top = `var' + `s2'*1.96 if tr == 2
+			replace top = `var' + `s3'*1.96 if tr == 3
+			replace top = `var' + `s4'*1.96 if tr == 4
+			
+			gen bottom = . 
+			replace bottom = `var' - `s1'*1.96 if tr == 1
+			replace bottom = `var' - `s2'*1.96 if tr == 2
+			replace bottom = `var' - `s3'*1.96 if tr == 3
+			replace bottom = `var' - `s4'*1.96 if tr == 4
+			
+			replace tr = tr + 0.5 if tr > 2
+
+			tw 	(bar `var' tr						///
+					, barwidth(0.8) color(gs13) lwidth(`lwidth') lcolor(black)) ///
+				(bar `var' tr if tr == 2 | tr > 4	///
+					, barwidth(0.8) color(gs5) lwidth(`lwidth')  lcolor(black)) ///
+				(rcap bottom top tr, lcolor(black) lwidth(`lwidth')) ///
+				, ///
+				legend(order(1 "Control" 2 "Treatment") col(2) ring(0) pos(12)) ///
+				xtitle(" ") ytitle("Correct answers (out of 5)" " ") ///
+				ylabel(0(1)5) ///
+				xlabel(1.5 "Experiment A" 4 "Experiment B") ///
+				bgcolor(white) graphregion(color(white)) ///	
+				scale(*`scale') aspect(`aspect') ///
+				xscale(range(0.5 5)) 
+			graph export "graphs/figure1A.pdf", replace
+
+		restore
+		
+		
+		
+		
+		
+		preserve
+			local var = "discount_framed"
+			local scale = 1.3
+			local aspect = 0.8
+			local lwidth = 0.2
+			
+			keep if Full == 1 | Control == 1 | fullNew == 1 | contNew == 1
+		
+			gen tr = .
+			replace tr = 1 if Control == 1
+			replace tr = 2 if Full == 1
+			replace tr = 3 if contNew == 1
+			replace tr = 4 if fullNew == 1
+			
+			
+			xi, noomit: reg `var' i.tr, nocons cl(id)
+				local s1 = _se[_Itr_1]
+				local s2 = _se[_Itr_2]
+				local s3 = _se[_Itr_3]
+				local s4 = _se[_Itr_4]
+		
+			collapse `var', by(tr)
+			
+			gen top = . 
+			replace top = `var' + `s1'*1.96 if tr == 1
+			replace top = `var' + `s2'*1.96 if tr == 2
+			replace top = `var' + `s3'*1.96 if tr == 3
+			replace top = `var' + `s4'*1.96 if tr == 4
+			
+			gen bottom = . 
+			replace bottom = `var' - `s1'*1.96 if tr == 1
+			replace bottom = `var' - `s2'*1.96 if tr == 2
+			replace bottom = `var' - `s3'*1.96 if tr == 3
+			replace bottom = `var' - `s4'*1.96 if tr == 4
+			
+			replace tr = tr + 0.5 if tr > 2
+
+			tw 	(bar `var' tr						///
+					, barwidth(0.8) color(gs13) lwidth(`lwidth') lcolor(black)) ///
+				(bar `var' tr if tr == 2 | tr > 4	///
+					, barwidth(0.8) color(gs5) lwidth(`lwidth')  lcolor(black)) ///
+				(rcap bottom top tr, lcolor(black) lwidth(`lwidth')) ///
+				, ///
+				legend(order(1 "Control" 2 "Treatment") col(2) ring(0) pos(12)) ///
+				xtitle(" ") ytitle("WTP in cents for $1 in the future," "framed as interest-bearing investment" " ") ///
+				ylabel(0(20)100) ///
+				xscale(range(0.5 5)) ///
+				xlabel(1.5 "Experiment A" 4 "Experiment B") ///
+				bgcolor(white) graphregion(color(white)) ///	
+				scale(*`scale') aspect(`aspect')
+			graph export "graphs/figure1B.pdf", replace
+			
+			
+		restore
+	
+	
+		
+	
+		
+		
+		
+		
+
+		preserve
+		
+			local var = "absDiff"
+			replace `var' = -`var'
+			local scale = 1.3
+			local aspect = 0.8
+			local lwidth = 0.2
+			local lwidth2 = 0.6
+			
+			keep if Full == 1 | Control == 1 | fullNew == 1 | contNew == 1
+		
+			gen tr = .
+			replace tr = 1 if Control == 1
+			replace tr = 2 if Full == 1
+			replace tr = 3 if contNew == 1
+			replace tr = 4 if fullNew == 1
+			
+			
+			xi, noomit: reg `var' i.tr, nocons cl(id)
+				local s1 = _se[_Itr_1]
+				local s2 = _se[_Itr_2]
+				local s3 = _se[_Itr_3]
+				local s4 = _se[_Itr_4]
+		
+			collapse `var', by(tr)
+			
+			gen top = . 
+			replace top = `var' + `s1'*1.96 if tr == 1
+			replace top = `var' + `s2'*1.96 if tr == 2
+			replace top = `var' + `s3'*1.96 if tr == 3
+			replace top = `var' + `s4'*1.96 if tr == 4
+			
+			gen bottom = . 
+			replace bottom = `var' - `s1'*1.96 if tr == 1
+			replace bottom = `var' - `s2'*1.96 if tr == 2
+			replace bottom = `var' - `s3'*1.96 if tr == 3
+			replace bottom = `var' - `s4'*1.96 if tr == 4
+			
+			keep if tr <= 2
+			
+			local top -15
+			tw 	(line `var' tr					///
+					,  lwidth(`lwidth2') lcolor(black)) ///
+				(rcap bottom top tr, lcolor(black) lwidth(`lwidth')) ///
+				, ///
+				legend(off) ///
+				xtitle(" ") ytitle("Negative absolute value" "of valuation difference" " ") ///
+				ylabel(-30(5)`top') ///
+				xscale(range(0.5 2.5)) ///
+				xlabel(1 "Control" 2 "Treatment") ///
+				bgcolor(white) graphregion(color(white)) ///	
+				scale(*`scale') aspect(`aspect')
+			
+			graph export "graphs/finCompLinesA.pdf", replace
+		restore		
+			
+
+			
+
+		preserve
+		
+			local var = "absDiff"
+			replace `var' = -`var'
+			local scale = 1.3
+			local aspect = 0.8
+			local lwidth = 0.2
+			local lwidth2 = 0.6
+			
+			keep if Full == 1 | Control == 1 | fullNew == 1 | contNew == 1
+		
+			gen tr = .
+			replace tr = 1 if Control == 1
+			replace tr = 2 if Full == 1
+			replace tr = 3 if contNew == 1
+			replace tr = 4 if fullNew == 1
+			
+			
+			xi, noomit: reg `var' i.tr, nocons cl(id)
+				local s1 = _se[_Itr_1]
+				local s2 = _se[_Itr_2]
+				local s3 = _se[_Itr_3]
+				local s4 = _se[_Itr_4]
+		
+			collapse `var', by(tr)
+			
+			gen top = . 
+			replace top = `var' + `s1'*1.96 if tr == 1
+			replace top = `var' + `s2'*1.96 if tr == 2
+			replace top = `var' + `s3'*1.96 if tr == 3
+			replace top = `var' + `s4'*1.96 if tr == 4
+			
+			gen bottom = . 
+			replace bottom = `var' - `s1'*1.96 if tr == 1
+			replace bottom = `var' - `s2'*1.96 if tr == 2
+			replace bottom = `var' - `s3'*1.96 if tr == 3
+			replace bottom = `var' - `s4'*1.96 if tr == 4
+			
+			keep if tr > 2
+			replace tr = tr - 2
+			
+			local top -15
+			tw 	(line `var' tr					///
+					,  lwidth(`lwidth2') lcolor(black)) ///
+				(rcap bottom top tr, lcolor(black) lwidth(`lwidth')) ///
+				, ///
+				legend(off) ///
+				xtitle(" ") ytitle("Negative absolute value" "of valuation difference" " ") ///
+				ylabel(-30(5)`top') ///
+				xscale(range(0.5 2.5)) ///
+				xlabel(1 "Control" 2 "Treatment") ///
+				bgcolor(white) graphregion(color(white)) ///	
+				scale(*`scale') aspect(`aspect')
+			
+			graph export "graphs/finCompLinesB.pdf", replace
+		restore		
+						
+	}
+	
+}
+
+// Tables 
+if 1 {
+	// Table test scores
+	if 1 {
+		preserve
+		
+		replace Full = fullNew if sample == "new"
+
+		reg score_compounding Full if tag == 1 & (Full == 1 | Control == 1) & sample == "old", cl(id)
+		local subj = e(N_clust)
+		lincom _b[_cons] + _b[Full]
+		local levelFull = r(estimate)
+		local seFull = r(se)
+		outreg2 using "tables/testScores.tex", ///
+			 addstat("subj", `subj', "levelFull",`levelFull', "seFull", `seFull') ///
+			 tex(frag) ///
+			 dec(3) replace
+			 
+		reg score_compounding Full if tag == 1 & (fullNew == 1 | contNew == 1) & sample == "new", cl(id)
+		local subj = e(N_clust)
+		lincom _b[_cons] + _b[Full]
+		local levelFull = r(estimate)
+		local seFull = r(se)
+		outreg2 using "tables/testScores.tex", ///
+			 addstat("subj", `subj', "levelFull",`levelFull', "seFull", `seFull') ///
+			 tex(frag) ///
+			 dec(3) 
+			 
+
+		reg score_indexing Full if tag == 1 & (Full == 1 | Control == 1) & sample == "old", cl(id)
+		local subj = e(N_clust)
+		lincom _b[_cons] + _b[Full]
+		local levelFull = r(estimate)
+		local seFull = r(se)
+		outreg2 using "tables/testScores.tex", ///
+			 addstat("subj", `subj', "levelFull",`levelFull', "seFull", `seFull') ///
+			 tex(frag) ///
+			 dec(3) 
+			 
+		reg score_indexing Full if tag == 1 & (fullNew == 1 | contNew == 1) & sample == "new", cl(id)
+		local subj = e(N_clust)
+		lincom _b[_cons] + _b[Full]
+		local levelFull = r(estimate)
+		local seFull = r(se)
+		outreg2 using "tables/testScores.tex", ///
+			 addstat("subj", `subj', "levelFull",`levelFull', "seFull", `seFull') ///
+			 tex(frag) ///
+			 dec(3) 
+		restore
+	}	
+
+	// Table individual test questions 
+	if 1 {
+
+		// Experiment A	 
+			 
+		reg t1 Full Rule72 Rhetoric if  sample == "old" & tag == 1, cl(id)
+		local subj = e(N_clust)
+		lincom _b[_cons] + _b[Full]
+		local levelFull = r(estimate)
+		local seFull = r(se)
+		outreg2 using "tables/indivTestQuestionsA.tex", ///
+			 addstat("subj", `subj', "levelFull",`levelFull', "seFull", `seFull') ///
+			 tex(frag) ///
+			 dec(3) adec(3) replace	
+			 
+
+		reg t2 Full Rule72 Rhetoric if  sample == "old" & tag == 1, cl(id)
+		local subj = e(N_clust)
+		lincom _b[_cons] + _b[Full]
+		local levelFull = r(estimate)
+		local seFull = r(se)
+		outreg2 using "tables/indivTestQuestionsA.tex", ///
+			 addstat("subj", `subj', "levelFull",`levelFull', "seFull", `seFull') ///
+			 tex(frag) ///
+			 dec(3) adec(3) 	
+
+		reg t3 Full Rule72 Rhetoric if  sample == "old" & tag == 1, cl(id)
+		local subj = e(N_clust)
+		lincom _b[_cons] + _b[Full]
+		local levelFull = r(estimate)
+		local seFull = r(se)
+		outreg2 using "tables/indivTestQuestionsA.tex", ///
+			 addstat("subj", `subj', "levelFull",`levelFull', "seFull", `seFull') ///
+			 tex(frag) ///
+			 dec(3) adec(3) 	
+
+		reg t4 Full Rule72 Rhetoric if  sample == "old" & tag == 1, cl(id)
+		local subj = e(N_clust)
+		lincom _b[_cons] + _b[Full]
+		local levelFull = r(estimate)
+		local seFull = r(se)
+		outreg2 using "tables/indivTestQuestionsA.tex", ///
+			 addstat("subj", `subj', "levelFull",`levelFull', "seFull", `seFull') ///
+			 tex(frag) ///
+			 dec(3) adec(3) 	
+							 
+
+		reg t5 Full Rule72 Rhetoric if  sample == "old" & tag == 1, cl(id)
+		local subj = e(N_clust)
+		lincom _b[_cons] + _b[Full]
+		local levelFull = r(estimate)
+		local seFull = r(se)
+		outreg2 using "tables/indivTestQuestionsA.tex", ///
+			 addstat("subj", `subj', "levelFull",`levelFull', "seFull", `seFull') ///
+			 tex(frag) ///
+			 dec(3) adec(3) 			 
+
+			 
+		// Experiment B
+
+		preserve
+		
+			replace Full = fullNew if sample == "new"
+				
+			reg t1 Full if  sample == "new" , cl(id)
+			local subj = e(N_clust)
+			lincom _b[_cons] + _b[Full]
+			local levelFull = r(estimate)
+			local seFull = r(se)
+			outreg2 using "tables/indivTestQuestionsB.tex", ///
+				 addstat("subj", `subj', "levelFull",`levelFull', "seFull", `seFull') ///
+				 tex(frag) ///
+				 dec(3) adec(3) replace	
+				 
+
+			reg t2 Full if  sample == "new" , cl(id)
+			local subj = e(N_clust)
+			lincom _b[_cons] + _b[Full]
+			local levelFull = r(estimate)
+			local seFull = r(se)
+			outreg2 using "tables/indivTestQuestionsB.tex", ///
+				 addstat("subj", `subj', "levelFull",`levelFull', "seFull", `seFull') ///
+				 tex(frag) ///
+				 dec(3) adec(3) 	
+
+			reg t3 Full if  sample == "new" , cl(id)
+			local subj = e(N_clust)
+			lincom _b[_cons] + _b[Full]
+			local levelFull = r(estimate)
+			local seFull = r(se)
+			outreg2 using "tables/indivTestQuestionsB.tex", ///
+				 addstat("subj", `subj', "levelFull",`levelFull', "seFull", `seFull') ///
+				 tex(frag) ///
+				 dec(3) adec(3) 	
+
+			reg t4 Full if  sample == "new" , cl(id)
+			local subj = e(N_clust)
+			lincom _b[_cons] + _b[Full]
+			local levelFull = r(estimate)
+			local seFull = r(se)
+			outreg2 using "tables/indivTestQuestionsB.tex", ///
+				 addstat("subj", `subj', "levelFull",`levelFull', "seFull", `seFull') ///
+				 tex(frag) ///
+				 dec(3) adec(3) 	
+								 
+
+			reg t5 Full if  sample == "new" , cl(id)
+			local subj = e(N_clust)
+			lincom _b[_cons] + _b[Full]
+			local levelFull = r(estimate)
+			local seFull = r(se)
+			outreg2 using "tables/indivTestQuestionsB.tex", ///
+				 addstat("subj", `subj', "levelFull",`levelFull', "seFull", `seFull') ///
+				 tex(frag) ///
+				 dec(3) adec(3) 			 
+
+		restore
+		
+
+	}
+
+	// Table self-reports
+	if 1 {
+
+	preserve
+
+		replace Full = fullNew if sample == "new"
+
+		reg calculate Full if tag == 1 & (Full == 1 | Control == 1) & sample == "old", cl(id)
+			local subj = e(N_clust)
+			lincom _b[_cons] + _b[Full]
+			local levelFull = r(estimate)
+			local seFull = r(se)
+			outreg2 using "tables/selfReports.tex", ///
+				 addstat("subj", `subj', "levelFull",`levelFull', "seFull", `seFull') ///
+				 tex(frag) ///
+				 dec(3) replace
+
+		reg calculate Full if sample == "new" & tag == 1 & sample == "new", cl(id)
+			local subj = e(N_clust)
+			lincom _b[_cons] + _b[Full]
+			local levelFull = r(estimate)
+			local seFull = r(se)
+			outreg2 using "tables/selfReports.tex", ///
+				 addstat("subj", `subj', "levelFull",`levelFull', "seFull", `seFull') ///
+				 tex(frag) ///
+				 dec(3) 
+				 
+		reg r72report Full if tag == 1 & (Full == 1 | Control == 1) & sample == "old", cl(id)
+			local subj = e(N_clust)
+			lincom _b[_cons] + _b[Full]
+			local levelFull = r(estimate)
+			local seFull = r(se)
+			outreg2 using "tables/selfReports.tex", ///
+				 addstat("subj", `subj', "levelFull",`levelFull', "seFull", `seFull') ///
+				 tex(frag) ///
+				 dec(3) 
+
+		reg r72report Full if sample == "new" & tag == 1 & sample == "new", cl(id)
+			local subj = e(N_clust)
+			lincom _b[_cons] + _b[Full]
+			local levelFull = r(estimate)
+			local seFull = r(se)
+			outreg2 using "tables/selfReports.tex", ///
+				 addstat("subj", `subj', "levelFull",`levelFull', "seFull", `seFull') ///
+				 tex(frag) ///
+				 dec(3) 
+
+		reg r72invReport Full if tag == 1 & (Full == 1 | Control == 1) & sample == "old", cl(id)
+			local subj = e(N_clust)
+			lincom _b[_cons] + _b[Full]
+			local levelFull = r(estimate)
+			local seFull = r(se)
+			outreg2 using "tables/selfReports.tex", ///
+				 addstat("subj", `subj', "levelFull",`levelFull', "seFull", `seFull') ///
+				 tex(frag) ///
+				 dec(3) 
+
+		reg r72invReport Full if sample == "new" & tag == 1 & sample == "new", cl(id)
+			local subj = e(N_clust)
+			lincom _b[_cons] + _b[Full]
+			local levelFull = r(estimate)
+			local seFull = r(se)
+			outreg2 using "tables/selfReports.tex", ///
+				 addstat("subj", `subj', "levelFull",`levelFull', "seFull", `seFull') ///
+				 tex(frag) ///
+				 dec(3) 
+
+		reg help_test Full if tag == 1 & (Full == 1 | Control == 1) & sample == "old", cl(id)
+			local subj = e(N_clust)
+			lincom _b[_cons] + _b[Full]
+			local levelFull = r(estimate)
+			local seFull = r(se)
+			outreg2 using "tables/selfReports.tex", ///
+				 addstat("subj", `subj', "levelFull",`levelFull', "seFull", `seFull') ///
+				 tex(frag) ///
+				 dec(3) 
+
+		reg help_test Full if sample == "new" & tag == 1 & sample == "new", cl(id)
+			local subj = e(N_clust)
+			lincom _b[_cons] + _b[Full]
+			local levelFull = r(estimate)
+			local seFull = r(se)
+			outreg2 using "tables/selfReports.tex", ///
+				 addstat("subj", `subj', "levelFull",`levelFull', "seFull", `seFull') ///
+				 tex(frag) ///
+				 dec(3) 
+		restore
+	}		
+
+	// Table directional behavioral effects 
+	if 1 {
+
+		preserve
+		replace Full = fullNew if sample == "new"
+		
+
+		reg discount_framed Full if (Full == 1 | Control == 1) & sample == "old" , cl(id)
+		local subj = e(N_clust)
+		lincom _b[_cons] + _b[Full]
+		local levelFull = r(estimate)
+		local seFull = r(se)
+		outreg2 using "tables/directionalBehaviorV2.tex", ///
+			 addstat("subj", `subj', "levelFull",`levelFull', "seFull", `seFull') ///
+			 tex(frag) ///
+			 dec(3) adec(3) replace	
+			 
+
+		reg discount_framed Full if  (fullNew == 1 | contNew == 1) & sample == "new" , cl(id)
+		local subj = e(N_clust)
+		lincom _b[_cons] + _b[Full]
+		local levelFull = r(estimate)
+		local seFull = r(se)
+		outreg2 using "tables/directionalBehaviorV2.tex", ///
+			 addstat("subj", `subj', "levelFull",`levelFull', "seFull", `seFull') ///
+			 tex(frag) ///
+			 dec(3) adec(3) 		 
+
+		reg discount_framed Full if (Full == 1 | Control == 1) & sample == "old" & delay == 72, cl(id)
+		local subj = e(N_clust)
+		lincom _b[_cons] + _b[Full]
+		local levelFull = r(estimate)
+		local seFull = r(se)
+		outreg2 using "tables/directionalBehaviorV2.tex", ///
+			 addstat("subj", `subj', "levelFull",`levelFull', "seFull", `seFull') ///
+			 tex(frag) ///
+			 dec(3) adec(3) 
+
+			 
+		reg discount_framed Full if  (fullNew == 1 | contNew == 1) & sample == "new" & delay == 72, cl(id)
+		local subj = e(N_clust)
+		lincom _b[_cons] + _b[Full]
+		local levelFull = r(estimate)
+		local seFull = r(se)
+		outreg2 using "tables/directionalBehaviorV2.tex", ///
+			 addstat("subj", `subj', "levelFull",`levelFull', "seFull", `seFull') ///
+			 tex(frag) ///
+			 dec(3) adec(3) 
+			 
+
+		reg discount_framed Full if (Full == 1 | Control == 1) & sample == "old" & delay == 36, cl(id)
+		local subj = e(N_clust)
+		lincom _b[_cons] + _b[Full]
+		local levelFull = r(estimate)
+		local seFull = r(se)
+		outreg2 using "tables/directionalBehaviorV2.tex", ///
+			 addstat("subj", `subj', "levelFull",`levelFull', "seFull", `seFull') ///
+			 tex(frag) ///
+			 dec(3) adec(3) 		 
+			 
+		reg discount_framed Full if  (fullNew == 1 | contNew == 1) & sample == "new" & delay == 36, cl(id)
+		local subj = e(N_clust)
+		lincom _b[_cons] + _b[Full]
+		local levelFull = r(estimate)
+		local seFull = r(se)
+		outreg2 using "tables/directionalBehaviorV2.tex", ///
+			 addstat("subj", `subj', "levelFull",`levelFull', "seFull", `seFull') ///
+			 tex(frag) ///
+			 dec(3) adec(3) 
+			 
+			 
+		restore
+			 
+	}	
+
+	// Table Financial Competence
+	if 1 {
+
+		preserve 
+			replace Full = fullNew if sample == "new"
+
+			cap gen negAbsDiff = -absDiff
+			
+			replace Control = 1 if contNew == 1
+
+			reg negAbsDiff Control Full Rule72 Rhetoric  if sample == "old", nocons cl(id)
+			local subj = e(N_clust)
+			test Full 		== Control
+			local pFull = r(p)
+			test Rule72 	== Control
+			local pRule72 = r(p)
+			test Rhetoric 	== Control
+			local pRhetoric = r(p)
+			noisily: nlcom 1 - _b[Full]/_b[Control]
+			outreg2 using "tables/finComp.tex", ///
+				 addstat("subj", `subj', "pFull", `pFull', "pRule72", `pRule72', "pRhetoric", `pRhetoric') ///
+				 tex(frag) ///
+				 dec(3) adec(3) replace
+				 
+			reg negAbsDiff Control Full if sample == "new", nocons cl(id)
+			local subj = e(N_clust)
+			test Full 		== Control
+			local pFull = r(p)
+			noisily: di "Relative improvement:"
+			noisily: nlcom 1 - _b[Full]/_b[Control]
+			outreg2 using "tables/finComp.tex", ///
+				 addstat("subj", `subj', "pFull", `pFull') ///
+				 tex(frag) ///
+				 dec(3) adec(3) 
+
+
+			reg negAbsDiff Control Full Rule72 Rhetoric  if sample == "old" & delay == 72, nocons cl(id)
+			local subj = e(N_clust)
+			test Full 		== Control
+			local pFull = r(p)
+			test Rule72 	== Control
+			local pRule72 = r(p)
+			test Rhetoric 	== Control
+			local pRhetoric = r(p)
+			outreg2 using "tables/finComp.tex", ///
+				 addstat("subj", `subj', "pFull", `pFull', "pRule72", `pRule72', "pRhetoric", `pRhetoric') ///
+				 tex(frag) ///
+				 dec(3) adec(3) 
+				 
+			reg negAbsDiff Control Full if sample == "new" & delay == 72, nocons cl(id)
+			local subj = e(N_clust)
+			test Full 		== Control
+			local pFull = r(p)
+			outreg2 using "tables/finComp.tex", ///
+				 addstat("subj", `subj', "pFull", `pFull') ///
+				 tex(frag) ///
+				 dec(3) adec(3) 
+				 
+
+			reg negAbsDiff Control Full Rule72 Rhetoric  if sample == "old" & delay == 36, nocons cl(id)
+			local subj = e(N_clust)
+			test Full 		== Control
+			local pFull = r(p)
+			test Rule72 	== Control
+			local pRule72 = r(p)
+			test Rhetoric 	== Control
+			local pRhetoric = r(p)
+			outreg2 using "tables/finComp.tex", ///
+				 addstat("subj", `subj', "pFull", `pFull', "pRule72", `pRule72', "pRhetoric", `pRhetoric') ///
+				 tex(frag) ///
+				 dec(3) adec(3) 
+				 
+			reg negAbsDiff Control Full if sample == "new" & delay == 36, nocons cl(id)
+			local subj = e(N_clust)
+			test Full 		== Control
+			local pFull = r(p)
+			outreg2 using "tables/finComp.tex", ///
+				 addstat("subj", `subj', "pFull", `pFull') ///
+				 tex(frag) ///
+				 dec(3) adec(3) 
+
+		restore
+		
+	}	
+
+	// Table Financial Competence SQUARE measure
+	if 1 {
+
+		preserve 
+			replace Full = fullNew if sample == "new"
+
+			cap gen negSqDiff = -sqDiff
+			
+			replace Control = 1 if contNew == 1
+
+			reg negSqDiff Control Full Rule72 Rhetoric  if sample == "old", nocons cl(id)
+			local subj = e(N_clust)
+			test Full 		== Control
+			local pFull = r(p)
+			test Rule72 	== Control
+			local pRule72 = r(p)
+			test Rhetoric 	== Control
+			local pRhetoric = r(p)
+			noisily: nlcom 1 - _b[Full]/_b[Control]
+			outreg2 using "tables/finCompSq.tex", ///
+				 addstat("subj", `subj', "pFull", `pFull', "pRule72", `pRule72', "pRhetoric", `pRhetoric') ///
+				 tex(frag) ///
+				 dec(3) adec(3) replace
+				 
+			reg negSqDiff Control Full if sample == "new", nocons cl(id)
+			local subj = e(N_clust)
+			test Full 		== Control
+			local pFull = r(p)
+			noisily: di "Relative improvement:"
+			noisily: nlcom 1 - _b[Full]/_b[Control]
+			outreg2 using "tables/finCompSq.tex", ///
+				 addstat("subj", `subj', "pFull", `pFull') ///
+				 tex(frag) ///
+				 dec(3) adec(3) 
+
+
+			reg negSqDiff Control Full Rule72 Rhetoric  if sample == "old" & delay == 72, nocons cl(id)
+			local subj = e(N_clust)
+			test Full 		== Control
+			local pFull = r(p)
+			test Rule72 	== Control
+			local pRule72 = r(p)
+			test Rhetoric 	== Control
+			local pRhetoric = r(p)
+			outreg2 using "tables/finCompSq.tex", ///
+				 addstat("subj", `subj', "pFull", `pFull', "pRule72", `pRule72', "pRhetoric", `pRhetoric') ///
+				 tex(frag) ///
+				 dec(3) adec(3) 
+				 
+			reg negSqDiff Control Full if sample == "new" & delay == 72, nocons cl(id)
+			local subj = e(N_clust)
+			test Full 		== Control
+			local pFull = r(p)
+			outreg2 using "tables/finCompSq.tex", ///
+				 addstat("subj", `subj', "pFull", `pFull') ///
+				 tex(frag) ///
+				 dec(3) adec(3) 
+				 
+
+			reg negSqDiff Control Full Rule72 Rhetoric  if sample == "old" & delay == 36, nocons cl(id)
+			local subj = e(N_clust)
+			test Full 		== Control
+			local pFull = r(p)
+			test Rule72 	== Control
+			local pRule72 = r(p)
+			test Rhetoric 	== Control
+			local pRhetoric = r(p)
+			outreg2 using "tables/finCompSq.tex", ///
+				 addstat("subj", `subj', "pFull", `pFull', "pRule72", `pRule72', "pRhetoric", `pRhetoric') ///
+				 tex(frag) ///
+				 dec(3) adec(3) 
+				 
+			reg negSqDiff Control Full if sample == "new" & delay == 36, nocons cl(id)
+			local subj = e(N_clust)
+			test Full 		== Control
+			local pFull = r(p)
+			outreg2 using "tables/finCompSq.tex", ///
+				 addstat("subj", `subj', "pFull", `pFull') ///
+				 tex(frag) ///
+				 dec(3) adec(3) 
+
+		restore
+		
+	}	
+
+	// Table Financial Competence Correction for change in simply framed choices 
+	if 1 {
+
+		cap drop correctionFactor
+		bysort id delay: egen correctionFactor = mean(discount_unframed)
+		replace correctionFactor = 1 / correctionFactor
+			
+		cap drop finCompAvg
+		cap drop finCompCorr
+		gen finCompCorr = -correctionFactor * absDiff * 100
+		
+		preserve 
+			replace Full = fullNew if sample == "new"
+			replace Control = 1 if contNew == 1
+
+			cap gen negAbsDiff = -absDiff
+
+			reg finCompCorr Control Full Rule72 Rhetoric  if sample == "old", nocons cl(id)
+			local subj = e(N_clust)
+			test Full 		== Control
+			local pFull = r(p)
+			test Rule72 	== Control
+			local pRule72 = r(p)
+			test Rhetoric 	== Control
+			local pRhetoric = r(p)
+			noisily: nlcom 1 - _b[Full]/_b[Control]
+			outreg2 using "tables/finCompCorr.tex", ///
+				 addstat("subj", `subj', "pFull", `pFull', "pRule72", `pRule72', "pRhetoric", `pRhetoric') ///
+				 tex(frag) ///
+				 dec(3) adec(3) replace
+				 
+			reg finCompCorr Control Full if sample == "new", nocons cl(id)
+			local subj = e(N_clust)
+			test Full 		== Control
+			local pFull = r(p)
+			noisily: di "Relative improvement:"
+			noisily: nlcom 1 - _b[Full]/_b[Control]
+			outreg2 using "tables/finCompCorr.tex", ///
+				 addstat("subj", `subj', "pFull", `pFull') ///
+				 tex(frag) ///
+				 dec(3) adec(3) 
+
+
+			reg finCompCorr Control Full Rule72 Rhetoric  if sample == "old" & delay == 72, nocons cl(id)
+			local subj = e(N_clust)
+			test Full 		== Control
+			local pFull = r(p)
+			test Rule72 	== Control
+			local pRule72 = r(p)
+			test Rhetoric 	== Control
+			local pRhetoric = r(p)
+			outreg2 using "tables/finCompCorr.tex", ///
+				 addstat("subj", `subj', "pFull", `pFull', "pRule72", `pRule72', "pRhetoric", `pRhetoric') ///
+				 tex(frag) ///
+				 dec(3) adec(3) 
+				 
+			reg finCompCorr Control Full if sample == "new" & delay == 72, nocons cl(id)
+			local subj = e(N_clust)
+			test Full 		== Control
+			local pFull = r(p)
+			outreg2 using "tables/finCompCorr.tex", ///
+				 addstat("subj", `subj', "pFull", `pFull') ///
+				 tex(frag) ///
+				 dec(3) adec(3) 
+				 
+
+			reg finCompCorr Control Full Rule72 Rhetoric  if sample == "old" & delay == 36, nocons cl(id)
+			local subj = e(N_clust)
+			test Full 		== Control
+			local pFull = r(p)
+			test Rule72 	== Control
+			local pRule72 = r(p)
+			test Rhetoric 	== Control
+			local pRhetoric = r(p)
+			outreg2 using "tables/finCompCorr.tex", ///
+				 addstat("subj", `subj', "pFull", `pFull', "pRule72", `pRule72', "pRhetoric", `pRhetoric') ///
+				 tex(frag) ///
+				 dec(3) adec(3) 
+				 
+			reg finCompCorr Control Full if sample == "new" & delay == 36, nocons cl(id)
+			local subj = e(N_clust)
+			test Full 		== Control
+			local pFull = r(p)
+			outreg2 using "tables/finCompCorr.tex", ///
+				 addstat("subj", `subj', "pFull", `pFull') ///
+				 tex(frag) ///
+				 dec(3) adec(3) 
+
+		restore
+	}	
+
+	// Table Financial Competence Correction for change in simply framed choices ALT APPROX
+	if 1 {
+
+		// rho is the amount by which the simply framed valuation changes as we scale up the consequences
+		// Regress the (unnormalized) simply framed valuation on the amount, define rho as the slope factor
+		
+		cap drop rhoAgg
+		gen rhoAgg = . 
+		reg v_unframed amount 		if sample == "new" & Control == 0 & delay == 36
+		replace rhoAgg = _b[amount] if sample == "new" & Control == 0 & delay == 36
+		reg v_unframed amount 		if sample == "new" & contNew == 1 & delay == 36
+		replace rhoAgg = _b[amount] if sample == "new" & contNew == 1 & delay == 36
+		reg v_unframed amount 		if sample == "old" & Control == 0 & delay == 36
+		replace rhoAgg = _b[amount] if sample == "old" & Control == 0 & delay == 36
+		reg v_unframed amount 		if sample == "old" & Control == 1 & delay == 36
+		replace rhoAgg = _b[amount] if sample == "old" & Control == 1 & delay == 36
+		reg v_unframed amount 		if sample == "new" & Control == 0 & delay == 72
+		replace rhoAgg = _b[amount] if sample == "new" & Control == 0 & delay == 72
+		reg v_unframed amount 		if sample == "new" & contNew == 1 & delay == 72
+		replace rhoAgg = _b[amount] if sample == "new" & contNew == 1 & delay == 72
+		reg v_unframed amount 		if sample == "old" & Control == 0 & delay == 72
+		replace rhoAgg = _b[amount] if sample == "old" & Control == 0 & delay == 72
+		reg v_unframed amount 		if sample == "old" & Control == 1 & delay == 72
+		replace rhoAgg = _b[amount] if sample == "old" & Control == 1 & delay == 72
+		
+		
+		cap drop id2
+		egen id2 = group(id)
+
+		cap drop rho
+		gen rho = .
+		forvalues i = 1 / 803 {
+			reg v_unframed amount if id2 == `i'
+			replace rho = _b[amount] if id2 == `i'
+		}
+		
+		
+		cap drop correctionFactor
+		gen correctionFactor = 1 / rho
+			
+		cap drop finCompAvg
+		cap drop finCompCorrAltApprox
+		gen finCompCorrAltApprox = -correctionFactor * absDiff
+		
+		preserve 
+			replace Full = fullNew if sample == "new"
+
+			replace Control = 1 if contNew == 1
+
+			reg finCompCorrAltApprox Control Full Rule72 Rhetoric  if sample == "old", nocons cl(id)
+			local subj = e(N_clust)
+			test Full 		== Control
+			local pFull = r(p)
+			test Rule72 	== Control
+			local pRule72 = r(p)
+			test Rhetoric 	== Control
+			local pRhetoric = r(p)
+			noisily: nlcom 1 - _b[Full]/_b[Control]
+			outreg2 using "tables/finCompCorrAltApprox.tex", ///
+				 addstat("subj", `subj', "pFull", `pFull', "pRule72", `pRule72', "pRhetoric", `pRhetoric') ///
+				 tex(frag) ///
+				 dec(3) adec(3) replace
+				 
+			reg finCompCorrAltApprox Control Full if sample == "new", nocons cl(id)
+			local subj = e(N_clust)
+			test Full 		== Control
+			local pFull = r(p)
+			noisily: di "Relative improvement:"
+			noisily: nlcom 1 - _b[Full]/_b[Control]
+			outreg2 using "tables/finCompCorrAltApprox.tex", ///
+				 addstat("subj", `subj', "pFull", `pFull') ///
+				 tex(frag) ///
+				 dec(3) adec(3) 
+
+
+			reg finCompCorrAltApprox Control Full Rule72 Rhetoric  if sample == "old" & delay == 72, nocons cl(id)
+			local subj = e(N_clust)
+			test Full 		== Control
+			local pFull = r(p)
+			test Rule72 	== Control
+			local pRule72 = r(p)
+			test Rhetoric 	== Control
+			local pRhetoric = r(p)
+			outreg2 using "tables/finCompCorrAltApprox.tex", ///
+				 addstat("subj", `subj', "pFull", `pFull', "pRule72", `pRule72', "pRhetoric", `pRhetoric') ///
+				 tex(frag) ///
+				 dec(3) adec(3) 
+				 
+			reg finCompCorrAltApprox Control Full if sample == "new" & delay == 72, nocons cl(id)
+			local subj = e(N_clust)
+			test Full 		== Control
+			local pFull = r(p)
+			outreg2 using "tables/finCompCorrAltApprox.tex", ///
+				 addstat("subj", `subj', "pFull", `pFull') ///
+				 tex(frag) ///
+				 dec(3) adec(3) 
+				 
+
+			reg finCompCorrAltApprox Control Full Rule72 Rhetoric  if sample == "old" & delay == 36, nocons cl(id)
+			local subj = e(N_clust)
+			test Full 		== Control
+			local pFull = r(p)
+			test Rule72 	== Control
+			local pRule72 = r(p)
+			test Rhetoric 	== Control
+			local pRhetoric = r(p)
+			outreg2 using "tables/finCompCorrAltApprox.tex", ///
+				 addstat("subj", `subj', "pFull", `pFull', "pRule72", `pRule72', "pRhetoric", `pRhetoric') ///
+				 tex(frag) ///
+				 dec(3) adec(3) 
+				 
+			reg finCompCorrAltApprox Control Full if sample == "new" & delay == 36, nocons cl(id)
+			local subj = e(N_clust)
+			test Full 		== Control
+			local pFull = r(p)
+			outreg2 using "tables/finCompCorrAltApprox.tex", ///
+				 addstat("subj", `subj', "pFull", `pFull') ///
+				 tex(frag) ///
+				 dec(3) adec(3) 
+
+		restore
+	}	
+
+	// Table Financial Competence Correction for change in simply framed choices SQUARE measure
+	if 1 {
+
+		cap drop correctionFactorSq
+		bysort id delay: egen correctionFactorSq = mean(discount_unframed)
+		replace correctionFactorSq = correctionFactorSq / 100
+		replace correctionFactorSq = 1 / correctionFactorSq^2
+			
+		cap drop finCompAvg
+		cap drop finCompCorrSq
+		gen finCompCorrSq = -correctionFactorSq * sqDiff
+		
+		preserve 
+			replace Full = fullNew if sample == "new"
+			replace Control = 1 if contNew == 1
+
+
+			reg finCompCorrSq Control Full Rule72 Rhetoric  if sample == "old", nocons cl(id)
+			local subj = e(N_clust)
+			test Full 		== Control
+			local pFull = r(p)
+			test Rule72 	== Control
+			local pRule72 = r(p)
+			test Rhetoric 	== Control
+			local pRhetoric = r(p)
+			noisily: nlcom 1 - _b[Full]/_b[Control]
+			outreg2 using "tables/finCompCorrSq.tex", ///
+				 addstat("subj", `subj', "pFull", `pFull', "pRule72", `pRule72', "pRhetoric", `pRhetoric') ///
+				 tex(frag) ///
+				 dec(3) adec(3) replace
+				 
+			reg finCompCorrSq Control Full if sample == "new", nocons cl(id)
+			local subj = e(N_clust)
+			test Full 		== Control
+			local pFull = r(p)
+			noisily: di "Relative improvement:"
+			noisily: nlcom 1 - _b[Full]/_b[Control]
+			outreg2 using "tables/finCompCorrSq.tex", ///
+				 addstat("subj", `subj', "pFull", `pFull') ///
+				 tex(frag) ///
+				 dec(3) adec(3) 
+
+
+			reg finCompCorrSq Control Full Rule72 Rhetoric  if sample == "old" & delay == 72, nocons cl(id)
+			local subj = e(N_clust)
+			test Full 		== Control
+			local pFull = r(p)
+			test Rule72 	== Control
+			local pRule72 = r(p)
+			test Rhetoric 	== Control
+			local pRhetoric = r(p)
+			outreg2 using "tables/finCompCorrSq.tex", ///
+				 addstat("subj", `subj', "pFull", `pFull', "pRule72", `pRule72', "pRhetoric", `pRhetoric') ///
+				 tex(frag) ///
+				 dec(3) adec(3) 
+				 
+			reg finCompCorrSq Control Full if sample == "new" & delay == 72, nocons cl(id)
+			local subj = e(N_clust)
+			test Full 		== Control
+			local pFull = r(p)
+			outreg2 using "tables/finCompCorrSq.tex", ///
+				 addstat("subj", `subj', "pFull", `pFull') ///
+				 tex(frag) ///
+				 dec(3) adec(3) 
+				 
+
+			reg finCompCorrSq Control Full Rule72 Rhetoric  if sample == "old" & delay == 36, nocons cl(id)
+			local subj = e(N_clust)
+			test Full 		== Control
+			local pFull = r(p)
+			test Rule72 	== Control
+			local pRule72 = r(p)
+			test Rhetoric 	== Control
+			local pRhetoric = r(p)
+			outreg2 using "tables/finCompCorrSq.tex", ///
+				 addstat("subj", `subj', "pFull", `pFull', "pRule72", `pRule72', "pRhetoric", `pRhetoric') ///
+				 tex(frag) ///
+				 dec(3) adec(3) 
+				 
+			reg finCompCorrSq Control Full if sample == "new" & delay == 36, nocons cl(id)
+			local subj = e(N_clust)
+			test Full 		== Control
+			local pFull = r(p)
+			outreg2 using "tables/finCompCorrSq.tex", ///
+				 addstat("subj", `subj', "pFull", `pFull') ///
+				 tex(frag) ///
+				 dec(3) adec(3) 
+
+		restore
+	}	
+
+	// Table Financial Competence Correction for change in simply framed choices SQUARE measure, ALT APPROX
+	if 1 {
+
+		// rho is the amount by which the simply framed valuation changes as we scale up the consequences
+		// Regress the (unnormalized) simply framed valuation on the amount, define rho as the slope factor
+		
+		cap drop rhoAgg
+		gen rhoAgg = . 
+		reg v_unframed amount 		if sample == "new" & Control == 0 & delay == 36
+		replace rhoAgg = _b[amount] if sample == "new" & Control == 0 & delay == 36
+		reg v_unframed amount 		if sample == "new" & contNew == 1 & delay == 36
+		replace rhoAgg = _b[amount] if sample == "new" & contNew == 1 & delay == 36
+		reg v_unframed amount 		if sample == "old" & Control == 0 & delay == 36
+		replace rhoAgg = _b[amount] if sample == "old" & Control == 0 & delay == 36
+		reg v_unframed amount 		if sample == "old" & Control == 1 & delay == 36
+		replace rhoAgg = _b[amount] if sample == "old" & Control == 1 & delay == 36
+		reg v_unframed amount 		if sample == "new" & Control == 0 & delay == 72
+		replace rhoAgg = _b[amount] if sample == "new" & Control == 0 & delay == 72
+		reg v_unframed amount 		if sample == "new" & contNew == 1 & delay == 72
+		replace rhoAgg = _b[amount] if sample == "new" & contNew == 1 & delay == 72
+		reg v_unframed amount 		if sample == "old" & Control == 0 & delay == 72
+		replace rhoAgg = _b[amount] if sample == "old" & Control == 0 & delay == 72
+		reg v_unframed amount 		if sample == "old" & Control == 1 & delay == 72
+		replace rhoAgg = _b[amount] if sample == "old" & Control == 1 & delay == 72
+		
+		
+		cap drop id2
+		egen id2 = group(id)
+
+		cap drop rho
+		gen rho = .
+		forvalues i = 1 / 803 {
+			reg v_unframed amount if id2 == `i'
+			replace rho = _b[amount] if id2 == `i'
+		}
+		
+		
+		cap drop correctionFactor
+		gen correctionFactor = 1 / rhoAgg^2
+			
+		cap drop finCompAvg
+		cap drop finCompCorrAltApprox
+		gen finCompCorrAltApprox = -correctionFactor * sqDiff
+		
+		preserve 
+			replace Full = fullNew if sample == "new"
+
+			replace Control = 1 if contNew == 1
+
+			reg finCompCorrAltApprox Control Full Rule72 Rhetoric  if sample == "old", nocons cl(id)
+			local subj = e(N_clust)
+			test Full 		== Control
+			local pFull = r(p)
+			test Rule72 	== Control
+			local pRule72 = r(p)
+			test Rhetoric 	== Control
+			local pRhetoric = r(p)
+			noisily: nlcom 1 - _b[Full]/_b[Control]
+			outreg2 using "tables/finCompCorrSqAltApprox.tex", ///
+				 addstat("subj", `subj', "pFull", `pFull', "pRule72", `pRule72', "pRhetoric", `pRhetoric') ///
+				 tex(frag) ///
+				 dec(3) adec(3) replace
+				 
+			reg finCompCorrAltApprox Control Full if sample == "new", nocons cl(id)
+			local subj = e(N_clust)
+			test Full 		== Control
+			local pFull = r(p)
+			noisily: di "Relative improvement:"
+			noisily: nlcom 1 - _b[Full]/_b[Control]
+			outreg2 using "tables/finCompCorrSqAltApprox.tex", ///
+				 addstat("subj", `subj', "pFull", `pFull') ///
+				 tex(frag) ///
+				 dec(3) adec(3) 
+
+
+			reg finCompCorrAltApprox Control Full Rule72 Rhetoric  if sample == "old" & delay == 72, nocons cl(id)
+			local subj = e(N_clust)
+			test Full 		== Control
+			local pFull = r(p)
+			test Rule72 	== Control
+			local pRule72 = r(p)
+			test Rhetoric 	== Control
+			local pRhetoric = r(p)
+			outreg2 using "tables/finCompCorrSqAltApprox.tex", ///
+				 addstat("subj", `subj', "pFull", `pFull', "pRule72", `pRule72', "pRhetoric", `pRhetoric') ///
+				 tex(frag) ///
+				 dec(3) adec(3) 
+				 
+			reg finCompCorrAltApprox Control Full if sample == "new" & delay == 72, nocons cl(id)
+			local subj = e(N_clust)
+			test Full 		== Control
+			local pFull = r(p)
+			outreg2 using "tables/finCompCorrSqAltApprox.tex", ///
+				 addstat("subj", `subj', "pFull", `pFull') ///
+				 tex(frag) ///
+				 dec(3) adec(3) 
+				 
+
+			reg finCompCorrAltApprox Control Full Rule72 Rhetoric  if sample == "old" & delay == 36, nocons cl(id)
+			local subj = e(N_clust)
+			test Full 		== Control
+			local pFull = r(p)
+			test Rule72 	== Control
+			local pRule72 = r(p)
+			test Rhetoric 	== Control
+			local pRhetoric = r(p)
+			outreg2 using "tables/finCompCorrSqAltApprox.tex", ///
+				 addstat("subj", `subj', "pFull", `pFull', "pRule72", `pRule72', "pRhetoric", `pRhetoric') ///
+				 tex(frag) ///
+				 dec(3) adec(3) 
+				 
+			reg finCompCorrAltApprox Control Full if sample == "new" & delay == 36, nocons cl(id)
+			local subj = e(N_clust)
+			test Full 		== Control
+			local pFull = r(p)
+			outreg2 using "tables/finCompCorrSqAltApprox.tex", ///
+				 addstat("subj", `subj', "pFull", `pFull') ///
+				 tex(frag) ///
+				 dec(3) adec(3) 
+
+		restore
+	}	
+
+	// Table Simple frame	 
+	if 1 {	
+		preserve 
+		replace Full = fullNew if sample == "new"
+
+		cap gen negAbsDiff = -absDiff
+
+		reg discount_unframed Full if (Full == 1 | Control == 1) & delay == 72 & sample == "old", cl(id)
+		local subj = e(N_clust)
+		lincom _b[_cons] + _b[Full]
+		local levelFull = r(estimate)
+		local seFull = r(se)
+		outreg2 using "tables/simpleFrame.tex", ///
+			 addstat("subj", `subj', "levelFull",`levelFull', "seFull", `seFull') ///
+			 tex(frag) ///
+			 dec(3) adec(3) replace
+
+		reg discount_unframed Full if  (Full == 1 | contNew == 1) & delay == 72 & sample == "new", cl(id)
+		local subj = e(N_clust)
+		lincom _b[_cons] + _b[Full]
+		local levelFull = r(estimate)
+		local seFull = r(se)
+		outreg2 using "tables/simpleFrame.tex", ///
+			 addstat("subj", `subj', "levelFull",`levelFull', "seFull", `seFull') ///
+			 tex(frag) ///
+			 dec(3) adec(3) 
+
+		reg discount_unframed Full if (Full == 1 | Control == 1) & delay == 36 & sample == "old", cl(id)
+		local subj = e(N_clust)
+		lincom _b[_cons] + _b[Full]
+		local levelFull = r(estimate)
+		local seFull = r(se)
+		outreg2 using "tables/simpleFrame.tex", ///
+			 addstat("subj", `subj', "levelFull",`levelFull', "seFull", `seFull') ///
+			 tex(frag) ///
+			 dec(3) adec(3) 
+							 
+		reg discount_unframed Full if  (Full == 1 | contNew == 1) & delay == 36 & sample == "new", cl(id)
+		local subj = e(N_clust)
+		lincom _b[_cons] + _b[Full]
+		local levelFull = r(estimate)
+		local seFull = r(se)
+		outreg2 using "tables/simpleFrame.tex", ///
+			 addstat("subj", `subj', "levelFull",`levelFull', "seFull", `seFull') ///
+			 tex(frag) ///
+			 dec(3) adec(3) 
+			 
+			 
+			  
+		restore
+				
+		
+	}	
+
+	// Table Analysis by Quartiles
+	if 1 {
+
+
+		preserve 
+		
+			gen qSimple1 = .	
+			gen qSimple2 = .	
+			gen qSimple3 = .	
+			gen qSimple4 = .	
+		
+			foreach tr in Full fullN Control contN {
+				su meanVsimple if `tr' == 1, d
+				
+				replace qSimple1 = meanVsimple < r(p25)							if `tr' == 1
+				replace qSimple2 = meanVsimple < r(p50) & meanVsimple >= r(p25)	if `tr' == 1
+				replace qSimple3 = meanVsimple < r(p75) & meanVsimple >= r(p50)	if `tr' == 1
+				replace qSimple4 = meanVsimple >= r(p75)						if `tr' == 1
+
+			}
+		
+			replace Full = fullNew if sample == "new"
+			
+			cap gen Full1 = qSimple1 * Full
+			cap gen Full2 = qSimple2 * Full
+			cap gen Full3 = qSimple3 * Full
+			cap gen Full4 = qSimple4 * Full
+			
+			cap gen negAbsDiff = -absDiff
+			
+			reg negAbsDiff Full1 Full2 Full3 Full4 qSimple1 qSimple2 qSimple3 qSimple4 if sample == "old", nocons cl(id)
+				local subj = e(N_clust)
+				lincom qSimple1 + Full1
+					local levelFull1    = r(estimate)
+					local levelFull1se  = r(se)
+				lincom qSimple2 + Full2
+					local levelFull2    = r(estimate)
+					local levelFull2se  = r(se)
+				lincom qSimple3 + Full3
+					local levelFull3    = r(estimate)
+					local levelFull3se  = r(se)
+				lincom qSimple4 + Full4
+					local levelFull4    = r(estimate)
+					local levelFull4se  = r(se)
+			outreg2 using "tables/finCompAggregation.tex", ///
+				 addstat(	"subj", `subj', ///
+							"levelFull1",   `levelFull1', ///
+							"levelFull1se", `levelFull1se', ///
+							"levelFull2",   `levelFull2', ///
+							"levelFull2se", `levelFull2se', ///
+							"levelFull3",   `levelFull3', ///
+							"levelFull3se", `levelFull3se', ///
+							"levelFull4",   `levelFull4', ///
+							"levelFull4se", `levelFull4se' ) ///
+				 tex(frag) ///
+				 dec(3) adec(3) replace
+					
+
+					
+			reg negAbsDiff Full1 Full2 Full3 Full4 qSimple1 qSimple2 qSimple3 qSimple4 if sample == "new", nocons cl(id)
+				local subj = e(N_clust)
+				lincom qSimple1 + Full1
+					local levelFull1    = r(estimate)
+					local levelFull1se  = r(se)
+				lincom qSimple2 + Full2
+					local levelFull2    = r(estimate)
+					local levelFull2se  = r(se)
+				lincom qSimple3 + Full3
+					local levelFull3    = r(estimate)
+					local levelFull3se  = r(se)
+				lincom qSimple4 + Full4
+					local levelFull4    = r(estimate)
+					local levelFull4se  = r(se)
+			outreg2 using "tables/finCompAggregation.tex", ///
+				 addstat(	"subj", `subj', ///
+							"levelFull1",   `levelFull1', ///
+							"levelFull1se", `levelFull1se', ///
+							"levelFull2",   `levelFull2', ///
+							"levelFull2se", `levelFull2se', ///
+							"levelFull3",   `levelFull3', ///
+							"levelFull3se", `levelFull3se', ///
+							"levelFull4",   `levelFull4', ///
+							"levelFull4se", `levelFull4se' ) ///
+				 tex(frag) ///
+				 dec(3) adec(3) 		
+			
+				
+		
+		restore
+	}	
+
+	// Table Analysis by Quartiles SQUARE measure
+	if 1 {
+
+
+		preserve 
+		
+			gen qSimple1 = .	
+			gen qSimple2 = .	
+			gen qSimple3 = .	
+			gen qSimple4 = .	
+		
+			foreach tr in Full fullN Control contN {
+				su meanVsimple if `tr' == 1, d
+				
+				replace qSimple1 = meanVsimple < r(p25)							if `tr' == 1
+				replace qSimple2 = meanVsimple < r(p50) & meanVsimple >= r(p25)	if `tr' == 1
+				replace qSimple3 = meanVsimple < r(p75) & meanVsimple >= r(p50)	if `tr' == 1
+				replace qSimple4 = meanVsimple >= r(p75)						if `tr' == 1
+
+			}
+		
+			replace Full = fullNew if sample == "new"
+			
+			cap gen Full1 = qSimple1 * Full
+			cap gen Full2 = qSimple2 * Full
+			cap gen Full3 = qSimple3 * Full
+			cap gen Full4 = qSimple4 * Full
+			
+			cap gen negSqDiff = -sqDiff
+			
+			reg negSqDiff Full1 Full2 Full3 Full4 qSimple1 qSimple2 qSimple3 qSimple4 if sample == "old", nocons cl(id)
+				local subj = e(N_clust)
+				lincom qSimple1 + Full1
+					local levelFull1    = r(estimate)
+					local levelFull1se  = r(se)
+				lincom qSimple2 + Full2
+					local levelFull2    = r(estimate)
+					local levelFull2se  = r(se)
+				lincom qSimple3 + Full3
+					local levelFull3    = r(estimate)
+					local levelFull3se  = r(se)
+				lincom qSimple4 + Full4
+					local levelFull4    = r(estimate)
+					local levelFull4se  = r(se)
+			outreg2 using "tables/finCompAggregationSq.tex", ///
+				 addstat(	"subj", `subj', ///
+							"levelFull1",   `levelFull1', ///
+							"levelFull1se", `levelFull1se', ///
+							"levelFull2",   `levelFull2', ///
+							"levelFull2se", `levelFull2se', ///
+							"levelFull3",   `levelFull3', ///
+							"levelFull3se", `levelFull3se', ///
+							"levelFull4",   `levelFull4', ///
+							"levelFull4se", `levelFull4se' ) ///
+				 tex(frag) ///
+				 dec(3) adec(3) replace
+					
+
+					
+			reg negSqDiff Full1 Full2 Full3 Full4 qSimple1 qSimple2 qSimple3 qSimple4 if sample == "new", nocons cl(id)
+				local subj = e(N_clust)
+				lincom qSimple1 + Full1
+					local levelFull1    = r(estimate)
+					local levelFull1se  = r(se)
+				lincom qSimple2 + Full2
+					local levelFull2    = r(estimate)
+					local levelFull2se  = r(se)
+				lincom qSimple3 + Full3
+					local levelFull3    = r(estimate)
+					local levelFull3se  = r(se)
+				lincom qSimple4 + Full4
+					local levelFull4    = r(estimate)
+					local levelFull4se  = r(se)
+			outreg2 using "tables/finCompAggregationSq.tex", ///
+				 addstat(	"subj", `subj', ///
+							"levelFull1",   `levelFull1', ///
+							"levelFull1se", `levelFull1se', ///
+							"levelFull2",   `levelFull2', ///
+							"levelFull2se", `levelFull2se', ///
+							"levelFull3",   `levelFull3', ///
+							"levelFull3se", `levelFull3se', ///
+							"levelFull4",   `levelFull4', ///
+							"levelFull4se", `levelFull4se' ) ///
+				 tex(frag) ///
+				 dec(3) adec(3) 		
+			
+				
+		
+		restore
+	}	
+		
+	// Table mechanisms 
+	if 1 {
+
+		cap gen negAbsDiff = -absDiff
+
+		reg score_compounding Rule72 Rhetoric Full Control if tag == 1 & sample == "old", nocons cl(id)
+		local subj = e(N_clust)
+		test Full 		== Control
+		local pFull = r(p)
+		test Rule72 	== Control
+		local pRule72 = r(p)
+		test Rhetoric 	== Control
+		local pRhetoric = r(p)
+		outreg2 using "tables/mechanisms1.tex", ///
+			 addstat("subj", `subj', "pFull", `pFull', "pRule72", `pRule72', "pRhetoric", `pRhetoric') ///
+			 tex(frag) ///
+			 dec(3) adec(3) replace
+			 
+		reg score_indexing Rule72 Rhetoric Full Control if tag == 1 & sample == "old", nocons cl(id)
+		local subj = e(N_clust)
+		test Full 		== Control
+		local pFull = r(p)
+		test Rule72 	== Control
+		local pRule72 = r(p)
+		test Rhetoric 	== Control
+		local pRhetoric = r(p)
+		outreg2 using "tables/mechanisms1.tex", ///
+			 addstat("subj", `subj', "pFull", `pFull', "pRule72", `pRule72', "pRhetoric", `pRhetoric') ///
+			 tex(frag) ///
+			 dec(3) adec(3) 
+			 
+		reg discount_framed Rule72 Rhetoric Full Control if sample == "old", nocons cl(id)
+		local subj = e(N_clust)
+		test Full 		== Control
+		local pFull = r(p)
+		test Rule72 	== Control
+		local pRule72 = r(p)
+		test Rhetoric 	== Control
+		local pRhetoric = r(p)
+		outreg2 using "tables/mechanisms1.tex", ///
+			 addstat("subj", `subj', "pFull", `pFull', "pRule72", `pRule72', "pRhetoric", `pRhetoric') ///
+			 tex(frag) ///
+			 dec(3) adec(3) 
+			 
+			 
+		reg discount_unframed Rule72 Rhetoric Full Control if sample == "old", nocons cl(id)
+		local subj = e(N_clust)
+		test Full 		== Control
+		local pFull = r(p)
+		test Rule72 	== Control
+		local pRule72 = r(p)
+		test Rhetoric 	== Control
+		local pRhetoric = r(p)
+		outreg2 using "tables/mechanisms1.tex", ///
+			 addstat("subj", `subj', "pFull", `pFull', "pRule72", `pRule72', "pRhetoric", `pRhetoric') ///
+			 tex(frag) ///
+			 dec(3) adec(3) 
+			 
+			 
+
+	}	
+		
+	// Table demographics	
+	if 1 {
+
+		gen flAll3 = fl1 * fl2 * fl3
+		gen flAll5 = flAll3 * fl4 * fl5
+		
+		postfile demo str16 var float Control Full Rule72 Rhetoric fullNew contNew pOld pNew using "data/demographics.dta", replace
+
+		local varlist = "fl1 fl2 fl3 fl4 fl5 flAll3 flAll5 gender age income  afram asian caucasian hispanic other lessThanHighSchool highSchool voc someCollege college graduate fullTime partTime married widowed divorced never_married rural urbanSuburban hh1 hh2 hh3 hh4 ownStocks"
+		foreach var in `varlist' {
+		
+		
+			if ("`var'" == "age" | "`var'" == "income" ) {
+				qreg `var' fullNew 				if tag == 1 & sample == "new"
+					cap test fullNew == 0
+					local pNew = r(p)
+					local fullNew = _b[fullNew] + _b[_cons]
+					local contNew = _b[_cons]
+				qreg `var' Full Rule72 Rhetoric  if tag == 1 & sample == "old"
+					cap test Full == Rule72 == Rhetoric == 0
+					local pOld = r(p)
+					local Full = _b[_cons] + _b[Full]
+					local Rule72 = _b[_cons] + _b[Rule72]
+					local Rhetoric = _b[_cons] + _b[Rhetoric]
+				post demo ("`var'") (_b[_cons]) (`Full') (`Rule72') (`Rhetoric')  (`fullNew') (`contNew') (`pOld') (`pNew') 
+			}
+			else {
+				reg `var' fullNew contNew				if tag == 1 & sample == "new", nocons
+					cap test fullNew == contNew
+					local pNew = r(p)
+					local fullNew = _b[fullNew]
+					local contNew = _b[contNew]
+				reg `var' Control Full Rule72 Rhetoric  if tag == 1 & sample == "old", nocons
+					cap test Control == Full == Rule72 == Rhetoric
+					local pOld = r(p)
+				post demo ("`var'") (_b[Control]) (_b[Full]) (_b[Rule72]) (_b[Rhetoric]) (`fullNew') (`contNew') (`pOld') (`pNew') 
+			}
+			
+		}
+		
+		count if Control == 1 & tag == 1
+		local nCont = r(N)
+		count if Full == 1 & tag == 1
+		local nFull = r(N)
+		count if Rule72 == 1 & tag == 1
+		local nRule72 = r(N)
+		count if Rhetoric == 1 & tag == 1
+		local nRhetoric = r(N)
+		count if fullNew == 1 & tag == 1
+		local nfullNew = r(N)
+		count if contNew == 1 & tag == 1
+		local ncontNew = r(N)
+
+		post demo ("N") (`nCont') (`nFull') (`nRule72') (`nRhetoric') (`nfullNew') (`ncontNew')  (.) (.) 
+		
+		
+		postclose demo
+
+		preserve 
+			clear
+			use "data/demographics.dta"
+			format %9.2f Full Control Rule72 Rhetoric fullNew contNew pOld pNew
+			order var Full Control Rule72 Rhetoric pOld fullNew contNew  pNew
+			outsheet using "tables/demographicsNew.tex", delimiter("&") nonames replace
+		restore
+
+	}
+			
+	// Table demographic controls
+	if 1 {
+
+		cap gen negAbsDiff = -absDiff
+		local controls = "fl1 fl2 fl3 fl4 fl5 gender age income  afram asian caucasian hispanic other lessThanHighSchool highSchool voc someCollege college graduate fullTime partTime married widowed divorced never_married rural urbanSuburban hh1 hh2 hh3 hh4 ownStocks"
+		local treatments = "fullN Full Control Rule72 Rhetoric"
+		
+		reg score_compounding `treatments' `controls' if tag == 1, nocons cl(id)
+		local subj = e(N_clust)
+		test Full 		== Control
+		local pFull = r(p)
+		outreg2 using "tables/demoControl.tex", ///
+			 keep(`treatments') ///
+			 addstat("subj", `subj', "pFull", `pFull') ///
+			 tex(frag) ///
+			 dec(3) adec(3) replace
+			 
+		reg score_indexing `treatments' `controls' if tag == 1, nocons cl(id)
+		local subj = e(N_clust)
+		test Full 		== Control
+		local pFull = r(p)
+		outreg2 using "tables/demoControl.tex", ///
+			 keep(`treatments') ///
+			 addstat("subj", `subj', "pFull", `pFull') ///
+			 tex(frag) ///
+			 dec(3) adec(3) 
+			 
+		reg discount_framed `treatments' `controls' , nocons cl(id)
+		local subj = e(N_clust)
+		test Full 		== Control
+		local pFull = r(p)
+		outreg2 using "tables/demoControl.tex", ///
+			 keep(`treatments') ///
+			 addstat("subj", `subj', "pFull", `pFull') ///
+			 tex(frag) ///
+			 dec(3) adec(3) 
+			 
+			 
+		reg discount_unframed `treatments' `controls' , nocons cl(id)
+		local subj = e(N_clust)
+		test Full 		== Control
+		local pFull = r(p)
+		outreg2 using "tables/demoControl.tex", ///
+			 keep(`treatments') ///
+
+... [truncated: 1,010 more bytes of this script omitted] ...
+
+```
+
+### `doFiles/master.do`
+```stata
+
+
+
+cap cd "<home>/Dropbox/Financial_Literacy/SUBMISSIONS/AER 2/Round 3/REPLICATION PACKAGE V2/"
+ 
+set more off
+
+run "doFiles/setup.do"
+run "doFiles/dataManagementExpA.do"
+run "doFiles/dataManagementExpB.do"
+run "doFiles/analysis.do"
+
+
+```
+
+### `doFiles/dataManagementExpA.do`
+```stata
+clear all
+ 
+
+******* bring Qualtrics data into stata format
+
+
+insheet using "data/raw/expAbatch1.csv", names
+gen id = _n
+drop if id == 1 
+replace id = id - 1 + 1000
+destring, replace
+rename treatment fined
+save "data/raw_1.dta", replace
+clear
+
+
+insheet using "data/raw/expAbatch2.csv", names
+gen id = _n
+drop if id == 1 
+replace id = id - 1 + 2000
+drop excluded
+destring, replace
+rename treatment fined
+save "data/raw_2.dta", replace
+
+
+clear
+insheet using "data/raw/expAbatch3.csv", names
+gen id = _n
+drop if id == 1 
+replace id = id - 1 + 3000
+destring, replace
+drop excluded
+rename treatment fined
+replace fined = 2 if fined == 1 // 2 is substance only
+replace fined = 3 if fined == 0 // 3 is rhetoric only
+save "data/raw_3.dta", replace
+
+
+clear 
+insheet using "data/raw/expAbatch4.csv", names
+gen id = _n
+drop if id == 1 
+replace id = id - 1 + 4000
+destring, replace
+drop excluded
+rename treatment fined
+save "data/raw_4.dta", replace
+
+
+clear
+insheet using "data/raw/expAbatch5.csv", names
+gen id = _n
+drop if id == 1 
+replace id = id - 1 + 5000
+destring, replace
+drop excluded
+rename treatment fined
+save "data/raw_5.dta", replace
+
+
+
+clear
+insheet using "data/raw/expAbatch6.csv", names
+gen id = _n
+drop if id == 1 
+replace id = id - 1 + 6000
+destring, replace
+drop excluded
+rename treatment fined
+replace fined = 2 if fined == 1 // 2 is substance only
+replace fined = 3 if fined == 0 // 3 is rhetoric only
+save "data/raw_6.dta", replace
+
+
+clear
+insheet using "data/raw/expAbatch7.csv", names
+gen id = _n
+drop if id == 1 
+replace id = id - 1 + 7000
+destring, replace
+drop excluded
+rename treatment fined
+replace fined = 2 if fined == 1 // 2 is substance only
+replace fined = 3 if fined == 0 // 3 is rhetoric only
+save "data/raw_7.dta", replace
+clear
+
+
+insheet using "data/raw/expAbatch8.csv", names
+gen id = _n
+drop if id == 1 
+replace id = id - 1 + 8000
+destring, replace
+drop excluded
+rename treatment fined
+replace fined = 2 if fined == 1 // 2 is substance only
+replace fined = 3 if fined == 0 // 3 is rhetoric only
+drop codewt
+drop codetreat
+save "data/raw_8.dta", replace
+
+
+clear
+use "data/raw_1.dta"
+append using "data/raw_2.dta"
+append using "data/raw_3.dta"
+append using "data/raw_4.dta"
+append using "data/raw_5.dta"
+append using "data/raw_6.dta"
+append using "data/raw_7.dta"
+append using "data/raw_8.dta"
+
+rename v6 ip
+rename v8 startDate
+rename v9 endDate
+
+
+
+***** attrition
+
+gen attrited = help_test == .
+gen attrition_before_video = q120 == .
+gen started_video = (q124 == 1 | q125 == 1)
+
+preserve
+keep id attrited attrition_before_video started_video fined
+save "data/attrition.dta", replace
+restore
+
+
+drop if help_test == .
+drop attrited attrition_before_video started_video
+save "data/raw_all.dta", replace
+
+
+** find switching points
+
+// strategy:
+// 1. reshape
+// 2. order
+// 3. generate variable in order starting from 35, going down
+// 4. generate second variable, set to missing if choice was 1, to order otherwise, egen min of these
+// 5. generate third variable, set to missing if choice was 2, to order otherwise, egen max of those
+// 6. check for single switch by comparing whether max + 1 == min
+
+
+preserve
+rename sc0_0 score
+gen pay_test = payment_for_test <= 25
+keep id ip amt_id gender age ethnicity educ marital urban income employed hh_size stocks rule72* calculate line1 line2 amt1 amt2 decision_index pay_test payment_for_test score fined finlit* att* help_test test* startDate endDate time* 
+save "data/non_MPL.dta", replace
+restore
+
+keep id impl*
+
+forvalues i = 1 / 20 {
+	rename impl`i'_1_11 	 impl`i'_1 	 
+	rename impl`i'_1_21 	 impl`i'_2 	 
+	rename impl`i'_1_31 	 impl`i'_3 	 
+	rename impl`i'_1_41 	 impl`i'_4 	 
+	rename impl`i'_1_51 	 impl`i'_5 	 
+	rename impl`i'_1_61 	 impl`i'_6 	 
+	rename impl`i'_1_71 	 impl`i'_7 	 
+	rename impl`i'_1_81 	 impl`i'_8 	 
+	rename impl`i'_1_91 	 impl`i'_9 	 
+	rename impl`i'_1_101 	 impl`i'_10 	 
+	rename impl`i'_1_111 	 impl`i'_11	 
+	
+}
+
+keep impl1_* impl2_* impl3_* impl4_* impl5_* impl6_* impl7_* impl8_* impl9_* impl10_* impl11_* impl12_* impl13_* impl14_* impl15_* impl16_* impl17_* impl18_* impl19_* impl20_* id 
+reshape long impl1_ impl2_ impl3_ impl4_ impl5_ impl6_ impl7_ impl8_ impl9_ impl10_ impl11_ impl12_ impl13_ impl14_ impl15_ impl16_ impl17_ impl18_ impl19_ impl20_, i(id) j(line 1-11)
+
+forvalues i = 1 / 20 {
+	rename impl`i'_ impl`i'
+}
+
+sort id line
+
+gen sum_multi_switch_1 = 0
+
+local varlist impl1
+forvalues i=2/20 {
+	local varlist `varlist' impl`i'
+}
+
+
+** first pricelist for each delayed reward
+
+foreach var in `varlist' {
+
+	gen line_left = line
+	gen line_right = line
+	replace line_left = . if `var' == 1
+	replace line_right = . if `var' == 0
+	
+	by id: egen switch_low = max(line_left)
+	by id: egen switch_high = min(line_right)
+	by id: egen mll = max(line_left)
+	by id: egen mlr = min(line_right)
+	
+	gen multi_switch_`var' = 1 - (switch_high == 1 + switch_low)
+	replace multi_switch_`var' = 0 if switch_high == 11 | switch_high == . | switch_low == 1 | switch_low == .
+	
+	gen value_`var' = switch_high
+	replace value_`var' = . if multi_switch_`var' == 1 
+	replace value_`var' = 0 if mlr == 1 //case where all right selected
+	replace value_`var' = 12 if mll == 11 // case where all left selected
+	
+	replace sum_multi_switch_1 = sum_multi_switch_1 + multi_switch_`var'
+	
+	drop line_left
+ 	drop line_right
+	drop switch_high
+	drop switch_low	
+	drop mll
+	drop mlr
+
+	gen value_coarse_`var' = 20 - 2*(value_`var'-1)
+	
+}	
+
+preserve
+drop value_impl* 
+drop impl*
+
+
+collapse (mean) value* sum_multi* (max) multi*, by(id)
+
+save "data/data_coarse.dta", replace
+restore
+
+
+// second pricelist for each delayed reward
+
+clear all
+set more off
+use "data/raw_all.dta"
+
+keep id impl*
+
+
+forvalues i = 1 / 20 {
+	rename impl`i'_2_31 	 impl`i'_1 	 
+	rename impl`i'_2_41 	 impl`i'_2 	 
+	rename impl`i'_2_51 	 impl`i'_3 	 
+	rename impl`i'_2_61 	 impl`i'_4 	 
+	rename impl`i'_2_71 	 impl`i'_5 	 
+	rename impl`i'_2_81 	 impl`i'_6 	 
+	rename impl`i'_2_91 	 impl`i'_7 	 
+	rename impl`i'_2_101 	 impl`i'_8 	 
+	rename impl`i'_2_111 	 impl`i'_9	 
+	rename impl`i'_2_121 	 impl`i'_10
+	drop impl`i'_1_*
+}
+
+keep impl1_* impl2_* impl3_* impl4_* impl5_* impl6_* impl7_* impl8_* impl9_* impl10_* impl11_* impl12_* impl13_* impl14_* impl15_* impl16_* impl17_* impl18_* impl19_* impl20_*  id
+reshape long impl1_ impl2_ impl3_ impl4_ impl5_ impl6_ impl7_ impl8_ impl9_ impl10_ impl11_ impl12_ impl13_ impl14_ impl15_ impl16_ impl17_ impl18_ impl19_ impl20_ , i(id) j(line 1-10)
+
+forvalues i = 1 / 20 {
+	rename impl`i'_ impl`i'
+}
+
+sort id line
+
+gen sum_multi_switch_2 = 0
+
+local varlist impl1
+forvalues i=2/20 {
+	local varlist `varlist' impl`i'
+}
+
+foreach var in `varlist' {
+
+	gen line_left = line
+	gen line_right = line
+	replace line_left = . if `var' == 1
+	replace line_right = . if `var' == 0
+	
+	by id: egen switch_low = max(line_left)
+	by id: egen switch_high = min(line_right)
+	by id: egen mll = max(line_left)
+	by id: egen mlr = min(line_right)
+
+
+	
+	gen multi_switch_`var' = 1 - (switch_high == 1 + switch_low)
+	replace multi_switch_`var' = 0 if (switch_high == 1 & switch_low == .) | (switch_high == . & switch_low == 10)
+	
+	gen value_`var' = switch_low
+	replace value_`var' = . if multi_switch_`var' == 1 
+	replace value_`var' = 0 if mlr == 1 //case where all right selected
+	replace value_`var' = 10 if mll == 10 // case where all left selected
+	
+	replace sum_multi_switch_2 = sum_multi_switch_2 + multi_switch_`var'
+	
+	drop line_left
+ 	drop line_right
+	drop switch_high
+	drop switch_low	
+	drop mll
+	drop mlr
+
+	gen value_fine_`var' = 1.8 - 0.2*value_`var'
+	replace value_fine_`var' = 0 if value_fine_`var' < 0
+}	
+
+
+drop value_impl* 
+drop impl*
+
+collapse (mean) value* sum_multi* (max) multi*, by(id)
+
+save "data/data_fine.dta", replace
+
+
+
+
+
+
+***********************************
+*** merge datasets  ***************
+***********************************
+
+clear all
+use "data/data_fine.dta"
+merge 1:1 id  using "data/data_coarse.dta"
+drop _merge
+merge 1:1 id using "data/non_MPL.dta"
+drop _merge
+
+forvalues i = 1/20 {
+	gen value`i' = value_coarse_impl`i' + value_fine_impl`i'
+	rename time`i'1_1 timeFirstClick`i'
+	rename time`i'1_2 timeLastClick`i'
+	rename time`i'1_3 timeSubmit`i'
+	rename time`i'1_4 numClicks`i'
+}
+
+
+// Label variables conveniently
+
+gen multi = 0
+forvalues i = 1 / 20 {
+	replace multi = 1 if multi_switch_impl`i' == 1
+	replace multi = 1 if sum_multi_switch_1 == 1 | sum_multi_switch_2 == 1
+}
+drop multi_* value_*
+
+reshape long value timeFirstClick timeLastClick timeSubmit numClicks, i(id) j(treatment)
+
+gen framed = treatment > 10
+gen delay = 72
+replace delay = 36 if treatment >=6 & treatment <= 10
+replace delay = 36 if treatment == 11 | treatment == 13 | treatment == 15 | treatment == 17 | treatment == 19
+
+gen amount = 20 
+replace amount = 18 if treatment == 2 | treatment == 7  | treatment == 14 | treatment == 13
+replace amount = 16 if treatment == 3 | treatment == 8  | treatment == 16 | treatment == 15
+replace amount = 14 if treatment == 4 | treatment == 9  | treatment == 18 | treatment == 17
+replace amount = 12 if treatment == 5 | treatment == 10 | treatment == 20 | treatment == 19
+gen amount_precise = amount
+
+
+// rename treatments such that #framed = #unframed + 10
+gen tr_new = tr
+replace tr_new = 1 if treat == 6
+replace tr_new = 2 if treat == 1
+replace tr_new = 3 if treat == 7
+replace tr_new = 4 if treat == 2
+replace tr_new = 5 if treat == 8
+replace tr_new = 6 if treat == 3
+replace tr_new = 7 if treat == 9
+replace tr_new = 8 if treat == 4
+replace tr_new = 9 if treat == 10
+replace tr_new = 10 if treat == 5
+
+rename treatment tr_old
+rename tr_new treatment
+
+replace treatment = treatment - 10 if framed == 1
+
+replace amount_precise = 20.40 if treatment == 11 | treatment == 1
+replace amount_precise = 20.47 if treatment == 12 | treatment == 2
+replace amount_precise = 18.47 if treatment == 13 | treatment == 3
+replace amount_precise = 18.73 if treatment == 14 | treatment == 4
+replace amount_precise = 16.29 if treatment == 15 | treatment == 5
+replace amount_precise = 16.80 if treatment == 16 | treatment == 6
+replace amount_precise = 14.37 if treatment == 17 | treatment == 7
+replace amount_precise = 15.16 if treatment == 18 | treatment == 8
+replace amount_precise = 11.58 if treatment == 19 | treatment == 9
+replace amount_precise = 11.83 if treatment == 20 | treatment == 10
+
+gen id_alt = 1000*id+treatment
+sort id_alt
+order id_alt delay treatment tr_old
+
+drop tr_old
+
+reshape wide value timeFirstClick timeLastClick timeSubmit numClicks, i(id_alt) j(framed)
+
+rename value0 v_unframed
+rename value1 v_framed
+
+rename timeFirstClick0 timeFirstClickUnframed
+rename timeFirstClick1 timeFirstClickFramed
+rename timeLastClick0 timeLastClickUnframed
+rename timeLastClick1 timeLastClickFramed
+rename timeSubmit0 timeSubmitUnframed
+rename timeSubmit1 timeSubmitFramed
+rename numClicks0 numClicksUnframed
+rename numClicks1 numClicksFramed
+
+gen r = .
+replace r = 0.02 if treatment == 1 
+replace r = 0.01 if treatment == 2 
+replace r = 0.04 if treatment == 3 
+replace r = 0.02 if treatment == 4 
+replace r = 0.06 if treatment == 5 
+replace r = 0.03 if treatment == 6 
+replace r = 0.08 if treatment == 7 
+replace r = 0.04 if treatment == 8 
+replace r = 0.05 if treatment == 9 
+replace r = 0.25 if treatment == 10
+
+gen doublings = 1
+replace doublings = 2 if treatment == 3 | treatment == 4
+replace doublings = 3 if treatment == 5 | treatment == 6 
+replace doublings = 4 if treatment == 7 | treatment == 8  
+replace doublings = 2.5 if treatment == 9 | treatment == 10
+
+replace age = age + 17
+
+forvalues i = 1/10 {
+	gen t`i' = 0
+}
+
+replace t1  = 1 if test1  == 2
+replace t2  = 1 if test2  == 4
+replace t3  = 1 if test3  == 4
+replace t4  = 1 if test4  == 7
+replace t5  = 1 if test5  == 6
+replace t6  = 1 if test6  == 3
+replace t7  = 1 if test7  == 4
+replace t8  = 1 if test8  == 2
+replace t9  = 1 if test9  == 3
+replace t10 = 1 if test10 == 3
+
+gen score_compounding = t1+t2+t3+t4+t5
+gen score_indexing = score - score_compounding
+
+gen fl1 = finlit1 == 1
+gen fl2 = finlit2 == 1
+gen fl3 = finlit3 == 3
+gen fl4 = finlit4 == 1
+gen fl5 = finlit5 == 2
+gen fl_score = (fl1 == 1) * (fl2 == 1) * (fl3 == 1) * (fl4 == 1) * (fl5 == 1)
+gen fl_sum = (fl1 == 1) + (fl2 == 1) + (fl3 == 1) + (fl4 == 1) + (fl5 == 1)
+gen fl_score_compound = (fl1 == 1) * (fl2 == 1) * (fl3 == 1) 
+gen fl_sum_compound = (fl1 == 1) + (fl2 == 1) + (fl3 == 1)
+
+gen size_error_simple = .
+replace size_error_simple = 3.20 if treatment == 1 
+replace size_error_simple = 3.27 if treatment == 2 
+replace size_error_simple = 7.49 if treatment == 3 
+replace size_error_simple = 7.75 if treatment == 4 
+replace size_error_simple = 9.97 if treatment == 5 
+replace size_error_simple = 10.48 if treatment == 6 
+replace size_error_simple = 10.88 if treatment == 7 
+replace size_error_simple = 11.66 if treatment == 8 
+replace size_error_simple = 5.98 if treatment == 9 
+replace size_error_simple = 6.23 if treatment == 10
+
+// use midpoint of the interval for analysis
+replace v_framed = v_framed + 0.1
+replace v_unframed = v_unframed + 0.1
+
+replace v_framed = 0 if v_framed <= 0
+replace v_unframed = 0 if v_unframed <= 0
+
+
+
+merge m:1 id using "data/attrition.dta"
+
+gen double startTime = clock(startDate, "YMDhms")
+gen double endTime = clock(endDate, "YMDhms")
+
+gen double duration = endTime - startTime
+replace duration = duration / (1000*60) // duration in minutes
+
+
+drop line1 line2 decision_index
+
+gen fl_high = fl_score_compound == 1
+
+gen discount_unframed = v_unframed/amount * 100
+gen discount_framed = v_framed/amount_precise * 100
+gen discount_framed_72 = v_framed/amount * 100
+
+sort id delay
+by id delay: egen min_discount_unframed = min(discount_unframed)
+by id delay: egen max_discount_unframed = max(discount_unframed)
+
+gen diff = discount_framed - discount_unframed
+gen diff72 = discount_framed - discount_unframed
+gen min_diff = discount_framed - min_discount_unframed
+gen max_diff = discount_framed - max_discount_unframed
+
+
+gen abs_diff =  - abs(diff)
+gen sq_diff = - (diff/100)^2*100
+gen sq_diff72 = - (diff72/100)^2*100
+gen sq_diff_up = - (diff/100)^2*100
+gen sq_diff_down = - (diff/100)^2*100
+replace sq_diff_up = 0 if diff > 0
+replace sq_diff_down = 0 if diff < 0
+
+sort id
+by id: egen mean_diff = mean(diff)
+gen sq_mean_diff = - (mean_diff/100)^2*100
+gen sq_mean_diff_up = - (mean_diff/100)^2*100
+gen sq_mean_diff_down = - (mean_diff/100)^2*100
+replace sq_mean_diff_up = 0 if mean_diff > 0
+replace sq_mean_diff_down = 0 if mean_diff < 0
+
+gen sqrt_diff = - sqrt(abs(diff)/100)*100
+
+gen abs_min_diff = - abs(min_diff)
+gen abs_max_diff = - abs(max_diff)
+gen sq_min_diff = -(min_diff/100)^2*100
+gen sq_max_diff = -(max_diff/100)^2*100
+
+gen CVa = min(sq_min_diff, sq_max_diff)
+gen CVb = max(sq_min_diff, sq_max_diff)
+replace CVb = 0 if discount_framed <= max_discount_unframed & discount_framed >= min_discount_unframed
+
+gen asy_diff_up = diff
+replace asy_diff_up = 0 if diff > 0 
+gen asy_diff_down = - diff
+replace asy_diff_down = 0 if diff < 0 
+
+sort id delay
+by id delay: egen mean_disc = mean(discount_unframed)
+
+gen r72 = rule72 == 1
+gen r72inv = rule72_inv == 1
+
+
+// generate treatment dummies
+
+gen Control = fined == 0 // Control
+gen Full = fined == 1 // Full
+gen Rule72 = fined == 2 // Substance Only
+gen Rhetoric = fined == 3 // Rhetoric Only
+
+label define treatment 0 "Control" 1 "Full Treatment" 2 "Only Rule of 72" 3 "Only Rhetoric"
+label values fined treatment
+
+
+// measures of noise and inattention
+
+sort id delay
+by id delay: egen sdV = sd(v_framed)
+by id: egen mean_sdV = mean(sdV)
+
+gen slope_unframed = .
+gen slope_framed = .
+gen corr_unframed_framed = .
+gen r2_unframed_framed = .
+drop if id == -1
+egen id3 = group(id)
+su id3
+local max = r(max)
+forvalues i = 1/`max' {
+	capture: reg discount_unframed amount if id3 == `i'
+	capture: replace slope_unframed = _b[amount] if id3 == `i'
+	capture: reg discount_framed amount_precise if id3 == `i'
+	capture: replace slope_framed = _b[amount_precise] if id3 == `i'
+	capture: reg discount_framed discount_unframed if id3 == `i'
+	capture: replace corr_unframed_framed = _b[discount_unframed] if id3 == `i'
+	capture: replace r2_unframed_framed = e(r2) if id3 == `i'
+}
+
+su slope_unframed, d
+gen lowSlope25 = slope_unframed <= r(p25)
+gen lowSlope50 = slope_unframed <= r(p50)
+gen lowSlope75 = slope_unframed <= r(p75)
+
+
+***** Demographic variables
+
+
+gen afram = ethnicity == 1
+gen asian = ethnicity == 2
+gen caucasian = ethnicity == 3
+gen hispanic = ethnicity == 4
+gen other = ethnicity == 5
+
+gen lessThanHighSchool = educ <= 2
+gen highSchool = educ == 3
+gen voc = educ == 4
+gen someCollege = educ == 5
+gen college = educ == 6
+gen graduate = educ >= 7
+
+gen rural = urban == 3
+gen urbanSuburban = urban <= 2
+
+gen fullTime = employed == 3
+gen partTime = employed == 2
+
+gen hh1 = hh_size == 1
+gen hh2 = hh_size == 2
+gen hh3 = hh_size == 3
+gen hh4 = hh_size >= 4
+
+gen married = marital == 3 | marital == 4
+gen widowed = marital == 6
+gen divorced = marital == 1
+gen never_married = marital == 2 | marital == 5 
+
+gen ownStocks = stocks == 1
+
+gen fl_high_remaining = fl4 == 1 & fl5 == 1
+gen was_married = widowed == 1 | divorced == 1
+gen highSchoolOrLess = highSchool == 1 | lessThanHighSchool == 1
+gen vocOrSomeCollege = voc == 1 | someCollege == 1
+gen hh3to5 = hh_size >= 2 & hh_size <= 5
+gen hhGeq6 = hh_size >= 6
+replace income = income / 1000
+
+egen tag = tag(id)
+
+
+save "data/dataExpA.dta", replace
+
+
+
+
+
+```
+
+### `doFiles/dataManagementExpB.do`
+```stata
+clear all
+
+
+
+
+
+
+// insheet the data
+if 1  {
+
+	insheet using "data/raw/expBbatch1.csv", names
+	drop if _n <= 2 // drop lines added by qualtrics
+	gen batch = 1
+	gen id = _n + 1000*batch
+	destring, replace
+	rename treatment fined /*DZ: fined=1 designates treated with BLB intervention.*/
+
+	drop if _n == 1 // dropping text line that qualtrics adds
+	destring, replace
+
+
+	gen attrited = finlit3 ~= . & impl111_impl11_1 == .
+	gen attritedLate = q182 ~= . & impl111_impl11_1 == .
+
+	save "data/batch1.dta", replace 
+
+	clear 
+
+
+	insheet using "data/raw/expBbatch2.csv", names
+	drop if _n <= 2 // drop lines added by qualtrics
+	gen batch = 2
+	gen id = _n + 1000*batch
+	destring, replace
+	rename treatment fined /*DZ: fined=1 designates treated with BLB intervention.*/
+
+	drop if _n == 1 // dropping text line that qualtrics adds
+	destring, replace
+
+
+	gen attrited = finlit3 ~= . & impl111_impl11_1 == .
+	gen attritedLate = q182 ~= . & impl111_impl11_1 == .
+
+	save "data/batch2.dta", replace
+
+	clear
+	
+	use "data/batch1.dta", replace
+	append using "data/batch2.dta" 
+
+
+
+	save "data/dataRaw.dta", replace
+}
+
+use "data/dataRaw.dta", replace
+
+
+// 
+
+
+
+
+** find switching points
+
+// strategy:
+// 1. reshape
+// 2. order
+// 3. gen variable in order starting from 35, going down
+// 4. gen second variable, set to missing if choice was 1, to order otherwise, egen min of these
+// 5. gen third variable, set to missing if choice was 2, to order otherwise, egen max of those
+// 6. check for single switch by comparing whether max + 1 == min
+
+***************************************************************************************************************
+
+forvalues i = 1/10 {
+	gen s`i' = 0
+}
+
+replace s1  = 1 if test1  == 2
+replace s2  = 1 if test2  == 4
+replace s3  = 1 if test3  == 4
+replace s4  = 1 if test4  == 7
+replace s5  = 1 if test5  == 6
+replace s6  = 1 if test6  == 4
+replace s7  = 1 if test7  == 5
+replace s8  = 1 if test8  == 5
+replace s9  = 1 if test9  == 5
+replace s10 = 1 if test10 == 1
+
+
+gen score = s1+s2+s3+s4+s5+s6+s7+s8+s9+s10
+
+
+
+preserve
+/*rename sc0_0 score*/
+
+gen pay_test = payment_for_test <= 25
+keep ip id amt_id gender age ethnicity educ marital urban income employed hh_size stocks rule72* calculate line1 line2 amt1 amt2 decision_index pay_test payment_for_test fined finlit* att* help_test test* startdate enddate durationinseconds time* score
+save "data/dataNon_MPL.dta", replace
+restore
+
+*****************************************************************************************************************8
+
+keep id impl*
+
+forvalues i = 1 / 20 {
+	rename impl`i'11_impl`i'1_1 	 impl`i'_1 	 
+	rename impl`i'11_impl`i'1_2 	 impl`i'_2 	 
+	rename impl`i'11_impl`i'1_3 	 impl`i'_3 	 
+	rename impl`i'11_impl`i'1_4 	 impl`i'_4 	 
+	rename impl`i'11_impl`i'1_5 	 impl`i'_5 	 
+	rename impl`i'11_impl`i'1_6 	 impl`i'_6 	 
+	rename impl`i'11_impl`i'1_7 	 impl`i'_7 	 
+	rename impl`i'11_impl`i'1_8 	 impl`i'_8	 
+	rename impl`i'11_impl`i'1_9 	 impl`i'_9 	 
+	rename impl`i'11_impl`i'1_10 	 impl`i'_10 	 
+	rename impl`i'11_impl`i'1_11 	 impl`i'_11 
+}
+
+keep impl1_* impl2_* impl3_* impl4_* impl5_* impl6_* impl7_* impl8_* impl9_* impl10_* impl11_* impl12_* impl13_* impl14_* impl15_* impl16_* impl17_* impl18_* impl19_* impl20_* id 
+reshape long impl1_ impl2_ impl3_ impl4_ impl5_ impl6_ impl7_ impl8_ impl9_ impl10_ impl11_ impl12_ impl13_ impl14_ impl15_ impl16_ impl17_ impl18_ impl19_ impl20_, i(id) j(line 1-11)
+
+forvalues i = 1 / 20 {
+	rename impl`i'_ impl`i'
+}
+
+sort id line
+
+gen sum_multi_switch_1 = 0
+
+local varlist impl1
+forvalues i=2/20 {
+	local varlist `varlist' impl`i'
+}
+
+
+** first pricelist
+
+foreach var in `varlist' { /*At this point varlist includes impl1, impl2, ... impl20*/
+
+	gen line_left = line
+	gen line_right = line
+	replace line_left = . if `var' == 1
+	replace line_right = . if `var' == 0
+	
+	by id: egen switch_low = max(line_left)
+	by id: egen switch_high = min(line_right)
+	by id: egen mll = max(line_left)
+	by id: egen mlr = min(line_right)
+	
+	gen multi_switch_`var' = 1 - (switch_high == 1 + switch_low)
+	replace multi_switch_`var' = 0 if switch_high == 11 | switch_high == . | switch_low == 1 | switch_low == .
+	
+	gen value_`var' = switch_high
+	replace value_`var' = . if multi_switch_`var' == 1 
+	replace value_`var' = 0 if mlr == 1 //case where all right selected
+	replace value_`var' = 12 if mll == 11 // case where all left selected
+	
+	replace sum_multi_switch_1 = sum_multi_switch_1 + multi_switch_`var'
+	
+	drop line_left
+ 	drop line_right
+	drop switch_high
+	drop switch_low	
+	drop mll
+	drop mlr
+
+	gen value_coarse_`var' = 20 - 2*(value_`var'-1)
+	
+}	
+
+
+preserve
+	drop value_impl* 
+	drop impl*
+	collapse (mean) value* sum_multi* (max) multi*, by(id)
+	save "data/data_Coarse.dta", replace
+restore
+
+
+
+
+***********************************
+*** fine valuations ***************
+***********************************
+
+
+clear all
+set more off
+use "data/dataRaw.dta"
+
+keep id impl*
+
+
+forvalues i = 1 / 20 {
+	rename impl`i'21_impl`i'2_3 	 impl`i'_1 	 
+	rename impl`i'21_impl`i'2_4 	 impl`i'_2 	 
+	rename impl`i'21_impl`i'2_5 	 impl`i'_3 	 
+	rename impl`i'21_impl`i'2_6 	 impl`i'_4
+	rename impl`i'21_impl`i'2_7 	 impl`i'_5 	 
+	rename impl`i'21_impl`i'2_8 	 impl`i'_6 	 
+	rename impl`i'21_impl`i'2_9 	 impl`i'_7 	 
+	rename impl`i'21_impl`i'2_10 	 impl`i'_8 
+	rename impl`i'21_impl`i'2_11 	 impl`i'_9 	 
+	rename impl`i'21_impl`i'2_12 	 impl`i'_10 
+	
+}
+
+
+
+
+keep impl1_* impl2_* impl3_* impl4_* impl5_* impl6_* impl7_* impl8_* impl9_* impl10_* impl11_* impl12_* impl13_* impl14_* impl15_* impl16_* impl17_* impl18_* impl19_* impl20_*  id
+reshape long impl1_ impl2_ impl3_ impl4_ impl5_ impl6_ impl7_ impl8_ impl9_ impl10_ impl11_ impl12_ impl13_ impl14_ impl15_ impl16_ impl17_ impl18_ impl19_ impl20_ , i(id) j(line 1-10)
+
+forvalues i = 1 / 20 {
+	rename impl`i'_ impl`i'
+}
+
+sort id line
+
+gen sum_multi_switch_2 = 0
+
+local varlist impl1
+forvalues i=2/20 {
+	local varlist `varlist' impl`i'
+}
+
+ 
+
+
+
+** second pricelist
+
+foreach var in `varlist' {
+
+	gen line_left = line
+	gen line_right = line
+	replace line_left = . if `var' == 1
+	replace line_right = . if `var' == 0
+	
+	by id: egen switch_low = max(line_left)
+	by id: egen switch_high = min(line_right)
+	by id: egen mll = max(line_left)
+	by id: egen mlr = min(line_right)
+
+
+	
+	gen multi_switch_`var' = 1 - (switch_high == 1 + switch_low)
+	replace multi_switch_`var' = 0 if (switch_high == 1 & switch_low == .) | (switch_high == . & switch_low == 10)
+	
+	gen value_`var' = switch_low
+	replace value_`var' = . if multi_switch_`var' == 1 
+	replace value_`var' = 0 if mlr == 1 //case where all right selected
+	replace value_`var' = 10 if mll == 10 // case where all left selected
+	
+	replace sum_multi_switch_2 = sum_multi_switch_2 + multi_switch_`var'
+	
+	drop line_left
+ 	drop line_right
+	drop switch_high
+	drop switch_low	
+	drop mll
+	drop mlr
+
+	gen value_fine_`var' = 1.8 - 0.2*value_`var'
+	replace value_fine_`var' = 0 if value_fine_`var' < 0
+}	
+
+
+drop value_impl* 
+drop impl*
+
+collapse (mean) value* sum_multi* (max) multi*, by(id)
+
+save "data/data_Fine.dta", replace
+
+
+
+
+
+
+***********************************
+*** merge datasets  ***************
+***********************************
+
+clear all
+use "data/data_Fine.dta"
+merge 1:1 id  using "data/data_Coarse.dta"
+drop _merge
+merge 1:1 id using "data/dataNon_MPL.dta"
+drop _merge
+
+/*DZ: Slight change in naming of variables.*/
+forvalues i = 1/20 {
+	gen value`i' = value_coarse_impl`i' + value_fine_impl`i'
+
+	rename time`i'1_firstclick timeFirstClick`i'
+	rename time`i'1_lastclick timeLastClick`i'
+	rename time`i'1_pagesubmit timeSubmit`i'
+	rename time`i'1_clickcount numClicks`i'
+
+}
+
+
+
+***********************************
+
+
+
+gen multi = 0
+forvalues i = 1 / 20 {
+	replace multi = 1 if multi_switch_impl`i' == 1
+	replace multi = 1 if sum_multi_switch_1 == 1 | sum_multi_switch_2 == 1
+}
+drop multi_*
+
+
+drop value_*
+
+
+
+reshape long value timeFirstClick timeLastClick timeSubmit numClicks, i(id) j(treatment)
+
+
+
+
+gen framed = treatment > 10
+
+gen delay = 72
+replace delay = 36 if treatment >=6 & treatment <= 10
+replace delay = 36 if treatment == 11 | treatment == 13 | treatment == 15 | treatment == 17 | treatment == 19
+
+
+gen amount = 20 
+replace amount = 18 if treatment == 2 | treatment == 7  | treatment == 14 | treatment == 13
+replace amount = 16 if treatment == 3 | treatment == 8  | treatment == 16 | treatment == 15
+replace amount = 14 if treatment == 4 | treatment == 9  | treatment == 18 | treatment == 17
+replace amount = 12 if treatment == 5 | treatment == 10 | treatment == 20 | treatment == 19
+
+gen amount_precise = amount
+
+
+// rename treatments such that #framed = #unframed + 10
+
+gen tr_new = tr
+replace tr_new = 1 if treat == 6
+replace tr_new = 2 if treat == 1
+replace tr_new = 3 if treat == 7
+replace tr_new = 4 if treat == 2
+replace tr_new = 5 if treat == 8
+replace tr_new = 6 if treat == 3
+replace tr_new = 7 if treat == 9
+replace tr_new = 8 if treat == 4
+replace tr_new = 9 if treat == 10
+replace tr_new = 10 if treat == 5
+
+rename treatment tr_old
+rename tr_new treatment
+
+replace treatment = treatment - 10 if framed == 1
+
+
+replace amount_precise = 20.40 if treatment == 11 | treatment == 1
+replace amount_precise = 20.47 if treatment == 12 | treatment == 2
+replace amount_precise = 18.47 if treatment == 13 | treatment == 3
+replace amount_precise = 18.73 if treatment == 14 | treatment == 4
+replace amount_precise = 16.29 if treatment == 15 | treatment == 5
+replace amount_precise = 16.80 if treatment == 16 | treatment == 6
+replace amount_precise = 14.37 if treatment == 17 | treatment == 7
+replace amount_precise = 15.16 if treatment == 18 | treatment == 8
+replace amount_precise = 11.58 if treatment == 19 | treatment == 9
+replace amount_precise = 11.83 if treatment == 20 | treatment == 10
+
+
+
+gen id_alt = 1000*id+treatment
+sort id_alt
+order id_alt delay treatment tr_old
+
+drop tr_old
+
+reshape wide value timeFirstClick timeLastClick timeSubmit numClicks, i(id_alt) j(framed)
+
+rename value0 v_unframed
+rename value1 v_framed
+
+
+rename timeFirstClick0 timeFirstClickUnframed
+rename timeFirstClick1 timeFirstClickFramed
+rename timeLastClick0 timeLastClickUnframed
+rename timeLastClick1 timeLastClickFramed
+rename timeSubmit0 timeSubmitUnframed
+rename timeSubmit1 timeSubmitFramed
+rename numClicks0 numClicksUnframed
+rename numClicks1 numClicksFramed
+
+
+
+gen difficulty = 0
+replace difficulty = 1 if treatment >= 3 & treatment <= 8
+replace difficulty = 2 if treatment >= 9
+
+gen start = 10
+replace start = 4.5 if treatment == 3 | treatment == 4
+replace start = 2 if treatment == 5 | treatment == 6 | treatment == 9 | treatment == 10
+replace start = 0.9 if treatment == 7 | treatment == 8
+
+gen r = .
+replace r = 0.02 if treatment == 1 
+replace r = 0.01 if treatment == 2 
+replace r = 0.04 if treatment == 3 
+replace r = 0.02 if treatment == 4 
+replace r = 0.06 if treatment == 5 
+replace r = 0.03 if treatment == 6 
+replace r = 0.08 if treatment == 7 
+replace r = 0.04 if treatment == 8 
+replace r = 0.05 if treatment == 9 
+replace r = 0.25 if treatment == 10
+
+
+gen doublings = 1
+replace doublings = 2 if treatment == 3 | treatment == 4
+replace doublings = 3 if treatment == 5 | treatment == 6 
+replace doublings = 4 if treatment == 7 | treatment == 8  
+replace doublings = 2.5 if treatment == 9 | treatment == 10
+
+
+replace age = age + 17
+
+forvalues i = 1/10 {
+	gen t`i' = 0
+}
+
+replace t1  = 1 if test1  == 2
+replace t2  = 1 if test2  == 4
+replace t3  = 1 if test3  == 4
+replace t4  = 1 if test4  == 7
+replace t5  = 1 if test5  == 6
+replace t6  = 1 if test6  == 4
+replace t7  = 1 if test7  == 4
+replace t8  = 1 if test8  == 5
+replace t9  = 1 if test9  == 5
+replace t10 = 1 if test10 == 5
+
+
+
+gen score_compounding = t1+t2+t3+t4+t5
+gen score_indexing = score - score_compounding
+
+gen fl1 = finlit1 == 1
+gen fl2 = finlit2 == 1
+gen fl3 = finlit3 == 3
+gen fl4 = finlit4 == 1
+gen fl5 = finlit5 == 2
+gen fl_score = (fl1 == 1) * (fl2 == 1) * (fl3 == 1) * (fl4 == 1) * (fl5 == 1)
+gen fl_sum = (fl1 == 1) + (fl2 == 1) + (fl3 == 1) + (fl4 == 1) + (fl5 == 1)
+gen fl_score_compound = (fl1 == 1) * (fl2 == 1) * (fl3 == 1) 
+gen fl_sum_compound = (fl1 == 1) + (fl2 == 1) + (fl3 == 1)
+
+gen size_error_simple = .
+replace size_error_simple = 3.20 if treatment == 1 
+replace size_error_simple = 3.27 if treatment == 2 
+replace size_error_simple = 7.49 if treatment == 3 
+replace size_error_simple = 7.75 if treatment == 4 
+replace size_error_simple = 9.97 if treatment == 5 
+replace size_error_simple = 10.48 if treatment == 6 
+replace size_error_simple = 10.88 if treatment == 7 
+replace size_error_simple = 11.66 if treatment == 8 
+replace size_error_simple = 5.98 if treatment == 9 
+replace size_error_simple = 6.23 if treatment == 10
+
+
+
+
+
+
+// use midpoint of the interval for analysis
+replace v_framed = v_framed + 0.1
+replace v_unframed = v_unframed + 0.1
+
+replace v_framed = 0 if v_framed <= 0
+replace v_unframed = 0 if v_unframed <= 0
+
+************ monotonicity violations
+sort id
+gen v_u_1_i = v_unframed if amount == 12
+gen v_u_2_i = v_unframed if amount == 14
+gen v_u_3_i = v_unframed if amount == 16
+gen v_u_4_i = v_unframed if amount == 18
+gen v_u_5_i = v_unframed if amount == 20
+by id: egen v_u_1 = max(v_u_1_i) 
+by id: egen v_u_2 = max(v_u_2_i) 
+by id: egen v_u_3 = max(v_u_3_i) 
+by id: egen v_u_4 = max(v_u_4_i) 
+by id: egen v_u_5 = max(v_u_5_i) 
+
+gen monotonic_u = (v_u_1 <= v_u_2 & v_u_2 <= v_u_3 & v_u_3 <= v_u_4 & v_u_4 <= v_u_5)
+
+gen v_f_1_i = v_framed if amount == 12
+gen v_f_2_i = v_framed if amount == 14
+gen v_f_3_i = v_framed if amount == 16
+gen v_f_4_i = v_framed if amount == 18
+gen v_f_5_i = v_framed if amount == 20
+by id: egen v_f_1 = max(v_f_1_i) 
+by id: egen v_f_2 = max(v_f_2_i) 
+by id: egen v_f_3 = max(v_f_3_i) 
+by id: egen v_f_4 = max(v_f_4_i) 
+by id: egen v_f_5 = max(v_f_5_i) 
+
+gen monotonic_f = (v_f_1 <= v_f_2 & v_f_2 <= v_f_3 & v_f_3 <= v_f_4 & v_f_4 <= v_f_5)
+
+
+
+egen tag_id = tag(id)
+
+
+gen duration = durationinseconds/60 /* duration in minutes */
+
+
+gen afram = ethnicity == 1
+gen asian = ethnicity == 2
+gen caucasian = ethnicity == 3
+gen hispanic = ethnicity == 4
+gen other = ethnicity == 5
+
+
+gen lessThanHighSchool = educ <= 2
+gen highSchool = educ == 3
+gen voc = educ == 4
+gen someCollege = educ == 5
+gen college = educ == 6
+gen graduate = educ >= 7
+
+gen rural = urban == 3
+gen urbanSuburban = urban <= 2
+
+gen fullTime = employed == 3
+gen partTime = employed == 2
+
+gen hh1 = hh_size == 1
+gen hh2 = hh_size == 2
+gen hh3 = hh_size == 3
+gen hh4 = hh_size >= 4
+
+gen married = marital == 3 | marital == 4
+gen widowed = marital == 6
+gen divorced = marital == 1
+gen never_married = marital == 2 | marital == 5 
+
+gen ownStocks = stocks == 1
+
+
+
+drop line1 line2 decision_index
+drop if test10 == .
+save "data/dataExpB.dta", replace
+
+
+
+
+
+```
+
+### `doFiles/setup.do`
+```stata
+ssc install outreg2
+ssc install distplot
+
+```
+
+## How to run a script
+
+Write each script to a file under the output directory, then run it with
+exactly this command (the data directory is mounted read-only at its own
+path; nothing else from the host is visible; `$SCRIPT` is the absolute path of
+the script you wrote):
+
+    SCRIPT=<repo>/benchmark/reproductions/ambuehl-2022-deliberative-competence-financial-choice/seeded/2026-11-10-a/script.R   # or <repo>/benchmark/reproductions/ambuehl-2022-deliberative-competence-financial-choice/seeded/2026-11-10-a/attempt-<n>/script.R
+    uv run --directory <repo> python -m benchmark.reproducers.run_sandbox --timeout 300 --label retally.run=claude-code-ambuehl-2022-deliberative-competence-financial-choice-seeded-2026-11-10-a --run-dir "$(dirname "$SCRIPT")" -- docker run --rm --label retally.run=claude-code-ambuehl-2022-deliberative-competence-financial-choice-seeded-2026-11-10-a --network none --memory 4g --cpus 1.0 --read-only --tmpfs /tmp:size=256m --cap-drop ALL --security-opt no-new-privileges -v "$SCRIPT":/workspace/script.R:ro -v <repo>/benchmark/.cache/claude-code/ambuehl-2022-deliberative-competence-financial-choice/seeded/2026-11-10-a/mount/ambuehl_2022_deliberative_competence_financial_choice:<repo>/benchmark/.cache/claude-code/ambuehl-2022-deliberative-competence-financial-choice/seeded/2026-11-10-a/mount/ambuehl_2022_deliberative_competence_financial_choice:ro --workdir /workspace retally-sandbox-r:latest Rscript /workspace/script.R; echo "exit code: $?"
+
+The sandbox time limit is 300 seconds (memory 4g, 1.0 CPU).  The
+command enforces it: `run_sandbox` runs the `docker run` after `--`, writes
+its output to `stdout.txt` and `stderr.txt` next to the script, and writes
+`timing.json` there too (wall-clock seconds, and whether the limit was
+hit).  If the limit is hit it kills the container, appends a line saying
+so to `stderr.txt` and exits with code 124: treat the run as a crash.  Do
+not add your own timeout, do not redirect its output yourself, and do not
+delete `timing.json`; keep it with the run's other files.
+
+If a `docker run` produces no output for more than ten minutes (no
+container output, no error, the command does not return), the Docker
+daemon is probably wedged.  Stop: kill the command, and do not restart
+Docker Desktop or the Docker daemon yourself.  The hung attempt is not
+counted: do not save it as an `attempt-<n>` directory or as the final run,
+and say in `notes` that it hung.  Report it in your final message (which
+step hung, and for how long) instead of retrying.
+
+## Output contract
+
+The output directory `<repo>/benchmark/reproductions/ambuehl-2022-deliberative-competence-financial-choice/seeded/2026-11-10-a` already holds `render.json`; leave it
+there.  Add:
+
+```
+<repo>/benchmark/reproductions/ambuehl-2022-deliberative-competence-financial-choice/seeded/2026-11-10-a/
+  script.R  stdout.txt  stderr.txt  timing.json   # the FINAL run: its RESULT: lines are what is scored
+  attempt-1/  attempt-2/  ...           # every execution BEFORE the final one, in order
+    script.R  stdout.txt  stderr.txt  timing.json  feedback.txt   # feedback.txt when kind is not ""
+  reproduction.json                     # written LAST
+```
+
+- `attempt-<n>` directories are every execution before the final one, in
+  the order they ran; the final files at the top are the run whose
+  `RESULT:` lines are scored.  If you go back to an earlier attempt, copy
+  that attempt's files to the top level as the final run.
+- `feedback.txt` holds what you acted on before the next attempt: the error
+  you fixed (`kind: "error"`) or the `check_attempt` comparison
+  (`kind: "claim"`).
+- Exploratory runs (inspecting variables, counting rows, checking a filter;
+  no estimate of a listed quantity) are attempts with `kind: ""` and need no
+  `feedback.txt`.  They must NOT print any `RESULT:` line, not even a
+  placeholder: the first run that prints one is scored as your first scored
+  attempt.  Print `RESULT:` lines only from a script that estimates the
+  listed quantities, and `kind: "error"` only for a run that crashed or
+  that was meant to print them and did not.
+- Write `reproduction.json` last, in this schema:
+
+```
+reproduction.json (schema 1), written last by the agent into its run directory
+benchmark/reproductions/<entry_id>/<mode>/<run_id>/:
+
+{
+  "schema": 1,
+  "entry_id": "montero-2022-cooperative-property-rights",
+  "mode": "independent",
+  "run_id": "2026-10-22-a",
+  "reproducer": "claude-code",
+  "language": "r",
+  "final": {"script": "script.R", "stdout": "stdout.txt", "stderr": "stderr.txt", "exit_code": 0},
+  "attempts": [
+    {"dir": "attempt-1", "exit_code": 1, "kind": "error"},
+    {"dir": "attempt-2", "exit_code": 0, "kind": "claim"}
+  ],
+  "deviations": [],
+  "notes": "free text: what the agent did, what it could not do",
+  "files_read_outside_mount": [],
+  "started_at": "2026-10-22T10:00:00Z",
+  "finished_at": "2026-10-22T10:40:00Z"
+}
+
+* entry_id, mode and run_id must match the directory the file sits in.
+* final: the run that is scored -- script.R, stdout.txt, stderr.txt at the
+  run-dir root, and its exit code.  If the agent reverts to an earlier
+  attempt it copies that attempt's files there.
+* attempts: every execution before the final one, oldest first.  Each
+  attempt-<n>/ holds script.R, stdout.txt, stderr.txt, and feedback.txt
+  when kind is not "".  kind is the refinement that followed it:
+  "error" (it crashed or printed no RESULT: line; the agent repaired it),
+  "claim" (the agent compared its RESULT: values with the claimed values
+  and changed the script; never allowed in blind mode), or "" (neither).
+* All paths are relative to the run directory; absolute paths and ".."
+  are rejected.
+* deviations: free-text methodology changes, in addition to any
+  DEVIATION: lines in the final stdout.
+* The numbers scored are the RESULT: lines of the files, never anything
+  written in this JSON.
+```
+
+End your final message with the final run's `RESULT:` lines and a short
+note.  Nothing needed for scoring may live only in the message: the files
+are the record.
+
+Do not edit any file in the repository; your only writes are under `<repo>/benchmark/reproductions/ambuehl-2022-deliberative-competence-financial-choice/seeded/2026-11-10-a`.

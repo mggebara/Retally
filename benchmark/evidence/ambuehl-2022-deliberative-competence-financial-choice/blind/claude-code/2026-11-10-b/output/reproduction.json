@@ -1,0 +1,28 @@
+{
+  "schema": 1,
+  "entry_id": "ambuehl-2022-deliberative-competence-financial-choice",
+  "mode": "blind",
+  "run_id": "2026-11-10-b",
+  "reproducer": "claude-code",
+  "language": "r",
+  "final": {"script": "script.R", "stdout": "stdout.txt", "stderr": "stderr.txt", "exit_code": 0},
+  "attempts": [
+    {"dir": "attempt-1", "exit_code": 0, "kind": ""},
+    {"dir": "attempt-2", "exit_code": 0, "kind": ""},
+    {"dir": "attempt-3", "exit_code": 0, "kind": ""},
+    {"dir": "attempt-4", "exit_code": 0, "kind": ""},
+    {"dir": "attempt-5", "exit_code": 0, "kind": ""},
+    {"dir": "attempt-6", "exit_code": 0, "kind": ""}
+  ],
+  "deviations": [
+    "Multiple-switching rule: the paper reports 49/504 (A) and 53/401 (B) multiple switchers but does not give the exact rule. Several rules were checked (per-list >=2 switches: 28/30; any non-monotone list: 53/55; iterated list 1 + list 2 merged into one price list ordered by amount with >=2 switches: 51/51). The merged-list rule was used. It keeps 453 (A) + 350 (B) = 803 subjects, which matches the paper's stated total of 803, but the per-experiment split differs from 455/348 by 2 subjects.",
+    "Experiment A conditions are not coded directly in the data (the treatment field is 0/1). Sessions 1, 2, 4 and 5 ran the full Treatment against Control; sessions 3, 6, 7 and 8 ran Substance-Only (treatment path) against Rhetoric-Only (other path). This was inferred from the minimum video page times (~665 s, ~620 s, ~265 s and ~505 s), the slide code words, and correctness on Q1 and Q2 by group.",
+    "Test answer keys: the compound-interest key and the Experiment A control-module key reproduce the Qualtrics Score field exactly (R^2 = 1). Experiment B's Qualtrics score uses Experiment A's control-module key, which does not fit B's diversification questions, so the B control-module answers were scored from Table C.2 content (options in display order: GM & Microsoft, 0.7, stocks, stocks, 1).",
+    "Experiment B: one worker ID appears twice. The earlier record, which is unfinished (Progress 97), was dropped, giving the 401 completers. 'Completed' means the subject answered the final test.",
+    "Valuation = midpoint of the $0.20 interval implied by the iterated MPL: 2*switch - 0.1 - 0.2*(number of immediate choices in list 2), with x = 2*switch - 2 as displayed. It is normalized by the rule-of-72 future reward R from Table 2 and is not clipped. Table 4 uses iid OLS standard errors; Table 7 clusters by subject."
+  ],
+  "notes": "Data: raw Qualtrics CSVs (8 Exp A batches, 2 Exp B batches). Exploratory runs (attempts 1-6, no RESULT lines) decoded the price-list coding (line 1 = $20, 0 = immediate, 1 = future; list 2 lines 3..12 = x+1.8..x), the condition arms, the answer keys and the multiple-switching rule. The final script computes Table 4 columns 1-4 (OLS of test score on a Treatment dummy, A Treatment+Control only, multiple switchers excluded) and Table 7 columns 1-2 (no-constant OLS of -|r_c - r_s| x 100 on condition dummies, clustered by subject). Table 7 Experiment A has 4,530 observations (453 subjects x 10 pairs); Experiment B has 3,500. No run hung. readMe.pdf in the mount was read for the data description only.",
+  "files_read_outside_mount": [],
+  "started_at": "2026-11-10T06:54:57Z",
+  "finished_at": "2026-11-10T11:23:30Z"
+}

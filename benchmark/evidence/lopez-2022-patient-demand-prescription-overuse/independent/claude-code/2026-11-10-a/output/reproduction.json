@@ -1,0 +1,20 @@
+{
+  "schema": 1,
+  "entry_id": "lopez-2022-patient-demand-prescription-overuse",
+  "mode": "independent",
+  "run_id": "2026-11-10-a",
+  "reproducer": "claude-code",
+  "language": "r",
+  "final": {"script": "script.R", "stdout": "stdout.txt", "stderr": "stderr.txt", "exit_code": 0},
+  "attempts": [
+    {"dir": "attempt-1", "exit_code": 0, "kind": ""},
+    {"dir": "attempt-2", "exit_code": 0, "kind": ""}
+  ],
+  "deviations": [
+    "Post-double-selection lasso implemented by hand in R (glmnet/hdm not available): rlasso-style rigorous plug-in penalty lambda = 2*1.1*sqrt(n)*qnorm(1-gamma/(2p)), gamma = 0.1/log(#clusters), clinic-cluster-robust penalty loadings iterated with post-lasso residuals (initial residuals from OLS on the 5 most correlated candidates). The authors' Stata lasso implementation (pdslasso vs dsregress, exact penalty constants) is unknown, so the selected control set may differ slightly."
+  ],
+  "notes": "Sample: dropme==0 (2,055 in-clinic patients; 2,053 with non-missing prescription/purchase outcomes). Outcomes: used_vouchers_admin (col 1), RXtreat_sev_simple_mal (col 2), treat_sev_simple_mal (col 3), RXtreat_severe_mal (col 4), treat_severe_mal (col 5). Treatments patient_voucher and doctor_voucher. Date fixed effects (DD1-DD35 dummies) partialled out before lasso and included in the final OLS. Candidate controls: the 23 prepared CC* individual controls (missings mean-coded, with missing dummies), their 249 pairwise interactions CCaxCCb, and 59 clinic dummies CL*. Union of controls selected in the lasso for y, PV and DV; final OLS via fixest with SEs clustered by clinic (cscomnum_OS). Attempts 1-2 were exploratory (variable listing, sample and outcome checks; no RESULT lines). The final run was the first estimation run; after comparing with the claims by eye, nothing was changed (all coefficients within about 0.002 of the paper, Ns exact, SEs also close). No run hung.",
+  "files_read_outside_mount": [],
+  "started_at": "2026-11-10T06:40:05Z",
+  "finished_at": "2026-11-10T06:43:30Z"
+}

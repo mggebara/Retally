@@ -1,0 +1,103 @@
+Income bracket -> log income map:
+  hhincbracket         v nv
+1           A1  8.815073  1
+2           A2  9.890504  1
+3           A3 10.510559  1
+4           A4 11.023128  1
+5           A5 11.364471  1
+6           A6 11.700948  1
+7           A7 12.045793  1
+8           A8 12.698513  1
+Perception index (main survey):
+  index weights: large_z 0.375 problem_z 0.222 govmit_z 0.403 
+Policy demand index (main survey; wage transparency (A) / reporting website (B) share one slot):
+  index weights: quota_z 0.201 aa_z 0.14 legis_z 0.202 transpweb_z 0.224 childc_z 0.234 
+Control-group prior 5th/95th percentiles: 50 113 
+Table 3/4 sample N: 921 
+Treatment sample N: 3031  with posterior: 3022 
+Follow-up N: 1105  T74: 554 
+Follow-up perception index:
+  index weights: fu_problem_z 0.061 fu_govwomen_z 0.398 fu_high_z 0.247 fu_low_z 0.293 
+check prior          agree 1104 / 1105
+check democrat       agree 1105 / 1105
+check indep          agree 1105 / 1105
+check otherpol       agree 1105 / 1105
+check female         agree 1105 / 1105
+check pweight        agree 1105 / 1105
+check associatemore  agree 1105 / 1105
+check anychildren    agree 1105 / 1105
+Table 5 N (posterior, index): 3022 3031  IV N: 3022  Table 6 N: 1105 
+First-stage F (IV): 471.1913 
+                       m3a        m3b          m4a          m4b
+Dependent Var.: perc_index perc_index policy_index policy_index
+                                                               
+Constant        -0.4458*** -0.0527      -0.4870***   -0.0161   
+                (0.0696)   (0.0394)     (0.0539)     (0.0343)  
+democrat         0.6917***               0.6691***             
+                (0.0656)                (0.0511)               
+female           0.1852**                0.2912***             
+                (0.0567)                (0.0431)               
+indep            0.1671                  0.2149***             
+                (0.0916)                (0.0607)               
+otherpol        -0.0841                 -0.0350                
+                (0.2368)                (0.2079)               
+waveB           -0.0642    -0.0436      -0.0205      -0.0144   
+                (0.0566)   (0.0556)     (0.0433)     (0.0481)  
+prior_z                    -0.7340***                -0.3038***
+                           (0.0649)                  (0.0537)  
+_______________ __________ __________ ____________ ____________
+S.E. type       Hete.-rob. Hete.-rob. Hetero.-rob. Hetero.-rob.
+Observations           921        921          921          921
+R2                 0.14235    0.16479      0.22551      0.04341
+Adj. R2            0.13767    0.16297      0.22127      0.04133
+---
+Signif. codes: 0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+                     m5_1        m5_2       m5_6
+Dependent Var.: posterior posterior_z perc_index
+                                                
+T74             -12.95***  -0.6595***  0.4156***
+                 (0.5944)  (0.0303)   (0.0322)  
+_______________ _________ ___________ __________
+S.E. type       Het.-rob. Heter.-rob. Hete.-rob.
+Observations        3,022       3,022      3,031
+R2                0.31514     0.31514    0.19915
+Adj. R2           0.31012     0.31012    0.19329
+---
+Signif. codes: 0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+                    m5c_2      m5c_3        m5c_7
+Dependent Var.:      aa_z    legis_z policy_index
+                                                 
+posterior_z     -0.1707** -0.1766***     -0.0861*
+                (0.0527)  (0.0532)       (0.0382)
+_______________ _________ __________ ____________
+S.E. type       Het.-rob. Hete.-rob. Hetero.-rob.
+Observations        3,022      3,022        3,022
+R2                0.12479    0.10958      0.17781
+Adj. R2           0.11837    0.10305      0.17177
+---
+Signif. codes: 0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+                           m6
+Dependent Var.: fu_perc_index
+                             
+T74                 0.1556***
+                   (0.0449)  
+_______________ _____________
+S.E. type       Heteros.-rob.
+Observations            1,105
+R2                    0.15913
+Adj. R2               0.14203
+---
+Signif. codes: 0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+RESULT:perception_index_democrat_table3_panelA_col4=0.691680
+RESULT:perception_index_female_table3_panelA_col4=0.185238
+RESULT:perception_index_prior_table3_panelB_col4=-0.733978
+RESULT:n_obs_table3=921.000000
+RESULT:policy_demand_index_democrat_table4_panelA_col7=0.669064
+RESULT:policy_demand_index_prior_table4_panelB_col7=-0.303753
+RESULT:first_stage_posterior_raw_t74_table5_panelA_col1=-12.950173
+RESULT:first_stage_posterior_z_t74_table5_panelA_col2=-0.659462
+RESULT:perception_index_t74_table5_panelA_col6=0.415603
+RESULT:iv_affirmative_action_posterior_table5_panelC_col2=-0.170720
+RESULT:iv_equal_pay_legislation_posterior_table5_panelC_col3=-0.176561
+RESULT:iv_policy_demand_index_posterior_table5_panelC_col7=-0.086099
+RESULT:followup_perception_index_t74_table6_panelA_col7=0.155612

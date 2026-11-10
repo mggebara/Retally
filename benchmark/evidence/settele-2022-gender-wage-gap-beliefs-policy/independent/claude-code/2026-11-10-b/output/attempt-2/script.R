@@ -1,0 +1,30 @@
+suppressMessages({library(haven); library(dplyr)})
+M <- "<repo>/benchmark/.cache/claude-code/settele-2022-gender-wage-gap-beliefs-policy/independent/2026-11-10-b/mount/settele_2022_gender_wage_gap_beliefs_policy/data/"
+num <- function(x) suppressWarnings(as.numeric(sub("^A", "", x)))
+A <- read_dta(paste0(M,"SurveyStageI_WaveA_raw.dta")); B <- read_dta(paste0(M,"SurveyStageI_WaveB_raw.dta"))
+A2 <- read_dta(paste0(M,"SurveyStageII_WaveA_raw.dta")); B2 <- read_dta(paste0(M,"SurveyStageII_WaveB_raw.dta"))
+for (w in c("A","B")) {
+  d <- if (w=="A") A else B; d2 <- if (w=="A") A2 else B2
+  cat("######## wave", w, "\n")
+  print(table(RAND0=d$RAND0, RAND=d$RAND))
+  print(table(RAND0=d$RAND0, inc=is.na(d$elicitbgendeMarc)))
+  d$prior <- ifelse(is.na(d$elicitbgendeMarc), d$elicitbgendernoinMar, d$elicitbgendeMarc)
+  print(summary(d$prior))
+  pv <- if (w=="A") c("extrayoung","extraHSS","extraoccuu") else c("extrasame","extrachild")
+  for (v in pv) { cat(v, "\n"); print(summary(d[[v]])); print(table(RAND3=d$RAND3, nonNA=!is.na(d[[v]]))) }
+  cat("n posterior nonNA:", sum(rowSums(!is.na(as.data.frame(d[,pv])))>0), " by RAND:\n"); print(table(d$RAND, rowSums(!is.na(as.data.frame(d[,pv])))))
+  m <- inner_join(d, d2, by="panelID", suffix=c("",".f"))
+  cat("merged", nrow(m), "\n")
+  print(table(RAND=m$RAND, rand=m$rand))
+  cat("prior equal:", mean(m$prior==m$prior.f), "\n")
+  print(table(region=m$region, mw=m$midwest, s=m$south, west=m$west))
+  print(table(age=m$agebracket, a1=m$age1, a2=m$age2)); print(table(age=m$agebracket, a3=m$age3, a4=m$age4))
+  print(table(dem=m$demrep, democ=m$democrat, ind=m$indep, oth=m$otherpol))
+  print(table(emp=m$employment, ft=m$fulltime, pt=m$parttime)); print(table(emp=m$employment, se=m$selfemp, un=m$unemployed, st=m$student))
+  print(table(edu=m$demo1, ass=m$associatemore))
+  print(table(inc=m$hhincbracket, round(m$loghhinc,3)))
+  print(table(c1=m$childrenSQ001, c2=m$childrenSQ002, any=m$anychildren))
+  print(table(g=m$gender, gf=as.numeric(m$gender.f)))
+  print(table(age=m$agebracket, g=m$gender, pw=round(m$pweight,4)))
+  print(table(m$demrepother[m$demrep=="-oth-"] ))
+}

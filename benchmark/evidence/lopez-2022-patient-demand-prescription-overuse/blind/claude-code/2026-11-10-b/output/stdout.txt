@@ -1,0 +1,39 @@
+Candidate controls: main 23  interactions 249  clinic dummies 59  total 331 
+Clinic-survey patients: 2753  clinics: 60  dates: 36 
+[used_vouchers_admin] N=2753, p=331; selected: y=1, PV=1, DV=1, union=3
+   selected controls: CL9 CL33 CL51 
+   beta_P = 0.2948 (se 0.0291)   beta_D = 0.2135 (se 0.0228)   p(bP=bD) = 0.008   N = 2753
+   (no-controls ref: beta_P = 0.2996, beta_D = 0.2177)
+[RXtreat_sev_simple_mal] N=2429, p=331; selected: y=11, PV=3, DV=3, union=17
+   selected controls: CC1 CC5 CC7 CC9 CC1xCC19 CC1xCC31 CC3xCC9 CC9xCC25 CC9xCC31 CC9xCC41 CC13xCC31 CL5 CL33 CL47 CL49 CL51 CL54 
+   beta_P = 0.0537 (se 0.0254)   beta_D = 0.0259 (se 0.0248)   p(bP=bD) = 0.178   N = 2429
+   (no-controls ref: beta_P = 0.0718, beta_D = 0.0307)
+[treat_sev_simple_mal] N=2429, p=331; selected: y=9, PV=3, DV=3, union=15
+   selected controls: CC1 CC5 CC9 CC1xCC5 CC1xCC19 CC5xCC31 CC9xCC25 CC23xCC35 CC31xCC41 CL5 CL33 CL47 CL49 CL51 CL54 
+   beta_P = 0.1238 (se 0.0276)   beta_D = 0.0761 (se 0.0251)   p(bP=bD) = 0.051   N = 2429
+   (no-controls ref: beta_P = 0.1415, beta_D = 0.0870)
+[RXtreat_severe_mal] N=2429, p=331; selected: y=10, PV=3, DV=3, union=16
+   selected controls: CC5 CC23 CC1xCC3 CC1xCC5 CC1xCC9 CC1xCC31 CC3xCC9 CC5xCC7 CC9xCC25 CC9xCC41 CL5 CL33 CL47 CL49 CL51 CL54 
+   beta_P = -0.0359 (se 0.0180)   beta_D = -0.0506 (se 0.0195)   p(bP=bD) = 0.479   N = 2429
+   (no-controls ref: beta_P = -0.0231, beta_D = -0.0482)
+[treat_severe_mal] N=2429, p=331; selected: y=11, PV=3, DV=3, union=17
+   selected controls: CC5 CC9 CC23 CC1xCC5 CC1xCC9 CC3xCC9 CC5xCC25 CC5xCC31 CC9xCC25 CC9xCC41 CC23xCC35 CL5 CL33 CL47 CL49 CL51 CL54 
+   beta_P = -0.0156 (se 0.0202)   beta_D = -0.0466 (se 0.0193)   p(bP=bD) = 0.121   N = 2429
+   (no-controls ref: beta_P = -0.0062, beta_D = -0.0430)
+Control mean col1 (used_vouchers_admin): 0.0000
+Control mean col2 (RXtreat_sev_simple_mal): 0.5254
+Control mean col3 (treat_sev_simple_mal): 0.3957
+Control mean col4 (RXtreat_severe_mal): 0.2580
+Control mean col5 (treat_severe_mal): 0.2179
+RESULT:voucher_used_patient_voucher_table3_col1=0.294839
+RESULT:voucher_used_doctor_voucher_table3_col1=0.213482
+RESULT:any_malaria_treatment_prescribed_patient_voucher_table3_col2=0.053725
+RESULT:any_malaria_treatment_prescribed_doctor_voucher_table3_col2=0.025878
+RESULT:any_malaria_treatment_purchased_patient_voucher_table3_col3=0.123841
+RESULT:any_malaria_treatment_purchased_doctor_voucher_table3_col3=0.076115
+RESULT:severe_malaria_treatment_prescribed_patient_voucher_table3_col4=-0.035932
+RESULT:severe_malaria_treatment_prescribed_doctor_voucher_table3_col4=-0.050564
+RESULT:severe_malaria_treatment_purchased_patient_voucher_table3_col5=-0.015600
+RESULT:severe_malaria_treatment_purchased_doctor_voucher_table3_col5=-0.046596
+RESULT:n_obs_table3_col1=2753
+RESULT:n_obs_table3_cols2_5=2429

@@ -1,0 +1,20 @@
+{
+  "schema": 1,
+  "entry_id": "lopez-2022-patient-demand-prescription-overuse",
+  "mode": "independent",
+  "run_id": "2026-11-10-c",
+  "reproducer": "claude-code",
+  "language": "r",
+  "final": {"script": "script.R", "stdout": "stdout.txt", "stderr": "stderr.txt", "exit_code": 0},
+  "attempts": [
+    {"dir": "attempt-1", "exit_code": 0, "kind": ""},
+    {"dir": "attempt-2", "exit_code": 0, "kind": ""}
+  ],
+  "deviations": [
+    "glmnet/lassopack are not available, so the post-double-selection lasso is a hand-written rigorous (plug-in) lasso in the style of Stata's lassopack rlasso/pdslasso: coordinate descent, cluster-robust (clinic) penalty loadings iterated on post-lasso residuals (initialised from OLS on the 5 most correlated regressors), lambda = 2*1.1*sqrt(N)*qnorm(1-gamma/(2p)), gamma = 0.1/log(N_clusters). The exact Stata penalty settings used by the authors are not stated in the paper, so selected controls may differ slightly from theirs."
+  ],
+  "notes": "Sample: dropme==0 in LSS_analysis_datasets_20201108.dta (2055 in-clinic interviews; 2053 with prescription/purchase outcomes). Outcomes: used_vouchers_admin, RXtreat_sev_simple_mal, treat_sev_simple_mal, RXtreat_severe_mal, treat_severe_mal (control-group means match Table 3 exactly: 0.616/0.461/0.303/0.255). Treatments: patient_voucher, doctor_voucher (PI cross-cut not controlled, as in eq. 1). Candidate controls: the dataset's pre-built CC* individual controls (missings mean-coded plus missing dummies), their pairwise CCxCC interactions, and CL* clinic dummies (331 in all). Date FE (date_morning_survey) partialled out before the lasso; lasso run for the outcome, PV and DV separately and the union of selected controls used in an OLS with date FE and clinic-clustered SEs (fixest). Attempts 1-2 were exploratory (variable listing, sample counts), no RESULT lines. The first estimating run (final) matched all claims to reported precision except severe-prescribed PV (-0.0448 vs -0.046); no claim-driven changes were made. No run hung.",
+  "files_read_outside_mount": [],
+  "started_at": "2026-11-10T06:44:38Z",
+  "finished_at": "2026-11-10T06:48:19Z"
+}

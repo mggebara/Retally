@@ -1,0 +1,29 @@
+{
+  "schema": 1,
+  "entry_id": "ambuehl-2022-deliberative-competence-financial-choice",
+  "mode": "blind",
+  "run_id": "2026-11-10-a",
+  "reproducer": "claude-code",
+  "language": "r",
+  "final": {"script": "script.R", "stdout": "stdout.txt", "stderr": "stderr.txt", "exit_code": 0},
+  "attempts": [
+    {"dir": "attempt-1", "exit_code": 0, "kind": ""},
+    {"dir": "attempt-2", "exit_code": 1, "kind": ""},
+    {"dir": "attempt-3", "exit_code": 0, "kind": ""},
+    {"dir": "attempt-4", "exit_code": 0, "kind": ""},
+    {"dir": "attempt-5", "exit_code": 0, "kind": ""},
+    {"dir": "attempt-6", "exit_code": 0, "kind": ""}
+  ],
+  "deviations": [
+    "Exp A condition labels are not stored in the data (the 'treatment' field is 0/1 in every batch). Batches 1,2,4,5 were coded Treatment(1)/Control(0) and batches 3,6,7,8 SubstanceOnly(1)/RhetoricOnly(0), based on the video attention-check words, video durations and the rule-of-72 self-report (the Rhetoric-Only video omits the rule of 72; its viewers mostly report not knowing it).",
+    "Multiple switching: a subject is excluded if any first price list is non-monotone (more than one switch, or a right-to-left switch), or any second price list is non-monotone when the first list had an interior switch (second lists after an all-left or all-right first list have amounts outside $0-$20 and are disregarded for this check). This gives 53 of 401 in Exp B (paper: 53) and 51 of 504 in Exp A (paper: 49), so the Exp A Substance/Rhetoric arms hold 2 more excluded subjects than the paper's sample (Table 7 col 1 N = 4530, not 455 subjects x 10).",
+    "Valuation = midpoint of the $0.20 interval: (2*s - 2) + 0.2*(# future choices in list 2) - 0.1, where s = # future choices in list 1; applied mechanically also when s = 0 or 11 (giving values just below $0 or above $20).",
+    "Normalization uses the nominal future reward R of Table 2 (20/18/16/14/12) for both frames; complex tasks matched to their simple twin by (R, delay).",
+    "Exp B control-module answer key built from content (GM & Microsoft; 0.7; stocks; stocks; 1) because the Qualtrics score field in Exp B uses the Exp A control key; compounding and Exp A control keys match the Qualtrics score field. An unanswered question counts as wrong.",
+    "One worker appears twice in Exp B; only the first participation is kept (401 completed, as in the paper). The Exp A duplicate is a multiple switcher both times and is excluded."
+  ],
+  "notes": "Built everything from the raw Qualtrics CSVs (no authors' code or tables available/opened). Completed = all 20 iterated price lists answered and the test reached (A: 504, B: 402 rows -> 401 after dropping the duplicate). Price-list coding: list 1 columns run $20 (j=1) to $0 (j=11), 0 = immediate amount, 1 = future reward; list 2 column j shows x + 0.2*(12-j) with x = 2*switch - 2 (taken from the Exp B column labels). Test scores: number correct on test1-5 (compound interest) and test6-10 (control module). Table 4: lm(score ~ treat), one obs per subject. Table 7: deliberative competence = -|100*v_c/R - 100*v_s/R| per subject x (R, delay) pair, feols(dc ~ 0 + condition, cluster = subject). Six exploratory runs (attempt-1..6) inspected variables, coding and sample counts and printed no RESULT lines; attempt-2 crashed on duplicated column names during exploration. The final run is the first and only scored run; no runs hung (each took under 10 s).",
+  "files_read_outside_mount": [],
+  "started_at": "2026-11-10T06:47:48Z",
+  "finished_at": "2026-11-10T06:58:30Z"
+}

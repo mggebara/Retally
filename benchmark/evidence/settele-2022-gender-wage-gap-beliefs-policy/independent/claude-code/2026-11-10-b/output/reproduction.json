@@ -1,0 +1,24 @@
+{
+  "schema": 1,
+  "entry_id": "settele-2022-gender-wage-gap-beliefs-policy",
+  "mode": "independent",
+  "run_id": "2026-11-10-b",
+  "reproducer": "claude-code",
+  "language": "r",
+  "final": {"script": "script.R", "stdout": "stdout.txt", "stderr": "stderr.txt", "exit_code": 0},
+  "attempts": [
+    {"dir": "attempt-1", "exit_code": 0, "kind": ""},
+    {"dir": "attempt-2", "exit_code": 0, "kind": ""},
+    {"dir": "attempt-3", "exit_code": 0, "kind": ""},
+    {"dir": "attempt-4", "exit_code": 0, "kind": "claim"},
+    {"dir": "attempt-5", "exit_code": 0, "kind": "claim"}
+  ],
+  "deviations": [
+    "The z-scored posterior belief (Table 5 Panel A col 2 and the 2SLS regressor in Panel C) is standardized with the mean and SD of the treatment-arm sample, pooled across the five posterior-statistic versions. The paper does not say which reference sample it uses for this variable; this choice was made after two claim comparisons (pure-control pooled SD, then pure-control SD by statistic version, both gave about -0.59 instead of -0.658).",
+    "In the policy demand index, wage transparency (wave A) and the reporting website (wave B) enter as one item, each z-scored on its own wave's pure control group, because no respondent answered both."
+  ],
+  "notes": "Analysis data were built from the raw LimeSurvey exports (SurveyStageI_WaveA/B_raw.dta for the main survey, SurveyStageII_WaveA/B_raw.dta for the follow-up). The survey .lss files (survey structure, not code) were used to decode answer codes. Treatment: RAND0 1-4 = ACS/$74 (T74), 5-8 = CPS/$94 (T94), 9+ = pure control; this matches RAND 1/2/0. Prior = elicitbgendeMarc or elicitbgendernoinMar (incentivized or not). Controls (region, age brackets, employment, 2-year college+, log household income, children, party groups) were coded from Stage I and checked against the constructed variables in the Stage II files; they match exactly. Probability weights follow Appendix G.1 (wave B: ages 18-24 F 0.6298 / M 1.4615, ages 55-65 F 0.8691 / M 1.0184; all others 1). Tables 3/4 sample: pure control group with prior strictly between its 5th and 95th percentiles (50 and 113), N=921. Outcomes are z-scored on the pure control group (main survey) or on the full follow-up sample (Table 6). The Anderson (2008) indices are inverse-covariance-weighted averages of the standardized items and are not re-standardized. They use the covariance over the full main sample (main survey) or the full follow-up sample. All regressions are weighted OLS/2SLS with heteroskedasticity-robust SEs (fixest). Table 5/6 controls are as listed in the paper's Table 5 notes. Exploratory runs (attempts 1-3) inspected variables, crosswalks and the trimming rule's row counts. No run hung.",
+  "files_read_outside_mount": [],
+  "started_at": "2026-11-10T06:21:16Z",
+  "finished_at": "2026-11-10T06:28:00Z"
+}

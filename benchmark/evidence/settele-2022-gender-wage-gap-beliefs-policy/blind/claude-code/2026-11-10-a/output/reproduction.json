@@ -1,0 +1,26 @@
+{
+  "schema": 1,
+  "entry_id": "settele-2022-gender-wage-gap-beliefs-policy",
+  "mode": "blind",
+  "run_id": "2026-11-10-a",
+  "reproducer": "claude-code",
+  "language": "r",
+  "final": {"script": "script.R", "stdout": "stdout.txt", "stderr": "stderr.txt", "exit_code": 0},
+  "attempts": [
+    {"dir": "attempt-1", "exit_code": 1, "kind": ""},
+    {"dir": "attempt-2", "exit_code": 0, "kind": ""},
+    {"dir": "attempt-3", "exit_code": 0, "kind": ""},
+    {"dir": "attempt-4", "exit_code": 0, "kind": ""}
+  ],
+  "deviations": [
+    "Table 3/4 sample trimmed at the 5th/95th percentiles of the full main-survey prior distribution (50 and 116, strict inequalities), which are the cutoffs stated in the paper's Appendix G; the task context describes the control group's own percentiles (which would be 50 and 113).",
+    "Policy demand index: wage transparency (wave A only) and the reporting website (wave B only) are never observed for the same respondent, so their covariance is unidentified; they enter the Anderson index through one wave-specific slot (each z-scored on its own wave's pure control group), giving a 5-slot inverse-covariance weighted index.",
+    "Anderson (2008) indices: items z-scored on the pure control group (follow-up: full follow-up sample), weights = row sums of the inverse covariance matrix estimated on the whole main (resp. follow-up) sample, weighted mean over non-missing items, then re-standardised on the pure control group (resp. full follow-up sample). Z-scoring and covariance are unweighted.",
+    "Prior and posterior z-scored with the mean/sd of the full (untrimmed) pure control group; the posterior pools the five randomized statistic versions without version dummies (Table 5 notes list none).",
+    "Table 5/6 controls: female, census region dummies, four age-group dummies (55-65 omitted), any children, log household income (bracket values taken from the cleaned follow-up files), 2-year college degree+, full-time, part-time, self-employed, unemployed, student, raw prior, wave B, Democrat, Independent, other political orientation. Probability weights as in Appendix G (wave B age 18-24 and 55-65 by gender); HC1 robust SEs; 2SLS via fixest."
+  ],
+  "notes": "All variables were built from the raw LimeSurvey exports (SurveyStageI_Wave{A,B}_raw.dta) with answer codes decoded from the survey .lss definitions in the mount; treatment arm from RAND (1 = $74/ACS, 2 = $94/CPS, 0 = pure control), giving 3,031 treated, 1,034 control, 1,105 follow-up respondents. Covariate codings and the probability weights were checked against the cleaned covariates in the follow-up files (all matched). Follow-up wave B items: wageproblem2 swaps the high/low-skilled sub-items, handled. attempt-1..3 were exploratory (variable listing, .lss decoding, covariate validation; attempt-1 crashed on a labelled-vector comparison, no RESULT lines). attempt-4 printed results with a pairwise-covariance policy index that set the unidentified transparency/website covariance to zero; this gave degenerate index weights (equal pay legislation weight 0.015 vs transparency 0.83), so on methodological grounds alone (no comparison with any paper value) the final run uses the single-slot construction. Only policy-index quantities changed between attempt-4 and the final run. While reading the paper text for methods I saw non-target numbers in Tables 2-4 (e.g. columns 1-3 of Table 3) and the Appendix G cutoffs (50/116); none was used to tune any estimate. Read Me.pdf and output/Display_Output.tex were not opened. No host R was run; all runs took about 2 s, no hangs.",
+  "files_read_outside_mount": [],
+  "started_at": "2026-11-10T06:21:18Z",
+  "finished_at": "2026-11-10T06:27:30Z"
+}

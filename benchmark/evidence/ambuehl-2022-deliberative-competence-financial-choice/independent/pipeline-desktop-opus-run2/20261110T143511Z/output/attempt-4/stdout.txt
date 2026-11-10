@@ -1,0 +1,48 @@
+==== Exp A: 746 rows, 671 cols (0 loop-prefixed) ====
+Non-loop name patterns: iMPL#_#_#: #:420 time#-#_#:80 switch#:20 T#:20 Q#:17 TimeInstr#_#:12 test#:10 V#:10 Q#_#:8 FinLit#:5 P_test_#:4 time_demog_#:4 time#_#:4 TimeContro_#:4 TImeFinLit_#:4 TimeTreat_#:4 SC#_#:3 amt#:2 line#:2 X_#:2 age:1 amt_id:1 attention:1 attn_video:1 batch_file:1 calculate:1 code treat:1 codeWC:1 codeWT:1 consent:1 decision_index:1 educ:1 employed:1 ethnicity:1 excluded:1 gender:1 help_test:1 hh_size:1 income:1 info:1 LocationAccuracy:1 LocationLatitude:1 LocationLongitude:1 marital:1 one:1 P#:1 payment_for_test:1 payment_test:1 rule#:1 rule#_inv:1 stocks:1 suggestion:1 tech_diffi:1 test_payment:1 treatment:1 urban:1 
+Loop iter 1: none 
+Rows: any test answer 504; all 10 answers 503; finished & any answer 489
+DEVIATION: sample defined by having answered the test (no Qualtrics 'Finished' filter)
+Arm column candidates: 'treatment'=2 'code treat'=5 
+Arm column: code treat values: Interest:82 Compounding:63 compounding:57 interest:57 Interest (or stock, ~:1 
+Cross-tab with 'treatment':                 |                  0  1 |   compounding    0 57 |   Compounding    0 63 |   interest       0 57 |   Interest       0 82 |   Interest (or~  0  1 
+Answer-profile distinctness by code: compounding:0.90 Compounding:0.67 interest:0.90 Interest:0.71 
+DEVIATION: Experiment A arm codes are unlabeled; Control = code with the most distinct test-answer profile, remaining codes mapped in code order to Treatment, Substance-Only, Rhetoric-Only
+Code -> arm: interest=Control compounding=Treatment Compounding=Substance Interest=Rhetoric 
+Item keys: t1=2(-0.04) t2=4(+0.07) t3=4(+0.16) t4=7(+0.02) t5=6(+0.26) t6=3(+0.28) t7=3(-0.05) t8=2(+0.04) t9=1(-0.16) t10=2(+0.04) 
+Compound-interest items: 2,3,5,6,8 
+cor(our total, SC0_0) = 0.746
+MPL lists found per loop iteration: 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 
+Column excluded : A2YBZFSUD5OP~:151 A10YUF81V3PW~:122 amt_id / "A1~:112 A1T2VMIY43RT~:99 NA:20 
+Exclusion flag shares: excluded:0.961 
+Analysis sample N = 259 : Control=57 Rhetoric=82 Substance=63 Treatment=57 
+==== Exp B: 686 rows, 780 cols (0 loop-prefixed) ====
+Non-loop name patterns: iMPL#-###_iMPL#-#_#:420 Q#_#_#_RANK:36 Q#_#_GROUP_#:36 switch#:20 T#:20 time#-#_Click Count:20 time#-#_First Click:20 time#-#_Last Click:20 time#-#_Page Submit:20 Q#:19 Q#_Click Count:12 Q#_First Click:12 Q#_Last Click:12 Q#_Page Submit:12 test#:10 FinLit#:5 exclude#:4 TimeInstr#_Click Count:3 TimeInstr#_First Click:3 TimeInstr#_Last Click:3 TimeInstr#_Page Submit:3 amt#:2 line#:2 age:1 amt_id:1 attention:1 attn_video:1 batch_file:1 calculate:1 codeWC:1 codeWT:1 decision_index:1 DistributionChannel:1 Duration (in seconds):1 educ:1 employed:1 EndDate:1 ethnicity:1 ExternalReference:1 Finished:1 gender:1 help_test:1 hh_size:1 income:1 IPAddress:1 LocationLatitude:1 LocationLongitude:1 marital:1 one:1 P_test_Click Count:1 P_test_First Click:1 P_test_Last Click:1 P_test_Page Submit:1 payment_for_test:1 payment_test:1 Progress:1 RecipientEmail:1 RecipientFirstName:1 RecipientLastName:1 RecordedDate:1 ResponseId:1 rule#:1 rule#_inv:1 SC#:1 StartDate:1 Status:1 stocks:1 suggestion:1 tech_diffi:1 test_payment:1 time_demog_Click Count:1 time_demog_First Click:1 time_demog_Last Click:1 time_de 
+Loop iter 1: none 
+Rows: any test answer 402; all 10 answers 402; finished & any answer 393
+DEVIATION: sample defined by having answered the test (no Qualtrics 'Finished' filter)
+Arm column candidates: 'treatment'=2 
+Arm column: treatment values: 0:201 1:201 
+Binary 0/1 treatment indicator: 0 = Control, 1 = Treatment
+Item keys: t1=2(+0.51) t2=4(+0.66) t3=4(+0.01) t4=7(-0.07) t5=6(+0.36) t6=4(-0.17) t7=3(+0.09) t8=5(-0.01) t9=5(-0.02) t10=3(+0.04) 
+Compound-interest items: 1,2,5,7,10 
+cor(our total, SC0) = 0.673
+MPL lists found per loop iteration: 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 
+Column exclude2 : A1T2VMIY43RT~:402 
+Column exclude3 : A1102MP1CZI3~:402 
+Column exclude4 : A2OVWCQ4B9AH~:402 
+Column exclude5 : A2I6ZS386UJV~:402 
+Exclusion flag shares: exclude2:1.000 exclude3:1.000 exclude4:1.000 exclude5:1.000 any_exclude:1.000 
+Analysis sample N = 402 : Control=201 Treatment=201 
+
+==== SUMMARY ====
+[A] N=259 excl=none | T4 comp 0.807 (0.260) ctrl -0.193 N=114 | DC  N=NA
+[A iter1] none
+[B] N=402 excl=none | T4 comp 1.662 (0.110) ctrl -0.264 N=402 | DC  N=NA
+[B iter1] none
+RESULT:test_score_compounding_treatment_minus_control_expA_table4_col1=0.8070175439
+RESULT:test_score_control_module_treatment_minus_control_expA_table4_col3=-0.1929824561
+RESULT:n_obs_table4_expA_cols1_3=114
+RESULT:test_score_compounding_treatment_minus_control_expB_table4_col2=1.661691542
+RESULT:test_score_control_module_treatment_minus_control_expB_table4_col4=-0.263681592
+RESULT:n_obs_table4_expB_cols2_4=402

@@ -1,0 +1,22 @@
+{
+  "schema": 1,
+  "entry_id": "lopez-2022-patient-demand-prescription-overuse",
+  "mode": "blind",
+  "run_id": "2026-11-10-c",
+  "reproducer": "claude-code",
+  "language": "r",
+  "final": {"script": "script.R", "stdout": "stdout.txt", "stderr": "stderr.txt", "exit_code": 0},
+  "attempts": [
+    {"dir": "attempt-1", "exit_code": 0, "kind": ""},
+    {"dir": "attempt-2", "exit_code": 0, "kind": ""}
+  ],
+  "deviations": [
+    "Post-double-selection lasso implemented by hand (glmnet/hdm/lassopack unavailable): rigorous plug-in lasso following lassopack rlasso defaults as I understand them -- cluster-robust penalty loadings by clinic (psi_j = sqrt((1/N) sum_g (sum_{i in g} x_ij e_i)^2)), lambda = 2*1.1*sqrt(N)*qnorm(1 - gamma/(2p)) with gamma = 0.1/log(number of clusters), initial residuals from OLS on the 5 most correlated regressors, 2 loading iterations using post-lasso residuals. The authors' exact lasso implementation (pdslasso vs Stata dsregress, heteroskedastic vs cluster loadings, gamma) is not stated in the paper, so selected controls may differ.",
+    "Candidate controls taken as the analysis file's prebuilt CC* variables (23 individual controls with missing values mean-recoded plus missing dummies, and their 249 pairwise interactions) and CL* clinic dummies (59); date dummies (DD*, plus constant) partialled out of all variables before the lassos and always included; final OLS with date fixed effects (date_morning_survey) and clinic-clustered SEs via fixest.",
+    "Treatment dummies are patient_voucher and doctor_voucher (scheduled assignment) as in the analysis file; PI (information) cross-cut not controlled, pooled across arms as the paper's equation (1) describes."
+  ],
+  "notes": "Sample: rows with patient==1 (in-clinic survey patients, N=2753) for column 1 (outcome used_vouchers_admin, voucher redemption from admin records); columns 2-5 use the 2429 patients with prescription/purchase outcomes recorded (RXtreat_sev_simple_mal, treat_sev_simple_mal, RXtreat_severe_mal, treat_severe_mal). For each outcome, rlasso of y, patient_voucher and doctor_voucher on candidates; union of selections enters the final regression. Two exploratory runs (variable listing, sample/coding checks) printed no RESULT lines. The printed 'p(bP=bD)' diagnostic in stdout is actually fixest's joint Wald p-value for bP=bD=0 (mislabelled, not a scored quantity); the separate 't-test bP=bD' line is the equality test. No run hung.",
+  "files_read_outside_mount": [],
+  "started_at": "2026-11-10T06:44:38Z",
+  "finished_at": "2026-11-10T06:49:00Z"
+}

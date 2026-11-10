@@ -1,0 +1,518 @@
+You are fixing R code that was generated to reproduce results from an econometrics paper.
+
+## Original Code
+```r
+suppressPackageStartupMessages({
+  library(haven)
+  library(dplyr)
+  library(fixest)
+})
+set.seed(42)
+options(width = 200)
+
+root <- "<repo>/.cache/datasets/settele_2022_gender_wage_gap_beliefs_policy.script-free"
+dd <- file.path(root, "data")
+A  <- read_dta(file.path(dd, "SurveyStageI_WaveA_raw.dta"))
+B  <- read_dta(file.path(dd, "SurveyStageI_WaveB_raw.dta"))
+FA <- read_dta(file.path(dd, "SurveyStageII_WaveA_raw.dta"))
+FB <- read_dta(file.path(dd, "SurveyStageII_WaveB_raw.dta"))
+
+cat("== Stage I Wave A names ==\n"); print(names(A))
+cat("== Stage I Wave B names ==\n"); print(names(B))
+cat("== Stage II Wave A names ==\n"); print(names(FA))
+cat("== Stage II Wave B names ==\n"); print(names(FB))
+
+# ---------------------------------------------------------------- helpers
+vlab <- function(x) { l <- attr(x, "label"); if (is.null(l)) "" else as.character(l)[1] }
+
+tonum <- function(x) {
+  if (is.null(x)) return(NULL)
+  if (is.numeric(x)) return(as.numeric(zap_labels(x)))
+  s <- as.character(x); s[trimws(s) == ""] <- NA
+  v <- suppressWarnings(as.numeric(s))
+  if (all(is.na(v[!is.na(s)]))) v <- suppressWarnings(as.numeric(gsub("[^0-9.\\-]", "", s)))
+  v
+}
+
+labtext <- function(x) {
+  if (inherits(x, "haven_labelled")) as.character(as_factor(x, levels = "default"))
+  else as.character(x)
+}
+
+EXCL <- "time$|anchor|order$|calculation|summary"
+findv <- function(df, exact = character(0), regex = character(0), labregex = character(0), exclude = EXCL) {
+  nm <- names(df); lnm <- tolower(nm)
+  for (e in exact) { i <- which(lnm == tolower(e)); if (length(i)) return(nm[i[1]]) }
+  ok <- !grepl(exclude, nm, ignore.case = TRUE)
+  for (r in regex) { i <- which(ok & grepl(r, nm, ignore.case = TRUE)); if (length(i)) return(nm[i[1]]) }
+  if (length(labregex)) {
+    labs <- vapply(df, vlab, "")
+    for (r in labregex) { i <- which(ok & grepl(r, labs, ignore.case = TRUE)); if (length(i)) return(nm[i[1]]) }
+  }
+  NA_character_
+}
+
+describe <- function(df, v, tag = "") {
+  if (is.na(v)) { cat(sprintf("[%s] NOT FOUND\n", tag)); return(invisible()) }
+  x <- df[[v]]
+  cat(sprintf("[%s] -> %s | label: %s\n", tag, v, vlab(x)))
+  lb <- attr(x, "labels"); if (!is.null(lb)) { cat("  value labels: "); cat(paste(lb, names(lb), sep = "=", collapse = "; "), "\n") }
+  u <- unique(x)
+  if (length(u) <= 15) print(table(labtext(x), useNA = "ifany")) else print(summary(tonum(x)))
+}
+
+likert <- function(x) {
+  if (is.null(x)) return(NULL)
+  v <- tonum(x)
+  lb <- attr(x, "labels")
+  if (!is.null(lb) && length(lb) > 1) {
+    dk <- lb[grepl("know|prefer|no answer|n/a|not sure", names(lb), ignore.case = TRUE)]
+    if (length(dk)) v[v %in% as.numeric(dk)] <- NA
+    lb2 <- lb[!lb %in% dk]
+    if (length(lb2) > 1) {
+      lo <- names(lb2)[which.min(lb2)]
+      if (grepl("strongly agree|^agree|very large|large|definitely|strongly support|much more|a lot", lo, ignore.case = TRUE) &&
+          !grepl("disagree|small|less|oppose|not ", lo, ignore.case = TRUE)) {
+        v <- max(as.numeric(lb2)) + min(as.numeric(lb2)) - v
+      }
+    }
+  }
+  v[!is.na(v) & (v >= 90 | v < 0)] <- NA
+  v
+}
+
+mkfemale <- function(x) {
+  if (is.null(x)) return(NULL)
+  lb <- attr(x, "labels")
+  if (!is.null(lb)) {
+    fl <- lb[grepl("female|woman|^f$", names(lb), ignore.case = TRUE)]
+    if (length(fl)) { v <- as.numeric(zap_labels(x)); return(ifelse(is.na(v), NA, as.numeric(v %in% as.numeric(fl)))) }
+  }
+  if (is.character(x)) { s <- tolower(trimws(x)); return(ifelse(s == "" | is.na(s), NA, as.numeric(s %in% c("f", "female", "woman")))) }
+  v <- as.numeric(x); u <- sort(unique(na.omit(v)))
+  if (all(u %in% c(0, 1))) return(v)
+  if (all(u %in% c(1, 2))) return(as.numeric(v == 2))
+  v
+}
+
+dumlab <- function(x, pat, notpat = NULL) {
+  s <- labtext(x); r <- as.numeric(grepl(pat, s, ignore.case = TRUE))
+  if (!is.null(notpat)) r[grepl(notpat, s, ignore.case = TRUE)] <- 0
+  r[is.na(s) | s == ""] <- NA
+  r
+}
+
+zc <- function(x, ref) {
+  m <- mean(x[ref], na.rm = TRUE); s <- sd(x[ref], na.rm = TRUE)
+  (x - m) / s
+}
+
+anderson <- function(Z, ref) {
+  Z <- as.matrix(Z)
+  keep <- apply(Z, 2, function(c) sum(!is.na(c)) > 0)
+  Z <- Z[, keep, drop = FALSE]
+  Zr <- Z[ref, , drop = FALSE]; Zr <- Zr[complete.cases(Zr), , drop = FALSE]
+  w <- tryCatch(rowSums(solve(cov(Zr))), error = function(e) rep(1, ncol(Z)))
+  cat("  Anderson weights:", round(w, 3), "\n")
+  idx <- apply(Z, 1, function(z) { ok <- !is.na(z); if (!any(ok)) NA else sum(w[ok] * z[ok]) / sum(w[ok]) })
+  zc(idx, ref)
+}
+
+# ---------------------------------------------------------------- Stage I builder
+build <- function(df, wave) {
+  n <- nrow(df)
+  out <- data.frame(wave = rep(wave, n))
+  cat(sprintf("\n==== Building Stage I wave %s (n=%d) ====\n", ifelse(wave == 0, "A", "B"), n))
+  g <- function(...) findv(df, ...)
+
+  v <- g(exact = c("panelID", "panelid", "id", "token", "respid")); describe(df, NA, "id"); cat("  id var:", v, "\n")
+  out$id <- if (!is.na(v)) as.character(df[[v]]) else as.character(seq_len(n))
+
+  v <- g(exact = c("pweight", "weight", "pw", "weights")); cat("  weight var:", v, "\n")
+  out$pw <- if (!is.na(v)) tonum(df[[v]]) else 1
+
+  v <- g(exact = c("prior"), regex = c("^prior$", "^prior")); describe(df, v, "prior")
+  out$prior <- if (!is.na(v)) tonum(df[[v]]) else NA
+
+  # posterior: pooled across versions
+  pc <- names(df)[grepl("^posterior", names(df), ignore.case = TRUE) &
+                    !grepl("time$|order|version|rand|check", names(df), ignore.case = TRUE)]
+  if (any(tolower(pc) == "posterior")) pc <- pc[tolower(pc) == "posterior"]
+  cat("  posterior columns:", pc, "\n")
+  post <- rep(NA_real_, n)
+  for (p in pc) { x <- tonum(df[[p]]); if (!is.null(x)) post <- ifelse(is.na(post), x, post) }
+  out$posterior <- post
+  print(summary(post))
+
+  # treatment
+  t74 <- g(exact = c("T74", "t74")); t94 <- g(exact = c("T94", "t94"))
+  out$tr <- NA; out$trlab <- NA
+  if (!is.na(t74)) {
+    a <- tonum(df[[t74]]); b <- if (!is.na(t94)) tonum(df[[t94]]) else NA
+    out$tr <- ifelse(a == 1, "T74", ifelse(!is.na(t94) & b == 1, "T94", "control"))
+    out$trlab <- out$tr
+    cat("  treatment from T74/T94 dummies\n")
+  } else {
+    v <- g(exact = c("treatment", "treat", "treatmentgroup", "group", "rand", "randomization", "condition", "treatgroup"),
+           regex = c("^treat", "^group"))
+    describe(df, v, "treatment")
+    if (!is.na(v)) { out$tr <- as.character(tonum(df[[v]])); out$trlab <- labtext(df[[v]])
+      if (all(is.na(out$tr))) out$tr <- as.character(df[[v]]) }
+  }
+  cg <- g(exact = c("controlgroupnote")); if (!is.na(cg)) { cat("  controlgroupnote nonmissing by tr:\n"); print(table(out$tr, !is.na(df[[cg]]) & as.character(df[[cg]]) != "")) }
+
+  # gender
+  v <- g(exact = c("female", "gender")); describe(df, v, "gender")
+  out$female <- if (!is.na(v)) mkfemale(df[[v]]) else NA
+
+  # politics
+  if (!is.na(g(exact = "democrat"))) {
+    out$democrat <- tonum(df[[g(exact = "democrat")]])
+    out$indep <- if (!is.na(g(exact = "indep"))) tonum(df[[g(exact = "indep")]]) else NA
+    out$otherpol <- if (!is.na(g(exact = "otherpol"))) tonum(df[[g(exact = "otherpol")]]) else NA
+    cat("  politics: processed dummies used\n")
+  } else {
+    v <- g(regex = c("^polit", "party", "partisan"), labregex = c("democrat", "politic"))
+    describe(df, v, "politics")
+    if (!is.na(v)) {
+      out$democrat <- dumlab(df[[v]], "democrat"); out$republican <- dumlab(df[[v]], "republican")
+      out$indep <- dumlab(df[[v]], "independent")
+      out$otherpol <- as.numeric(out$democrat == 0 & out$republican == 0 & out$indep == 0)
+    } else { out$democrat <- NA; out$indep <- NA; out$otherpol <- NA }
+  }
+
+  # region
+  if (!is.na(g(exact = "midwest"))) {
+    for (r in c("midwest", "south", "west")) out[[r]] <- tonum(df[[g(exact = r)]])
+  } else {
+    v <- g(exact = "region"); describe(df, v, "region")
+    if (!is.na(v)) { out$midwest <- dumlab(df[[v]], "midwest"); out$south <- dumlab(df[[v]], "south")
+      out$west <- dumlab(df[[v]], "west", "midwest") } else { out$midwest <- out$south <- out$west <- NA }
+  }
+
+  # age
+  if (!is.na(g(exact = "age1"))) {
+    for (k in 1:4) { vv <- g(exact = paste0("age", k)); out[[paste0("age", k)]] <- if (!is.na(vv)) tonum(df[[vv]]) else NA }
+  } else {
+    v <- g(exact = c("age")); describe(df, v, "age")
+    a <- if (!is.na(v)) tonum(df[[v]]) else rep(NA, n)
+    cats <- cut(a, c(-Inf, 24, 34, 44, 54, Inf))
+    for (k in 1:4) out[[paste0("age", k)]] <- as.numeric(as.integer(cats) == k)
+  }
+
+  # children
+  v <- g(exact = c("anychildren", "children", "anychild", "kids"))
+  out$anychildren <- if (!is.na(v)) { x <- tonum(df[[v]]); if (tolower(v) == "anychildren") x else as.numeric(x > 0) } else NA
+
+  # income
+  v <- g(exact = c("loghhinc"))
+  if (!is.na(v)) out$loghhinc <- tonum(df[[v]]) else {
+    v <- g(exact = c("hhincome")); describe(df, v, "hhincome")
+    if (!is.na(v)) {
+      s <- labtext(df[[v]])
+      mid <- sapply(s, function(z) { if (is.na(z)) return(NA); nums <- as.numeric(gsub(",", "", regmatches(z, gregexpr("[0-9][0-9,]*", z))[[1]])); if (!length(nums)) NA else mean(nums) })
+      out$loghhinc <- log(pmax(as.numeric(mid), 1))
+    } else out$loghhinc <- NA
+  }
+
+  # education
+  v <- g(exact = c("associatemore"))
+  if (!is.na(v)) out$associatemore <- tonum(df[[v]]) else {
+    v <- g(regex = c("^educ", "education"), labregex = c("education", "degree")); describe(df, v, "education")
+    out$associatemore <- if (!is.na(v)) dumlab(df[[v]], "associate|bachelor|master|doctor|professional|2-year|4-year|graduate", "high school|some college|less than") else NA
+  }
+
+  # employment
+  emp <- c("fulltime", "parttime", "selfemp", "unemployed", "student")
+  if (!is.na(g(exact = "fulltime"))) {
+    for (e in emp) { vv <- g(exact = e); out[[e]] <- if (!is.na(vv)) tonum(df[[vv]]) else NA }
+  } else {
+    v <- g(exact = "employment"); describe(df, v, "employment")
+    pats <- c(fulltime = "full", parttime = "part", selfemp = "self", unemployed = "unemploy", student = "student")
+    for (e in emp) out[[e]] <- if (!is.na(v)) dumlab(df[[v]], pats[[e]]) else NA
+  }
+
+  # outcomes
+  outc <- list(
+    large   = list(exact = c("wagegap", "large", "gaplarge"), regex = c("large"), lab = c("large")),
+    problem = list(exact = c("wageproblem", "problem"), regex = c("^wageproblem$", "problem"), lab = c("problem")),
+    govmore = list(exact = c("govwomen", "govmore", "government"), regex = c("^govwomen", "govmore", "^gov"), lab = c("government.*(more|effort|mitigat)")),
+    quota   = list(exact = c("quota", "quotas"), regex = c("^quota"), lab = c("quota")),
+    affirm  = list(exact = c("affirmative", "affirmativeaction", "aa"), regex = c("affirm"), lab = c("affirmative")),
+    legis   = list(exact = c("legislation"), regex = c("^legislation", "legislat"), lab = c("equal pay")),
+    transp  = list(exact = c("transparency"), regex = c("^transparency", "transparen"), lab = c("transparen")),
+    website = list(exact = c("website", "reportingwebsite"), regex = c("website", "reporting"), lab = c("website")),
+    childc  = list(exact = c("childcare"), regex = c("childcare", "child.?care", "daycare"), lab = c("child ?care"))
+  )
+  for (o in names(outc)) {
+    sp <- outc[[o]]
+    v <- g(exact = sp$exact, regex = sp$regex, labregex = sp$lab)
+    describe(df, v, o)
+    out[[o]] <- if (!is.na(v)) likert(df[[v]]) else NA_real_
+  }
+  out
+}
+
+S <- bind_rows(build(A, 0), build(B, 1))
+S$pw[is.na(S$pw)] <- 1
+
+# ---------------------------------------------------------------- treatment assignment
+cat("\n==== Treatment assignment ====\n")
+print(table(S$tr, S$wave, useNA = "ifany"))
+print(table(S$trlab, S$wave, useNA = "ifany"))
+S$group <- NA_character_
+if (all(na.omit(unique(S$tr)) %in% c("T74", "T94", "control"))) {
+  S$group <- S$tr
+} else {
+  lt <- S$trlab
+  if (any(grepl("74", lt)) && any(grepl("94", lt))) {
+    S$group <- ifelse(grepl("74", lt), "T74", ifelse(grepl("94", lt), "T94", "control"))
+    cat("  groups from value labels\n")
+  } else {
+    vals <- sort(unique(na.omit(S$tr)))
+    m <- sapply(vals, function(v) mean(S$posterior[S$tr == v & !is.na(S$tr)] - S$prior[S$tr == v & !is.na(S$tr)], na.rm = TRUE))
+    np <- sapply(vals, function(v) mean(!is.na(S$posterior[S$tr == v & !is.na(S$tr)])))
+    cat("  mean(posterior - prior) by tr value:\n"); print(data.frame(vals, m, share_post = np))
+    if (length(vals) == 3) {
+      ctrl_v <- if (any(is.nan(m) | np < 0.2)) vals[which(is.nan(m) | np < 0.2)[1]] else vals[order(m)][2]
+      rest <- setdiff(vals, ctrl_v)
+      t74v <- rest[which.min(m[match(rest, vals)])]
+      t94v <- setdiff(rest, t74v)
+      S$group <- ifelse(S$tr == ctrl_v, "control", ifelse(S$tr == t74v, "T74", ifelse(S$tr == t94v, "T94", NA)))
+    } else {
+      cat("  WARNING: could not identify three groups\n")
+    }
+  }
+}
+print(table(S$group, S$wave, useNA = "ifany"))
+S$T74 <- as.numeric(S$group == "T74")
+ctrl <- !is.na(S$group) & S$group == "control"
+cat("Mean prior/posterior by group:\n")
+print(S %>% group_by(group) %>% summarise(n = n(), prior = mean(prior, na.rm = TRUE), post = mean(posterior, na.rm = TRUE)))
+
+# ---------------------------------------------------------------- standardization & indices
+for (o in c("large", "problem", "govmore", "quota", "affirm", "legis", "childc")) S[[paste0(o, "_z")]] <- zc(S[[o]], ctrl)
+tz <- ifelse(S$wave == 0, zc(S$transp, ctrl & S$wave == 0), NA)
+wz <- ifelse(S$wave == 1, zc(S$website, ctrl & S$wave == 1), NA)
+S$transweb_z <- ifelse(S$wave == 0, tz, wz)
+if (all(is.na(S$transweb_z))) S$transweb_z <- NULL
+
+cat("Perception index:\n")
+S$perc_idx <- anderson(S[, c("large_z", "problem_z", "govmore_z")], ctrl)
+pol_items <- intersect(c("quota_z", "affirm_z", "legis_z", "transweb_z", "childc_z"), names(S))
+cat("Policy index items:", pol_items, "\n")
+S$pol_idx <- anderson(S[, pol_items], ctrl)
+S$prior_z <- zc(S$prior, ctrl)
+pref <- if (sum(!is.na(S$posterior[ctrl])) > 50) ctrl else (!ctrl & !is.na(S$group))
+S$post_z <- zc(S$posterior, pref)
+
+res <- list()
+safe <- function(expr) tryCatch(expr, error = function(e) { cat("ERROR:", conditionMessage(e), "\n"); NA_real_ })
+gc1 <- function(m, nm) { cf <- coef(m); if (nm %in% names(cf)) unname(cf[nm]) else NA_real_ }
+
+# ---------------------------------------------------------------- Table 3 / 4
+q <- quantile(S$prior[ctrl], c(0.05, 0.95), na.rm = TRUE, type = 2)
+cat("Control prior 5th/95th pct:", q, "\n")
+T3 <- S[ctrl & !is.na(S$prior) & S$prior > q[1] & S$prior < q[2], ]
+cat("Trimmed control N:", nrow(T3), "\n")
+res$n_obs_table3 <- nrow(T3)
+
+polA <- intersect(c("democrat", "female", "indep", "otherpol", "wave"), names(T3))
+polA <- polA[sapply(polA, function(v) sum(!is.na(T3[[v]])) > 0)]
+fA <- function(y) as.formula(paste(y, "~", paste(polA, collapse = " + ")))
+m3a <- safe(feols(fA("perc_idx"), data = T3, weights = ~pw, vcov = "hetero"))
+if (!is.na(m3a[1])) { print(summary(m3a)); res$perception_index_democrat_table3_panelA_col4 <- gc1(m3a, "democrat")
+  res$perception_index_female_table3_panelA_col4 <- gc1(m3a, "female") }
+m3b <- safe(feols(perc_idx ~ prior_z + wave, data = T3, weights = ~pw, vcov = "hetero"))
+if (!is.na(m3b[1])) { print(summary(m3b)); res$perception_index_prior_table3_panelB_col4 <- gc1(m3b, "prior_z") }
+m4a <- safe(feols(fA("pol_idx"), data = T3, weights = ~pw, vcov = "hetero"))
+if (!is.na(m4a[1])) { print(summary(m4a)); res$policy_demand_index_democrat_table4_panelA_col7 <- gc1(m4a, "democrat") }
+m4b <- safe(feols(pol_idx ~ prior_z + wave, data = T3, weights = ~pw, vcov = "hetero"))
+if (!is.na(m4b[1])) { print(summary(m4b)); res$policy_demand_index_prior_table4_panelB_col7 <- gc1(m4b, "prior_z") }
+
+# ---------------------------------------------------------------- Table 5
+TR <- S[!is.na(S$group) & S$group %in% c("T74", "T94"), ]
+cat("Treatment-arm N:", nrow(TR), "\n")
+ctrl_vars <- c("wave", "female", "prior", "midwest", "south", "west", "age1", "age2", "age3", "age4",
+               "anychildren", "loghhinc", "associatemore", "fulltime", "parttime", "selfemp", "unemployed", "student",
+               "democrat", "indep", "otherpol")
+usable <- function(d, vars) vars[sapply(vars, function(v) v %in% names(d) && mean(!is.na(d[[v]])) > 0.8 && var(d[[v]], na.rm = TRUE) > 0)]
+cv <- usable(TR, ctrl_vars); cat("Table 5 controls used:", cv, "\n")
+cs <- if (length(cv)) paste(cv, collapse = " + ") else "1"
+ols <- function(y, d = TR, cvs = cs) feols(as.formula(paste(y, "~ T74 +", cvs)), data = d, weights = ~pw, vcov = "hetero")
+iv  <- function(y) feols(as.formula(paste(y, "~", cs, "| post_z ~ T74")), data = TR, weights = ~pw, vcov = "hetero")
+
+m <- safe(ols("posterior")); if (!is.na(m[1])) { print(summary(m)); res$first_stage_posterior_raw_t74_table5_panelA_col1 <- gc1(m, "T74") }
+m <- safe(ols("post_z"));    if (!is.na(m[1])) res$first_stage_posterior_z_t74_table5_panelA_col2 <- gc1(m, "T74")
+m <- safe(ols("perc_idx"));  if (!is.na(m[1])) res$perception_index_t74_table5_panelA_col6 <- gc1(m, "T74")
+m <- safe(iv("affirm_z"));   if (!is.na(m[1])) { print(summary(m)); res$iv_affirmative_action_posterior_table5_panelC_col2 <- gc1(m, "fit_post_z") }
+m <- safe(iv("legis_z"));    if (!is.na(m[1])) res$iv_equal_pay_legislation_posterior_table5_panelC_col3 <- gc1(m, "fit_post_z")
+m <- safe(iv("pol_idx"));    if (!is.na(m[1])) res$iv_policy_demand_index_posterior_table5_panelC_col7 <- gc1(m, "fit_post_z")
+
+# ---------------------------------------------------------------- Table 6 (follow-up)
+fu_roles <- function(df, prefix) {
+  cols <- names(df)[grepl(paste0("^", prefix, "SQ00[0-9]$"), names(df))]
+  if (!length(cols)) return(NULL)
+  labs <- tolower(vapply(df[cols], vlab, ""))
+  cat("  ", prefix, "labels:\n"); print(setNames(labs, cols))
+  hi <- cols[grepl("high", labs)][1]; lo <- cols[grepl("low", labs) & !grepl("high", labs)][1]
+  if (is.na(hi) || is.na(lo)) return(list(general = cols[1], high = cols[2], low = cols[3]))
+  rest <- setdiff(cols, c(hi, lo))
+  list(general = rest[1], high = hi, low = lo)
+}
+buildfu <- function(df, wave) {
+  n <- nrow(df)
+  cat(sprintf("\n==== Building follow-up wave %s (n=%d) ====\n", ifelse(wave == 0, "A", "B"), n))
+  out <- data.frame(wave = rep(wave, n))
+  v <- findv(df, exact = c("panelID", "panelid", "id", "token"))
+  out$id <- if (!is.na(v)) as.character(df[[v]]) else NA
+  out$pw <- if ("pweight" %in% names(df)) tonum(df$pweight) else 1
+  out$rand <- if ("rand" %in% names(df)) tonum(df$rand) else NA
+  out$prior <- tonum(df$prior); out$posteriorII <- if ("posteriorII" %in% names(df)) tonum(df$posteriorII) else NA
+  describe(df, "gender", "gender"); out$female <- mkfemale(df$gender)
+  for (cvn in setdiff(ctrl_vars, c("wave", "female", "prior"))) out[[cvn]] <- if (cvn %in% names(df)) tonum(df[[cvn]]) else NA
+  r1 <- fu_roles(df, "wageproblem"); r2 <- fu_roles(df, "wageproblem2")
+  for (role in c("general", "high", "low")) {
+    x <- if (!is.null(r1)) likert(df[[r1[[role]]]]) else rep(NA_real_, n)
+    if (!is.null(r2)) { x2 <- likert(df[[r2[[role]]]]); x <- ifelse(is.na(x), x2, x) }
+    out[[paste0("f_", role)]] <- x
+  }
+  describe(df, "govwomen", "govwomen")
+  out$f_gov <- if ("govwomen" %in% names(df)) likert(df$govwomen) else NA
+  out
+}
+FU <- bind_rows(buildfu(FA, 0), buildfu(FB, 1))
+FU$pw[is.na(FU$pw)] <- 1
+
+key_s <- paste(S$wave, S$id); key_f <- paste(FU$wave, FU$id)
+mt <- match(key_f, key_s)
+if (mean(!is.na(mt)) < 0.5) { mt2 <- match(FU$id, S$id); if (mean(!is.na(mt2)) > mean(!is.na(mt))) mt <- mt2 }
+cat("Follow-up match rate to Stage I:", mean(!is.na(mt)), "\n")
+if (mean(!is.na(mt)) > 0.5) {
+  FU$T74 <- S$T74[mt]
+} else {
+  cat("Using rand fallback\n"); print(table(FU$rand, useNA = "ifany"))
+  vals <- sort(unique(na.omit(FU$rand)))
+  mm <- sapply(vals, function(v) mean(FU$posteriorII[FU$rand == v] - FU$prior[FU$rand == v], na.rm = TRUE))
+  print(data.frame(vals, mm))
+  FU$T74 <- as.numeric(FU$rand == vals[which.min(mm)])
+}
+print(table(FU$T74, FU$wave, useNA = "ifany"))
+allfu <- rep(TRUE, nrow(FU))
+for (o in c("general", "gov", "high", "low")) FU[[paste0("fz_", o)]] <- zc(FU[[paste0("f_", o)]], allfu)
+cat("Follow-up perception index:\n")
+FU$fperc_idx <- anderson(FU[, c("fz_general", "fz_gov", "fz_high", "fz_low")], allfu)
+cvf <- usable(FU, ctrl_vars); cat("Table 6 controls used:", cvf, "\n")
+csf <- if (length(cvf)) paste(cvf, collapse = " + ") else "1"
+m <- safe(ols("fperc_idx", d = FU, cvs = csf))
+if (!is.na(m[1])) { print(summary(m)); res$followup_perception_index_t74_table6_panelA_col7 <- gc1(m, "T74") }
+
+# ---------------------------------------------------------------- output
+nms <- c("perception_index_democrat_table3_panelA_col4", "perception_index_female_table3_panelA_col4",
+         "perception_index_prior_table3_panelB_col4", "n_obs_table3",
+         "policy_demand_index_democrat_table4_panelA_col7", "policy_demand_index_prior_table4_panelB_col7",
+         "first_stage_posterior_raw_t74_table5_panelA_col1", "first_stage_posterior_z_t74_table5_panelA_col2",
+         "perception_index_t74_table5_panelA_col6", "iv_affirmative_action_posterior_table5_panelC_col2",
+         "iv_equal_pay_legislation_posterior_table5_panelC_col3", "iv_policy_demand_index_posterior_table5_panelC_col7",
+         "followup_perception_index_t74_table6_panelA_col7")
+for (n in nms) {
+  v <- res[[n]]; if (is.null(v) || length(v) == 0) v <- NA
+  cat(sprintf("RESULT:%s=%s\n", n, ifelse(is.na(v), "NA", format(v, digits = 8))))
+}
+```
+
+## Error / Unexpected Output
+```
+Error in cut.default(a, c(-Inf, 24, 34, 44, 54, Inf)) : 
+  'x' must be numeric
+Calls: bind_rows -> list2 -> build -> cut -> cut.default
+Execution halted
+
+```
+
+## Last run's stdout (excerpt: first/last 3000 characters)
+```
+== Stage I Wave A names ==
+  [1] "submitdate"               "lastpage"                 "startlanguage"            "seed"                     "startdate"                "datestamp"                "welcome"                 
+  [8] "panelID"                  "region"                   "agebracket"               "gender"                   "demrep"                   "demrepother"              "hhincbracket"            
+ [15] "employment"               "ForMyQuota0"              "Quotacalculation"         "petitionQuota"            "petitionQuotafill"        "attentionSQ001"           "attentionSQ002"          
+ [22] "attentionSQ003"           "attentionSQ004"           "attentionSQ005"           "ForMyQuota1"              "AA"                       "RAND0"                    "RAND"                    
+ [29] "fillRAND"                 "RAND12"                   "RAND6"                    "RAND13"                   "RAND2"                    "RAND3"                    "elicitbgendeMarc"        
+ [36] "elicitbgendernoinMar"     "introtreat"               "treatmentACS"             "treatmentCPS"             "treatmentACSnoinc"        "treatmentCPSnoin"         "controlgroupnote"        
+ [43] "note"                     "manicheckSQ001"           "manicheckSQ002"           "manicheckSQ003"           "womenwage"                "womenwages"               "menwage"                 
+ [50] "ownwage"                  "womenwagesorder"          "ownwageorder"             "menwageorder"             "genderpolanch"            "quotaanchor"              "AAanchor"                
+ [57] "transparencyanchor"       "legislationanchor"        "childcare"                "quotaanchorder"           "AAanchorder"              "transpanchorder"          "legisanchorder"          
+ [64] "childcareorder"           "RAND5"                    "RAND8"                    "RAND4"                    "RAND7"                    "RANDINST"                 "petition1"               
+ [71] "petitionT1maledem"        "petitionT1decmaledem"     "petitionT1femdem"         "petitionT1decfemdem"      "petitionT1malerep"        "petitionT1decmalerep"     "petitionT1femrep"        
+ [78] "petitionT1decfemrep"      "petitionT2maledem"        "petitionT2decmaledem"     "petitionT2femdem"         "petitionT2decfemdem"      "petitionT2malerep"        "petitionT2decmalerep"    
+ [85] "petitionT2femrep"         "petitionT2decfemrep"      "petitionCmaledem"         "petitionCdecmaledem"      "petitionCfemdem"          "petitionCdecfemdem"       "petitionCmalerep"        
+ [92] "petitionCdecmalerep"      "petitionCfemrep"          "petitionCdecfemrep"       "donation1"                "AAUW"                     "amountkept"               "amountdonated"           
+ [99] "donationsummary"          "fblike"                   "reasonsSQ001"             "reasonsSQ002"             "reasonsSQ003"             "reasonsSQ004"             "reasonsSQ005"            
+[106] "reasonsSQ006"             "reasons2SQ012"
+[... 18850 characters omitted ...]
+ortance4SQ003"         "importance4SQ004"         "GL"                       "GM"                      
+[414] "attitudes3Time"           "attitudes4Time"           "attitudes5Time"           "attitudes6Time"           "importance3Time"          "importance4Time"         
+== Stage II Wave A names ==
+ [1] "submitdateII"     "panelID"          "startdateII"      "datestampII"      "ageII"            "genderII"         "employmentII"     "wageproblemSQ001" "wageproblemSQ002" "wageproblemSQ003"
+[11] "wageproblemSQ004" "fairnessSQ001"    "fairnessSQ002"    "govwomen"         "govlowskilled"    "antidiscr"        "fampolicy"        "posteriorII"      "readII"           "discussII"       
+[21] "rand"             "fulltime"         "parttime"         "selfemp"          "unemployed"       "student"          "midwest"          "south"            "west"             "age1"            
+[31] "age2"             "age3"             "age4"             "gender"           "otherpol"         "democrat"         "indep"            "prior"            "associatemore"    "loghhinc"        
+[41] "anychildren"      "wave"             "pweight"         
+== Stage II Wave B names ==
+ [1] "submitdateII"        "panelID"             "startdateII"         "datestampII"         "ageII"               "genderII"            "employmentII"        "randorder2"         
+ [9] "wageproblemSQ001"    "wageproblemSQ002"    "wageproblemSQ003"    "wageproblemSQ004"    "wageproblem2SQ001"   "wageproblem2SQ002"   "wageproblem2SQ003"   "wageproblem2SQ004"  
+[17] "fairnessSQ001"       "fairnessSQ002"       "govwomen"            "govlowskilled"       "govwomenorder"       "govloworder"         "antidiscr"           "fampolicy"          
+[25] "orderantidisc"       "fampolicyorder"      "AAanchorII"          "legislationanchorII" "AAorderII"           "legisorderII"        "posteriorII"         "readII"             
+[33] "discussII"           "rand"                "fulltime"            "parttime"            "selfemp"             "unemployed"          "student"             "midwest"            
+[41] "south"               "west"                "age1"                "age2"                "age3"                "age4"                "gender"              "otherpol"           
+[49] "democrat"            "indep"               "prior"               "associatemore"       "loghhinc"            "anychildren"         "pweight"             "wave"               
+
+==== Building Stage I wave A (n=2510) ====
+[id] NOT FOUND
+  id var: panelID 
+  weight var: NA 
+[prior] NOT FOUND
+  posterior columns:  
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max.     NAs 
+     NA      NA      NA     NaN      NA      NA    2510 
+[treatment] -> RAND | label: RAND
+
+   0    1    2 
+ 498 1005 1007 
+  controlgroupnote nonmissing by tr:
+   
+    FALSE
+  0   498
+  1  1005
+  2  1007
+[gender] -> gender | label: gender
+
+  A1   A2 
+1250 1260 
+[politics] NOT FOUND
+[region] -> region | label: region
+
+ A1  A2  A3  A4 
+446 527 943 594 
+[age] NOT FOUND
+```
+
+## Task
+Fix specifically the identified problem above. Do not rewrite the entire approach unless necessary.
+
+## Reminder: Output Convention
+The fixed R code MUST emit each reproduced metric on its own line using EXACTLY this format:
+    RESULT:<metric_name>=<numeric_value>
+For example:  cat('RESULT:beta=0.342\n')
+Use snake_case metric names.
+
+## Reminder: Constraints
+- The dataset is a directory tree at '<repo>/.cache/datasets/settele_2022_gender_wage_gap_beliefs_policy.script-free' — see the file listing under Dataset Information.  Load the actual data file(s) by the exact paths listed there (readr::read_csv() for .csv, haven::read_dta() for Stata .dta, load() for .RData/.rda, which creates the objects listed for the file under exactly those names: use them, do not guess others; readRDS() for .rds).
+- Installed packages (no network; nothing else can be installed): jsonlite, fixest, lfe, AER, ivreg, plm, estimatr, lme4, quantreg, car, sandwich, lmtest, clubSandwich, multiwayvcov, marginaleffects, MatchIt, optmatch, CBPS, WeightIt, cobalt, did, rdrobust, rddensity, Synth, modelsummary, stargazer, texreg, broom, tidyverse, dplyr, tidyr, readr, stringr, lubridate, data.table, haven, readxl, janitor, zoo, ggplot2, ggridges, ggrepel, gridExtra, cowplot, gtable, extrafont, sf, MASS, nnet, survival, splines, Matrix, boot, stats, utils.
+- Prefer fixest for fixed effects, IV and clustered SEs; use the other installed packages where the paper's method calls for them.
+- Do NOT access the internet.
+- Do NOT call system() / system2().
+- Use set.seed(42) for reproducibility.
+- Print all RESULT: lines at the end via cat().
+
+Output ONLY the corrected R code — no explanation, no markdown fences.

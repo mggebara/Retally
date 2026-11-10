@@ -1,0 +1,13 @@
+PV var: patient_voucher  DV var: doctor_voucher
+Base sample (non-missing PV/DV/date): 2753
+Indicator candidates: thinkillness__97(=0:2055), recorded_Malaria_test(=0:2055), GE_FS_test_only_POS(=0:2051), dropme(=0:2055), CC13xCC29(=0:2052), CC39xCC41(=0:2050)
+Sample restricted using indicator: thinkillness__97 == 0
+Final sample: 2055
+Cluster var: cscomnum_OS
+Voucher used var: constructed from voucher_used_PV/DV
+RX binary vars (well-populated): RXisantimal1[2055,0.34], RXisantimal2[2055,0.10], RXisantimal3[2055,0.07], RXisantimal4[2055,0.06], RXisantimal5[2055,0.04], RXisantimal6[2055,0.02], RXisantimal7[2055,0.02], RXisantimal8[2055,0.02], RXisantimal9[2055,0.01], RXisantimal10[2055,0.01], RXisantimal11[2055,0.01], RXisantimal12[2055,0.00], RXisantimal13[2055,0.00], RXisantimal15[2055,0.00]
+Filling 197 missing any-prescribed values from RXisantimal*
+Any prescribed -> RXtreat_simple_mal OR RXtreat_severe_mal
+Any purchased -> treat_simple_mal OR treat_severe_mal
+Severe prescribed -> RXtreat_severe_mal
+Severe purchased -> treat_severe_mal

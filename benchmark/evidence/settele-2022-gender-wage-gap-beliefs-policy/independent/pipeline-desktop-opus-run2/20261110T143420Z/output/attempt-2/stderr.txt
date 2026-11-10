@@ -1,0 +1,88 @@
+---- building S1A
+  S1A: no weights found, using 1
+# S1A party var demrep: A5=826; A1=682; A3=424; A4=301; A2=228; -oth-=49
+  control region <- raw region (4 levels)
+  control age <- raw agebracket (5 levels)
+  control kids <- raw childrenSQ001 (6 levels)
+  control college: not found
+  control employment <- raw employment (7 levels)
+  control income <- raw hhincome (518 levels)
+# S1A: prior <- elicitbgendeMarc+elicitbgendernoinMar; N=2510; summ 1 75 81 83.5 90 200; female 0; pol otherpol=2510
+# S1A posterior candidates: extrayoung(n=834,md=85,r=0.43) extraHSS(n=825,md=77,r=0.48) extraoccuu(n=838,md=86,r=0.51)
+# S1A posterior <- extraoccuu+extrayoung+extraHSS; N=2497; mean 83.16
+# S1A screen flags: ACS=0 CPS=0 ctrlnote=0 overlapAB=0 n=2510
+# S1A: arm var = RAND; post means: 0=81.27, 1=77.41, 2=89.87 -> T74=1 T94=2 ctl=0
+  item large: NOT FOUND
+  item problem: NOT FOUND
+  item gov: NOT FOUND
+# S1A manicheckSQ001: A8=491; A10=478; A7=455; A9=257; A6=194; A5=189; A3=142
+# S1A manicheckSQ002: A10=692; A8=425; A9=373; A7=305; A6=183; A5=149; A1=115
+# S1A manicheckSQ003: A10=870; A9=356; A8=350; A7=246; A5=181; A1=161; A6=139
+# S1A perception items <- manicheckSQ001-003; nonmissing 2510,2510,2510
+  item quota <- ForMyQuota0 ; values: 1=682, 2=953, 3=826, 4=49
+  item affirmative action <- AAanchor ; values: 1=179, 2=293, 3=857, 4=815, 5=366
+  item equal pay legislation <- legislationanchor ; values: 1=98, 2=248, 3=808, 4=979, 5=377
+  item transparency <- transparencyanchor ; values: 1=152, 2=239, 3=517, 4=905, 5=697
+  item childcare <- childcare ; values: 1=91, 2=145, 3=601, 4=946, 5=727
+# S1A items nonmissing: large 2510 problem 2510 gov 2510 quota 2510 aa 2510 legis 2510 tw 2510 child 2510
+---- building S1B
+  S1B: no weights found, using 1
+# S1B party var demrep: A5=507; A1=401; A3=295; A4=171; A2=151; -oth-=30
+  control region <- raw region (4 levels)
+  control age <- raw agebracket (5 levels)
+  control kids <- raw childrenSQ001 (6 levels)
+  control college: not found
+  control employment <- raw employment (7 levels)
+  control income <- raw hhincome (385 levels)
+# S1B: prior <- elicitbgendeMarc+elicitbgendernoinMar; N=1555; summ 0 75 82 83.1 92 200; female 0; pol otherpol=1555
+# S1B posterior candidates: extrasame(n=790,md=88,r=0.47) extrachild(n=765,md=82,r=0.59)
+# S1B posterior <- extrasame+extrachild; N=1555; mean 85.69
+# S1B screen flags: ACS=0 CPS=0 ctrlnote=0 overlapAB=0 n=1555
+# S1B: arm var = RAND; post means: 0=85.82, 1=78.65, 2=93.06 -> T74=1 T94=2 ctl=0
+  item large: NOT FOUND
+  item problem: NOT FOUND
+  item gov: NOT FOUND
+# S1B manicheckSQ001: A10=308; A8=304; A7=259; A9=156; A6=126; A5=124; A3=83
+# S1B manicheckSQ002: A10=435; A8=251; A9=205; A7=200; A6=124; A5=114; A1=76
+# S1B manicheckSQ003: A10=544; A9=211; A8=200; A7=152; A5=149; A1=97; A6=92
+# S1B perception items <- manicheckSQ001-003; nonmissing 1555,1555,1555
+  item quota <- quotaanchor ; values: 1=209, 2=248, 3=405, 4=448, 5=245
+  item affirmative action <- AAanchor ; values: 1=113, 2=181, 3=510, 4=507, 5=244
+  item equal pay legislation <- legislationanchor ; values: 1=77, 2=128, 3=534, 4=559, 5=257
+  item website: NOT FOUND
+  item childcare <- childcare ; values: 1=73, 2=81, 3=425, 4=555, 5=421
+# S1B items nonmissing: large 1555 problem 1555 gov 1555 quota 1555 aa 1555 legis 1555 tw 0 child 1555
+# Arms: control=1034, T74=1531, T94=1500
+# Posterior mean by arm: control=83.64, T74=77.83, T94=90.92
+  index perception cols: z_large,z_problem,z_gov weights: 0.411,0.244,0.442
+  index policy cols: z_quota,z_aa,z_legis,z_tw,z_child weights: 0.71,0.195,0.286,0.541,0.383
+# Control N=1034; control prior 5/95 pct: 50, 113
+# Table 3 trimmed control N = 921
+The variables 'democrat', 'female', 'indep' and 'otherpol' have been removed
+because of collinearity (see $collin.var).
+The variables 'democrat', 'female', 'indep' and 'otherpol' have been removed
+because of collinearity (see $collin.var).
+   coef prior_z = -0.7912 (se 0.0708), N = 921
+   coef prior_z = -0.3735 (se 0.0701), N = 921
+# Table 5 N=3031 controls: waveB + prior + factor(c_region) + factor(c_age) + factor(c_kids) + factor(c_emp) + factor(inc_chr)
+NOTE: 9 observations removed because of NA values (LHS: 9).
+NOTE: 9 observations removed because of NA values (LHS: 9).
+NOTE: 9 observations removed because of NA values (IV: 9/0).
+NOTE: 9 observations removed because of NA values (IV: 9/0).
+NOTE: 9 observations removed because of NA values (IV: 9/0).
+   coef T74 = -12.4352 (se 0.6692), N = 3022
+   coef T74 = -0.5634 (se 0.0303), N = 3022
+   coef T74 = 0.4901 (se 0.0437), N = 3031
+   coef fit_posterior_z = -0.2277 (se 0.075), N = 3022
+   coef fit_posterior_z = -0.2182 (se 0.0771), N = 3022
+   coef fit_posterior_z = -0.1055 (se 0.0711), N = 3022
+---- building S2A
+  control income <- raw loghhinc (8 levels)
+# S2A: prior <- prior; N=499; summ 3 75 81 84.9 92 200; female 0.481; pol democrat=230,indep=76,otherpol=11,republican=182
+---- building S2B
+  control income <- raw loghhinc (8 levels)
+# S2B: prior <- prior; N=606; summ 2 75 82 82.9 91 200; female 0.51; pol democrat=232,indep=123,otherpol=11,republican=240
+# follow-up merged 1105; rand x arm:     /     T74 T94 /   1 554   0 /   2   0 551
+# Follow-up sample N = 1105; T74 share = 0.501
+  index follow-up perception cols: zf_a,zf_gw,zf_b,zf_c weights: 0.571,0.637,0.171,0.313
+   coef T74 = 0.1302 (se 0.056), N = 1105

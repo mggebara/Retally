@@ -1,0 +1,86 @@
+Rows: 2770  Cols: 4266 
+Vars matching 'cscom|clinic': cscom_day, cscomnum_OS, same_day_cscom_DV, same_day_cscom_PV, cscom_1, cscom_2, cscom_3, cscom_4, cscom_5, cscom_6, cscom_7, cscom_8, cscom_9, cscom_10, cscom_11, cscom_12, cscom_13, cscom_14, cscom_15, cscom_16, cscom_17, cscom_18, cscom_19, cscom_20, cscom_21, cscom_22, cscom_23, cscom_24, cscom_25, cscom_26, cscom_27, cscom_28, cscom_29, cscom_30, cscom_31, cscom_32, cscom_33, cscom_34, cscom_35, cscom_36, cscom_37, cscom_38, cscom_39, cscom_40, cscom_41, cscom_42, cscom_43, cscom_44, cscom_45, cscom_46, cscom_47, cscom_48, cscom_49, cscom_50, cscom_51, cscom_52, cscom_53, cscom_54, cscom_55, cscom_56
+Vars matching 'severe': severemalaria, treat_severe_mal, treat_severe_mal_alt, U_treat_severe_mal, U_treat_severe_mal_alt, H_treat_severe_mal, H_treat_severe_mal_alt, RXtreat_severe_mal, RXtreat_severe_mal_alt, NBref_treat_severe_mal, NBref_treat_severe_mal_alt, NBcscom_treat_severe_mal, NBcscom_treat_severe_mal_alt, treat_severe_mal_voucher, treat_severe_mal_NOvoucher, RXtreat_severe_mal_voucher, RXtreat_severe_mal_NOvoucher, correct_severe_mal, U_correct_severe_mal, H_correct_severe_mal, RXcorrect_severe_mal, NBref_correct_severe_mal, NBcscom_correct_severe_mal, taking_treat_severe_mal_alt, taking_treat_severe_mal, RDT_NEG_treat_severe, RDT_POS_no_symp_treat_severe, severe_overtreatment, RXRDT_NEG_treat_severe, RXRDT_POS_no_symp_treat_severe, RXsevere_overtreatment
+Vars matching 'used': voucher_used_DV, voucher_used_PV, vouchers_received_used, vouchers_received_not_used, voucher_received_notused_PV, voucher_received_notused_DV, used_vouchers_admin
+Vars matching '^patient|^id|_id$|hhid': id, patient, patient_complete_survey, patientrespondent, patient_shows_records, patient_video_received, patient_info, patient_voucher, patient_info_x_doctor_info, patient_voucher_x_doctor_info, patient_voucher_high, patient_voucher_low, patient_info_high, patient_info_low, patient_info_x_doctor_info_high, patient_info_x_doctor_info_low, patient_voucher_high_new, patient_voucher_low_new, patient_info_high_new, patient_info_low_new
+Using PV: patient_voucher  DV: doctor_voucher  clinic: cscomnum_OS  date: date 
+Non-missing clinic: 2770  non-missing date: 2753  unique dates: 37 
+After non-missing treatment: 2770 
+Unique values of 'patient': 2 
+Sample size after restrictions: 2753 
+Outcome candidate: RXtreat_sev_simple_mal -> RXtreat_sev_simple_mal 
+Outcome candidate: treat_sev_simple_mal -> treat_sev_simple_mal 
+Outcome candidate: RXtreat_severe_mal -> RXtreat_severe_mal 
+Outcome candidate: treat_severe_mal -> treat_severe_mal 
+y_voucher : non-missing = 2753  mean = 0.1714493 
+y_any_rx : non-missing = 2429  mean = 0.5677233 
+y_any_buy : non-missing = 2429  mean = 0.4771511 
+y_sev_rx : non-missing = 2429  mean = 0.2400165 
+y_sev_buy : non-missing = 2429  mean = 0.2050226 
+OLS estimation, Dep. Var.: y_voucher
+Observations: 2,753
+Fixed-effects: datefe: 36
+Standard-errors: Clustered (clinic) 
+   Estimate Std. Error  t value   Pr(>|t|)    
+PV 0.299555   0.028927 10.35538 6.8381e-15 ***
+DV 0.217650   0.022586  9.63656 1.0100e-13 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+RMSE: 0.348688     Adj. R2: 0.132442
+                 Within R2: 0.100972
+OLS estimation, Dep. Var.: y_any_rx
+Observations: 2,429
+Fixed-effects: datefe: 36
+Standard-errors: Clustered (clinic) 
+   Estimate Std. Error t value Pr(>|t|)    
+PV 0.071836   0.027769 2.58687 0.012171 *  
+DV 0.030724   0.026475 1.16049 0.250522    
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+RMSE: 0.460616     Adj. R2: 0.122093
+                 Within R2: 0.003537
+OLS estimation, Dep. Var.: y_any_buy
+Observations: 2,429
+Fixed-effects: datefe: 36
+Standard-errors: Clustered (clinic) 
+   Estimate Std. Error t value   Pr(>|t|)    
+PV 0.141517   0.032157 4.40076 4.5911e-05 ***
+DV 0.086979   0.027649 3.14576 2.5952e-03 ** 
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+RMSE: 0.47065     Adj. R2: 0.098362
+                Within R2: 0.012994
+OLS estimation, Dep. Var.: y_sev_rx
+Observations: 2,429
+Fixed-effects: datefe: 36
+Standard-errors: Clustered (clinic) 
+    Estimate Std. Error  t value Pr(>|t|)    
+PV -0.023104   0.019927 -1.15945 0.250944    
+DV -0.048232   0.020525 -2.34995 0.022141 *  
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+RMSE: 0.414543     Adj. R2: 0.043326
+                 Within R2: 0.002121
+OLS estimation, Dep. Var.: y_sev_buy
+Observations: 2,429
+Fixed-effects: datefe: 36
+Standard-errors: Clustered (clinic) 
+    Estimate Std. Error   t value Pr(>|t|)    
+PV -0.006205   0.022178 -0.279778 0.780626    
+DV -0.043031   0.019105 -2.252380 0.028033 *  
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+RMSE: 0.391953     Adj. R2: 0.04285
+                 Within R2: 0.00231
+RESULT:voucher_used_patient_voucher_table3_col1=0.299555
+RESULT:voucher_used_doctor_voucher_table3_col1=0.217650
+RESULT:any_malaria_treatment_prescribed_patient_voucher_table3_col2=0.071836
+RESULT:any_malaria_treatment_prescribed_doctor_voucher_table3_col2=0.030724
+RESULT:any_malaria_treatment_purchased_patient_voucher_table3_col3=0.141517
+RESULT:any_malaria_treatment_purchased_doctor_voucher_table3_col3=0.086979
+RESULT:severe_malaria_treatment_prescribed_patient_voucher_table3_col4=-0.023104
+RESULT:severe_malaria_treatment_prescribed_doctor_voucher_table3_col4=-0.048232
+RESULT:severe_malaria_treatment_purchased_patient_voucher_table3_col5=-0.006205
+RESULT:severe_malaria_treatment_purchased_doctor_voucher_table3_col5=-0.043031
+RESULT:n_obs_table3_col1=2753.000000
+RESULT:n_obs_table3_cols2_5=2429.000000

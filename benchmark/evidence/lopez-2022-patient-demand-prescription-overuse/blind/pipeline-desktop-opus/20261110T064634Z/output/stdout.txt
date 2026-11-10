@@ -1,0 +1,31 @@
+Rows: 2770  Cols: 4266 
+Pattern ^patient_voucher$ -> patient_voucher 
+Pattern ^doctor_voucher$ -> doctor_voucher 
+PV var: patient_voucher  DV var: doctor_voucher 
+Pattern ^cscomnum -> cscomnum_OS 
+Clinic var: cscomnum_OS  Date var: date 
+Restricted to patient==1: 2753 
+Analysis sample: 2753  clinics: 60  control obs: 876 
+Mean voucher used by arm:
+      0 0       0 1       1 0 
+0.0000000 0.2122789 0.2925764 
+Outcomes: NA NA NA NA 
+Candidate controls ( 79 ): symptomsscreening_1, symptomsscreening_2, symptomsscreening_3, symptomsscreening_4, symptomsscreening_5, symptomsscreening_6, symptomsscreening_7, patientrespondent, gender, age, french, niveduc, feverintake, chillsintake, nauseaintake, diarrheaintake, poorappetiteintake, headacheintake, coughintake, productivecoughintake, weaknessintake, consciousnessintake, respondentavailable, num_symptoms, respondent, noschooling, middleschool, highschoolup, ltmiddleschool, islamicschool, prischoolorless, agepatient_sq, ethnic_bambara, speak_french, readwrite_fluentlittle_french, readwrite_fluent_french, primary_bambara, genderpatient_pregnancy, genderpatient_female, genderpatient_male, newcough, agepatient2, agepatient3, agepatient_less15, under5, u5_age, u5_age2, M0symptomsscreening_1, M0symptomsscreening_2, M0symptomsscreening_3, M0symptomsscreening_4, M0symptomsscreening_5, M0symptomsscreening_6, M0symptomsscreening_7, M0u5_age, MSSpregnancy, M0pregnancy, M0respondent, MSSgender, M0gender 
+
+Outcome y_used  N = 2753  selected controls: symptomsscreening_1, respondentavailable, genderpatient_pregnancy, under5 
+    Estimate Std. Error   t value     Pr(>|t|)
+PV 0.2900585 0.02750474 10.545763 3.382449e-15
+DV 0.2094186 0.02231015  9.386696 2.606263e-13
+Joint p: 1.008448e-16 
+RESULT:voucher_used_patient_voucher_table3_col1=0.290058
+RESULT:voucher_used_doctor_voucher_table3_col1=0.209419
+RESULT:any_malaria_treatment_prescribed_patient_voucher_table3_col2=NA
+RESULT:any_malaria_treatment_prescribed_doctor_voucher_table3_col2=NA
+RESULT:any_malaria_treatment_purchased_patient_voucher_table3_col3=NA
+RESULT:any_malaria_treatment_purchased_doctor_voucher_table3_col3=NA
+RESULT:severe_malaria_treatment_prescribed_patient_voucher_table3_col4=NA
+RESULT:severe_malaria_treatment_prescribed_doctor_voucher_table3_col4=NA
+RESULT:severe_malaria_treatment_purchased_patient_voucher_table3_col5=NA
+RESULT:severe_malaria_treatment_purchased_doctor_voucher_table3_col5=NA
+RESULT:n_obs_table3_col1=2753
+RESULT:n_obs_table3_cols2_5=NA

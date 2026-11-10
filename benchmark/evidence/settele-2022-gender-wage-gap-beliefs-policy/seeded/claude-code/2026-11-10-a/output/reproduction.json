@@ -1,0 +1,17 @@
+{
+  "schema": 1,
+  "entry_id": "settele-2022-gender-wage-gap-beliefs-policy",
+  "mode": "seeded",
+  "run_id": "2026-11-10-a",
+  "reproducer": "claude-code",
+  "language": "r",
+  "final": {"script": "script.R", "stdout": "stdout.txt", "stderr": "stderr.txt", "exit_code": 0},
+  "attempts": [
+    {"dir": "attempt-1", "exit_code": 0, "kind": ""}
+  ],
+  "deviations": [],
+  "notes": "attempt-1 was an exploratory run that inspected raw variable types and codes in the four survey files (no estimates). The final script translates dofiles 03/04 (Stage I cleaning of the variables needed), 05 (append, oversampling weights, z-scoring on the pure control group, Anderson-style indices with weights from the inverse correlation matrix -- weights match those in All.log), 06 (follow-up cleaning, full-sample z-scoring, follow-up perception index) and 08 (Tables 3-6) into R with fixest: weighted OLS with HC1 SEs, 2SLS for Table 5 Panel C with zposterior instrumented by T1, zposterior computed with Stata aweight mean/sd, Table 3/4 trimming at Stata 'summarize, detail' percentiles (R quantile type 2). The census/CPS treatment-value step (02) was skipped since no claim depends on it. All 13 claims reproduce to the reported precision except the Table 5 col 1 first stage (-12.950 vs -12.955 claimed). No comparison-driven changes were made.",
+  "files_read_outside_mount": [],
+  "started_at": "2026-11-10T06:05:00Z",
+  "finished_at": "2026-11-10T06:24:30Z"
+}

@@ -1,0 +1,19 @@
+{
+  "schema": 1,
+  "entry_id": "lopez-2022-patient-demand-prescription-overuse",
+  "mode": "independent",
+  "run_id": "2026-11-10-b",
+  "reproducer": "claude-code",
+  "language": "r",
+  "final": {"script": "script.R", "stdout": "stdout.txt", "stderr": "stderr.txt", "exit_code": 0},
+  "attempts": [
+    {"dir": "attempt-1", "exit_code": 0, "kind": ""}
+  ],
+  "deviations": [
+    "Post-double-selection lasso implemented by hand in R (glmnet/hdm not installed): rigorous BCH penalty lambda = 2*1.1*sqrt(n)*qnorm(1-gamma/(2p)), gamma = 0.1/log(#clusters), clinic-cluster-robust penalty loadings iterated on post-lasso residuals (up to 15 iterations, initial residuals from OLS on the 5 most correlated candidates), date fixed effects partialled out before selection. This approximates Stata pdslasso/rlasso with cluster(); exact Stata defaults (e.g. psi-iteration count) may differ."
+  ],
+  "notes": "Sample: dropme==0 (N=2055; 2053 with non-missing treatment outcomes). Outcomes: used_vouchers_admin, RXtreat_sev_simple_mal, treat_sev_simple_mal, RXtreat_severe_mal, treat_severe_mal. Regressors patient_voucher, doctor_voucher; date FE (date_morning_survey); SEs clustered by cscomnum_OS. Candidate controls taken from the pre-built columns in the analysis file: clinic dummies CL1-CL59, individual controls CC* (mean-imputed, plus missing dummies CC28/CC34), and their pairwise interactions CCaxCCb (249). Union of selections from lasso of y, PV and DV on candidates; final OLS via fixest. All 10 coefficients and both Ns match the paper at reported precision (clustered SEs also match). attempt-1 was an exploratory variable listing (no RESULT lines). No claim-feedback iterations were needed. No run hung.",
+  "files_read_outside_mount": [],
+  "started_at": "2026-11-10T06:40:04Z",
+  "finished_at": "2026-11-10T06:44:00Z"
+}

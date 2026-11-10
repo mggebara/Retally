@@ -1,0 +1,155 @@
+
+==== Experiment A: 746 rows, 671 cols after header-row removal ====
+Key names: V10, SC0_0, SC0_1, SC0_2, treatment, T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19, T20, switch1, switch2, switch3, switch4, switch5, switch6, switch7, switch8, switch9, switch10, switch11, switch12, switch13, switch14, switch15, switch16, switch17, switch18, switch19, switch20, TimeTreat_1, TimeTreat_2, TimeTreat_3, TimeTreat_4, code treat, test1, test2, test3, test4, test5, test6, test7, test8, test9, test10, excluded 
+Completion column V10 :
+f
+  0   1 
+135 611 
+Rows after completion filter: 611 
+Score-like columns: nonNA / min / max / share integer
+  SC0_0: 611 / 0 / 9 / 1.000
+  SC0_1: 611 / 0 / 1 / 1.000
+  SC0_2: 611 / 0 / 0 / 1.000
+Score measures used: SC0_0 SC0_1 
+Treatment column: treatment 
+raw
+  0   1 
+302 309 
+Score means by treatment code:
+          0     1
+SC0_0 3.755 4.278
+SC0_1 0.778 0.809
+Code -> arm mapping (Control identified from scores; others by code order):
+          0           1 
+  "Control" "Treatment" 
+Treatment - Control raw diffs by score column:
+SC0_0 SC0_1 
+0.523 0.031 
+Compound-interest score measure: SC0_0 ; control-module score measure: SC0_1 
+Switch columns ( 20 ): value distribution
+
+   0    1    2    3    4    5    6    7    8    9   10   11 <NA> 
+  68  303  445  770 1071 1467 1339 1224 1232  905  635  321 2440 
+multi vs excluded:
+      excluded
+multi  <NA>
+  <NA>  611
+Analysis sample N = 611 
+
+  Control Treatment 
+      302       309 
+Table 4 A compound: diff 0.523 (SE 0.223), N=611
+Table 4 A control module: diff 0.031 (SE 0.033), N=611
+Valuation columns: mean / max / NA count
+       T1   T2   T3   T4   T5   T6   T7   T8   T9  T10  T11  T12  T13  T14  T15
+mean  NaN  NaN  NaN  NaN  NaN  NaN  NaN  NaN  NaN  NaN  NaN  NaN  NaN  NaN  NaN
+max  -Inf -Inf -Inf -Inf -Inf -Inf -Inf -Inf -Inf -Inf -Inf -Inf -Inf -Inf -Inf
+nNA   611  611  611  611  611  611  611  611  611  611  611  611  611  611  611
+      T16  T17  T18  T19  T20
+mean  NaN  NaN  NaN  NaN  NaN
+max  -Inf -Inf -Inf -Inf -Inf
+nNA   611  611  611  611  611
+Pairing hypothesis scores:
+H1 H2 
+ 0  0 
+Pairs used (column A, column B, R):
+     pair colA colB  R
+1       1   T1  T11 NA
+612     2   T2  T12 NA
+1223    3   T3  T13 NA
+1834    4   T4  T14 NA
+2445    5   T5  T15 NA
+3056    6   T6  T16 NA
+3667    7   T7  T17 NA
+4278    8   T8  T18 NA
+4889    9   T9  T19 NA
+5500   10  T10  T20 NA
+DC stage error: in feols(fml, data = df, cluster = cluster): 
+The data set contains 0 observation: the estimation cannot be done. 
+
+==== Experiment B: 686 rows, 780 cols after header-row removal ====
+Key names: Duration (in seconds), Finished, TimeTreat_First Click, TimeTreat_Last Click, TimeTreat_Page Submit, TimeTreat_Click Count, test1, test2, test3, test4, test5, test6, test7, test8, test9, test10, SC0, treatment, T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, T18, T19, T20, exclude2, exclude3, exclude4, exclude5, switch1, switch2, switch3, switch4, switch5, switch6, switch7, switch8, switch9, switch10, switch11, switch12, switch13, switch14, switch15, switch16, switch17, switch18, switch19, switch20 
+Completion column Finished :
+f
+  0   1 
+ 48 638 
+Rows after completion filter: 638 
+Score-like columns: nonNA / min / max / share integer
+  SC0: 638 / 0 / 7 / 1.000
+Fewer than two SC sub-score columns; scoring test1..test10 item by item
+  test1: keyed answer '2', share correct 0.585
+  test2: keyed answer '4', share correct 0.489
+  test3: keyed answer '4', share correct 0.461
+  test4: keyed answer '7', share correct 0.366
+  test5: keyed answer '6', share correct 0.590
+  test6: keyed answer '3', share correct 0.204
+  test7: keyed answer '4', share correct 0.201
+  test8: keyed answer '5', share correct 0.738
+  test9: keyed answer '3', share correct 0.020
+  test10: keyed answer '3', share correct 0.417
+Correlation of item-keyed total with SC total: 0.977; exact match share 0.495
+Score measures used: items1_5 items6_10 items_odd items_even 
+Treatment column: treatment 
+raw
+  0   1 
+321 317 
+Score means by treatment code:
+               0     1
+items1_5   1.755 3.223
+items6_10  1.536 1.624
+items_odd  1.413 2.299
+items_even 1.878 2.548
+Code -> arm mapping (Control identified from scores; others by code order):
+          0           1 
+  "Control" "Treatment" 
+Treatment - Control raw diffs by score column:
+  items1_5  items6_10  items_odd items_even 
+     1.468      0.089      0.886      0.671 
+Compound-interest score measure: items1_5 ; control-module score measure: items6_10 
+Switch columns ( 20 ): value distribution
+
+   0    1    2    3    4    5    6    7    8    9   10   11 <NA> 
+  78  208  371  629  933 1206 1039  958  994  724  488  232 4900 
+multi vs excluded:
+      excluded
+multi  <NA>
+  <NA>  638
+Analysis sample N = 638 
+
+  Control Treatment 
+      321       317 
+Table 4 B compound: diff 1.468 (SE 0.139), N=393
+Table 4 B control module: diff 0.089 (SE 0.086), N=393
+Valuation columns: mean / max / NA count
+       T1   T2   T3   T4   T5   T6   T7   T8   T9  T10  T11  T12  T13  T14  T15
+mean  NaN  NaN  NaN  NaN  NaN  NaN  NaN  NaN  NaN  NaN  NaN  NaN  NaN  NaN  NaN
+max  -Inf -Inf -Inf -Inf -Inf -Inf -Inf -Inf -Inf -Inf -Inf -Inf -Inf -Inf -Inf
+nNA   638  638  638  638  638  638  638  638  638  638  638  638  638  638  638
+      T16  T17  T18  T19  T20
+mean  NaN  NaN  NaN  NaN  NaN
+max  -Inf -Inf -Inf -Inf -Inf
+nNA   638  638  638  638  638
+Pairing hypothesis scores:
+H1 H2 
+ 0  0 
+Pairs used (column A, column B, R):
+     pair colA colB  R
+1       1   T1  T11 NA
+639     2   T2  T12 NA
+1277    3   T3  T13 NA
+1915    4   T4  T14 NA
+2553    5   T5  T15 NA
+3191    6   T6  T16 NA
+3829    7   T7  T17 NA
+4467    8   T8  T18 NA
+5105    9   T9  T19 NA
+5743   10  T10  T20 NA
+DC stage error: in feols(fml, data = df, cluster = cluster): 
+The data set contains 0 observation: the estimation cannot be done. 
+
+RESULT:test_score_compounding_treatment_minus_control_expA_table4_col1=0.5233502647
+RESULT:test_score_control_module_treatment_minus_control_expA_table4_col3=0.03091579331
+RESULT:n_obs_table4_expA_cols1_3=611
+RESULT:test_score_compounding_treatment_minus_control_expB_table4_col2=1.468248213
+RESULT:test_score_control_module_treatment_minus_control_expB_table4_col4=0.08865119652
+RESULT:n_obs_table4_expB_cols2_4=393

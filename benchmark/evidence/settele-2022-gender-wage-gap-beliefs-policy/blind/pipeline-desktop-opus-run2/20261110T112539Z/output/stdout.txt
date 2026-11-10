@@ -1,0 +1,92 @@
+Stage I rows: 4065  cols: 559 
+Treatment candidate RAND :
+tx
+   0    1    2 
+1034 1531 1500 
+Treatment source: RAND (guessed coding) 
+Arms: T74 = 1531  T94 = 1500  control = 1034 
+Weight var: NA 
+Prior candidate columns: elicitbgendeMarc, elicitbgendernoinMar 
+  elicitbgendeMarc : n = 2293 
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max.     NAs 
+   0.00   75.00   81.00   83.25   90.00  200.00    1772 
+  elicitbgendernoinMar : n = 1772 
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max.     NAs 
+   1.00   75.00   81.00   83.52   91.00  200.00    2293 
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+   0.00   75.00   81.00   83.37   90.00  200.00 
+Posterior columns:  
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max.     NAs 
+     NA      NA      NA     NaN      NA      NA    4065 
+Female share: 0 
+Party var: demrep 
+tx
+-oth-    a1    a2    a3    a4    a5 
+   79  1083   379   719   472  1333 
+Controls: waveB + female + prior + democrat + indep + otherpol + f_region + f_age + f_inc + f_emp 
+Item large -> NA  
+Item problem -> NA  
+Item gov -> NA  
+Item quota -> ForMyQuota0 [ForMyQuota0] 
+x
+   1    2    3    4 
+1083 1570 1333   79 
+Item aa -> NA  
+Item legislation -> NA  
+Item transparency -> NA  
+Item website -> NA  
+Item childcare -> childcare [childcare] 
+x
+   1    2    3    4    5 
+ 164  226 1026 1501 1148 
+Perception index:
+index error: Lapack routine dgesv: system is exactly singular: U[1,1] = 0 
+Policy index:
+index error: Lapack routine dgesv: system is exactly singular: U[2,2] = 0 
+Prior 5/95 pct (control): 50 113 
+Trimmed control N: 921 
+<simpleError: in feols(perc_idx ~ democrat + female + indep + othe...: 
+The dependent variable contains only NAs, the estimation cannot be done.>
+<simpleError: in feols(perc_idx ~ prior_z + waveB, data = Mt, weig...: 
+The dependent variable contains only NAs, the estimation cannot be done.>
+<simpleError: in feols(pol_idx ~ democrat + female + indep + other...: 
+The dependent variable contains only NAs, the estimation cannot be done.>
+<simpleError: in feols(pol_idx ~ prior_z + waveB, data = Mt, weigh...: 
+The dependent variable contains only NAs, the estimation cannot be done.>
+Treatment-arm N: 3031 
+ERROR in first_stage_posterior_raw_t74_table5_panelA_col1 : in feols(as.formula(paste(y, "~ T74 +", ctrl_str)), ...: 
+The dependent variable contains only NAs, the estimation cannot be done. 
+ERROR in first_stage_posterior_z_t74_table5_panelA_col2 : in feols(as.formula(paste(y, "~ T74 +", ctrl_str)), ...: 
+The dependent variable contains only NAs, the estimation cannot be done. 
+ERROR in perception_index_t74_table5_panelA_col6 : in feols(as.formula(paste(y, "~ T74 +", ctrl_str)), ...: 
+The dependent variable contains only NAs, the estimation cannot be done. 
+ERROR in iv_affirmative_action_posterior_table5_panelC_col2 : in feols(as.formula(paste(y, "~", ctrl_str, "| post_...: 
+The dependent variable contains only NAs, the estimation cannot be done. 
+ERROR in iv_equal_pay_legislation_posterior_table5_panelC_col3 : in feols(as.formula(paste(y, "~", ctrl_str, "| post_...: 
+The dependent variable contains only NAs, the estimation cannot be done. 
+ERROR in iv_policy_demand_index_posterior_table5_panelC_col7 : in feols(as.formula(paste(y, "~", ctrl_str, "| post_...: 
+The dependent variable contains only NAs, the estimation cannot be done. 
+Follow-up N: 1105 
+Follow-up matched to Stage I: 1105 
+Follow-up T74 table:
+fT74
+  0   1 
+551 554 
+FU items: problem = wageproblemSQ001  high = wageproblemSQ002  low = wageproblemSQ003  gov = govwomen
+  Anderson weights: 0.571 0.637 0.171 0.313 
+Follow-up error: in feols(as.formula(paste("idx ~", rhs)), data = F, ...: 
+All observations contain NAs. Estimation cannot be done. (Breakup: RHS:
+1,105.) 
+RESULT:perception_index_democrat_table3_panelA_col4=NA
+RESULT:perception_index_female_table3_panelA_col4=NA
+RESULT:perception_index_prior_table3_panelB_col4=NA
+RESULT:n_obs_table3=921
+RESULT:policy_demand_index_democrat_table4_panelA_col7=NA
+RESULT:policy_demand_index_prior_table4_panelB_col7=NA
+RESULT:first_stage_posterior_raw_t74_table5_panelA_col1=NA
+RESULT:first_stage_posterior_z_t74_table5_panelA_col2=NA
+RESULT:perception_index_t74_table5_panelA_col6=NA
+RESULT:iv_affirmative_action_posterior_table5_panelC_col2=NA
+RESULT:iv_equal_pay_legislation_posterior_table5_panelC_col3=NA
+RESULT:iv_policy_demand_index_posterior_table5_panelC_col7=NA
+RESULT:followup_perception_index_t74_table6_panelA_col7=NA

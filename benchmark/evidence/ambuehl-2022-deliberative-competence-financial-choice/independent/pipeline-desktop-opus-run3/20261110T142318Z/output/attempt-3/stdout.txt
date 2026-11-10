@@ -1,0 +1,33 @@
+== A rows=754 cols=670
+V7: [0]:699 [8]:46 [status]:8 [1]:1
+V10: [1]:611 [0]:135 [finished]:8
+after status/finished: 573
+tasks cx_R_t: [TRUE_16_72]:1146 [FALSE_12_36]:573 [FALSE_12_72]:573 [FALSE_14_36]:573 [FALSE_14_72]:573 [FALSE_16_36]:573 [FALSE_16_72]:573 [FALSE_18_36]:573 [FALSE_18_72]:573 [FALSE_20_36]:573 [FALSE_20_72]:573 [TRUE_12_36]:573 [TRUE_12_72]:573 [TRUE_14_36]:573 [TRUE_16_36]:573 [TRUE_18_36]:573 [TRUE_18_72]:573 [TRUE_20_36]:573 [TRUE_20_72]:573
+complex txt: we will invest $10 in an account with 2% interest per day. Interest is compounded daily. We will pay you the proceeds in 36 days.
+complex |Rraw-R| med=0.442 max=0.842
+iMPL cols=420 tasks=20 lev1 rows=11-11 lev2 rows=10-10
+lev1 row1: [0]:9381 [<NA>]:1680 [1]:399 | lev1 last: [1]:9628 [<NA>]:1680 [0]:152 | lev2: [1]:61372 [0]:36428 [<NA>]:16800
+cor(lev1 count, switch)=-1
+valuation source: iMPL; multi-switch among keep: 28
+pair keys: 12_36 12_72 14_36 14_72 16_36 16_72 18_36 18_72 20_36 20_72
+complete=0 arm_ok=0 dup=0 multiswitch=0 final=0 tr: []:
+Q(nu,fr,d1,d0): Q117:0,NaN,NaN,NaN Q122:0,NaN,NaN,NaN Q127:0,NaN,NaN,NaN Q119:0,NaN,NaN,NaN Q120:0,NaN,NaN,NaN Q124:0,NaN,NaN,NaN Q125:0,NaN,NaN,NaN Q130:0,NaN,NaN,NaN Q121:0,NaN,NaN,NaN Q111:0,NaN,NaN,NaN Q123:0,NaN,NaN,NaN Q18:0,NaN,NaN,NaN Q108:0,NaN,NaN,NaN Q95:0,NaN,NaN,NaN Q109:0,NaN,NaN,NaN Q99:0,NaN,NaN,NaN Q100:0,NaN,NaN,NaN
+comp Qs:  | ctrl Qs: 
+batch type by ctrl-score gap
+Experiment A error: no complete element pairs 
+== B rows=690 cols=781
+Status: [0]:670 [8]:15 [{"importid":"status"}]:2 [response type]:2
+Finished: [1]:638 [0]:48 [{"importid":"finished"~]:2 [finished]:2
+after status/finished: 624
+tasks cx_R_t: [TRUE_16_72]:1248 [FALSE_12_36]:624 [FALSE_12_72]:624 [FALSE_14_36]:624 [FALSE_14_72]:624 [FALSE_16_36]:624 [FALSE_16_72]:624 [FALSE_18_36]:624 [FALSE_18_72]:624 [FALSE_20_36]:624 [FALSE_20_72]:624 [TRUE_12_36]:624 [TRUE_12_72]:624 [TRUE_14_36]:624 [TRUE_16_36]:624 [TRUE_18_36]:624 [TRUE_18_72]:624 [TRUE_20_36]:624 [TRUE_20_72]:624
+complex txt: we will invest $10 in an account with 2% interest per day. Interest is compounded daily. We will pay you the proceeds in 36 days.
+complex |Rraw-R| med=0.442 max=0.842
+valuation source: switch; multi-switch among keep: 0
+pair keys: 12_36 12_72 14_36 14_72 16_36 16_72 18_36 18_72 20_36 20_72
+complete=0 arm_ok=0 dup=0 multiswitch=0 final=0 tr: []:
+TimeTreat nonempty tr0/tr1: NaN/NaN
+Experiment B error: missing value where TRUE/FALSE needed 
+DEVIATION: valuations = $2 first-level grid + $0.20 refinement from iMPL choices; multiple switching = 2+ switches in any list
+DEVIATION: Exp A Substance/Rhetoric arms could not be identified; only treatment 0/1 used
+DEVIATION: test-score answer keys inferred from modal answers (compounding: treated arm; control module: control arm) since no key is provided
+DEVIATION: Exp B valuations from switch columns ($2 grid, no refinement); multiple-switch exclusion not identifiable

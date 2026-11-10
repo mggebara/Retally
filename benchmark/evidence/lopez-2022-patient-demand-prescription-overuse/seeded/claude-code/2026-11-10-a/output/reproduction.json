@@ -1,0 +1,21 @@
+{
+  "schema": 1,
+  "entry_id": "lopez-2022-patient-demand-prescription-overuse",
+  "mode": "seeded",
+  "run_id": "2026-11-10-a",
+  "reproducer": "claude-code",
+  "language": "r",
+  "final": {"script": "script.R", "stdout": "stdout.txt", "stderr": "stderr.txt", "exit_code": 0},
+  "attempts": [
+    {"dir": "attempt-1", "exit_code": 0, "kind": ""},
+    {"dir": "attempt-2", "exit_code": 0, "kind": ""}
+  ],
+  "deviations": [
+    "Stata's pdslasso/rlasso (lassopack) is not available in R (glmnet not installed either), so the rigorous cluster-robust lasso was re-implemented by hand: lassopack defaults c=1.1, gamma=0.1/log(number of clusters), lambda=2c*sqrt(N)*invnormal(1-gamma/(2p)), cluster-robust penalty loadings, initial residuals from OLS on the 5 most correlated regressors, 2 loading iterations with post-lasso residuals, date dummies and constant partialled out before selection; final post-double-selection OLS via fixest with date dummies and clinic-clustered SEs.",
+    "The do-file clusters on `cscomnum`, which does not exist in the data; it is a Stata abbreviation that resolves to `cscomnum_OS` (the only variable with that prefix, 60 clinics), used here."
+  ],
+  "notes": "Table 3 of the paper (docpat_theory_lso in LSS_TablePrograms.do): pdslasso of each outcome on patient_voucher and doctor_voucher, penalized candidates CL1-CL59 and CC* (272 patient/respondent controls and interactions), DD1-DD35 partialled out, after dropping dropme==1 (2055 patients). Two exploratory runs (attempt-1, attempt-2) inspected variables and located the cluster variable; they printed no RESULT lines. The first estimating run is the final run; all 10 coefficients round to the published values and the clustered SEs also match the published table (e.g. 0.0307 vs 0.030, 0.0245 vs 0.024). N = 2055 (col 1) and 2053 (cols 2-5). No claim-feedback or error-repair iterations were needed. fixest dropped one selected control (CC23xCC27) as collinear in column 2, which does not affect the treatment coefficients.",
+  "files_read_outside_mount": [],
+  "started_at": "2026-11-10T06:40:12Z",
+  "finished_at": "2026-11-10T06:43:30Z"
+}

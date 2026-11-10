@@ -1,0 +1,17 @@
+{
+  "schema": 1,
+  "entry_id": "ambuehl-2022-deliberative-competence-financial-choice",
+  "mode": "seeded",
+  "run_id": "2026-11-10-b",
+  "reproducer": "claude-code",
+  "language": "r",
+  "final": {"script": "script.R", "stdout": "stdout.txt", "stderr": "stderr.txt", "exit_code": 0},
+  "attempts": [
+    {"dir": "attempt-1", "exit_code": 0, "kind": ""}
+  ],
+  "deviations": [],
+  "notes": "attempt-1 was exploratory: it checked the raw CSV structure (Qualtrics header rows, choice coding 0/1/blank, multi-line records in the Exp B files) and printed no RESULT lines. The final script translates dataManagementExpA.do, dataManagementExpB.do and the Table 4 and Table 7 parts of analysis.do into R. It reads the raw Qualtrics CSVs and drops the header rows as the do-files do (Exp A: 1 row; Exp B: 2 rows, then the first remaining row). It recodes the treatment arms by batch, drops attriters (help_test missing in A, test10 missing in B) and rebuilds the switching-point logic with Stata missing-value semantics, including the quirk that merge keeps only the fine-list multi_switch flags plus the sum_multi_switch==1 conditions. It then builds valuations as coarse plus fine values, adds the 0.1 midpoint and computes absDiff = |v_framed/amount_precise*100 - v_unframed/amount*100| per subject and task pair. Single switchers only (multi==0). Table 4 is OLS of score_compounding or score_indexing on a Treatment dummy, one obs per subject, SEs clustered by id. Table 7 cols 1-2 are OLS of -absDiff on the condition dummies without a constant, clustered by id. All 13 claims match the paper to the reported precision, and so do the standard errors.",
+  "files_read_outside_mount": [],
+  "started_at": "2026-11-10T06:47:00Z",
+  "finished_at": "2026-11-10T06:53:00Z"
+}

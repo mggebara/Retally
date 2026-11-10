@@ -1,0 +1,71 @@
+Exp A multiple switchers: 49 of 504 
+Exp B multiple switchers: 53 of 401 
+Exp A kept by arm:
+
+      Control  RhetoricOnly SubstanceOnly     Treatment 
+          108           112           128           107 
+Exp B kept by arm:
+
+  Control Treatment 
+      179       169 
+
+Table 4 levels (Control / Treatment means):
+    Control Treatment
+c1 1.981481  3.373832
+c2 1.849162  3.443787
+c3 3.296296  2.214953
+c4 3.078212  2.692308
+                             t4c1              t4c2               t4c3
+Dependent Var.:              comp              comp               ctrl
+                                                                      
+Constant        1.981*** (0.1381) 1.849*** (0.1003)  3.296*** (0.1035)
+treat           1.392*** (0.1958) 1.595*** (0.1439) -1.081*** (0.1468)
+_______________ _________________ _________________ __________________
+S.E. type                     IID               IID                IID
+Observations                  215               348                215
+R2                        0.19182           0.26200            0.20312
+Adj. R2                   0.18803           0.25986            0.19937
+
+                              t4c4
+Dependent Var.:               ctrl
+                                  
+Constant         3.078*** (0.0982)
+treat           -0.3859** (0.1409)
+_______________ __________________
+S.E. type                      IID
+Observations                   348
+R2                         0.02123
+Adj. R2                    0.01840
+---
+Signif. codes: 0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Table 7 columns 1-2:
+                             t7c1              t7c2
+Dependent Var.:                dc                dc
+                                                   
+Control         -23.71*** (1.572) -25.07*** (1.330)
+Treatment       -22.54*** (1.645) -17.53*** (1.129)
+SubstanceOnly   -21.41*** (1.390)                  
+RhetoricOnly    -18.95*** (1.289)                  
+_______________ _________________ _________________
+S.E.: Clustered           by: sid           by: sid
+Observations                4,550             3,480
+R2                        0.00555           0.02570
+Adj. R2                   0.00490           0.02542
+---
+Signif. codes: 0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+Complex-frame valuation means (Table 5 style) A: 59.264 77.909 63.447 73.8 
+
+RESULT:test_score_compounding_treatment_minus_control_expA_table4_col1=1.392350
+RESULT:test_score_compounding_treatment_minus_control_expB_table4_col2=1.594625
+RESULT:test_score_control_module_treatment_minus_control_expA_table4_col3=-1.081343
+RESULT:test_score_control_module_treatment_minus_control_expB_table4_col4=-0.385905
+RESULT:n_obs_table4_expA_cols1_3=215.000000
+RESULT:n_obs_table4_expB_cols2_4=348.000000
+RESULT:deliberative_competence_control_expA_table7_col1=-23.705791
+RESULT:deliberative_competence_treatment_expA_table7_col1=-22.543714
+RESULT:deliberative_competence_substance_only_expA_table7_col1=-21.407726
+RESULT:deliberative_competence_rhetoric_only_expA_table7_col1=-18.949525
+RESULT:deliberative_competence_control_expB_table7_col2=-25.069010
+RESULT:deliberative_competence_treatment_expB_table7_col2=-17.533702
+RESULT:n_obs_table7_expA_col1=4550.000000

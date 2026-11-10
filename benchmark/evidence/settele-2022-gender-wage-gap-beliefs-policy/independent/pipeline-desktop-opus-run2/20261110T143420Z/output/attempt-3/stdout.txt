@@ -1,0 +1,69 @@
+RESULT:perception_index_democrat_table3_panelA_col4=0.749171
+RESULT:perception_index_female_table3_panelA_col4=0.207071
+RESULT:perception_index_prior_table3_panelB_col4=-0.791179
+RESULT:n_obs_table3=921.000000
+RESULT:policy_demand_index_democrat_table4_panelA_col7=0.899859
+RESULT:policy_demand_index_prior_table4_panelB_col7=-0.401021
+RESULT:first_stage_posterior_raw_t74_table5_panelA_col1=-13.011325
+RESULT:first_stage_posterior_z_t74_table5_panelA_col2=-0.597693
+RESULT:perception_index_t74_table5_panelA_col6=0.458510
+RESULT:iv_affirmative_action_posterior_table5_panelC_col2=-0.192098
+RESULT:iv_equal_pay_legislation_posterior_table5_panelC_col3=-0.207095
+RESULT:iv_policy_demand_index_posterior_table5_panelC_col7=-0.130960
+RESULT:followup_perception_index_t74_table6_panelA_col7=0.130226
+DEVIATION: Survey probability weights not present in raw files; regressions are unweighted
+DEVIATION: Raw main-survey demographic answer codes (gender, party, education, children, income bracket) carry no value labels; they were decoded by matching respondents to the follow-up files' coded dummies (female, democrat/indep/otherpol, associatemore, anychildren, loghhinc)
+DEVIATION: Posterior beliefs standardized separately for each elicited wage statistic using that statistic's pure-control-group mean and SD
+# S2A: prior <- prior; N=499; summ 3 75 81 84.9 92 200; female 0.481; pol democrat=230,indep=76,otherpol=11,republican=182
+# S2B: prior <- prior; N=606; summ 2 75 82 82.9 91 200; female 0.51; pol democrat=232,indep=123,otherpol=11,republican=240
+# S1A party var demrep: A5=826; A1=682; A3=424; A4=301; A2=228; -oth-=49
+# S1A: prior <- elicitbgendeMarc+elicitbgendernoinMar; N=2510; summ 1 75 81 83.5 90 200; female 0; pol otherpol=2510
+# S1A matched to follow-up for decoding: 499
+# S1A decode female <- gender (purity 1, base 0.519): A1->0, A2->1
+# S1A decode party <- demrep (purity 1, base 0.461): -oth-->otherpol, A1->republican, A2->republican, A3->indep, A4->democrat, A5->democrat
+# S1A decode college <- demo1 (purity 1, base 0.539): A2->0, A3->0, A4->0, A5->1, A6->1, A7->1, A8->1, A9->1
+# S1A decode kids <- childrenSQ001 (purity 0.842, base 0.587): A1->0, A2->1, A3->1, A4->1, A5->1, A6->1
+# S1A decode kids: rejected
+# S1A decode income <- hhincbracket (purity 1, base 0.293): A1->8.815073, A2->9.890504, A3->10.510559, A4->11.023128, A5->11.364471, A6->11.700948, A7->12.045793, A8->12.698513
+# S1A after decoding: female 0.502; pol democrat=1127,indep=424,otherpol=49,republican=910; coll 0=984,1=1526; inc nonmiss 2510
+# S1A posterior candidates: extrayoung(n=834,md=85,r=0.43) extraHSS(n=825,md=77,r=0.48) extraoccuu(n=838,md=86,r=0.51)
+# S1A posterior <- extraoccuu+extrayoung+extraHSS; N=2497; mean 83.16
+# S1A screen flags: ACS=0 CPS=0 ctrlnote=0 overlapAB=0 n=2510
+# S1A: arm var = RAND; post means: 0=81.27, 1=77.41, 2=89.87 -> T74=1 T94=2 ctl=0
+# S1A manicheckSQ001: A8=491; A10=478; A7=455; A9=257; A6=194; A5=189; A3=142
+# S1A manicheckSQ002: A10=692; A8=425; A9=373; A7=305; A6=183; A5=149; A1=115
+# S1A manicheckSQ003: A10=870; A9=356; A8=350; A7=246; A5=181; A1=161; A6=139
+# S1A perception items <- manicheckSQ001-003; nonmissing 2510,2510,2510
+# S1A items nonmissing: large 2510 problem 2510 gov 2510 quota 2510 aa 2510 legis 2510 tw 2510 child 2510
+# S1B party var demrep: A5=507; A1=401; A3=295; A4=171; A2=151; -oth-=30
+# S1B: prior <- elicitbgendeMarc+elicitbgendernoinMar; N=1555; summ 0 75 82 83.1 92 200; female 0; pol otherpol=1555
+# S1B matched to follow-up for decoding: 606
+# S1B decode female <- gender (purity 1, base 0.51): A1->0, A2->1
+# S1B decode party <- demrep (purity 1, base 0.396): -oth-->otherpol, A1->republican, A2->republican, A3->indep, A4->democrat, A5->democrat
+# S1B decode college <- demo1 (purity 1, base 0.662): A2->0, A3->0, A4->0, A5->1, A6->1, A7->1, A8->1, A9->1
+# S1B decode kids <- childrenSQ001 (purity 0.875, base 0.578): A1->0, A2->1, A3->1, A4->1, A5->1, A6->1
+# S1B decode income <- hhincbracket (purity 1, base 0.269): A1->8.815073, A2->9.890504, A3->10.510559, A4->11.023128, A5->11.364471, A6->11.700948, A7->12.045793, A8->12.698513
+# S1B after decoding: female 0.545; pol democrat=678,indep=295,otherpol=30,republican=552; coll 0=599,1=955,missing=1; inc nonmiss 1555
+# S1B posterior candidates: extrasame(n=790,md=88,r=0.47) extrachild(n=765,md=82,r=0.59)
+# S1B posterior <- extrasame+extrachild; N=1555; mean 85.69
+# S1B screen flags: ACS=0 CPS=0 ctrlnote=0 overlapAB=0 n=1555
+# S1B: arm var = RAND; post means: 0=85.82, 1=78.65, 2=93.06 -> T74=1 T94=2 ctl=0
+# S1B manicheckSQ001: A10=308; A8=304; A7=259; A9=156; A6=126; A5=124; A3=83
+# S1B manicheckSQ002: A10=435; A8=251; A9=205; A7=200; A6=124; A5=114; A1=76
+# S1B manicheckSQ003: A10=544; A9=211; A8=200; A7=152; A5=149; A1=97; A6=92
+# S1B perception items <- manicheckSQ001-003; nonmissing 1555,1555,1555
+# S1B items nonmissing: large 1555 problem 1555 gov 1555 quota 1555 aa 1555 legis 1555 tw 0 child 1555
+# Arms: control=1034, T74=1531, T94=1500
+# Posterior mean by arm: control=83.64, T74=77.83, T94=90.92
+# Control N=1034; control prior 5/95 pct: 50, 113
+# Table 3 trimmed control N = 921
+# posterior stat extraHSS: control N=149 mean 78.26 sd 25.98
+# posterior stat extraoccuu: control N=181 mean 83.07 sd 18.44
+# posterior stat extrayoung: control N=164 mean 82.02 sd 23.36
+# posterior stat extrasame: control N=267 mean 88.17 sd 20.28
+# posterior stat extrachild: control N=269 mean 83.49 sd 22.16
+# Table 5 N=3031 controls: waveB + female + prior + factor(c_region) + factor(c_age) + factor(c_kids) + factor(c_coll) + factor(c_emp) + factor(c_pol) + inc_num
+# follow-up merged 1105; rand x arm:     /     T74 T94 /   1 554   0 /   2   0 551
+# Follow-up sample N = 1105; T74 share = 0.501
+# S1A names: submitdate lastpage startlanguage seed startdate datestamp welcome panelID region agebracket gender demrep demrepother hhincbracket employment ForMyQuota0 Quotacalculation ForMyQuota1 AA RAND0 RAND fillRAND RAND12 RAND6 RAND13 RAND2 RAND3 elicitbgendeMarc elicitbgendernoinMar introtreat treatmentACS treatmentCPS treatmentACSnoinc treatmentCPSnoin controlgroupnote note manicheckSQ* womenwage womenwages menwage ownwage genderpolanch quotaanchor AAanchor transparencyanchor legislationanchor childcare RAND5 RAND8 RAND4 RAND7 RANDINST donation1 AAUW amountkept amountdonated donationsummary fblike reasonsSQ* reasons2SQ* reasons3SQ* reasons4SQ* reasons5SQ* infointro0 infodemand0 Scenario01 Scenario02 Scenario03 Scenario04 Scenario05 Scenario06 infodemand02 Scenario0B1 Scenario0B2 Scenario0B3 Scenario0B4 Scenario0B5 Scenario0B6 extrayoung extraHSS extraoccuu genderroleattSQ* tenyears wageexpectation fairown demo1 demo2 demo2other demo3 ind1 ind1other ind2 occ companysize labinc hhincome hrsweek treatmentCACS treatmentCCPS RAND9 RAND10 maritalst maritalstother childrenSQ* birthyear fblikesettings biased relevant read trustworthy trustcensus payoffinfo131 finalnote groupTime539 groupTime512 groupTime615 groupTime525 groupTime547 GX groupTime504 groupTime516 groupTime513 groupTime499 groupTime742 groupTime506 groupTime502 groupTime505 groupTime747 groupTime748 groupTime548 groupTime531 groupTime550 groupTime510 groupTime523 groupTime517 groupTime533 groupTime519 groupTime520 groupTime744 groupTime745 groupTime521 groupTime706 groupTime622 groupTime500 groupTime514 groupTime515 groupTime565 groupTime566 groupTime736 groupTime737 groupTime738 groupTime806 groupTime807 groupTime808 groupTime749 groupTime527 groupTime528 groupTime635 groupTime637 groupTime638 groupTime529 groupTime501 groupTime630
+# S1B extra names: RAND14 RAND15 RAND16 RAND17 controlgroupnotenoin effectivenessSQ* effectiveness2SQ* trustgov extrasame extrachild costsSQ* costs2SQ* attitudes2SQ* importanceSQ* importance2SQ* vote voteother r292q0 EZ FA device deviceother groupTime867 groupTime851 groupTime861 groupTime868 groupTime847 groupTime855 groupTime852 groupTime843 groupTime883 groupTime849 groupTime846 groupTime848 groupTime886 groupTime887 groupTime869 groupTime865 groupTime870 groupTime850 groupTime860 groupTime856 groupTime866 groupTime857 groupTime858 groupTime884 groupTime885 groupTime859 groupTime879 groupTime874 groupTime880 groupTime881 groupTime882 groupTime893 groupTime889 groupTime890 groupTime891 groupTime888 groupTime862 groupTime996 groupTime876 groupTime877 groupTime998 MD groupTime999 MF groupTime863 groupTime864 groupTime875 effectiveness3SQ* costs3SQ* FF FG ML MN attitudes3SQ* attitudes4SQ* attitudes5SQ* attitudes6SQ* importance3SQ* importance4SQ* GL GM

@@ -1,0 +1,26 @@
+{
+  "schema": 1,
+  "entry_id": "ambuehl-2022-deliberative-competence-financial-choice",
+  "mode": "blind",
+  "run_id": "2026-11-10-c",
+  "reproducer": "claude-code",
+  "language": "r",
+  "final": {"script": "script.R", "stdout": "stdout.txt", "stderr": "stderr.txt", "exit_code": 0},
+  "attempts": [
+    {"dir": "attempt-1", "exit_code": 0, "kind": ""},
+    {"dir": "attempt-2", "exit_code": 0, "kind": ""},
+    {"dir": "attempt-3", "exit_code": 0, "kind": ""},
+    {"dir": "attempt-4", "exit_code": 0, "kind": ""}
+  ],
+  "deviations": [
+    "Multiple switching defined as any price list (first or second list of the iterated MPL) with two or more switches or any switch from the future reward back to the immediate amount; this flags 53/504 subjects in Experiment A and 54/401 in Experiment B, versus 49 and 53 stated in the paper text, so the analysis samples are slightly smaller (A 451 vs 455 subjects; B 347 vs 348). No tested variant reproduced both stated counts; the strict definition from the experimental instructions was kept.",
+    "Valuation = midpoint of the iterated-MPL interval, computed as 2*(future choices in list 1) - 2 + 0.2*(future choices in list 2) - 0.1; lists where the subject took the future reward on every line (top-coded) get x+1.9 and lists with all-immediate choices in list 1 get -0.1, without further censoring adjustments.",
+    "Experiment A arm coding inferred from the raw files: batches 1,2,4,5 randomize Treatment (treatment=1) vs Control; batches 3,6,7 randomize Substance-Only (treatment=1; subjects overwhelmingly report knowing the rule of 72) vs Rhetoric-Only (treatment=0); batch 8 contains Rhetoric-Only only (same video slot).",
+    "Test answer key: compound questions 7.2 yrs, 18% (rule of 72), about 20 yrs, 36%, $250; Experiment A control key (Franklin 'money makes money', 90%, Sinclair quote, 50-70%, market portfolio) reproduces Qualtrics' own Score-sum for all 504 A subjects; Experiment B control key (GM & Microsoft, 0.7, stocks, stocks, 1) chosen from content, as B's Qualtrics score does not match a full key.",
+    "Table 4 SEs clustered by subject (one obs per subject, i.e. heteroskedasticity-robust)."
+  ],
+  "notes": "Exploratory attempts 1-4 (no RESULT lines) inspected the raw Qualtrics files, arm coding, completion (answered the final test: 504 A, 401 B after dropping one B preview response), price-list coding (iMPLk corresponds to embedded task text Tk; checked via simple-frame valuation means by reward), switching definitions and the answer key. Final script: Table 4 OLS of test score on Treatment indicator (A: Treatment+Control only; B: both arms), multiple switchers excluded; Table 7 no-constant OLS of deliberative competence -|r_c - r_s| (percent of R; 10 task pairs per subject, both delays) on arm indicators, clustered by subject. Experiment A Table 7 N = 4510 (451 subjects x 10). readMe.pdf in the mount was read for file descriptions only (it contains no results). No hung runs.",
+  "files_read_outside_mount": [],
+  "started_at": "2026-11-10T06:54:56Z",
+  "finished_at": "2026-11-10T07:05:00Z"
+}

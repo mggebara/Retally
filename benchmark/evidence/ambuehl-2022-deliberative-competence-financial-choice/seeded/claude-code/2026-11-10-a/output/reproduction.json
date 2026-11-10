@@ -1,0 +1,18 @@
+{
+  "schema": 1,
+  "entry_id": "ambuehl-2022-deliberative-competence-financial-choice",
+  "mode": "seeded",
+  "run_id": "2026-11-10-a",
+  "reproducer": "claude-code",
+  "language": "r",
+  "final": {"script": "script.R", "stdout": "stdout.txt", "stderr": "stderr.txt", "exit_code": 0},
+  "attempts": [
+    {"dir": "attempt-1", "exit_code": 0, "kind": ""},
+    {"dir": "attempt-2", "exit_code": 0, "kind": ""}
+  ],
+  "deviations": [],
+  "notes": "Translated dataManagementExpA.do / dataManagementExpB.do (Qualtrics CSV import, price-list switching-point and multi-switch logic incl. Stata missing-value semantics and the merge that keeps the fine-list multi_switch flags, task renumbering/pairing, amount_precise, +0.1 midpoint) and the Table 4 (testScores) and Table 7 (finComp) regressions of analysis.do into R/fixest; SEs clustered by subject. Attempts 1-2 were exploratory (CSV structure; embedded newlines in ExpB Qualtrics exports) and printed no RESULT lines. ExpB follows the do-file literally, including 'drop if _n == 1' after dropping the two Qualtrics header rows. The final run was the first scored run; it was not compared-and-revised, and all 13 values agree with the claims to the reported precision (N = 215, 348, 4550). Stata stores generated variables as float while R uses double; this has no effect at 3 decimals.",
+  "files_read_outside_mount": [],
+  "started_at": "2026-11-10T06:45:00Z",
+  "finished_at": "2026-11-10T06:52:30Z"
+}

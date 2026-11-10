@@ -1,0 +1,77 @@
+Control group N: 1034  trimming cut-offs: 50 113  trimmed N: 921 
+                       t3a        t3b        t4a        t4b
+Dependent Var.: perc_index perc_index  pol_index  pol_index
+                                                           
+Constant        -0.4906*** -0.0580    -0.6097*** -0.0231   
+                (0.0765)   (0.0433)   (0.0739)   (0.0465)  
+democrat         0.7611***             0.7780***           
+                (0.0722)              (0.0701)             
+female           0.2038**              0.4260***           
+                (0.0624)              (0.0595)             
+indep            0.1839                0.2575**            
+                (0.1008)              (0.0854)             
+otherpol        -0.0925               -0.1737              
+                (0.2606)              (0.2620)             
+waveB           -0.0707    -0.0480    -0.0011     0.0094   
+                (0.0623)   (0.0612)   (0.0595)   (0.0647)  
+prior_z                    -0.8077***            -0.3915***
+                           (0.0715)              (0.0716)  
+_______________ __________ __________ __________ __________
+S.E. type       Hete.-rob. Hete.-rob. Hete.-rob. Hete.-rob.
+Observations           921        921        921        921
+R2                 0.14235    0.16479    0.19008    0.03960
+Adj. R2            0.13767    0.16297    0.18566    0.03750
+---
+Signif. codes: 0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+Treatment-arm N: 3031  with posterior: 3022 
+                      fs1         fs2        t5p
+Dependent Var.: posterior posterior_z perc_index
+                                                
+T74             -12.95***  -0.5867***  0.4573***
+                 (0.5944)  (0.0269)   (0.0354)  
+_______________ _________ ___________ __________
+S.E. type       Het.-rob. Heter.-rob. Hete.-rob.
+Observations        3,022       3,022      3,031
+R2                0.31514     0.31514    0.19915
+Adj. R2           0.31012     0.31012    0.19329
+---
+Signif. codes: 0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+                    iv_aa      iv_ep     iv_ix
+Dependent Var.:  affact_z equalpay_z pol_index
+                                              
+posterior_z     -0.1919** -0.1985***  -0.0622 
+                (0.0592)  (0.0598)    (0.0585)
+_______________ _________ __________ _________
+S.E. type       Het.-rob. Hete.-rob. Het.-rob.
+Observations        3,022      3,022     3,022
+R2                0.12479    0.10958   0.14109
+Adj. R2           0.11837    0.10305   0.13479
+---
+Signif. codes: 0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+First-stage F (posterior_z on T74): 471.1913 
+Follow-up N: 1105 
+                        t6
+Dependent Var.:   fu_index
+                          
+T74              0.1942***
+                (0.0560)  
+_______________ __________
+S.E. type       Hete.-rob.
+Observations         1,105
+R2                 0.15913
+Adj. R2            0.14203
+---
+Signif. codes: 0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+RESULT:perception_index_democrat_table3_panelA_col4=0.761115
+RESULT:perception_index_female_table3_panelA_col4=0.203834
+RESULT:perception_index_prior_table3_panelB_col4=-0.807659
+RESULT:n_obs_table3=921
+RESULT:policy_demand_index_democrat_table4_panelA_col7=0.777977
+RESULT:policy_demand_index_prior_table4_panelB_col7=-0.391535
+RESULT:first_stage_posterior_raw_t74_table5_panelA_col1=-12.950173
+RESULT:first_stage_posterior_z_t74_table5_panelA_col2=-0.586687
+RESULT:perception_index_t74_table5_panelA_col6=0.457323
+RESULT:iv_affirmative_action_posterior_table5_panelC_col2=-0.191897
+RESULT:iv_equal_pay_legislation_posterior_table5_panelC_col3=-0.198462
+RESULT:iv_policy_demand_index_posterior_table5_panelC_col7=-0.062164
+RESULT:followup_perception_index_t74_table6_panelA_col7=0.194246

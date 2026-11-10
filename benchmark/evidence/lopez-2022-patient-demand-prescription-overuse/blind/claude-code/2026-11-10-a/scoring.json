@@ -1,0 +1,664 @@
+{
+  "how": "recomputed: ResultComparator().compare_all(catalog claims, RESULT lines of output/stdout.txt, mode) - the comparator and claim conversion benchmark.runner.score_reproduction uses; row: the results row's claim_details entry as written by the run (tolerance, tolerance_source and rel_err come from there unchanged).",
+  "claims": [
+    {
+      "name": "voucher_used_patient_voucher_table3_col1",
+      "ground_truth": {
+        "value": 0.35,
+        "standard_error": 0.03,
+        "unit": "change in the probability of using a voucher (share of patients)",
+        "claim_type": "coefficient",
+        "location": "Table 3, column (1) Used Voucher, beta_P: Patient Voucher",
+        "context": "Table 3 (\"Impacts on Malaria Treatment Outcomes\"), column (1). Linear probability model of an indicator that the patient redeemed a voucher for a free course of ACT tablets (simple malaria treatment), from the administrative voucher records, on dummies for Patient Voucher days (vouchers handed to patients on arrival, before the consultation) and Doctor Voucher days (vouchers given to the health workers to assign at their discretion), relative to Control days, with clinic visit date fixed effects and additional controls chosen by post-double-selection lasso (Belloni, Chernozhukov and Hansen 2014) from clinic dummies, symptom dummies, illness duration (top-coded at the 99th percentile) and its square, patient age and its square, an under-five dummy, patient gender, pregnancy, whether the patient answered the survey, respondent gender, Bambara ethnicity, French speaking, literacy, primary education or less, a home follow-up survey dummy, and all pairwise interactions of the patient and respondent controls; missing values recoded to the sample mean and dummied out.  Sample: acutely ill patients interviewed at the study clinics in Bamako, Mali.  The entry is the Patient Voucher coefficient.  Standard errors clustered by clinic.\n",
+        "decimals": 2,
+        "sample_size": null
+      },
+      "i4r": {
+        "reproduced_value": 0.35,
+        "outcome": "matches",
+        "notes": "Blanket I4R verdict (team 23); the row adds back non-malaria voucher users, 0.33 (0.029).",
+        "reproduced_within_band": false
+      },
+      "rule": {
+        "mode": "blind",
+        "type_relative_tolerance": 0.02,
+        "se_multiplier": 1.0,
+        "se_band_relative": 0.08571428571428572,
+        "printed_half_unit": 0.005
+      },
+      "row": {
+        "description": "voucher_used_patient_voucher_table3_col1",
+        "claim_type": "coefficient",
+        "claimed": 0.35,
+        "reproduced": 0.294839,
+        "tolerance": 0.08571428571428572,
+        "rel_err": 0.15760285714285704,
+        "passed": false,
+        "passed_first_attempt": false,
+        "passed_first_scored": false,
+        "tolerance_source": "se_band"
+      },
+      "recomputed": {
+        "result_name": "voucher_used_patient_voucher_table3_col1",
+        "reproduced": 0.294839,
+        "band_source": "se_band",
+        "band_relative": 0.08571428571428572,
+        "band_absolute": 0.03,
+        "abs_err": 0.05516099999999996,
+        "rel_err": 0.15760285714285704,
+        "margin": 1.8386999999999987,
+        "passed": false,
+        "notes": "Outside tolerance: reproduced=0.294839 vs claimed=0.35 (relative error 15.76%, tolerance 8.57%, the ±1·SE band with SE=0.03)."
+      },
+      "agrees_with_row": true,
+      "verdict": "FAIL"
+    },
+    {
+      "name": "voucher_used_doctor_voucher_table3_col1",
+      "ground_truth": {
+        "value": 0.26,
+        "standard_error": 0.024,
+        "unit": "change in the probability of using a voucher (share of patients)",
+        "claim_type": "coefficient",
+        "location": "Table 3, column (1) Used Voucher, beta_D: Doctor Voucher",
+        "context": "Table 3, column (1): the same lasso-controlled regression of voucher use on the Patient Voucher and Doctor Voucher day dummies with date fixed effects.  The entry is the Doctor Voucher coefficient (voucher use relative to Control days, where no vouchers were available). Standard errors clustered by clinic.\n",
+        "decimals": 2,
+        "sample_size": null
+      },
+      "i4r": {
+        "reproduced_value": 0.26,
+        "outcome": "matches",
+        "notes": "Blanket I4R verdict; the row adds back non-malaria voucher users, 0.25 (0.023).",
+        "reproduced_within_band": false
+      },
+      "rule": {
+        "mode": "blind",
+        "type_relative_tolerance": 0.02,
+        "se_multiplier": 1.0,
+        "se_band_relative": 0.09230769230769231,
+        "printed_half_unit": 0.005
+      },
+      "row": {
+        "description": "voucher_used_doctor_voucher_table3_col1",
+        "claim_type": "coefficient",
+        "claimed": 0.26,
+        "reproduced": 0.213482,
+        "tolerance": 0.09230769230769231,
+        "rel_err": 0.17891538461538462,
+        "passed": false,
+        "passed_first_attempt": false,
+        "passed_first_scored": false,
+        "tolerance_source": "se_band"
+      },
+      "recomputed": {
+        "result_name": "voucher_used_doctor_voucher_table3_col1",
+        "reproduced": 0.213482,
+        "band_source": "se_band",
+        "band_relative": 0.09230769230769231,
+        "band_absolute": 0.024,
+        "abs_err": 0.046518000000000004,
+        "rel_err": 0.17891538461538462,
+        "margin": 1.93825,
+        "passed": false,
+        "notes": "Outside tolerance: reproduced=0.213482 vs claimed=0.26 (relative error 17.89%, tolerance 9.23%, the ±1·SE band with SE=0.024)."
+      },
+      "agrees_with_row": true,
+      "verdict": "FAIL"
+    },
+    {
+      "name": "any_malaria_treatment_prescribed_patient_voucher_table3_col2",
+      "ground_truth": {
+        "value": 0.052,
+        "standard_error": 0.025,
+        "unit": "change in the probability of an antimalarial prescription",
+        "claim_type": "coefficient",
+        "location": "Table 3, column (2) Any Malaria Treatment, Prescribed, beta_P: Patient Voucher",
+        "context": "Table 3, column (2).  Linear probability model of an indicator that the patient was prescribed any malaria treatment (simple or severe) at the consultation, on the Patient Voucher and Doctor Voucher day dummies with clinic visit date fixed effects and the post-double-selection lasso controls of column (1).  The entry is the Patient Voucher coefficient.  Standard errors clustered by clinic.\n",
+        "decimals": 3,
+        "sample_size": null
+      },
+      "i4r": {
+        "reproduced_value": 0.052,
+        "outcome": "matches",
+        "notes": "Blanket I4R verdict; the row adds back non-malaria voucher users, 0.055 (0.025).",
+        "reproduced_within_band": true
+      },
+      "rule": {
+        "mode": "blind",
+        "type_relative_tolerance": 0.02,
+        "se_multiplier": 1.0,
+        "se_band_relative": 0.48076923076923084,
+        "printed_half_unit": 0.0005
+      },
+      "row": {
+        "description": "any_malaria_treatment_prescribed_patient_voucher_table3_col2",
+        "claim_type": "coefficient",
+        "claimed": 0.052,
+        "reproduced": 0.05582,
+        "tolerance": 0.48076923076923084,
+        "rel_err": 0.07346153846153854,
+        "passed": true,
+        "passed_first_attempt": false,
+        "passed_first_scored": true,
+        "tolerance_source": "se_band"
+      },
+      "recomputed": {
+        "result_name": "any_malaria_treatment_prescribed_patient_voucher_table3_col2",
+        "reproduced": 0.05582,
+        "band_source": "se_band",
+        "band_relative": 0.48076923076923084,
+        "band_absolute": 0.025,
+        "abs_err": 0.003820000000000004,
+        "rel_err": 0.07346153846153854,
+        "margin": 0.15280000000000016,
+        "passed": true,
+        "notes": ""
+      },
+      "agrees_with_row": true,
+      "verdict": "PASS"
+    },
+    {
+      "name": "any_malaria_treatment_prescribed_doctor_voucher_table3_col2",
+      "ground_truth": {
+        "value": 0.016,
+        "standard_error": 0.025,
+        "unit": "change in the probability of an antimalarial prescription",
+        "claim_type": "coefficient",
+        "location": "Table 3, column (2) Any Malaria Treatment, Prescribed, beta_D: Doctor Voucher",
+        "context": "Table 3, column (2): any malaria treatment prescribed, same specification (date fixed effects, lasso-selected controls, clinic-clustered standard errors).  The entry is the Doctor Voucher coefficient.\n",
+        "decimals": 3,
+        "sample_size": null
+      },
+      "i4r": {
+        "reproduced_value": 0.016,
+        "outcome": "matches",
+        "notes": "Blanket I4R verdict; the row adds back non-malaria voucher users, 0.017 (0.026).",
+        "reproduced_within_band": true
+      },
+      "rule": {
+        "mode": "blind",
+        "type_relative_tolerance": 0.02,
+        "se_multiplier": 1.0,
+        "se_band_relative": 1.5625,
+        "printed_half_unit": 0.0005
+      },
+      "row": {
+        "description": "any_malaria_treatment_prescribed_doctor_voucher_table3_col2",
+        "claim_type": "coefficient",
+        "claimed": 0.016,
+        "reproduced": 0.027122,
+        "tolerance": 1.5625,
+        "rel_err": 0.695125,
+        "passed": true,
+        "passed_first_attempt": false,
+        "passed_first_scored": true,
+        "tolerance_source": "se_band"
+      },
+      "recomputed": {
+        "result_name": "any_malaria_treatment_prescribed_doctor_voucher_table3_col2",
+        "reproduced": 0.027122,
+        "band_source": "se_band",
+        "band_relative": 1.5625,
+        "band_absolute": 0.025,
+        "abs_err": 0.011122,
+        "rel_err": 0.695125,
+        "margin": 0.44488,
+        "passed": true,
+        "notes": ""
+      },
+      "agrees_with_row": true,
+      "verdict": "PASS"
+    },
+    {
+      "name": "any_malaria_treatment_purchased_patient_voucher_table3_col3",
+      "ground_truth": {
+        "value": 0.14,
+        "standard_error": 0.027,
+        "unit": "change in the probability of purchasing an antimalarial",
+        "claim_type": "coefficient",
+        "location": "Table 3, column (3) Any Malaria Treatment, Purchased, beta_P: Patient Voucher",
+        "context": "Table 3, column (3).  Linear probability model of an indicator that the patient purchased (obtained) any malaria treatment at the clinic, on the Patient Voucher and Doctor Voucher day dummies with clinic visit date fixed effects and the post-double-selection lasso controls.  The entry is the Patient Voucher coefficient.  Standard errors clustered by clinic.\n",
+        "decimals": 2,
+        "sample_size": null
+      },
+      "i4r": {
+        "reproduced_value": 0.14,
+        "outcome": "matches",
+        "notes": "Blanket I4R verdict; the row adds back non-malaria voucher users, 0.14 (0.028).",
+        "reproduced_within_band": true
+      },
+      "rule": {
+        "mode": "blind",
+        "type_relative_tolerance": 0.02,
+        "se_multiplier": 1.0,
+        "se_band_relative": 0.19285714285714284,
+        "printed_half_unit": 0.005
+      },
+      "row": {
+        "description": "any_malaria_treatment_purchased_patient_voucher_table3_col3",
+        "claim_type": "coefficient",
+        "claimed": 0.14,
+        "reproduced": 0.123097,
+        "tolerance": 0.19285714285714284,
+        "rel_err": 0.12073571428571438,
+        "passed": true,
+        "passed_first_attempt": false,
+        "passed_first_scored": true,
+        "tolerance_source": "se_band"
+      },
+      "recomputed": {
+        "result_name": "any_malaria_treatment_purchased_patient_voucher_table3_col3",
+        "reproduced": 0.123097,
+        "band_source": "se_band",
+        "band_relative": 0.19285714285714284,
+        "band_absolute": 0.027,
+        "abs_err": 0.016903000000000015,
+        "rel_err": 0.12073571428571438,
+        "margin": 0.6260370370370376,
+        "passed": true,
+        "notes": ""
+      },
+      "agrees_with_row": true,
+      "verdict": "PASS"
+    },
+    {
+      "name": "any_malaria_treatment_purchased_doctor_voucher_table3_col3",
+      "ground_truth": {
+        "value": 0.085,
+        "standard_error": 0.025,
+        "unit": "change in the probability of purchasing an antimalarial",
+        "claim_type": "coefficient",
+        "location": "Table 3, column (3) Any Malaria Treatment, Purchased, beta_D: Doctor Voucher",
+        "context": "Table 3, column (3): any malaria treatment purchased, same specification.  The entry is the Doctor Voucher coefficient; standard errors clustered by clinic.\n",
+        "decimals": 3,
+        "sample_size": null
+      },
+      "i4r": {
+        "reproduced_value": 0.085,
+        "outcome": "matches",
+        "notes": "Blanket I4R verdict; the row adds back non-malaria voucher users, 0.083 (0.026).",
+        "reproduced_within_band": true
+      },
+      "rule": {
+        "mode": "blind",
+        "type_relative_tolerance": 0.02,
+        "se_multiplier": 1.0,
+        "se_band_relative": 0.29411764705882354,
+        "printed_half_unit": 0.0005
+      },
+      "row": {
+        "description": "any_malaria_treatment_purchased_doctor_voucher_table3_col3",
+        "claim_type": "coefficient",
+        "claimed": 0.085,
+        "reproduced": 0.075604,
+        "tolerance": 0.29411764705882354,
+        "rel_err": 0.11054117647058824,
+        "passed": true,
+        "passed_first_attempt": false,
+        "passed_first_scored": true,
+        "tolerance_source": "se_band"
+      },
+      "recomputed": {
+        "result_name": "any_malaria_treatment_purchased_doctor_voucher_table3_col3",
+        "reproduced": 0.075604,
+        "band_source": "se_band",
+        "band_relative": 0.29411764705882354,
+        "band_absolute": 0.025,
+        "abs_err": 0.009396000000000002,
+        "rel_err": 0.11054117647058824,
+        "margin": 0.37584000000000006,
+        "passed": true,
+        "notes": ""
+      },
+      "agrees_with_row": true,
+      "verdict": "PASS"
+    },
+    {
+      "name": "severe_malaria_treatment_prescribed_patient_voucher_table3_col4",
+      "ground_truth": {
+        "value": -0.046,
+        "standard_error": 0.018,
+        "unit": "change in the probability of a severe malaria treatment prescription",
+        "claim_type": "coefficient",
+        "location": "Table 3, column (4) Severe Malaria Treatment, Prescribed, beta_P: Patient Voucher",
+        "context": "Table 3, column (4).  Linear probability model of an indicator that the patient was prescribed severe malaria treatment (the more expensive treatment, usually an injection or IV drip), on the Patient Voucher and Doctor Voucher day dummies with clinic visit date fixed effects and the post-double-selection lasso controls. The entry is the Patient Voucher coefficient.  Standard errors clustered by clinic.\n",
+        "decimals": 3,
+        "sample_size": null
+      },
+      "i4r": {
+        "reproduced_value": -0.046,
+        "outcome": "matches",
+        "notes": "Blanket I4R verdict; the row adds back non-malaria voucher users, -0.045 (0.019).",
+        "reproduced_within_band": true
+      },
+      "rule": {
+        "mode": "blind",
+        "type_relative_tolerance": 0.02,
+        "se_multiplier": 1.0,
+        "se_band_relative": 0.3913043478260869,
+        "printed_half_unit": 0.0005
+      },
+      "row": {
+        "description": "severe_malaria_treatment_prescribed_patient_voucher_table3_col4",
+        "claim_type": "coefficient",
+        "claimed": -0.046,
+        "reproduced": -0.035958,
+        "tolerance": 0.3913043478260869,
+        "rel_err": 0.21830434782608701,
+        "passed": true,
+        "passed_first_attempt": false,
+        "passed_first_scored": true,
+        "tolerance_source": "se_band"
+      },
+      "recomputed": {
+        "result_name": "severe_malaria_treatment_prescribed_patient_voucher_table3_col4",
+        "reproduced": -0.035958,
+        "band_source": "se_band",
+        "band_relative": 0.3913043478260869,
+        "band_absolute": 0.018,
+        "abs_err": 0.010042000000000002,
+        "rel_err": 0.21830434782608701,
+        "margin": 0.5578888888888891,
+        "passed": true,
+        "notes": ""
+      },
+      "agrees_with_row": true,
+      "verdict": "PASS"
+    },
+    {
+      "name": "severe_malaria_treatment_prescribed_doctor_voucher_table3_col4",
+      "ground_truth": {
+        "value": -0.054,
+        "standard_error": 0.021,
+        "unit": "change in the probability of a severe malaria treatment prescription",
+        "claim_type": "coefficient",
+        "location": "Table 3, column (4) Severe Malaria Treatment, Prescribed, beta_D: Doctor Voucher",
+        "context": "Table 3, column (4): severe malaria treatment prescribed, same specification.  The entry is the Doctor Voucher coefficient; standard errors clustered by clinic.\n",
+        "decimals": 3,
+        "sample_size": null
+      },
+      "i4r": {
+        "reproduced_value": -0.054,
+        "outcome": "matches",
+        "notes": "Blanket I4R verdict; the row adds back non-malaria voucher users, -0.057 (0.023).",
+        "reproduced_within_band": true
+      },
+      "rule": {
+        "mode": "blind",
+        "type_relative_tolerance": 0.02,
+        "se_multiplier": 1.0,
+        "se_band_relative": 0.3888888888888889,
+        "printed_half_unit": 0.0005
+      },
+      "row": {
+        "description": "severe_malaria_treatment_prescribed_doctor_voucher_table3_col4",
+        "claim_type": "coefficient",
+        "claimed": -0.054,
+        "reproduced": -0.049603,
+        "tolerance": 0.3888888888888889,
+        "rel_err": 0.08142592592592589,
+        "passed": true,
+        "passed_first_attempt": false,
+        "passed_first_scored": true,
+        "tolerance_source": "se_band"
+      },
+      "recomputed": {
+        "result_name": "severe_malaria_treatment_prescribed_doctor_voucher_table3_col4",
+        "reproduced": -0.049603,
+        "band_source": "se_band",
+        "band_relative": 0.3888888888888889,
+        "band_absolute": 0.021,
+        "abs_err": 0.004396999999999998,
+        "rel_err": 0.08142592592592589,
+        "margin": 0.20938095238095228,
+        "passed": true,
+        "notes": ""
+      },
+      "agrees_with_row": true,
+      "verdict": "PASS"
+    },
+    {
+      "name": "severe_malaria_treatment_purchased_patient_voucher_table3_col5",
+      "ground_truth": {
+        "value": -0.022,
+        "standard_error": 0.02,
+        "unit": "change in the probability of purchasing severe malaria treatment",
+        "claim_type": "coefficient",
+        "location": "Table 3, column (5) Severe Malaria Treatment, Purchased, beta_P: Patient Voucher",
+        "context": "Table 3, column (5).  Linear probability model of an indicator that the patient purchased severe malaria treatment at the clinic, on the Patient Voucher and Doctor Voucher day dummies with clinic visit date fixed effects and the post-double-selection lasso controls. The entry is the Patient Voucher coefficient.  Standard errors clustered by clinic.\n",
+        "decimals": 3,
+        "sample_size": null
+      },
+      "i4r": {
+        "reproduced_value": -0.022,
+        "outcome": "matches",
+        "notes": "Blanket I4R verdict; the row adds back non-malaria voucher users, -0.022 (0.021).",
+        "reproduced_within_band": true
+      },
+      "rule": {
+        "mode": "blind",
+        "type_relative_tolerance": 0.02,
+        "se_multiplier": 1.0,
+        "se_band_relative": 0.9090909090909092,
+        "printed_half_unit": 0.0005
+      },
+      "row": {
+        "description": "severe_malaria_treatment_purchased_patient_voucher_table3_col5",
+        "claim_type": "coefficient",
+        "claimed": -0.022,
+        "reproduced": -0.0156,
+        "tolerance": 0.9090909090909092,
+        "rel_err": 0.2909090909090909,
+        "passed": true,
+        "passed_first_attempt": false,
+        "passed_first_scored": true,
+        "tolerance_source": "se_band"
+      },
+      "recomputed": {
+        "result_name": "severe_malaria_treatment_purchased_patient_voucher_table3_col5",
+        "reproduced": -0.0156,
+        "band_source": "se_band",
+        "band_relative": 0.9090909090909092,
+        "band_absolute": 0.02,
+        "abs_err": 0.0063999999999999994,
+        "rel_err": 0.2909090909090909,
+        "margin": 0.31999999999999995,
+        "passed": true,
+        "notes": ""
+      },
+      "agrees_with_row": true,
+      "verdict": "PASS"
+    },
+    {
+      "name": "severe_malaria_treatment_purchased_doctor_voucher_table3_col5",
+      "ground_truth": {
+        "value": -0.05,
+        "standard_error": 0.019,
+        "unit": "change in the probability of purchasing severe malaria treatment",
+        "claim_type": "coefficient",
+        "location": "Table 3, column (5) Severe Malaria Treatment, Purchased, beta_D: Doctor Voucher",
+        "context": "Table 3, column (5): severe malaria treatment purchased, same specification.  The entry is the Doctor Voucher coefficient; standard errors clustered by clinic.\n",
+        "decimals": 3,
+        "sample_size": null
+      },
+      "i4r": {
+        "reproduced_value": -0.05,
+        "outcome": "matches",
+        "notes": "Blanket I4R verdict; the row adds back non-malaria voucher users, -0.052 (0.021).",
+        "reproduced_within_band": true
+      },
+      "rule": {
+        "mode": "blind",
+        "type_relative_tolerance": 0.02,
+        "se_multiplier": 1.0,
+        "se_band_relative": 0.37999999999999995,
+        "printed_half_unit": 0.0005
+      },
+      "row": {
+        "description": "severe_malaria_treatment_purchased_doctor_voucher_table3_col5",
+        "claim_type": "coefficient",
+        "claimed": -0.05,
+        "reproduced": -0.046596,
+        "tolerance": 0.37999999999999995,
+        "rel_err": 0.06808000000000008,
+        "passed": true,
+        "passed_first_attempt": false,
+        "passed_first_scored": true,
+        "tolerance_source": "se_band"
+      },
+      "recomputed": {
+        "result_name": "severe_malaria_treatment_purchased_doctor_voucher_table3_col5",
+        "reproduced": -0.046596,
+        "band_source": "se_band",
+        "band_relative": 0.37999999999999995,
+        "band_absolute": 0.019,
+        "abs_err": 0.0034040000000000042,
+        "rel_err": 0.06808000000000008,
+        "margin": 0.17915789473684232,
+        "passed": true,
+        "notes": ""
+      },
+      "agrees_with_row": true,
+      "verdict": "PASS"
+    },
+    {
+      "name": "n_obs_table3_col1",
+      "ground_truth": {
+        "value": 2055.0,
+        "standard_error": null,
+        "unit": "patients",
+        "claim_type": "count",
+        "location": "Table 3, N, column (1)",
+        "context": "Number of observations in Table 3, column (1) (voucher use): all patients interviewed in the in-clinic survey.\n",
+        "decimals": 0,
+        "sample_size": null
+      },
+      "i4r": null,
+      "rule": {
+        "mode": "blind",
+        "type_relative_tolerance": 0.05,
+        "se_multiplier": 1.0,
+        "se_band_relative": null,
+        "printed_half_unit": 0.5
+      },
+      "row": {
+        "description": "n_obs_table3_col1",
+        "claim_type": "count",
+        "claimed": 2055.0,
+        "reproduced": 2753.0,
+        "tolerance": 0.05,
+        "rel_err": 0.3396593673965937,
+        "passed": false,
+        "passed_first_attempt": false,
+        "passed_first_scored": false,
+        "tolerance_source": "relative"
+      },
+      "recomputed": {
+        "result_name": "n_obs_table3_col1",
+        "reproduced": 2753.0,
+        "band_source": "relative",
+        "band_relative": 0.05,
+        "band_absolute": 102.75,
+        "abs_err": 698.0,
+        "rel_err": 0.3396593673965937,
+        "margin": 6.793187347931873,
+        "passed": false,
+        "notes": "Outside tolerance: reproduced=2753.0 vs claimed=2055.0 (relative error 33.97%, tolerance 5.00%)."
+      },
+      "agrees_with_row": true,
+      "verdict": "FAIL"
+    },
+    {
+      "name": "n_obs_table3_cols2_5",
+      "ground_truth": {
+        "value": 2053.0,
+        "standard_error": null,
+        "unit": "patients",
+        "claim_type": "count",
+        "location": "Table 3, N, columns (2)-(5)",
+        "context": "Number of observations in Table 3, columns (2) through (5) (malaria treatment prescribed and purchased): the in-clinic survey patients with prescription and purchase outcomes recorded.\n",
+        "decimals": 0,
+        "sample_size": null
+      },
+      "i4r": null,
+      "rule": {
+        "mode": "blind",
+        "type_relative_tolerance": 0.05,
+        "se_multiplier": 1.0,
+        "se_band_relative": null,
+        "printed_half_unit": 0.5
+      },
+      "row": {
+        "description": "n_obs_table3_cols2_5",
+        "claim_type": "count",
+        "claimed": 2053.0,
+        "reproduced": 2429.0,
+        "tolerance": 0.05,
+        "rel_err": 0.18314661471018023,
+        "passed": false,
+        "passed_first_attempt": false,
+        "passed_first_scored": false,
+        "tolerance_source": "relative"
+      },
+      "recomputed": {
+        "result_name": "n_obs_table3_cols2_5",
+        "reproduced": 2429.0,
+        "band_source": "relative",
+        "band_relative": 0.05,
+        "band_absolute": 102.65,
+        "abs_err": 376.0,
+        "rel_err": 0.18314661471018023,
+        "margin": 3.6629322942036042,
+        "passed": false,
+        "notes": "Outside tolerance: reproduced=2429.0 vs claimed=2053.0 (relative error 18.31%, tolerance 5.00%)."
+      },
+      "agrees_with_row": true,
+      "verdict": "FAIL"
+    }
+  ],
+  "row_only_claims": [],
+  "summary": {
+    "n_claims": 12,
+    "row_passed": 8,
+    "recomputed_passed": 8,
+    "disagreements": []
+  },
+  "cell": {
+    "entry_id": "lopez-2022-patient-demand-prescription-overuse",
+    "mode": "blind",
+    "reproducer": "claude-code",
+    "label": "claude-code",
+    "model": null,
+    "oracle": false,
+    "run": "2026-11-10-a",
+    "results_file": "claude-code-1paper-lopez-all-modes-2026-11-10.json",
+    "also_in": [],
+    "artifacts_dir": "benchmark/results/artifacts/lopez-2022-patient-demand-prescription-overuse/blind/claude-code/20261110T064620Z",
+    "run_dir": "benchmark/reproductions/lopez-2022-patient-demand-prescription-overuse/blind/2026-11-10-a",
+    "date": "2026-11-10T06:45:00Z",
+    "data_access": "manual",
+    "retally_ran": true,
+    "error": null,
+    "n_claims": 12,
+    "final": 8,
+    "first_scored": 8,
+    "first_scored_index": 2,
+    "first_attempt": 0,
+    "n_refinements": 0,
+    "n_error_refinements": 0,
+    "n_claim_refinements": 0,
+    "n_executions": 3,
+    "n_files_stripped": 36,
+    "agrees_with_i4r": false,
+    "deviations_manifest": [
+      "Post-double-selection lasso implemented by hand in R (no glmnet/pdslasso available): rlasso-style plug-in lasso with cluster-robust (clinic) penalty loadings, c=1.1, gamma=0.1/log(60 clusters), lambda=2c*sqrt(n)*qnorm(1-gamma/(2p)), initial residuals from OLS on the 5 most-correlated candidates, loadings iterated on post-lasso residuals (max 15 iterations). Exact Stata pdslasso/rlasso defaults could not be verified, so the selected control set may differ from the authors'.",
+      "Date fixed effects (date_morning_survey) are partialled out of outcome, treatments and candidate controls before the lassos, and included in the final OLS; the final OLS uses the union of controls selected in the outcome, Patient Voucher and Doctor Voucher lassos (PDS OLS, not the CHS orthogonalized estimator)."
+    ],
+    "deviations_stdout": [],
+    "notes": "Data: LSS_analysis_datasets_20201108.dta. Sample: in-clinic survey patients (patient==1, N=2753) for column 1; for columns 2-5 the patients with non-missing prescription/purchase outcomes (N=2429). Treatments: patient_voucher and doctor_voucher (assigned schedule). Outcomes: used_vouchers_admin (col 1, admin voucher match), RXtreat_sev_simple_mal (col 2), treat_sev_simple_mal (col 3), RXtreat_severe_mal (col 4), treat_severe_mal (col 5). Candidate controls: all pre-built CC* variables in the dataset (symptom dummies, illness duration and square, age and square, under-5, gender, pregnancy plus missing dummy, respondent dummies, Bambara plus missing dummy, French, literacy, primary education, in-home-survey, and their pairwise interactions; 272 columns) plus 59 clinic dummies CL*. SEs clustered by clinic (cscomnum_OS) via fixest. Two exploratory runs (attempt-1, attempt-2) inspected variables only and printed no RESULT lines. The final script's diagnostic print line contains a leftover p-value expression that prints NA (cosmetic only, does not affect any RESULT). The diagnostic output also prints Control-group outcome means; these came out lower than the Control means printed in the paper's Table 3 notes (seen in the paper text while reading the method), which may mean the authors' cols 2-5 sample or outcome coding differs from mine. The specification was not changed in response. No run hung.",
+    "files_read_outside_mount": [],
+    "paper_text": "paper.blind.txt",
+    "complete": true,
+    "missing": []
+  }
+}

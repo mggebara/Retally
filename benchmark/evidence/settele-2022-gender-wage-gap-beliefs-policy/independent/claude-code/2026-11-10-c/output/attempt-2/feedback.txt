@@ -1,0 +1,3 @@
+Exploratory cross-check crashed after the variable listing:
+Error in x - y : non-numeric argument to binary operator (chk() was called on columns that the join had renamed with .I/.II suffixes, and on the character `wave` column).
+Fix: the full analysis script (attempt-3) builds the covariates and runs the cross-checks against the follow-up files' derived variables inside tryCatch, with explicit suffixes.

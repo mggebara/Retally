@@ -1,0 +1,20 @@
+{
+  "schema": 1,
+  "entry_id": "lopez-2022-patient-demand-prescription-overuse",
+  "mode": "independent",
+  "run_id": "2026-11-10-d",
+  "reproducer": "claude-code",
+  "language": "r",
+  "final": {"script": "script.R", "stdout": "stdout.txt", "stderr": "stderr.txt", "exit_code": 0},
+  "attempts": [
+    {"dir": "attempt-1", "exit_code": 0, "kind": ""}
+  ],
+  "deviations": [
+    "Post-double-selection lasso implemented by hand in R (glmnet/hdm not installed): rigorous plug-in lasso with heteroskedastic penalty loadings, lambda = 2*1.1*sqrt(n)*qnorm(1-gamma/(2p)), gamma = 0.1/log(n), initial residuals from OLS on the 5 most correlated candidates, post-lasso residuals for loading updates (up to 15 iterations); date fixed effects and constant partialled out before selection. This mimics Stata pdslasso/rlasso defaults; exact selected sets may differ from the authors' software.",
+    "Candidate controls taken from the pre-built variables in the analysis file: CC* (individual controls with missing values set to the sample mean, plus missing dummies), CC*xCC* pairwise interactions, CL* clinic dummies."
+  ],
+  "notes": "Sample: LSS_analysis_datasets_20201108.dta restricted to dropme==0 (2,055 in-clinic patients; 2,053 with nonmissing prescription/purchase outcomes). Outcomes: used_vouchers_admin (col 1), RXtreat_sev_simple_mal, treat_sev_simple_mal, RXtreat_severe_mal, treat_severe_mal (cols 2-5). Treatments: patient_voucher, doctor_voucher (assigned schedule). Final OLS: y on PV, DV, union of lasso-selected controls (from lassos of y, PV and DV on the candidates), date FE (date_morning_survey), SEs clustered by clinic (cscomnum_OS). Control-group means match the paper exactly (0.616, 0.461, 0.303, 0.255). attempt-1 was an exploratory variable listing (no RESULT lines). The first scored run was compared with the claims via check_attempt ('All claims within tolerance') and kept unchanged as the final run, so no claim attempt is recorded. No run hung.",
+  "files_read_outside_mount": [],
+  "started_at": "2026-11-10T06:44:38Z",
+  "finished_at": "2026-11-10T06:48:00Z"
+}

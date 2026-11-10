@@ -1,0 +1,72 @@
+Loaded rows: 2770 cols: 4266 
+PV col: patient_voucher  DV col: doctor_voucher 
+Clinic col: cscomnum_OS 
+Date col: date 
+Rows with treatment/clinic/date: 2770 
+Analysis sample: 2770   Control obs: 883 
+Finding voucher used
+Voucher used col: constructed from voucher_used_PV/DV 
+Finding any malaria prescribed
+  candidates: decline_mal(2429), decline_sev_mal(2429), decline_corr_mal(2429), decline_corr_sev_mal(2429), decline_mal_prescrip(1379), RXisantimal1(2770), RXisantimal2(2770), RXisantimal3(2770), RXisantimal4(2770), RXisantimal5(2770), RXisantimal6(2770), RXisantimal7(2770), RXisantimal8(2770), RXisantimal9(2770), RXisantimal10(2770), RXisantimal11(2770), RXisantimal12(2770), RXisantimal13(2770), RXisantimal15(2770) 
+Finding any malaria purchased
+  candidates: decline_mal(2429), decline_sev_mal(2429), decline_corr_mal(2429), decline_corr_sev_mal(2429) 
+Finding severe prescribed
+  candidates: RXtreat_severe_mal(2429), RXtreat_severe_mal_alt(2429), RXcorrect_severe_mal(2429), RXNsymp_sev_mal_sev_treat(2370), RXsevere_overtreatment(1126) 
+Finding severe purchased
+Outcome cols: RXisantimal1 decline_mal RXtreat_severe_mal NA 
+OLS estimation, Dep. Var.: y
+Observations: 2,770
+Fixed-effects: date_fe: 37
+Standard-errors: Clustered (clinic_id) 
+   Estimate Std. Error  t value   Pr(>|t|)    
+PV 0.297263   0.028642 10.37871 6.2717e-15 ***
+DV 0.215926   0.022441  9.62191 1.0676e-13 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+RMSE: 0.347767     Adj. R2: 0.132547
+                 Within R2: 0.100194
+OLS estimation, Dep. Var.: y
+Observations: 2,770
+Fixed-effects: date_fe: 37
+Standard-errors: Clustered (clinic_id) 
+   Estimate Std. Error  t value Pr(>|t|) 
+PV 0.043516   0.027912 1.559036  0.12434 
+DV 0.020021   0.025242 0.793167  0.43086 
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+RMSE: 0.430619     Adj. R2: 0.050171
+                 Within R2: 0.001464
+OLS estimation, Dep. Var.: y
+Observations: 2,429
+Fixed-effects: date_fe: 36
+Standard-errors: Clustered (clinic_id) 
+    Estimate Std. Error  t value   Pr(>|t|)    
+PV -0.069682   0.016266 -4.28381 6.8697e-05 ***
+DV -0.056255   0.015471 -3.63608 5.8268e-04 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+RMSE: 0.281786     Adj. R2: 0.021084
+                 Within R2: 0.009778
+OLS estimation, Dep. Var.: y
+Observations: 2,429
+Fixed-effects: date_fe: 36
+Standard-errors: Clustered (clinic_id) 
+    Estimate Std. Error  t value Pr(>|t|)    
+PV -0.023104   0.019927 -1.15945 0.250944    
+DV -0.048232   0.020525 -2.34995 0.022141 *  
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+RMSE: 0.414543     Adj. R2: 0.043326
+                 Within R2: 0.002121
+RESULT:voucher_used_patient_voucher_table3_col1=0.297263
+RESULT:voucher_used_doctor_voucher_table3_col1=0.215926
+RESULT:any_malaria_treatment_prescribed_patient_voucher_table3_col2=0.043516
+RESULT:any_malaria_treatment_prescribed_doctor_voucher_table3_col2=0.020021
+RESULT:any_malaria_treatment_purchased_patient_voucher_table3_col3=-0.069682
+RESULT:any_malaria_treatment_purchased_doctor_voucher_table3_col3=-0.056255
+RESULT:severe_malaria_treatment_prescribed_patient_voucher_table3_col4=-0.023104
+RESULT:severe_malaria_treatment_prescribed_doctor_voucher_table3_col4=-0.048232
+RESULT:severe_malaria_treatment_purchased_patient_voucher_table3_col5=NA
+RESULT:severe_malaria_treatment_purchased_doctor_voucher_table3_col5=NA
+RESULT:n_obs_table3_col1=2770
+RESULT:n_obs_table3_cols2_5=2770

@@ -1,0 +1,21 @@
+suppressMessages(library(haven))
+p <- "<repo>/benchmark/.cache/claude-code/lopez-2022-patient-demand-prescription-overuse/seeded/2026-11-10-a/mount/lopez_2022_patient_demand_prescription_overuse/Lopez_Sautmann_Schaner_2020/Data/LSS_analysis_datasets_20201108.dta"
+d <- read_dta(p)
+cat("rows", nrow(d), "cols", ncol(d), "\n")
+print(table(d$dropme, useNA="a"))
+d <- d[is.na(d$dropme) | d$dropme != 1, ]
+cat("after drop", nrow(d), "\n")
+nm <- names(d)
+cc <- grep("^CC", nm, value=TRUE); dd <- grep("^DD[0-9]+$", nm, value=TRUE); cl <- grep("^CL[0-9]+$", nm, value=TRUE)
+cat("CC", length(cc), "DD", length(dd), "CL", length(cl), "\n")
+print(head(cc, 60)); print(tail(cc, 20))
+i1 <- match("DD1", nm); i2 <- match("DD35", nm); cat("DD range", i1, i2, "\n"); print(nm[i1:i2])
+i1 <- match("CL1", nm); i2 <- match("CL59", nm); cat("CL range", i1, i2, "\n"); print(nm[i1:i2])
+X <- as.matrix(d[, cc]); cat("CC NA total", sum(is.na(X)), "\n")
+cat("CC constant cols", sum(apply(X,2,function(v) length(unique(v))<=1)), "\n")
+for (v in c("used_vouchers_admin","RXtreat_sev_simple_mal","treat_sev_simple_mal","RXtreat_severe_mal","treat_severe_mal","patient_voucher","doctor_voucher","cscomnum")) {cat(v, "NA", sum(is.na(d[[v]])), "mean", mean(d[[v]], na.rm=TRUE), "\n")}
+cat("clusters", length(unique(d$cscomnum)), "\n")
+cat("DD NA", sum(is.na(as.matrix(d[,dd]))), "CL NA", sum(is.na(as.matrix(d[,cl]))), "\n")
+print(colSums(as.matrix(d[,dd]))); print(colSums(as.matrix(d[,cl])))
+for (v in head(cc,40)) cat(v, ":", attr(d[[v]], "label"), "\n")
+cat("date vars:", grep("^date", nm, value=TRUE)[1:10], "\n")

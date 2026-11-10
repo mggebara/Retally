@@ -1,0 +1,711 @@
+{
+  "how": "recomputed: ResultComparator().compare_all(catalog claims, RESULT lines of output/stdout.txt, mode) - the comparator and claim conversion benchmark.runner.score_reproduction uses; row: the results row's claim_details entry as written by the run (tolerance, tolerance_source and rel_err come from there unchanged).",
+  "claims": [
+    {
+      "name": "test_score_compounding_treatment_minus_control_expA_table4_col1",
+      "ground_truth": {
+        "value": 1.442,
+        "standard_error": 0.194,
+        "unit": "correct answers out of 5 (compound-interest questions)",
+        "claim_type": "coefficient",
+        "location": "Table 4, column (1) Test score compounding, Experiment A, Difference",
+        "context": "Table 4 (\"Performance in exam-style test\"), column (1).  OLS regression of the number of correct answers on the five incentivized exam-style questions about compound interest on a Treatment indicator, Experiment A, Treatment and Control conditions only (the Substance-Only and Rhetoric-Only arms are excluded), one observation per subject; the sample is subjects who completed the study and did not switch more than once in any price list.  The entry is the Difference row (Treatment minus Control).  Standard errors in parentheses.\n",
+        "decimals": 3,
+        "sample_size": null
+      },
+      "i4r": {
+        "reproduced_value": 1.442,
+        "outcome": "matches",
+        "notes": "DP110 Table 1 col 1 (Original, Comp A) prints 1.442 (0.194)."
+      },
+      "rule": {
+        "mode": "blind",
+        "type_relative_tolerance": 0.02,
+        "se_multiplier": 1.0,
+        "se_band_relative": 0.13453536754507628,
+        "printed_half_unit": 0.0005
+      },
+      "row": {
+        "description": "test_score_compounding_treatment_minus_control_expA_table4_col1",
+        "claim_type": "coefficient",
+        "claimed": 1.442,
+        "reproduced": null,
+        "tolerance": 0.13453536754507628,
+        "rel_err": null,
+        "passed": false,
+        "passed_first_attempt": false,
+        "passed_first_scored": false,
+        "tolerance_source": "se_band"
+      },
+      "recomputed": {
+        "result_name": null,
+        "reproduced": null,
+        "band_source": "se_band",
+        "band_relative": 0.13453536754507628,
+        "band_absolute": 0.19399999999999998,
+        "abs_err": null,
+        "rel_err": null,
+        "margin": null,
+        "passed": false,
+        "notes": "No reproduced value available."
+      },
+      "agrees_with_row": true,
+      "verdict": "FAIL"
+    },
+    {
+      "name": "test_score_compounding_treatment_minus_control_expB_table4_col2",
+      "ground_truth": {
+        "value": 1.601,
+        "standard_error": 0.143,
+        "unit": "correct answers out of 5 (compound-interest questions)",
+        "claim_type": "coefficient",
+        "location": "Table 4, column (2) Test score compounding, Experiment B, Difference",
+        "context": "Table 4, column (2): the column (1) regression of the compound-interest test score on the Treatment indicator for Experiment B (Treatment with practice and feedback vs. a portfolio diversification Control), one observation per subject, multiple switchers excluded.  The entry is the Difference row (Treatment minus Control).  Standard errors in parentheses.\n",
+        "decimals": 3,
+        "sample_size": null
+      },
+      "i4r": {
+        "reproduced_value": 1.601,
+        "outcome": "matches",
+        "notes": "DP110 Table 1 col 3 (Original, Comp B) prints 1.601 (0.143)."
+      },
+      "rule": {
+        "mode": "blind",
+        "type_relative_tolerance": 0.02,
+        "se_multiplier": 1.0,
+        "se_band_relative": 0.08931917551530293,
+        "printed_half_unit": 0.0005
+      },
+      "row": {
+        "description": "test_score_compounding_treatment_minus_control_expB_table4_col2",
+        "claim_type": "coefficient",
+        "claimed": 1.601,
+        "reproduced": null,
+        "tolerance": 0.08931917551530293,
+        "rel_err": null,
+        "passed": false,
+        "passed_first_attempt": false,
+        "passed_first_scored": false,
+        "tolerance_source": "se_band"
+      },
+      "recomputed": {
+        "result_name": null,
+        "reproduced": null,
+        "band_source": "se_band",
+        "band_relative": 0.08931917551530293,
+        "band_absolute": 0.143,
+        "abs_err": null,
+        "rel_err": null,
+        "margin": null,
+        "passed": false,
+        "notes": "No reproduced value available."
+      },
+      "agrees_with_row": true,
+      "verdict": "FAIL"
+    },
+    {
+      "name": "test_score_control_module_treatment_minus_control_expA_table4_col3",
+      "ground_truth": {
+        "value": -1.058,
+        "standard_error": 0.146,
+        "unit": "correct answers out of 5 (control-module questions)",
+        "claim_type": "coefficient",
+        "location": "Table 4, column (3) Test score control module, Experiment A, Difference",
+        "context": "Table 4, column (3): the same OLS regression with the score on the five exam-style questions about the material of the Control intervention (index funds in Experiment A) as the outcome, Experiment A Treatment and Control subjects, multiple switchers excluded.  The entry is the Difference row (Treatment minus Control).  Standard errors in parentheses.\n",
+        "decimals": 3,
+        "sample_size": null
+      },
+      "i4r": {
+        "reproduced_value": -1.058,
+        "outcome": "matches",
+        "notes": "DP110 Table 1 col 5 (Original, Module A) prints -1.058 (0.146)."
+      },
+      "rule": {
+        "mode": "blind",
+        "type_relative_tolerance": 0.02,
+        "se_multiplier": 1.0,
+        "se_band_relative": 0.1379962192816635,
+        "printed_half_unit": 0.0005
+      },
+      "row": {
+        "description": "test_score_control_module_treatment_minus_control_expA_table4_col3",
+        "claim_type": "coefficient",
+        "claimed": -1.058,
+        "reproduced": null,
+        "tolerance": 0.1379962192816635,
+        "rel_err": null,
+        "passed": false,
+        "passed_first_attempt": false,
+        "passed_first_scored": false,
+        "tolerance_source": "se_band"
+      },
+      "recomputed": {
+        "result_name": null,
+        "reproduced": null,
+        "band_source": "se_band",
+        "band_relative": 0.1379962192816635,
+        "band_absolute": 0.146,
+        "abs_err": null,
+        "rel_err": null,
+        "margin": null,
+        "passed": false,
+        "notes": "No reproduced value available."
+      },
+      "agrees_with_row": true,
+      "verdict": "FAIL"
+    },
+    {
+      "name": "test_score_control_module_treatment_minus_control_expB_table4_col4",
+      "ground_truth": {
+        "value": -0.374,
+        "standard_error": 0.141,
+        "unit": "correct answers out of 5 (control-module questions)",
+        "claim_type": "coefficient",
+        "location": "Table 4, column (4) Test score control module, Experiment B, Difference",
+        "context": "Table 4, column (4): the score on the five questions about the Control intervention's material (portfolio diversification in Experiment B) regressed on the Treatment indicator, Experiment B subjects, multiple switchers excluded.  The entry is the Difference row (Treatment minus Control).  Standard errors in parentheses.\n",
+        "decimals": 3,
+        "sample_size": null
+      },
+      "i4r": {
+        "reproduced_value": -0.374,
+        "outcome": "matches",
+        "notes": "DP110 Table 1 col 7 (Original, Module B) prints -0.374 (0.141)."
+      },
+      "rule": {
+        "mode": "blind",
+        "type_relative_tolerance": 0.02,
+        "se_multiplier": 1.0,
+        "se_band_relative": 0.37700534759358284,
+        "printed_half_unit": 0.0005
+      },
+      "row": {
+        "description": "test_score_control_module_treatment_minus_control_expB_table4_col4",
+        "claim_type": "coefficient",
+        "claimed": -0.374,
+        "reproduced": null,
+        "tolerance": 0.37700534759358284,
+        "rel_err": null,
+        "passed": false,
+        "passed_first_attempt": false,
+        "passed_first_scored": false,
+        "tolerance_source": "se_band"
+      },
+      "recomputed": {
+        "result_name": null,
+        "reproduced": null,
+        "band_source": "se_band",
+        "band_relative": 0.37700534759358284,
+        "band_absolute": 0.141,
+        "abs_err": null,
+        "rel_err": null,
+        "margin": null,
+        "passed": false,
+        "notes": "No reproduced value available."
+      },
+      "agrees_with_row": true,
+      "verdict": "FAIL"
+    },
+    {
+      "name": "n_obs_table4_expA_cols1_3",
+      "ground_truth": {
+        "value": 215.0,
+        "standard_error": null,
+        "unit": "subjects",
+        "claim_type": "count",
+        "location": "Table 4, Observations, columns (1) and (3), Experiment A",
+        "context": "Number of observations in Table 4, columns (1) and (3): Experiment A subjects in the Treatment and Control conditions who completed the study and did not switch more than once in any price list, one observation per subject.\n",
+        "decimals": 0,
+        "sample_size": null
+      },
+      "i4r": {
+        "reproduced_value": 215.0,
+        "outcome": "matches",
+        "notes": "DP110 Table 1 cols 1 and 5 (Original) print Observations 215."
+      },
+      "rule": {
+        "mode": "blind",
+        "type_relative_tolerance": 0.05,
+        "se_multiplier": 1.0,
+        "se_band_relative": null,
+        "printed_half_unit": 0.5
+      },
+      "row": {
+        "description": "n_obs_table4_expA_cols1_3",
+        "claim_type": "count",
+        "claimed": 215.0,
+        "reproduced": null,
+        "tolerance": 0.05,
+        "rel_err": null,
+        "passed": false,
+        "passed_first_attempt": false,
+        "passed_first_scored": false,
+        "tolerance_source": "relative"
+      },
+      "recomputed": {
+        "result_name": null,
+        "reproduced": null,
+        "band_source": "relative",
+        "band_relative": 0.05,
+        "band_absolute": 10.75,
+        "abs_err": null,
+        "rel_err": null,
+        "margin": null,
+        "passed": false,
+        "notes": "No reproduced value available."
+      },
+      "agrees_with_row": true,
+      "verdict": "FAIL"
+    },
+    {
+      "name": "n_obs_table4_expB_cols2_4",
+      "ground_truth": {
+        "value": 348.0,
+        "standard_error": null,
+        "unit": "subjects",
+        "claim_type": "count",
+        "location": "Table 4, Observations, columns (2) and (4), Experiment B",
+        "context": "Number of observations in Table 4, columns (2) and (4): Experiment B subjects (Treatment and Control) who completed the study and did not switch more than once in any price list, one observation per subject.\n",
+        "decimals": 0,
+        "sample_size": null
+      },
+      "i4r": {
+        "reproduced_value": 348.0,
+        "outcome": "matches",
+        "notes": "DP110 Table 1 cols 3 and 7 (Original) print Observations 348.",
+        "reproduced_within_band": false
+      },
+      "rule": {
+        "mode": "blind",
+        "type_relative_tolerance": 0.05,
+        "se_multiplier": 1.0,
+        "se_band_relative": null,
+        "printed_half_unit": 0.5
+      },
+      "row": {
+        "description": "n_obs_table4_expB_cols2_4",
+        "claim_type": "count",
+        "claimed": 348.0,
+        "reproduced": 247.0,
+        "tolerance": 0.05,
+        "rel_err": 0.29022988505747127,
+        "passed": false,
+        "passed_first_attempt": false,
+        "passed_first_scored": false,
+        "tolerance_source": "relative"
+      },
+      "recomputed": {
+        "result_name": "n_obs_table4_expB_cols2_4",
+        "reproduced": 247.0,
+        "band_source": "relative",
+        "band_relative": 0.05,
+        "band_absolute": 17.400000000000002,
+        "abs_err": 101.0,
+        "rel_err": 0.29022988505747127,
+        "margin": 5.804597701149425,
+        "passed": false,
+        "notes": "Outside tolerance: reproduced=247.0 vs claimed=348.0 (relative error 29.02%, tolerance 5.00%)."
+      },
+      "agrees_with_row": true,
+      "verdict": "FAIL"
+    },
+    {
+      "name": "deliberative_competence_control_expA_table7_col1",
+      "ground_truth": {
+        "value": -24.448,
+        "standard_error": 1.633,
+        "unit": "percentage points of the future reward (minus the absolute valuation gap)",
+        "claim_type": "coefficient",
+        "location": "Table 7, column (1) both delays, Experiment A, Levels, Control",
+        "context": "Table 7 (\"Deliberative Competence\"), column (1).  OLS regression, without a constant, of deliberative competence on indicators for the four Experiment A conditions (Control, Treatment, Substance-Only, Rhetoric-Only), so each coefficient is a condition's mean level. Deliberative competence for a subject and a pair of equivalent valuation tasks (same future reward and delay, 36 or 72 days) is minus the absolute difference between the complexly framed and the simply framed valuation, each expressed as a percentage of the future reward (0 to 100); one observation per subject and task pair, both delays pooled, all Experiment A subjects who did not switch more than once in any price list.  The entry is the Control level. Standard errors clustered by subject.\n",
+        "decimals": 3,
+        "sample_size": null
+      },
+      "i4r": {
+        "reproduced_value": -24.448,
+        "outcome": "matches",
+        "notes": "DP110 Table 4 col 1 prints -24.448 (1.633)."
+      },
+      "rule": {
+        "mode": "blind",
+        "type_relative_tolerance": 0.02,
+        "se_multiplier": 1.0,
+        "se_band_relative": 0.06679482984293193,
+        "printed_half_unit": 0.0005
+      },
+      "row": {
+        "description": "deliberative_competence_control_expA_table7_col1",
+        "claim_type": "coefficient",
+        "claimed": -24.448,
+        "reproduced": null,
+        "tolerance": 0.06679482984293193,
+        "rel_err": null,
+        "passed": false,
+        "passed_first_attempt": false,
+        "passed_first_scored": false,
+        "tolerance_source": "se_band"
+      },
+      "recomputed": {
+        "result_name": null,
+        "reproduced": null,
+        "band_source": "se_band",
+        "band_relative": 0.06679482984293193,
+        "band_absolute": 1.633,
+        "abs_err": null,
+        "rel_err": null,
+        "margin": null,
+        "passed": false,
+        "notes": "No reproduced value available."
+      },
+      "agrees_with_row": true,
+      "verdict": "FAIL"
+    },
+    {
+      "name": "deliberative_competence_treatment_expA_table7_col1",
+      "ground_truth": {
+        "value": -22.864,
+        "standard_error": 1.741,
+        "unit": "percentage points of the future reward (minus the absolute valuation gap)",
+        "claim_type": "coefficient",
+        "location": "Table 7, column (1) both delays, Experiment A, Levels, Treatment",
+        "context": "Table 7, column (1): the same no-constant regression of deliberative competence on the four Experiment A condition indicators (both delays, subject-clustered standard errors).  The entry is the Treatment level (the full financial education video without practice and feedback).\n",
+        "decimals": 3,
+        "sample_size": null
+      },
+      "i4r": {
+        "reproduced_value": -22.864,
+        "outcome": "matches",
+        "notes": "DP110 Table 4 col 1 prints -22.864 (1.741)."
+      },
+      "rule": {
+        "mode": "blind",
+        "type_relative_tolerance": 0.02,
+        "se_multiplier": 1.0,
+        "se_band_relative": 0.07614590622813157,
+        "printed_half_unit": 0.0005
+      },
+      "row": {
+        "description": "deliberative_competence_treatment_expA_table7_col1",
+        "claim_type": "coefficient",
+        "claimed": -22.864,
+        "reproduced": null,
+        "tolerance": 0.07614590622813157,
+        "rel_err": null,
+        "passed": false,
+        "passed_first_attempt": false,
+        "passed_first_scored": false,
+        "tolerance_source": "se_band"
+      },
+      "recomputed": {
+        "result_name": null,
+        "reproduced": null,
+        "band_source": "se_band",
+        "band_relative": 0.07614590622813157,
+        "band_absolute": 1.7410000000000003,
+        "abs_err": null,
+        "rel_err": null,
+        "margin": null,
+        "passed": false,
+        "notes": "No reproduced value available."
+      },
+      "agrees_with_row": true,
+      "verdict": "FAIL"
+    },
+    {
+      "name": "deliberative_competence_substance_only_expA_table7_col1",
+      "ground_truth": {
+        "value": -22.012,
+        "standard_error": 1.433,
+        "unit": "percentage points of the future reward (minus the absolute valuation gap)",
+        "claim_type": "coefficient",
+        "location": "Table 7, column (1) both delays, Experiment A, Levels, Substance-Only",
+        "context": "Table 7, column (1): the Substance-Only level (the video's substantive material without the rhetoric) from the no-constant regression of deliberative competence on the four Experiment A condition indicators, both delays, standard errors clustered by subject.\n",
+        "decimals": 3,
+        "sample_size": null
+      },
+      "i4r": {
+        "reproduced_value": -22.012,
+        "outcome": "matches",
+        "notes": "DP110 Table 4 col 1 prints -22.012 (1.433)."
+      },
+      "rule": {
+        "mode": "blind",
+        "type_relative_tolerance": 0.02,
+        "se_multiplier": 1.0,
+        "se_band_relative": 0.06510085407959296,
+        "printed_half_unit": 0.0005
+      },
+      "row": {
+        "description": "deliberative_competence_substance_only_expA_table7_col1",
+        "claim_type": "coefficient",
+        "claimed": -22.012,
+        "reproduced": null,
+        "tolerance": 0.06510085407959296,
+        "rel_err": null,
+        "passed": false,
+        "passed_first_attempt": false,
+        "passed_first_scored": false,
+        "tolerance_source": "se_band"
+      },
+      "recomputed": {
+        "result_name": null,
+        "reproduced": null,
+        "band_source": "se_band",
+        "band_relative": 0.06510085407959296,
+        "band_absolute": 1.4330000000000003,
+        "abs_err": null,
+        "rel_err": null,
+        "margin": null,
+        "passed": false,
+        "notes": "No reproduced value available."
+      },
+      "agrees_with_row": true,
+      "verdict": "FAIL"
+    },
+    {
+      "name": "deliberative_competence_rhetoric_only_expA_table7_col1",
+      "ground_truth": {
+        "value": -19.797,
+        "standard_error": 1.406,
+        "unit": "percentage points of the future reward (minus the absolute valuation gap)",
+        "claim_type": "coefficient",
+        "location": "Table 7, column (1) both delays, Experiment A, Levels, Rhetoric-Only",
+        "context": "Table 7, column (1): the Rhetoric-Only level (the video's rhetorical material and introductory explanation without the rule of 72) from the same Experiment A regression, both delays, standard errors clustered by subject.\n",
+        "decimals": 3,
+        "sample_size": null
+      },
+      "i4r": {
+        "reproduced_value": -19.797,
+        "outcome": "matches",
+        "notes": "DP110 Table 4 col 1 prints -19.797 (1.406)."
+      },
+      "rule": {
+        "mode": "blind",
+        "type_relative_tolerance": 0.02,
+        "se_multiplier": 1.0,
+        "se_band_relative": 0.0710208617467293,
+        "printed_half_unit": 0.0005
+      },
+      "row": {
+        "description": "deliberative_competence_rhetoric_only_expA_table7_col1",
+        "claim_type": "coefficient",
+        "claimed": -19.797,
+        "reproduced": null,
+        "tolerance": 0.0710208617467293,
+        "rel_err": null,
+        "passed": false,
+        "passed_first_attempt": false,
+        "passed_first_scored": false,
+        "tolerance_source": "se_band"
+      },
+      "recomputed": {
+        "result_name": null,
+        "reproduced": null,
+        "band_source": "se_band",
+        "band_relative": 0.0710208617467293,
+        "band_absolute": 1.406,
+        "abs_err": null,
+        "rel_err": null,
+        "margin": null,
+        "passed": false,
+        "notes": "No reproduced value available."
+      },
+      "agrees_with_row": true,
+      "verdict": "FAIL"
+    },
+    {
+      "name": "deliberative_competence_control_expB_table7_col2",
+      "ground_truth": {
+        "value": -25.673,
+        "standard_error": 1.357,
+        "unit": "percentage points of the future reward (minus the absolute valuation gap)",
+        "claim_type": "coefficient",
+        "location": "Table 7, column (2) both delays, Experiment B, Levels, Control",
+        "context": "Table 7, column (2): no-constant OLS regression of deliberative competence (minus the absolute gap between paired complexly and simply framed valuations, percentage points of the future reward) on the two Experiment B condition indicators, one observation per subject and task pair, both delays, Experiment B subjects who did not switch more than once.  The entry is the Control level (portfolio diversification module).  Standard errors clustered by subject.\n",
+        "decimals": 3,
+        "sample_size": null
+      },
+      "i4r": {
+        "reproduced_value": -25.673,
+        "outcome": "matches",
+        "notes": "DP110 Table 4 col 2 prints -25.673 (1.357)."
+      },
+      "rule": {
+        "mode": "blind",
+        "type_relative_tolerance": 0.02,
+        "se_multiplier": 1.0,
+        "se_band_relative": 0.05285708721224633,
+        "printed_half_unit": 0.0005
+      },
+      "row": {
+        "description": "deliberative_competence_control_expB_table7_col2",
+        "claim_type": "coefficient",
+        "claimed": -25.673,
+        "reproduced": null,
+        "tolerance": 0.05285708721224633,
+        "rel_err": null,
+        "passed": false,
+        "passed_first_attempt": false,
+        "passed_first_scored": false,
+        "tolerance_source": "se_band"
+      },
+      "recomputed": {
+        "result_name": null,
+        "reproduced": null,
+        "band_source": "se_band",
+        "band_relative": 0.05285708721224633,
+        "band_absolute": 1.357,
+        "abs_err": null,
+        "rel_err": null,
+        "margin": null,
+        "passed": false,
+        "notes": "No reproduced value available."
+      },
+      "agrees_with_row": true,
+      "verdict": "FAIL"
+    },
+    {
+      "name": "deliberative_competence_treatment_expB_table7_col2",
+      "ground_truth": {
+        "value": -18.569,
+        "standard_error": 1.177,
+        "unit": "percentage points of the future reward (minus the absolute valuation gap)",
+        "claim_type": "coefficient",
+        "location": "Table 7, column (2) both delays, Experiment B, Levels, Treatment",
+        "context": "Table 7, column (2): the Treatment level (the compound-interest education with practice problems and automated feedback) from the same Experiment B regression, both delays, standard errors clustered by subject.\n",
+        "decimals": 3,
+        "sample_size": null
+      },
+      "i4r": {
+        "reproduced_value": -18.569,
+        "outcome": "matches",
+        "notes": "DP110 Table 4 col 2 prints -18.569 (1.177)."
+      },
+      "rule": {
+        "mode": "blind",
+        "type_relative_tolerance": 0.02,
+        "se_multiplier": 1.0,
+        "se_band_relative": 0.063385211912327,
+        "printed_half_unit": 0.0005
+      },
+      "row": {
+        "description": "deliberative_competence_treatment_expB_table7_col2",
+        "claim_type": "coefficient",
+        "claimed": -18.569,
+        "reproduced": null,
+        "tolerance": 0.063385211912327,
+        "rel_err": null,
+        "passed": false,
+        "passed_first_attempt": false,
+        "passed_first_scored": false,
+        "tolerance_source": "se_band"
+      },
+      "recomputed": {
+        "result_name": null,
+        "reproduced": null,
+        "band_source": "se_band",
+        "band_relative": 0.063385211912327,
+        "band_absolute": 1.177,
+        "abs_err": null,
+        "rel_err": null,
+        "margin": null,
+        "passed": false,
+        "notes": "No reproduced value available."
+      },
+      "agrees_with_row": true,
+      "verdict": "FAIL"
+    },
+    {
+      "name": "n_obs_table7_expA_col1",
+      "ground_truth": {
+        "value": 4550.0,
+        "standard_error": null,
+        "unit": "subject-by-task-pair observations",
+        "claim_type": "count",
+        "location": "Table 7, Observations, column (1) Experiment A",
+        "context": "Number of observations in Table 7, column (1): subject-by-task-pair observations (both delays) of all four Experiment A conditions, multiple switchers excluded.\n",
+        "decimals": 0,
+        "sample_size": null
+      },
+      "i4r": {
+        "reproduced_value": 4550.0,
+        "outcome": "matches",
+        "notes": "DP110 Table 4 col 1 prints Observations 4,550."
+      },
+      "rule": {
+        "mode": "blind",
+        "type_relative_tolerance": 0.05,
+        "se_multiplier": 1.0,
+        "se_band_relative": null,
+        "printed_half_unit": 0.5
+      },
+      "row": {
+        "description": "n_obs_table7_expA_col1",
+        "claim_type": "count",
+        "claimed": 4550.0,
+        "reproduced": null,
+        "tolerance": 0.05,
+        "rel_err": null,
+        "passed": false,
+        "passed_first_attempt": false,
+        "passed_first_scored": false,
+        "tolerance_source": "relative"
+      },
+      "recomputed": {
+        "result_name": null,
+        "reproduced": null,
+        "band_source": "relative",
+        "band_relative": 0.05,
+        "band_absolute": 227.5,
+        "abs_err": null,
+        "rel_err": null,
+        "margin": null,
+        "passed": false,
+        "notes": "No reproduced value available."
+      },
+      "agrees_with_row": true,
+      "verdict": "FAIL"
+    }
+  ],
+  "row_only_claims": [],
+  "summary": {
+    "n_claims": 13,
+    "row_passed": 0,
+    "recomputed_passed": 0,
+    "disagreements": []
+  },
+  "cell": {
+    "entry_id": "ambuehl-2022-deliberative-competence-financial-choice",
+    "mode": "blind",
+    "reproducer": "pipeline",
+    "label": "pipeline-desktop-opus-run4",
+    "model": "desktop-opus-run4",
+    "oracle": true,
+    "run": "20261110T065905Z",
+    "results_file": "pipeline-oracle-desktop-opus-run4-1paper-ambuehl-indep-blind-2026-11-10.json",
+    "also_in": [],
+    "artifacts_dir": "benchmark/results/artifacts/ambuehl-2022-deliberative-competence-financial-choice/blind/pipeline/20261110T065905Z",
+    "run_dir": null,
+    "date": "2026-11-10T06:59:05Z",
+    "data_access": "manual",
+    "retally_ran": true,
+    "error": null,
+    "n_claims": 13,
+    "final": 0,
+    "first_scored": 0,
+    "first_scored_index": 0,
+    "first_attempt": 0,
+    "n_refinements": 0,
+    "n_error_refinements": 0,
+    "n_claim_refinements": 0,
+    "n_executions": 1,
+    "n_files_stripped": 5,
+    "agrees_with_i4r": false,
+    "deviations_manifest": [],
+    "deviations_stdout": [],
+    "notes": null,
+    "files_read_outside_mount": null,
+    "paper_text": null,
+    "complete": true,
+    "missing": []
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "schema": 1,
+  "entry_id": "lopez-2022-patient-demand-prescription-overuse",
+  "mode": "blind",
+  "run_id": "2026-11-10-a",
+  "reproducer": "claude-code",
+  "language": "r",
+  "final": {"script": "script.R", "stdout": "stdout.txt", "stderr": "stderr.txt", "exit_code": 0},
+  "attempts": [
+    {"dir": "attempt-1", "exit_code": 0, "kind": ""},
+    {"dir": "attempt-2", "exit_code": 0, "kind": ""}
+  ],
+  "deviations": [
+    "Post-double-selection lasso implemented by hand in R (no glmnet/pdslasso available): rlasso-style plug-in lasso with cluster-robust (clinic) penalty loadings, c=1.1, gamma=0.1/log(60 clusters), lambda=2c*sqrt(n)*qnorm(1-gamma/(2p)), initial residuals from OLS on the 5 most-correlated candidates, loadings iterated on post-lasso residuals (max 15 iterations). Exact Stata pdslasso/rlasso defaults could not be verified, so the selected control set may differ from the authors'.",
+    "Date fixed effects (date_morning_survey) are partialled out of outcome, treatments and candidate controls before the lassos, and included in the final OLS; the final OLS uses the union of controls selected in the outcome, Patient Voucher and Doctor Voucher lassos (PDS OLS, not the CHS orthogonalized estimator)."
+  ],
+  "notes": "Data: LSS_analysis_datasets_20201108.dta. Sample: in-clinic survey patients (patient==1, N=2753) for column 1; for columns 2-5 the patients with non-missing prescription/purchase outcomes (N=2429). Treatments: patient_voucher and doctor_voucher (assigned schedule). Outcomes: used_vouchers_admin (col 1, admin voucher match), RXtreat_sev_simple_mal (col 2), treat_sev_simple_mal (col 3), RXtreat_severe_mal (col 4), treat_severe_mal (col 5). Candidate controls: all pre-built CC* variables in the dataset (symptom dummies, illness duration and square, age and square, under-5, gender, pregnancy plus missing dummy, respondent dummies, Bambara plus missing dummy, French, literacy, primary education, in-home-survey, and their pairwise interactions; 272 columns) plus 59 clinic dummies CL*. SEs clustered by clinic (cscomnum_OS) via fixest. Two exploratory runs (attempt-1, attempt-2) inspected variables only and printed no RESULT lines. The final script's diagnostic print line contains a leftover p-value expression that prints NA (cosmetic only, does not affect any RESULT). The diagnostic output also prints Control-group outcome means; these came out lower than the Control means printed in the paper's Table 3 notes (seen in the paper text while reading the method), which may mean the authors' cols 2-5 sample or outcome coding differs from mine. The specification was not changed in response. No run hung.",
+  "files_read_outside_mount": [],
+  "started_at": "2026-11-10T06:40:04Z",
+  "finished_at": "2026-11-10T06:45:00Z"
+}

@@ -1,0 +1,731 @@
+{
+  "how": "recomputed: ResultComparator().compare_all(catalog claims, RESULT lines of output/stdout.txt, mode) - the comparator and claim conversion benchmark.runner.score_reproduction uses; row: the results row's claim_details entry as written by the run (tolerance, tolerance_source and rel_err come from there unchanged).",
+  "claims": [
+    {
+      "name": "perception_index_democrat_table3_panelA_col4",
+      "ground_truth": {
+        "value": 0.691,
+        "standard_error": 0.066,
+        "unit": "standard deviations of the perception index",
+        "claim_type": "coefficient",
+        "location": "Table 3, Panel A, Democrat, column (4) Perception Index",
+        "context": "Table 3 (\"Correlates of perceptions\"), Panel A, column (4).  OLS of the perception summary index on a Democrat indicator (Democrats include Independents leaning Democrat), a Female indicator, indicators for Independent and \"other\" political orientation (Republicans, incl. Independents leaning Republican, are the reference) and a dummy for survey wave B.  The index combines the three perception items of columns (1)-(3) (gender differences in wages are large, are a problem, government should mitigate the gap), each z-scored on the pure control group, following Anderson (2008). Sample: the pure control group of the main survey (no information), both waves, restricted to respondents whose prior belief about females' relative wages lies strictly between the 5th and 95th percentiles.  Probability weights; robust standard errors.  The entry is the Democrat coefficient.\n",
+        "decimals": 3,
+        "sample_size": null
+      },
+      "i4r": {
+        "reproduced_value": 0.691,
+        "outcome": "matches",
+        "notes": "DP12 Sec. 2 (code delivers reported estimates); re-coded simple-average index 0.742 (0.071) DP Table 2 col 4R is a different index.",
+        "reproduced_within_band": false
+      },
+      "rule": {
+        "mode": "blind",
+        "type_relative_tolerance": 0.02,
+        "se_multiplier": 1.0,
+        "se_band_relative": 0.09551374819102751,
+        "printed_half_unit": 0.0005
+      },
+      "row": {
+        "description": "perception_index_democrat_table3_panelA_col4",
+        "claim_type": "coefficient",
+        "claimed": 0.691,
+        "reproduced": 0.761115,
+        "tolerance": 0.09551374819102751,
+        "rel_err": 0.10146888567293784,
+        "passed": false,
+        "passed_first_attempt": false,
+        "passed_first_scored": false,
+        "tolerance_source": "se_band"
+      },
+      "recomputed": {
+        "result_name": "perception_index_democrat_table3_panelA_col4",
+        "reproduced": 0.761115,
+        "band_source": "se_band",
+        "band_relative": 0.09551374819102751,
+        "band_absolute": 0.066,
+        "abs_err": 0.07011500000000004,
+        "rel_err": 0.10146888567293784,
+        "margin": 1.0623484848484854,
+        "passed": false,
+        "notes": "Outside tolerance: reproduced=0.761115 vs claimed=0.691 (relative error 10.15%, tolerance 9.55%, the ±1·SE band with SE=0.066)."
+      },
+      "agrees_with_row": true,
+      "verdict": "FAIL"
+    },
+    {
+      "name": "perception_index_female_table3_panelA_col4",
+      "ground_truth": {
+        "value": 0.181,
+        "standard_error": 0.057,
+        "unit": "standard deviations of the perception index",
+        "claim_type": "coefficient",
+        "location": "Table 3, Panel A, Female, column (4) Perception Index",
+        "context": "Table 3, Panel A, column (4): the same regression of the perception index on Democrat, Female, Independent, \"other\" political orientation and a wave B dummy in the trimmed pure control group; the entry is the Female coefficient.  Probability weights; robust standard errors.\n",
+        "decimals": 3,
+        "sample_size": null
+      },
+      "i4r": {
+        "reproduced_value": 0.181,
+        "outcome": "matches",
+        "notes": "DP12 Sec. 2 blanket; re-coded simple-average index 0.219 (0.062) DP Table 2 col 4R.",
+        "reproduced_within_band": true
+      },
+      "rule": {
+        "mode": "blind",
+        "type_relative_tolerance": 0.02,
+        "se_multiplier": 1.0,
+        "se_band_relative": 0.31491712707182323,
+        "printed_half_unit": 0.0005
+      },
+      "row": {
+        "description": "perception_index_female_table3_panelA_col4",
+        "claim_type": "coefficient",
+        "claimed": 0.181,
+        "reproduced": 0.203834,
+        "tolerance": 0.31491712707182323,
+        "rel_err": 0.12615469613259664,
+        "passed": true,
+        "passed_first_attempt": false,
+        "passed_first_scored": true,
+        "tolerance_source": "se_band"
+      },
+      "recomputed": {
+        "result_name": "perception_index_female_table3_panelA_col4",
+        "reproduced": 0.203834,
+        "band_source": "se_band",
+        "band_relative": 0.31491712707182323,
+        "band_absolute": 0.057,
+        "abs_err": 0.022833999999999993,
+        "rel_err": 0.12615469613259664,
+        "margin": 0.40059649122807006,
+        "passed": true,
+        "notes": ""
+      },
+      "agrees_with_row": true,
+      "verdict": "PASS"
+    },
+    {
+      "name": "perception_index_prior_table3_panelB_col4",
+      "ground_truth": {
+        "value": -0.729,
+        "standard_error": 0.065,
+        "unit": "standard deviations of the perception index per standard deviation of the prior",
+        "claim_type": "coefficient",
+        "location": "Table 3, Panel B, Prior (z-scored), column (4) Perception Index",
+        "context": "Table 3, Panel B, column (4): OLS of the perception index on the respondent's prior belief about females' relative wages (a woman's average wage for every $100 made by a man when both are 45-year-old employees with a Bachelor's degree working 40 hours per week), z-scored within the pure control group, and a wave B dummy.  Same trimmed pure control group sample, probability weights and robust standard errors.\n",
+        "decimals": 3,
+        "sample_size": null
+      },
+      "i4r": {
+        "reproduced_value": -0.729,
+        "outcome": "matches",
+        "notes": "DP12 Sec. 2 blanket; re-coded simple-average index -0.815 (0.071) DP Table 3 col 4R.",
+        "reproduced_within_band": false
+      },
+      "rule": {
+        "mode": "blind",
+        "type_relative_tolerance": 0.02,
+        "se_multiplier": 1.0,
+        "se_band_relative": 0.08916323731138547,
+        "printed_half_unit": 0.0005
+      },
+      "row": {
+        "description": "perception_index_prior_table3_panelB_col4",
+        "claim_type": "coefficient",
+        "claimed": -0.729,
+        "reproduced": -0.807659,
+        "tolerance": 0.08916323731138547,
+        "rel_err": 0.1078998628257888,
+        "passed": false,
+        "passed_first_attempt": false,
+        "passed_first_scored": false,
+        "tolerance_source": "se_band"
+      },
+      "recomputed": {
+        "result_name": "perception_index_prior_table3_panelB_col4",
+        "reproduced": -0.807659,
+        "band_source": "se_band",
+        "band_relative": 0.08916323731138547,
+        "band_absolute": 0.065,
+        "abs_err": 0.07865900000000003,
+        "rel_err": 0.1078998628257888,
+        "margin": 1.210138461538462,
+        "passed": false,
+        "notes": "Outside tolerance: reproduced=-0.807659 vs claimed=-0.729 (relative error 10.79%, tolerance 8.92%, the ±1·SE band with SE=0.065)."
+      },
+      "agrees_with_row": true,
+      "verdict": "FAIL"
+    },
+    {
+      "name": "n_obs_table3",
+      "ground_truth": {
+        "value": 921.0,
+        "standard_error": null,
+        "unit": "respondents",
+        "claim_type": "count",
+        "location": "Table 3, Observations (all columns)",
+        "context": "Number of observations in Table 3 (every column): pure control group respondents of both main-survey waves whose prior belief lies strictly between the 5th and 95th percentiles of the control group's prior distribution.\n",
+        "decimals": 0,
+        "sample_size": null
+      },
+      "i4r": {
+        "reproduced_value": 921.0,
+        "outcome": "matches",
+        "notes": "DP12 Tables 2-7 print 921 in every re-coded (R) column.",
+        "reproduced_within_band": true
+      },
+      "rule": {
+        "mode": "blind",
+        "type_relative_tolerance": 0.05,
+        "se_multiplier": 1.0,
+        "se_band_relative": null,
+        "printed_half_unit": 0.5
+      },
+      "row": {
+        "description": "n_obs_table3",
+        "claim_type": "count",
+        "claimed": 921.0,
+        "reproduced": 921.0,
+        "tolerance": 0.05,
+        "rel_err": 0.0,
+        "passed": true,
+        "passed_first_attempt": false,
+        "passed_first_scored": true,
+        "tolerance_source": "relative"
+      },
+      "recomputed": {
+        "result_name": "n_obs_table3",
+        "reproduced": 921.0,
+        "band_source": "relative",
+        "band_relative": 0.05,
+        "band_absolute": 46.050000000000004,
+        "abs_err": 0.0,
+        "rel_err": 0.0,
+        "margin": 0.0,
+        "passed": true,
+        "notes": ""
+      },
+      "agrees_with_row": true,
+      "verdict": "PASS"
+    },
+    {
+      "name": "policy_demand_index_democrat_table4_panelA_col7",
+      "ground_truth": {
+        "value": 0.669,
+        "standard_error": 0.051,
+        "unit": "standard deviations of the policy demand index",
+        "claim_type": "coefficient",
+        "location": "Table 4, Panel A, Democrat, column (7) Policy demand index",
+        "context": "Table 4 (\"Correlates of demand for specific policies\"), Panel A, column (7).  OLS of the policy demand summary index (Anderson 2008) over the six specific policies of columns (1)-(6) (gender quotas for leading positions, statutory affirmative action, stricter equal pay legislation, wage transparency within companies (wave A) or a reporting website for company wage statistics (wave B), subsidies to child care), each z-scored on the pure control group, on Democrat, Female, Independent and \"other\" political orientation and a wave B dummy.  Trimmed pure control group as in Table 3; probability weights; robust standard errors.  The entry is the Democrat coefficient.\n",
+        "decimals": 3,
+        "sample_size": null
+      },
+      "i4r": {
+        "reproduced_value": 0.669,
+        "outcome": "matches",
+        "notes": "DP12 Sec. 2 blanket; re-coded simple-average index 0.904 (0.068) DP Table 5 col 7R.",
+        "reproduced_within_band": false
+      },
+      "rule": {
+        "mode": "blind",
+        "type_relative_tolerance": 0.02,
+        "se_multiplier": 1.0,
+        "se_band_relative": 0.07623318385650223,
+        "printed_half_unit": 0.0005
+      },
+      "row": {
+        "description": "policy_demand_index_democrat_table4_panelA_col7",
+        "claim_type": "coefficient",
+        "claimed": 0.669,
+        "reproduced": 0.777977,
+        "tolerance": 0.07623318385650223,
+        "rel_err": 0.16289536621823614,
+        "passed": false,
+        "passed_first_attempt": false,
+        "passed_first_scored": false,
+        "tolerance_source": "se_band"
+      },
+      "recomputed": {
+        "result_name": "policy_demand_index_democrat_table4_panelA_col7",
+        "reproduced": 0.777977,
+        "band_source": "se_band",
+        "band_relative": 0.07623318385650223,
+        "band_absolute": 0.05099999999999999,
+        "abs_err": 0.10897699999999999,
+        "rel_err": 0.16289536621823614,
+        "margin": 2.1368039215686276,
+        "passed": false,
+        "notes": "Outside tolerance: reproduced=0.777977 vs claimed=0.669 (relative error 16.29%, tolerance 7.62%, the ±1·SE band with SE=0.051)."
+      },
+      "agrees_with_row": true,
+      "verdict": "FAIL"
+    },
+    {
+      "name": "policy_demand_index_prior_table4_panelB_col7",
+      "ground_truth": {
+        "value": -0.302,
+        "standard_error": 0.054,
+        "unit": "standard deviations of the policy demand index per standard deviation of the prior",
+        "claim_type": "coefficient",
+        "location": "Table 4, Panel B, Prior (z-scored), column (7) Policy demand index",
+        "context": "Table 4, Panel B, column (7): OLS of the policy demand index on the z-scored prior belief about females' relative wages and a wave B dummy in the trimmed pure control group.  Probability weights; robust standard errors.\n",
+        "decimals": 3,
+        "sample_size": null
+      },
+      "i4r": {
+        "reproduced_value": -0.302,
+        "outcome": "matches",
+        "notes": "DP12 Sec. 2 blanket; re-coded simple-average index -0.422 (0.072) DP Table 6 col 7R.",
+        "reproduced_within_band": false
+      },
+      "rule": {
+        "mode": "blind",
+        "type_relative_tolerance": 0.02,
+        "se_multiplier": 1.0,
+        "se_band_relative": 0.17880794701986755,
+        "printed_half_unit": 0.0005
+      },
+      "row": {
+        "description": "policy_demand_index_prior_table4_panelB_col7",
+        "claim_type": "coefficient",
+        "claimed": -0.302,
+        "reproduced": -0.391535,
+        "tolerance": 0.17880794701986755,
+        "rel_err": 0.29647350993377497,
+        "passed": false,
+        "passed_first_attempt": false,
+        "passed_first_scored": false,
+        "tolerance_source": "se_band"
+      },
+      "recomputed": {
+        "result_name": "policy_demand_index_prior_table4_panelB_col7",
+        "reproduced": -0.391535,
+        "band_source": "se_band",
+        "band_relative": 0.17880794701986755,
+        "band_absolute": 0.054,
+        "abs_err": 0.08953500000000003,
+        "rel_err": 0.29647350993377497,
+        "margin": 1.658055555555556,
+        "passed": false,
+        "notes": "Outside tolerance: reproduced=-0.391535 vs claimed=-0.302 (relative error 29.65%, tolerance 17.88%, the ±1·SE band with SE=0.054)."
+      },
+      "agrees_with_row": true,
+      "verdict": "FAIL"
+    },
+    {
+      "name": "first_stage_posterior_raw_t74_table5_panelA_col1",
+      "ground_truth": {
+        "value": -12.955,
+        "standard_error": 0.594,
+        "unit": "dollars per $100 earned by a man (posterior belief, 0-200 scale)",
+        "claim_type": "coefficient",
+        "location": "Table 5, Panel A: First Stage, T74, column (1)",
+        "context": "Table 5 (\"Treatment effect on perceptions and demand for specific policies\"), Panel A, column (1).  OLS of the respondent's posterior belief about females' relative wages (dollars per $100 a man earns, pooled across the five randomized versions of the posterior wage statistic) on T74, a dummy for the high-wage-gap information arm (told the ACS-based statistic) versus the low-wage-gap arm (told the CPS-based statistic).  Sample: the two treatment arms of the main survey, both waves (pure control group excluded).  Controls: survey wave, gender, prior belief, census region, age categories, having a child, log household income, at least a 2-year college degree, full-time, part-time, self-employed, unemployed, student, Democrat, Independent and \"other\" political orientation.  Probability weights; robust standard errors.\n",
+        "decimals": 3,
+        "sample_size": null
+      },
+      "i4r": {
+        "reproduced_value": -12.955,
+        "outcome": "matches",
+        "notes": "DP12 Sec. 2 blanket; the DP does not reprint this column.",
+        "reproduced_within_band": true
+      },
+      "rule": {
+        "mode": "blind",
+        "type_relative_tolerance": 0.02,
+        "se_multiplier": 1.0,
+        "se_band_relative": 0.04585102277113084,
+        "printed_half_unit": 0.0005
+      },
+      "row": {
+        "description": "first_stage_posterior_raw_t74_table5_panelA_col1",
+        "claim_type": "coefficient",
+        "claimed": -12.955,
+        "reproduced": -12.950173,
+        "tolerance": 0.04585102277113084,
+        "rel_err": 0.000372597452721002,
+        "passed": true,
+        "passed_first_attempt": false,
+        "passed_first_scored": true,
+        "tolerance_source": "se_band"
+      },
+      "recomputed": {
+        "result_name": "first_stage_posterior_raw_t74_table5_panelA_col1",
+        "reproduced": -12.950173,
+        "band_source": "se_band",
+        "band_relative": 0.04585102277113084,
+        "band_absolute": 0.594,
+        "abs_err": 0.004827000000000581,
+        "rel_err": 0.000372597452721002,
+        "margin": 0.008126262626263604,
+        "passed": true,
+        "notes": ""
+      },
+      "agrees_with_row": true,
+      "verdict": "PASS"
+    },
+    {
+      "name": "first_stage_posterior_z_t74_table5_panelA_col2",
+      "ground_truth": {
+        "value": -0.658,
+        "standard_error": 0.03,
+        "unit": "standard deviations of the posterior belief",
+        "claim_type": "coefficient",
+        "location": "Table 5, Panel A: First Stage, T74, column (2)",
+        "context": "Table 5, Panel A, column (2): the column (1) regression with the posterior belief about females' relative wages z-scored as the outcome; the first stage of the Panel C 2SLS.  Same treatment-arm sample, controls, probability weights and robust standard errors.\n",
+        "decimals": 3,
+        "sample_size": null
+      },
+      "i4r": {
+        "reproduced_value": -0.638,
+        "outcome": "matches",
+        "notes": "DP12 Table 8 col 1R re-coded first stage -0.638 (0.029) vs -0.658 (0.030); income coded from reported amounts.",
+        "reproduced_within_band": false
+      },
+      "rule": {
+        "mode": "blind",
+        "type_relative_tolerance": 0.02,
+        "se_multiplier": 1.0,
+        "se_band_relative": 0.04559270516717325,
+        "printed_half_unit": 0.0005
+      },
+      "row": {
+        "description": "first_stage_posterior_z_t74_table5_panelA_col2",
+        "claim_type": "coefficient",
+        "claimed": -0.658,
+        "reproduced": -0.586687,
+        "tolerance": 0.04559270516717325,
+        "rel_err": 0.10837841945288765,
+        "passed": false,
+        "passed_first_attempt": false,
+        "passed_first_scored": false,
+        "tolerance_source": "se_band"
+      },
+      "recomputed": {
+        "result_name": "first_stage_posterior_z_t74_table5_panelA_col2",
+        "reproduced": -0.586687,
+        "band_source": "se_band",
+        "band_relative": 0.04559270516717325,
+        "band_absolute": 0.030000000000000002,
+        "abs_err": 0.07131300000000007,
+        "rel_err": 0.10837841945288765,
+        "margin": 2.377100000000002,
+        "passed": false,
+        "notes": "Outside tolerance: reproduced=-0.586687 vs claimed=-0.658 (relative error 10.84%, tolerance 4.56%, the ±1·SE band with SE=0.03)."
+      },
+      "agrees_with_row": true,
+      "verdict": "FAIL"
+    },
+    {
+      "name": "perception_index_t74_table5_panelA_col6",
+      "ground_truth": {
+        "value": 0.417,
+        "standard_error": 0.032,
+        "unit": "standard deviations of the perception index",
+        "claim_type": "coefficient",
+        "location": "Table 5, Panel A: First Stage, T74, column (6) Perception Index",
+        "context": "Table 5, Panel A, column (6): effect of T74 on the perception summary index over columns (3)-(5) (gender differences in wages are large, are a problem, government should mitigate the gap; each z-scored using the pure control group's mean and standard deviation), following Anderson (2008).  Treatment-arm sample, the Table 5 controls, probability weights, robust standard errors.\n",
+        "decimals": 3,
+        "sample_size": null
+      },
+      "i4r": {
+        "reproduced_value": 0.417,
+        "outcome": "matches",
+        "notes": "DP12 Sec. 2 blanket; the DP does not reprint this column.",
+        "reproduced_within_band": false
+      },
+      "rule": {
+        "mode": "blind",
+        "type_relative_tolerance": 0.02,
+        "se_multiplier": 1.0,
+        "se_band_relative": 0.07673860911270984,
+        "printed_half_unit": 0.0005
+      },
+      "row": {
+        "description": "perception_index_t74_table5_panelA_col6",
+        "claim_type": "coefficient",
+        "claimed": 0.417,
+        "reproduced": 0.457323,
+        "tolerance": 0.07673860911270984,
+        "rel_err": 0.0966978417266187,
+        "passed": false,
+        "passed_first_attempt": false,
+        "passed_first_scored": false,
+        "tolerance_source": "se_band"
+      },
+      "recomputed": {
+        "result_name": "perception_index_t74_table5_panelA_col6",
+        "reproduced": 0.457323,
+        "band_source": "se_band",
+        "band_relative": 0.07673860911270984,
+        "band_absolute": 0.032,
+        "abs_err": 0.040323,
+        "rel_err": 0.0966978417266187,
+        "margin": 1.26009375,
+        "passed": false,
+        "notes": "Outside tolerance: reproduced=0.457323 vs claimed=0.417 (relative error 9.67%, tolerance 7.67%, the ±1·SE band with SE=0.032)."
+      },
+      "agrees_with_row": true,
+      "verdict": "FAIL"
+    },
+    {
+      "name": "iv_affirmative_action_posterior_table5_panelC_col2",
+      "ground_truth": {
+        "value": -0.171,
+        "standard_error": 0.053,
+        "unit": "standard deviations of policy demand per standard deviation of the posterior belief",
+        "claim_type": "coefficient",
+        "location": "Table 5, Panel C: 2SLS, Posterior belief about fem. rel. wage (z-scored), column (2) Statutory affirmative action",
+        "context": "Table 5, Panel C, column (2).  2SLS of demand for statutory affirmative action programs (agreement with the policy statement, z-scored on the pure control group) on the z-scored posterior belief about females' relative wages, instrumented by T74 (first stage: Panel A, column 2), with the Table 5 controls.  Treatment-arm sample; probability weights; robust standard errors.\n",
+        "decimals": 3,
+        "sample_size": null
+      },
+      "i4r": {
+        "reproduced_value": -0.177,
+        "outcome": "matches",
+        "notes": "DP12 Table 9 col 2R re-coded 2SLS -0.177 (0.054) vs -0.171 (0.053).",
+        "reproduced_within_band": true
+      },
+      "rule": {
+        "mode": "blind",
+        "type_relative_tolerance": 0.02,
+        "se_multiplier": 1.0,
+        "se_band_relative": 0.30994152046783624,
+        "printed_half_unit": 0.0005
+      },
+      "row": {
+        "description": "iv_affirmative_action_posterior_table5_panelC_col2",
+        "claim_type": "coefficient",
+        "claimed": -0.171,
+        "reproduced": -0.191897,
+        "tolerance": 0.30994152046783624,
+        "rel_err": 0.12220467836257308,
+        "passed": true,
+        "passed_first_attempt": false,
+        "passed_first_scored": true,
+        "tolerance_source": "se_band"
+      },
+      "recomputed": {
+        "result_name": "iv_affirmative_action_posterior_table5_panelC_col2",
+        "reproduced": -0.191897,
+        "band_source": "se_band",
+        "band_relative": 0.30994152046783624,
+        "band_absolute": 0.053,
+        "abs_err": 0.020897,
+        "rel_err": 0.12220467836257308,
+        "margin": 0.3942830188679245,
+        "passed": true,
+        "notes": ""
+      },
+      "agrees_with_row": true,
+      "verdict": "PASS"
+    },
+    {
+      "name": "iv_equal_pay_legislation_posterior_table5_panelC_col3",
+      "ground_truth": {
+        "value": -0.177,
+        "standard_error": 0.053,
+        "unit": "standard deviations of policy demand per standard deviation of the posterior belief",
+        "claim_type": "coefficient",
+        "location": "Table 5, Panel C: 2SLS, Posterior belief about fem. rel. wage (z-scored), column (3) Stricter equal pay legislation",
+        "context": "Table 5, Panel C, column (3): the same 2SLS (z-scored posterior belief instrumented by T74, Table 5 controls) for demand for stricter equal pay legislation.  Treatment-arm sample; probability weights; robust standard errors.\n",
+        "decimals": 3,
+        "sample_size": null
+      },
+      "i4r": {
+        "reproduced_value": -0.182,
+        "outcome": "matches",
+        "notes": "DP12 Table 9 col 3R re-coded 2SLS -0.182 (0.055) vs -0.177 (0.053).",
+        "reproduced_within_band": true
+      },
+      "rule": {
+        "mode": "blind",
+        "type_relative_tolerance": 0.02,
+        "se_multiplier": 1.0,
+        "se_band_relative": 0.2994350282485876,
+        "printed_half_unit": 0.0005
+      },
+      "row": {
+        "description": "iv_equal_pay_legislation_posterior_table5_panelC_col3",
+        "claim_type": "coefficient",
+        "claimed": -0.177,
+        "reproduced": -0.198462,
+        "tolerance": 0.2994350282485876,
+        "rel_err": 0.12125423728813566,
+        "passed": true,
+        "passed_first_attempt": false,
+        "passed_first_scored": true,
+        "tolerance_source": "se_band"
+      },
+      "recomputed": {
+        "result_name": "iv_equal_pay_legislation_posterior_table5_panelC_col3",
+        "reproduced": -0.198462,
+        "band_source": "se_band",
+        "band_relative": 0.2994350282485876,
+        "band_absolute": 0.053,
+        "abs_err": 0.02146200000000001,
+        "rel_err": 0.12125423728813566,
+        "margin": 0.4049433962264153,
+        "passed": true,
+        "notes": ""
+      },
+      "agrees_with_row": true,
+      "verdict": "PASS"
+    },
+    {
+      "name": "iv_policy_demand_index_posterior_table5_panelC_col7",
+      "ground_truth": {
+        "value": -0.087,
+        "standard_error": 0.038,
+        "unit": "standard deviations of the policy demand index per standard deviation of the posterior belief",
+        "claim_type": "coefficient",
+        "location": "Table 5, Panel C: 2SLS, Posterior belief about fem. rel. wage (z-scored), column (7) Policy demand index",
+        "context": "Table 5, Panel C, column (7): the same 2SLS for the policy demand summary index over the six specific policies (Anderson 2008). Treatment-arm sample; probability weights; robust standard errors.\n",
+        "decimals": 3,
+        "sample_size": null
+      },
+      "i4r": {
+        "reproduced_value": -0.087,
+        "outcome": "matches",
+        "notes": "DP12 Sec. 2 blanket; re-coded simple-average index -0.133 (0.053) DP Table 9 is a different index.",
+        "reproduced_within_band": true
+      },
+      "rule": {
+        "mode": "blind",
+        "type_relative_tolerance": 0.02,
+        "se_multiplier": 1.0,
+        "se_band_relative": 0.4367816091954023,
+        "printed_half_unit": 0.0005
+      },
+      "row": {
+        "description": "iv_policy_demand_index_posterior_table5_panelC_col7",
+        "claim_type": "coefficient",
+        "claimed": -0.087,
+        "reproduced": -0.062164,
+        "tolerance": 0.4367816091954023,
+        "rel_err": 0.28547126436781606,
+        "passed": true,
+        "passed_first_attempt": false,
+        "passed_first_scored": true,
+        "tolerance_source": "se_band"
+      },
+      "recomputed": {
+        "result_name": "iv_policy_demand_index_posterior_table5_panelC_col7",
+        "reproduced": -0.062164,
+        "band_source": "se_band",
+        "band_relative": 0.4367816091954023,
+        "band_absolute": 0.038,
+        "abs_err": 0.024835999999999997,
+        "rel_err": 0.28547126436781606,
+        "margin": 0.653578947368421,
+        "passed": true,
+        "notes": ""
+      },
+      "agrees_with_row": true,
+      "verdict": "PASS"
+    },
+    {
+      "name": "followup_perception_index_t74_table6_panelA_col7",
+      "ground_truth": {
+        "value": 0.156,
+        "standard_error": 0.045,
+        "unit": "standard deviations of the follow-up perception index",
+        "claim_type": "coefficient",
+        "location": "Table 6, Panel A: Perceptions, T74, column (7) Perception Index",
+        "context": "Table 6 (\"Persistence of the treatment effect in obfuscated follow-up survey\"), Panel A, column (7).  OLS of the follow-up perception summary index over columns (3)-(6) (gender differences in wages are a problem; government should increase efforts to support women in the labor market; gender wage differences are a problem among high-skilled and among low-skilled workers; each z-scored on the full follow-up sample), following Anderson (2008), on T74 and the Table 5 controls.  Sample: treated respondents (both arms) who completed the follow-up survey, both waves.  Probability weights; robust standard errors.\n",
+        "decimals": 3,
+        "sample_size": null
+      },
+      "i4r": {
+        "reproduced_value": 0.156,
+        "outcome": "matches",
+        "notes": "DP12 Sec. 2 blanket; re-coded simple-average index 0.196 (0.056) DP Table 10 col 7R.",
+        "reproduced_within_band": true
+      },
+      "rule": {
+        "mode": "blind",
+        "type_relative_tolerance": 0.02,
+        "se_multiplier": 1.0,
+        "se_band_relative": 0.28846153846153844,
+        "printed_half_unit": 0.0005
+      },
+      "row": {
+        "description": "followup_perception_index_t74_table6_panelA_col7",
+        "claim_type": "coefficient",
+        "claimed": 0.156,
+        "reproduced": 0.194246,
+        "tolerance": 0.28846153846153844,
+        "rel_err": 0.24516666666666667,
+        "passed": true,
+        "passed_first_attempt": false,
+        "passed_first_scored": true,
+        "tolerance_source": "se_band"
+      },
+      "recomputed": {
+        "result_name": "followup_perception_index_t74_table6_panelA_col7",
+        "reproduced": 0.194246,
+        "band_source": "se_band",
+        "band_relative": 0.28846153846153844,
+        "band_absolute": 0.045,
+        "abs_err": 0.038246,
+        "rel_err": 0.24516666666666667,
+        "margin": 0.8499111111111112,
+        "passed": true,
+        "notes": ""
+      },
+      "agrees_with_row": true,
+      "verdict": "PASS"
+    }
+  ],
+  "row_only_claims": [],
+  "summary": {
+    "n_claims": 13,
+    "row_passed": 7,
+    "recomputed_passed": 7,
+    "disagreements": []
+  },
+  "cell": {
+    "entry_id": "settele-2022-gender-wage-gap-beliefs-policy",
+    "mode": "blind",
+    "reproducer": "claude-code",
+    "label": "claude-code",
+    "model": null,
+    "oracle": false,
+    "run": "2026-11-10-d",
+    "results_file": "claude-code-run4-1paper-settele-indep-blind-2026-11-10.json",
+    "also_in": [],
+    "artifacts_dir": "benchmark/results/artifacts/settele-2022-gender-wage-gap-beliefs-policy/blind/claude-code/20261110T063902Z",
+    "run_dir": "benchmark/reproductions/settele-2022-gender-wage-gap-beliefs-policy/blind/2026-11-10-d",
+    "date": "2026-11-10T06:37:30Z",
+    "data_access": "manual",
+    "retally_ran": true,
+    "error": null,
+    "n_claims": 13,
+    "final": 7,
+    "first_scored": 7,
+    "first_scored_index": 2,
+    "first_attempt": 0,
+    "n_refinements": 0,
+    "n_error_refinements": 0,
+    "n_claim_refinements": 0,
+    "n_executions": 3,
+    "n_files_stripped": 34,
+    "agrees_with_i4r": false,
+    "deviations_manifest": [
+      "Analysis data rebuilt from the raw LimeSurvey exports (Stage I waves A and B, 4,065 respondents). Answer codes were mapped using the survey instruments (.lss) in the package. Covariate construction (party, region, age, children, education, employment, log household income from bracket, prior) and the Wave B probability weights (gender x age-bracket cells) were checked against the constructed variables in the follow-up files; all matched on the 1,105 linked respondents (prior matched for 1,104).",
+      "T74 = RAND==1 (the ACS $74 screen is shown for RAND0 1-4); pure control = RAND==0.",
+      "z-scores use the unweighted mean/SD of the full pure control group (both waves, untrimmed); the prior is z-scored the same way. The posterior belief (pooled over the five versions) is z-scored on the pure control group's posterior. No dummies for the posterior-statistic version, because Table 5's notes do not list them.",
+      "Anderson (2008) indices: z-scored items weighted by the row sums of the inverse covariance matrix (pairwise-complete covariance over the whole main sample, or the whole follow-up sample for Table 6). Missing items are skipped in the weighted mean, and the index is re-standardized on the pure control group (on the full follow-up sample for Table 6). Wage transparency (Wave A) and the reporting website (Wave B) are never observed together, so their covariance is set to 0.",
+      "Trimming for Tables 3-4: prior strictly between the 5th and 95th percentiles of the pooled pure-control prior distribution, unweighted, Stata-style percentiles (R quantile type 2).",
+      "All regressions: weighted least squares with pweights and HC1 robust SEs (fixest). The 2SLS instruments the z-scored posterior with T74 and uses the full Table 5 control set.",
+      "Follow-up Wave B: the item order was randomized (randorder2). In the second ordering (wageproblem2) sub-items 3 and 4 are low-/high-skilled, so they were swapped back before pooling. Table 6 controls come from the follow-up files."
+    ],
+    "deviations_stdout": [],
+    "notes": "Two exploratory runs printed no RESULT lines: attempt-1 listed variables, and attempt-2 checked the variable mappings and the merge with the follow-up. The final run was the first scored run and succeeded on the first try, with no error repairs and no claim comparisons. The trimmed control sample has N=921. The Table 5 posterior and 2SLS regressions use N=3,022 (9 treated respondents have no posterior). Table 6 uses N=1,105. Besides the data files, I read the LimeSurvey .lss instruments in the mount's surveys/ folder to decode answer codes, using a small host-side Python XML dump of question and answer text. That was reading only; all analysis ran in R in the sandbox. I did not open any script, log, .tex or result file in the package, and I read nothing outside the mount and paper.txt.",
+    "files_read_outside_mount": [],
+    "paper_text": "paper.blind.txt",
+    "complete": true,
+    "missing": []
+  }
+}

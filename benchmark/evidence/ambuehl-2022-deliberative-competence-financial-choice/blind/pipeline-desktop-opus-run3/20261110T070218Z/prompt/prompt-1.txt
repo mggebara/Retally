@@ -1,0 +1,107 @@
+You are reproducing results from an econometrics paper for validation purposes.
+Write R code (not Python) — the paper's reference implementation is in R.
+
+## Paper Information
+Title: EVALUATING DELIBERATIVE COMPETENCE:
+Abstract (first 500 chars): We examine methods for evaluating opportunity-neutral interventions designed to improve the 
+quality of decision making in settings where people imperfectly comprehend consequences. In an 
+experiment involving financial education, conventional outcome metrics (financial literacy and 
+directional changes in behavior) imply that two interventions, one with practice and feedback, 
+one without, are equally beneficial even though only the first reduces average bias. We trace 
+these evaluative failure
+Methodology Summary: - **Design / data:** Two online randomized experiments run on Amazon Mechanical Turk (US residents aged 18+; Experiment B also required at least 500 completed HITs and an approval rating of at least 98%). Experiment A had 504 subjects in 8 sessions (Apr–May 2014) and four arms: Control (index-funds video), Treatment (compound-interest video based on Malkiel & Ellis 2013, including the rule of 72), Substance-Only and Rhetoric-Only. Experiment B had 401 subjects in 2 sessions (Oct 2018) and two arms: Treatment (the same video split into 3 parts, with 6 practice problems and individualized feedback) and Control (a portfolio-diversification module with practice and feedback). Each subject took part in exactly one arm of one experiment. The two experiments are analysed separately and never compared statistically with each other.
+- **Valuation tasks (Stage 2):** Each subject completed 10 pairs of tasks. In each, the subject's immediate dollar equivalent of a future reward R ∈ {$20, 18, 16, 14, 12} paid after t ∈ {36, 72} days was elicited with an iterated multiple price list (resolution $0.20). Each reward appeared once in a simple frame ("We will pay you $R in t days") and once in a complex frame (investing $a at X% daily interest, compounded daily; parameters in Table 2). Task order was randomized at the subject level. Valuations are interval-coded and the interval midpoint is used. Each valuation is normalized as r = r̃/R and expressed in percentage points (0–100).
+- **Knowledge outcome (Stage 3):** An incentivized test with 5 compound-interest questions (Table 3) and 5 questions on the control-module material. Scores are counted out of 5 for each block.
+- **Sample restriction:** Subjects who switched two or more times in any price list are dropped (49 in Experiment A, 53 in Experiment B), leaving 803 subjects who respected monotonicity. Estimation samples: Experiment A Treatment vs. Control has 215 subjects (2,150 valuation observations; 1,075 per delay). Experiment A with all four arms has 455 subjects (4,550 observations). Experiment B has 348 subjects (3,480 observations).
+- **Estimating equations (conventional metrics):** OLS regressions of an outcome on a full set of treatment-arm indicators with no constant, so each coefficient is an arm mean, plus a "Difference" (Treatment − Control) and p-values for each arm against Control. Outcomes are: (a) the subject-level test score out of 5 (Table 4, columns 1–4; Table 6, columns 1–2); (b) the normalized complex-frame valuation r^c at the task level, pooled over delays and separately for t = 72 and t = 36 (Table 5, columns 1–6); (c) the complex- and simple-frame valuations for all four Experiment A arms (Table 6, columns 3–4). The headline specifications have no additional controls. Robustness checks with controls are in Appendix D. Table 2 notes that the analysis controls for the gap between the rule-of-72 and exact future values.
+- **Standard errors:** Clustered by subject for regressions with multiple valuation observations per subject (Tables 5 and 6). Table 4's subject-level test-score regressions report conventional OLS standard errors. Randomization balance is checked with F-tests on 68 demographic characteristics, and differential attrition is reported.
+- **Proposed metric (deliberative competence):** For each subject i and task pair (R, t), d = −|r^c − r^s|, the negative absolute price-metric bias in percentage points, so that higher values mean better decisions. It is averaged over each subject's tasks, then over subjects, and compared across arms. The distributions of the valuation difference r^c − r^s are shown as empirical CDFs by arm (Figure 3).
+- **Evaluation protocol:** Interventions are assessed with three metrics: (1) test scores, (2) directional shifts in complex-frame valuations, and (3) deliberative competence. Rhetoric-Only and Substance-Only are used to separate the effects of substance from rhetoric on knowledge and on behaviour. There is no train/test split or cross-validation, since this is a randomized-experiment design.
+
+
+## Quantities to Compute
+Compute each quantity below and print it under the given name.  The paper's reported values are deliberately not shown.
+1. test_score_compounding_treatment_minus_control_expA_table4_col1 [type: coefficient; unit: correct answers out of 5 (compound-interest questions)]
+   Location: Table 4, column (1) Test score compounding, Experiment A, Difference
+   Context: Table 4 ("Performance in exam-style test"), column (1). OLS regression of the number of correct answers on the five incentivized exam-style questions about compound interest on a Treatment indicator, Experiment A, Treatment and Control conditions only (the Substance-Only and Rhetoric-Only arms are excluded), one observation per subject; the sample is subjects who completed the study and did not switch more than once in any price list. The entry is the Difference row (Treatment minus Control). Standard errors in parentheses.
+2. test_score_compounding_treatment_minus_control_expB_table4_col2 [type: coefficient; unit: correct answers out of 5 (compound-interest questions)]
+   Location: Table 4, column (2) Test score compounding, Experiment B, Difference
+   Context: Table 4, column (2): the column (1) regression of the compound-interest test score on the Treatment indicator for Experiment B (Treatment with practice and feedback vs. a portfolio diversification Control), one observation per subject, multiple switchers excluded. The entry is the Difference row (Treatment minus Control). Standard errors in parentheses.
+3. test_score_control_module_treatment_minus_control_expA_table4_col3 [type: coefficient; unit: correct answers out of 5 (control-module questions)]
+   Location: Table 4, column (3) Test score control module, Experiment A, Difference
+   Context: Table 4, column (3): the same OLS regression with the score on the five exam-style questions about the material of the Control intervention (index funds in Experiment A) as the outcome, Experiment A Treatment and Control subjects, multiple switchers excluded. The entry is the Difference row (Treatment minus Control). Standard errors in parentheses.
+4. test_score_control_module_treatment_minus_control_expB_table4_col4 [type: coefficient; unit: correct answers out of 5 (control-module questions)]
+   Location: Table 4, column (4) Test score control module, Experiment B, Difference
+   Context: Table 4, column (4): the score on the five questions about the Control intervention's material (portfolio diversification in Experiment B) regressed on the Treatment indicator, Experiment B subjects, multiple switchers excluded. The entry is the Difference row (Treatment minus Control). Standard errors in parentheses.
+5. n_obs_table4_expA_cols1_3 [type: count; unit: subjects]
+   Location: Table 4, Observations, columns (1) and (3), Experiment A
+   Context: Number of observations in Table 4, columns (1) and (3): Experiment A subjects in the Treatment and Control conditions who completed the study and did not switch more than once in any price list, one observation per subject.
+6. n_obs_table4_expB_cols2_4 [type: count; unit: subjects]
+   Location: Table 4, Observations, columns (2) and (4), Experiment B
+   Context: Number of observations in Table 4, columns (2) and (4): Experiment B subjects (Treatment and Control) who completed the study and did not switch more than once in any price list, one observation per subject.
+7. deliberative_competence_control_expA_table7_col1 [type: coefficient; unit: percentage points of the future reward (minus the absolute valuation gap)]
+   Location: Table 7, column (1) both delays, Experiment A, Levels, Control
+   Context: Table 7 ("Deliberative Competence"), column (1). OLS regression, without a constant, of deliberative competence on indicators for the four Experiment A conditions (Control, Treatment, Substance-Only, Rhetoric-Only), so each coefficient is a condition's mean level. Deliberative competence for a subject and a pair of equivalent valuation tasks (same future reward and delay, 36 or 72 days) is minus the absolute difference between the complexly framed and the simply framed valuation, each expressed as a percentage of the future reward (0 to 100); one observation per subject and task pair, both del…
+8. deliberative_competence_treatment_expA_table7_col1 [type: coefficient; unit: percentage points of the future reward (minus the absolute valuation gap)]
+   Location: Table 7, column (1) both delays, Experiment A, Levels, Treatment
+   Context: Table 7, column (1): the same no-constant regression of deliberative competence on the four Experiment A condition indicators (both delays, subject-clustered standard errors). The entry is the Treatment level (the full financial education video without practice and feedback).
+9. deliberative_competence_substance_only_expA_table7_col1 [type: coefficient; unit: percentage points of the future reward (minus the absolute valuation gap)]
+   Location: Table 7, column (1) both delays, Experiment A, Levels, Substance-Only
+   Context: Table 7, column (1): the Substance-Only level (the video's substantive material without the rhetoric) from the no-constant regression of deliberative competence on the four Experiment A condition indicators, both delays, standard errors clustered by subject.
+10. deliberative_competence_rhetoric_only_expA_table7_col1 [type: coefficient; unit: percentage points of the future reward (minus the absolute valuation gap)]
+   Location: Table 7, column (1) both delays, Experiment A, Levels, Rhetoric-Only
+   Context: Table 7, column (1): the Rhetoric-Only level (the video's rhetorical material and introductory explanation without the rule of 72) from the same Experiment A regression, both delays, standard errors clustered by subject.
+11. deliberative_competence_control_expB_table7_col2 [type: coefficient; unit: percentage points of the future reward (minus the absolute valuation gap)]
+   Location: Table 7, column (2) both delays, Experiment B, Levels, Control
+   Context: Table 7, column (2): no-constant OLS regression of deliberative competence (minus the absolute gap between paired complexly and simply framed valuations, percentage points of the future reward) on the two Experiment B condition indicators, one observation per subject and task pair, both delays, Experiment B subjects who did not switch more than once. The entry is the Control level (portfolio diversification module). Standard errors clustered by subject.
+12. deliberative_competence_treatment_expB_table7_col2 [type: coefficient; unit: percentage points of the future reward (minus the absolute valuation gap)]
+   Location: Table 7, column (2) both delays, Experiment B, Levels, Treatment
+   Context: Table 7, column (2): the Treatment level (the compound-interest education with practice problems and automated feedback) from the same Experiment B regression, both delays, standard errors clustered by subject.
+13. n_obs_table7_expA_col1 [type: count; unit: subject-by-task-pair observations]
+   Location: Table 7, Observations, column (1) Experiment A
+   Context: Number of observations in Table 7, column (1): subject-by-task-pair observations (both delays) of all four Experiment A conditions, multiple switchers excluded.
+
+## Dataset Information
+Name: ambuehl-2022-deliberative-competence-financial-choice
+Local path: <repo>/.cache/datasets/ambuehl_2022_deliberative_competence_financial_choice.script-free
+File format: csv
+Files in the dataset directory (paths relative to the local path above):
+- data/raw/expAbatch1.csv (200.0 KB) — columns: ﻿V1,V2,V3,V4,V5,V6,V7,V8,V9,V10,SC0_0,SC0_1,SC0_2,test_payment,treatment,line1,line2,amt1,amt2,decision_index,payment_test,payment_for_test,one,T1,T2,T3,T4,T5,T6,T7,T8,T9,T10,T11,T12,T13,T14,T15,T16,T17,T18,T19,T20,switch1,switch2,switch3,s…
+- data/raw/expAbatch2.csv (567.2 KB) — columns: ﻿V1,V2,V3,V4,V5,V6,V7,V8,V9,V10,SC0_0,SC0_1,SC0_2,test_payment,treatment,line1,line2,amt1,amt2,decision_index,payment_test,payment_for_test,one,T1,T2,T3,T4,T5,T6,T7,T8,T9,T10,T11,T12,T13,T14,T15,T16,T17,T18,T19,T20,excluded,switch1,switch2,…
+- data/raw/expAbatch3.csv (898.5 KB) — columns: ﻿V1,V2,V3,V4,V5,V6,V7,V8,V9,V10,SC0_0,SC0_1,SC0_2,test_payment,treatment,line1,line2,amt1,amt2,decision_index,payment_test,payment_for_test,one,T1,T2,T3,T4,T5,T6,T7,T8,T9,T10,T11,T12,T13,T14,T15,T16,T17,T18,T19,T20,excluded,switch1,switch2,…
+- data/raw/expAbatch4.csv (262.3 KB) — columns: ﻿V1,V2,V3,V4,V5,V6,V7,V8,V9,V10,SC0_0,SC0_1,SC0_2,test_payment,treatment,line1,line2,amt1,amt2,decision_index,payment_test,payment_for_test,one,T1,T2,T3,T4,T5,T6,T7,T8,T9,T10,T11,T12,T13,T14,T15,T16,T17,T18,T19,T20,excluded,switch1,switch2,…
+- data/raw/expAbatch5.csv (1.4 MB) — columns: ﻿V1,V2,V3,V4,V5,V6,V7,V8,V9,V10,SC0_0,SC0_1,SC0_2,test_payment,treatment,line1,line2,amt1,amt2,decision_index,payment_test,payment_for_test,one,T1,T2,T3,T4,T5,T6,T7,T8,T9,T10,T11,T12,T13,T14,T15,T16,T17,T18,T19,T20,excluded,switch1,switch2,…
+- data/raw/expAbatch6.csv (1.9 MB) — columns: ﻿V1,V2,V3,V4,V5,V6,V7,V8,V9,V10,SC0_0,SC0_1,SC0_2,test_payment,treatment,line1,line2,amt1,amt2,decision_index,payment_test,payment_for_test,one,T1,T2,T3,T4,T5,T6,T7,T8,T9,T10,T11,T12,T13,T14,T15,T16,T17,T18,T19,T20,excluded,switch1,switch2,…
+- data/raw/expAbatch7.csv (508.3 KB) — columns: ﻿V1,V2,V3,V4,V5,V6,V7,V8,V9,V10,SC0_0,SC0_1,SC0_2,test_payment,treatment,line1,line2,amt1,amt2,decision_index,payment_test,payment_for_test,one,T1,T2,T3,T4,T5,T6,T7,T8,T9,T10,T11,T12,T13,T14,T15,T16,T17,T18,T19,T20,excluded,switch1,switch2,…
+- data/raw/expAbatch8.csv (361.3 KB) — columns: ﻿V1,V2,V3,V4,V5,V6,V7,V8,V9,V10,SC0_0,SC0_1,SC0_2,test_payment,line1,line2,amt1,amt2,decision_index,payment_test,payment_for_test,one,T1,T2,T3,T4,T5,T6,T7,T8,T9,T10,T11,T12,T13,T14,T15,T16,T17,T18,T19,T20,excluded,treatment,switch1,switch2,…
+- data/raw/expBbatch1.csv (5.6 MB) — columns: StartDate,EndDate,Status,IPAddress,Progress,Duration (in seconds),Finished,RecordedDate,ResponseId,RecipientLastName,RecipientFirstName,RecipientEmail,ExternalReference,LocationLatitude,LocationLongitude,DistributionChannel,UserLanguage,amt…
+- data/raw/expBbatch2.csv (14.7 MB) — columns: StartDate,EndDate,Status,IPAddress,Progress,Duration (in seconds),Finished,RecordedDate,ResponseId,RecipientLastName,RecipientFirstName,RecipientEmail,ExternalReference,LocationLatitude,LocationLongitude,DistributionChannel,UserLanguage,amt…
+- metadata.json (240 B)
+- readMe.pdf (123.3 KB)
+
+## Required Output Convention
+Emit each reproduced metric on its own line to stdout using EXACTLY this format:
+    RESULT:<metric_name>=<numeric_value>
+For example:  cat('RESULT:beta=0.342\n')
+Use snake_case metric names matching the claim descriptions.
+
+## Code Requirements
+Write a complete, self-contained R script that runs under Rscript.
+The dataset is a directory tree at '<repo>/.cache/datasets/ambuehl_2022_deliberative_competence_financial_choice.script-free' — see the file listing under Dataset Information.  Load the actual data file(s) by the exact paths listed there (readr::read_csv() for .csv, haven::read_dta() for Stata .dta, load() for .RData/.rda, which creates the objects listed for the file under exactly those names: use them, do not guess others; readRDS() for .rds).
+Installed packages (no network; nothing else can be installed): jsonlite, fixest, lfe, AER, ivreg, plm, estimatr, lme4, quantreg, car, sandwich, lmtest, clubSandwich, multiwayvcov, marginaleffects, MatchIt, optmatch, CBPS, WeightIt, cobalt, did, rdrobust, rddensity, Synth, modelsummary, stargazer, texreg, broom, tidyverse, dplyr, tidyr, readr, stringr, lubridate, data.table, haven, readxl, janitor, zoo, ggplot2, ggridges, ggrepel, gridExtra, cowplot, gtable, extrafont, sf, MASS, nnet, survival, splines, Matrix, boot, stats, utils.
+Prefer fixest for fixed effects, IV and clustered SEs; use the other installed packages where the paper's method calls for them.
+Set a deterministic seed with ``set.seed(42)`` for any randomness.
+Do NOT access the internet; the container runs with --network none.
+Do NOT shell out via system() / system2().
+Emit RESULT:<name>=<value> lines to stdout at the end via cat().
+
+## Algorithm Hints
+This paper reports regression coefficients with standard errors. Default to fixest::feols() for OLS with fixed effects; switch to AER::ivreg() for instrumental variables and plm::plm() for panel data.  Use the cluster argument or cluster_var argument in feols() / vcovCL() from sandwich for cluster-robust standard errors.  Extract each coefficient via ``coef(model)['varname']`` and each SE via ``sqrt(diag(vcov(model)))['varname']`` so they can be emitted as separate RESULT: lines.
+
+## Independent Reproduction
+This is an INDEPENDENT reproduction: reconstruct the analysis from the paper's description alone.  The authors' own analysis code is deliberately withheld.  Do NOT open, read, source, or execute any script files that may appear in the dataset directory listing (.do, .ado, .R, .Rmd, .py, .sas, .sps, .m, and similar) — load data files only.  Derive the estimating equation, sample restrictions, fixed effects, and standard-error clustering from the paper information and claims above.
+
+## Blind Reproduction
+This reproduction is also BLIND: the paper's reported values for the quantities above are deliberately withheld, and you will not be told how close your numbers are.  Compute each quantity as the paper's method defines it; do not tune the specification toward any number you expect.  Do NOT read result tables, logs, or output files that may appear in the dataset directory (.tex, .log, .pdf, .html, and similar) to recover the paper's numbers — compute everything from the data files.  Print a RESULT: line for every quantity listed, using its name exactly.
+
+Now write the complete R script. Output ONLY the code — no explanation, no markdown fences.

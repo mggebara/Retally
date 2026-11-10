@@ -1,0 +1,33 @@
+Loaded: 2770 rows, 4266 cols
+After dropme filter: 2055 rows
+Date dummies: 35  Clinic dummies: 59  Patient controls (CC*): 272 
+Cluster variable not found among candidates; building clinic id from CL* dummies
+Constructed clusters: 60 
+DEVIATION: Clinic cluster id reconstructed from the CL* clinic dummies (cscomnum not found in data)
+  used_vouchers_admin: N=2055, selected y:2 PV:2 DV:0 union:4
+   controls: CL33 CL54 CC1xCC23 CC23xCC35 
+  used_vouchers_admin  bP=0.3465 (0.0302)  bD=0.2642 (0.0240)  N=2055
+  RXtreat_sev_simple_mal: N=2053, selected y:10 PV:2 DV:0 union:12
+   controls: CL33 CL54 CC23 CC1xCC9 CC3xCC9 CC5xCC9 CC9xCC25 CC9xCC31 CC15xCC23 CC23xCC25 CC23xCC27 CC23xCC35 
+  RXtreat_sev_simple_mal  bP=0.0532 (0.0250)  bD=0.0167 (0.0245)  N=2053
+  treat_sev_simple_mal: N=2053, selected y:8 PV:2 DV:0 union:10
+   controls: CL33 CL54 CC1xCC5 CC1xCC9 CC5xCC9 CC9xCC25 CC9xCC31 CC15xCC23 CC23xCC35 CC31xCC41 
+  treat_sev_simple_mal  bP=0.1409 (0.0274)  bD=0.0855 (0.0248)  N=2053
+  RXtreat_severe_mal: N=2053, selected y:8 PV:2 DV:0 union:10
+   controls: CL33 CL54 CC23 CC1xCC5 CC1xCC9 CC1xCC31 CC3xCC7 CC3xCC9 CC5xCC31 CC9xCC25 
+  RXtreat_severe_mal  bP=-0.0448 (0.0179)  bD=-0.0541 (0.0213)  N=2053
+  treat_severe_mal: N=2053, selected y:9 PV:2 DV:0 union:11
+   controls: CL33 CL54 CC23 CC1xCC5 CC1xCC9 CC3xCC9 CC5xCC25 CC5xCC31 CC9xCC25 CC9xCC41 CC23xCC35 
+  treat_severe_mal  bP=-0.0219 (0.0197)  bD=-0.0503 (0.0192)  N=2053
+RESULT:voucher_used_patient_voucher_table3_col1=0.346459
+RESULT:voucher_used_doctor_voucher_table3_col1=0.264222
+RESULT:any_malaria_treatment_prescribed_patient_voucher_table3_col2=0.053159
+RESULT:any_malaria_treatment_prescribed_doctor_voucher_table3_col2=0.016681
+RESULT:any_malaria_treatment_purchased_patient_voucher_table3_col3=0.140910
+RESULT:any_malaria_treatment_purchased_doctor_voucher_table3_col3=0.085490
+RESULT:severe_malaria_treatment_prescribed_patient_voucher_table3_col4=-0.044843
+RESULT:severe_malaria_treatment_prescribed_doctor_voucher_table3_col4=-0.054145
+RESULT:severe_malaria_treatment_purchased_patient_voucher_table3_col5=-0.021890
+RESULT:severe_malaria_treatment_purchased_doctor_voucher_table3_col5=-0.050268
+RESULT:n_obs_table3_col1=2055
+RESULT:n_obs_table3_cols2_5=2053
