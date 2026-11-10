@@ -431,7 +431,7 @@ def test_catalog_count_claims_are_integers():
         for c in e.original_claims
         if c.claim_type == "count"
     ]
-    assert len(counts) == 75
+    assert len(counts) == 78
     for entry_id, c in counts:
         assert float(c.value).is_integer() and c.decimals == 0, (entry_id, c.description)
         assert c.standard_error is None, (entry_id, c.description)
