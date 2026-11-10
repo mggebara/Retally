@@ -1,0 +1,11 @@
+PV var: patient_voucher  DV var: doctor_voucher
+Base sample (non-missing PV/DV/date): 2753
+Indicator candidates: thinkillness__97(=0:2055), recorded_Malaria_test(=0:2055), GE_FS_test_only_POS(=0:2051), dropme(=0:2055), CC13xCC29(=0:2052), CC39xCC41(=0:2050)
+Sample restricted using indicator: thinkillness__97 == 0
+Final sample: 2055
+Cluster var: cscomnum_OS
+Voucher used var: constructed from voucher_used_PV/DV
+Any prescribed -> RXmalacur
+Severe prescribed -> RXtreat_severe_mal
+Any purchased -> malacur
+Severe purchased -> treat_severe_mal

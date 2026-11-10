@@ -90,6 +90,30 @@ Built by `python -m benchmark.evidence`; see `benchmark/README.md` ("Evidence bu
 - [blind · pipeline-desktop-opus-run3 · 20261103T010557Z](altmann-2022-cognitive-spillovers/blind/pipeline-desktop-opus-run3/20261103T010557Z/CELL.md) — 13/13
 - [blind · pipeline-desktop-opus-run4 · 20261108T060639Z](altmann-2022-cognitive-spillovers/blind/pipeline-desktop-opus-run4/20261108T060639Z/CELL.md) — 4/13
 
+## [ambuehl-2022-deliberative-competence-financial-choice](ambuehl-2022-deliberative-competence-financial-choice/REPORT.md)
+
+- [seeded · claude-code · 2026-11-10-a](ambuehl-2022-deliberative-competence-financial-choice/seeded/claude-code/2026-11-10-a/CELL.md) — 13/13
+- [seeded · claude-code · 2026-11-10-b](ambuehl-2022-deliberative-competence-financial-choice/seeded/claude-code/2026-11-10-b/CELL.md) — 13/13
+- [seeded · pipeline-desktop-opus · 20261110T065041Z](ambuehl-2022-deliberative-competence-financial-choice/seeded/pipeline-desktop-opus/20261110T065041Z/CELL.md) — 13/13
+- [seeded · pipeline-desktop-opus-run2 · 20261110T112703Z](ambuehl-2022-deliberative-competence-financial-choice/seeded/pipeline-desktop-opus-run2/20261110T112703Z/CELL.md) — 13/13
+- [seeded · pipeline-desktop-opus-run3 · 20261110T112717Z](ambuehl-2022-deliberative-competence-financial-choice/seeded/pipeline-desktop-opus-run3/20261110T112717Z/CELL.md) — 13/13
+- [independent · claude-code · 2026-11-10-a](ambuehl-2022-deliberative-competence-financial-choice/independent/claude-code/2026-11-10-a/CELL.md) — 12/13
+- [independent · claude-code · 2026-11-10-b](ambuehl-2022-deliberative-competence-financial-choice/independent/claude-code/2026-11-10-b/CELL.md) — 12/13
+- [independent · claude-code · 2026-11-10-c](ambuehl-2022-deliberative-competence-financial-choice/independent/claude-code/2026-11-10-c/CELL.md) — 13/13
+- [independent · claude-code · 2026-11-10-d](ambuehl-2022-deliberative-competence-financial-choice/independent/claude-code/2026-11-10-d/CELL.md) — 13/13
+- [independent · pipeline-desktop-opus · 20261110T070354Z](ambuehl-2022-deliberative-competence-financial-choice/independent/pipeline-desktop-opus/20261110T070354Z/CELL.md) — 0/13
+- [independent · pipeline-desktop-opus-run2 · 20261110T143511Z](ambuehl-2022-deliberative-competence-financial-choice/independent/pipeline-desktop-opus-run2/20261110T143511Z/CELL.md) — 2/13
+- [independent · pipeline-desktop-opus-run3 · 20261110T142318Z](ambuehl-2022-deliberative-competence-financial-choice/independent/pipeline-desktop-opus-run3/20261110T142318Z/CELL.md) — 0/13
+- [independent · pipeline-desktop-opus-run4 · 20261110T142335Z](ambuehl-2022-deliberative-competence-financial-choice/independent/pipeline-desktop-opus-run4/20261110T142335Z/CELL.md) — 0/13
+- [blind · claude-code · 2026-11-10-a](ambuehl-2022-deliberative-competence-financial-choice/blind/claude-code/2026-11-10-a/CELL.md) — 12/13
+- [blind · claude-code · 2026-11-10-b](ambuehl-2022-deliberative-competence-financial-choice/blind/claude-code/2026-11-10-b/CELL.md) — 13/13
+- [blind · claude-code · 2026-11-10-c](ambuehl-2022-deliberative-competence-financial-choice/blind/claude-code/2026-11-10-c/CELL.md) — 12/13
+- [blind · claude-code · 2026-11-10-d](ambuehl-2022-deliberative-competence-financial-choice/blind/claude-code/2026-11-10-d/CELL.md) — 12/13
+- [blind · pipeline-desktop-opus · 20261110T064710Z](ambuehl-2022-deliberative-competence-financial-choice/blind/pipeline-desktop-opus/20261110T064710Z/CELL.md) — 0/13
+- [blind · pipeline-desktop-opus-run2 · 20261110T070206Z](ambuehl-2022-deliberative-competence-financial-choice/blind/pipeline-desktop-opus-run2/20261110T070206Z/CELL.md) — 0/13
+- [blind · pipeline-desktop-opus-run3 · 20261110T070218Z](ambuehl-2022-deliberative-competence-financial-choice/blind/pipeline-desktop-opus-run3/20261110T070218Z/CELL.md) — 0/13
+- [blind · pipeline-desktop-opus-run4 · 20261110T065905Z](ambuehl-2022-deliberative-competence-financial-choice/blind/pipeline-desktop-opus-run4/20261110T065905Z/CELL.md) — 0/13
+
 ## [arias-2022-changing-tides-climate-migration](arias-2022-changing-tides-climate-migration/REPORT.md)
 
 - [seeded · claude-code · 2026-10-21-b](arias-2022-changing-tides-climate-migration/seeded/claude-code/2026-10-21-b/CELL.md) — 12/12
@@ -605,6 +629,30 @@ Built by `python -m benchmark.evidence`; see `benchmark/README.md` ("Evidence bu
 - [blind · pipeline-desktop-opus-run3 · 20261103T004800Z](leeson-2022-hobo-economicus/blind/pipeline-desktop-opus-run3/20261103T004800Z/CELL.md) — 8/11
 - [blind · pipeline-desktop-opus-run4 · 20261108T013503Z](leeson-2022-hobo-economicus/blind/pipeline-desktop-opus-run4/20261108T013503Z/CELL.md) — 9/11
 
+## [lopez-2022-patient-demand-prescription-overuse](lopez-2022-patient-demand-prescription-overuse/REPORT.md)
+
+- [seeded · claude-code · 2026-11-10-a](lopez-2022-patient-demand-prescription-overuse/seeded/claude-code/2026-11-10-a/CELL.md) — 12/12
+- [seeded · claude-code · 2026-11-10-b](lopez-2022-patient-demand-prescription-overuse/seeded/claude-code/2026-11-10-b/CELL.md) — 11/12
+- [seeded · pipeline-desktop-opus · 20261110T112214Z](lopez-2022-patient-demand-prescription-overuse/seeded/pipeline-desktop-opus/20261110T112214Z/CELL.md) — 12/12
+- [seeded · pipeline-desktop-opus-run2 · 20261110T142949Z](lopez-2022-patient-demand-prescription-overuse/seeded/pipeline-desktop-opus-run2/20261110T142949Z/CELL.md) — 12/12
+- [seeded · pipeline-desktop-opus-run3 · 20261110T113744Z](lopez-2022-patient-demand-prescription-overuse/seeded/pipeline-desktop-opus-run3/20261110T113744Z/CELL.md) — 12/12
+- [independent · claude-code · 2026-11-10-a](lopez-2022-patient-demand-prescription-overuse/independent/claude-code/2026-11-10-a/CELL.md) — 12/12
+- [independent · claude-code · 2026-11-10-b](lopez-2022-patient-demand-prescription-overuse/independent/claude-code/2026-11-10-b/CELL.md) — 12/12
+- [independent · claude-code · 2026-11-10-c](lopez-2022-patient-demand-prescription-overuse/independent/claude-code/2026-11-10-c/CELL.md) — 12/12
+- [independent · claude-code · 2026-11-10-d](lopez-2022-patient-demand-prescription-overuse/independent/claude-code/2026-11-10-d/CELL.md) — 12/12
+- [independent · pipeline-desktop-opus · 20261110T065707Z](lopez-2022-patient-demand-prescription-overuse/independent/pipeline-desktop-opus/20261110T065707Z/CELL.md) — 12/12
+- [independent · pipeline-desktop-opus-run2 · 20261110T142213Z](lopez-2022-patient-demand-prescription-overuse/independent/pipeline-desktop-opus-run2/20261110T142213Z/CELL.md) — 12/12
+- [independent · pipeline-desktop-opus-run3 · 20261110T113422Z](lopez-2022-patient-demand-prescription-overuse/independent/pipeline-desktop-opus-run3/20261110T113422Z/CELL.md) — 12/12
+- [independent · pipeline-desktop-opus-run4 · 20261110T112343Z](lopez-2022-patient-demand-prescription-overuse/independent/pipeline-desktop-opus-run4/20261110T112343Z/CELL.md) — 4/12
+- [blind · claude-code · 2026-11-10-a](lopez-2022-patient-demand-prescription-overuse/blind/claude-code/2026-11-10-a/CELL.md) — 8/12
+- [blind · claude-code · 2026-11-10-b](lopez-2022-patient-demand-prescription-overuse/blind/claude-code/2026-11-10-b/CELL.md) — 8/12
+- [blind · claude-code · 2026-11-10-c](lopez-2022-patient-demand-prescription-overuse/blind/claude-code/2026-11-10-c/CELL.md) — 8/12
+- [blind · claude-code · 2026-11-10-d](lopez-2022-patient-demand-prescription-overuse/blind/claude-code/2026-11-10-d/CELL.md) — 12/12
+- [blind · pipeline-desktop-opus · 20261110T064634Z](lopez-2022-patient-demand-prescription-overuse/blind/pipeline-desktop-opus/20261110T064634Z/CELL.md) — 0/12
+- [blind · pipeline-desktop-opus-run2 · 20261110T070059Z](lopez-2022-patient-demand-prescription-overuse/blind/pipeline-desktop-opus-run2/20261110T070059Z/CELL.md) — 3/12
+- [blind · pipeline-desktop-opus-run3 · 20261110T070123Z](lopez-2022-patient-demand-prescription-overuse/blind/pipeline-desktop-opus-run3/20261110T070123Z/CELL.md) — 3/12
+- [blind · pipeline-desktop-opus-run4 · 20261110T065844Z](lopez-2022-patient-demand-prescription-overuse/blind/pipeline-desktop-opus-run4/20261110T065844Z/CELL.md) — 2/12
+
 ## [lopez-moctezuma-2022-policy-deliberation-philippines](lopez-moctezuma-2022-policy-deliberation-philippines/REPORT.md)
 
 - [seeded · claude-code · 2026-10-22-a](lopez-moctezuma-2022-policy-deliberation-philippines/seeded/claude-code/2026-10-22-a/CELL.md) — 13/13
@@ -746,4 +794,28 @@ Built by `python -m benchmark.evidence`; see `benchmark/README.md` ("Evidence bu
 - [blind · pipeline-desktop-opus-run2 · 20261023T151837Z](montero-2022-cooperative-property-rights/blind/pipeline-desktop-opus-run2/20261023T151837Z/CELL.md) — 3/10
 - [blind · pipeline-desktop-opus-run3 · 20261103T010557Z](montero-2022-cooperative-property-rights/blind/pipeline-desktop-opus-run3/20261103T010557Z/CELL.md) — 0/10
 - [blind · pipeline-desktop-opus-run4 · 20261108T013503Z](montero-2022-cooperative-property-rights/blind/pipeline-desktop-opus-run4/20261108T013503Z/CELL.md) — 1/10
+
+## [settele-2022-gender-wage-gap-beliefs-policy](settele-2022-gender-wage-gap-beliefs-policy/REPORT.md)
+
+- [seeded · claude-code · 2026-11-10-a](settele-2022-gender-wage-gap-beliefs-policy/seeded/claude-code/2026-11-10-a/CELL.md) — 13/13
+- [seeded · claude-code · 2026-11-10-b](settele-2022-gender-wage-gap-beliefs-policy/seeded/claude-code/2026-11-10-b/CELL.md) — 13/13
+- [seeded · pipeline-desktop-opus · 20261110T064621Z](settele-2022-gender-wage-gap-beliefs-policy/seeded/pipeline-desktop-opus/20261110T064621Z/CELL.md) — 13/13
+- [seeded · pipeline-desktop-opus-run2 · 20261110T112930Z](settele-2022-gender-wage-gap-beliefs-policy/seeded/pipeline-desktop-opus-run2/20261110T112930Z/CELL.md) — 13/13
+- [seeded · pipeline-desktop-opus-run3 · 20261110T113315Z](settele-2022-gender-wage-gap-beliefs-policy/seeded/pipeline-desktop-opus-run3/20261110T113315Z/CELL.md) — 9/13
+- [independent · claude-code · 2026-11-10-a](settele-2022-gender-wage-gap-beliefs-policy/independent/claude-code/2026-11-10-a/CELL.md) — 13/13
+- [independent · claude-code · 2026-11-10-b](settele-2022-gender-wage-gap-beliefs-policy/independent/claude-code/2026-11-10-b/CELL.md) — 13/13
+- [independent · claude-code · 2026-11-10-c](settele-2022-gender-wage-gap-beliefs-policy/independent/claude-code/2026-11-10-c/CELL.md) — 13/13
+- [independent · claude-code · 2026-11-10-d](settele-2022-gender-wage-gap-beliefs-policy/independent/claude-code/2026-11-10-d/CELL.md) — 13/13
+- [independent · pipeline-desktop-opus · 20261110T142110Z](settele-2022-gender-wage-gap-beliefs-policy/independent/pipeline-desktop-opus/20261110T142110Z/CELL.md) — 2/13
+- [independent · pipeline-desktop-opus-run2 · 20261110T143420Z](settele-2022-gender-wage-gap-beliefs-policy/independent/pipeline-desktop-opus-run2/20261110T143420Z/CELL.md) — 12/13
+- [independent · pipeline-desktop-opus-run3 · 20261110T113315Z](settele-2022-gender-wage-gap-beliefs-policy/independent/pipeline-desktop-opus-run3/20261110T113315Z/CELL.md) — 1/13
+- [independent · pipeline-desktop-opus-run4 · 20261110T113334Z](settele-2022-gender-wage-gap-beliefs-policy/independent/pipeline-desktop-opus-run4/20261110T113334Z/CELL.md) — 1/13
+- [blind · claude-code · 2026-11-10-a](settele-2022-gender-wage-gap-beliefs-policy/blind/claude-code/2026-11-10-a/CELL.md) — 7/13
+- [blind · claude-code · 2026-11-10-b](settele-2022-gender-wage-gap-beliefs-policy/blind/claude-code/2026-11-10-b/CELL.md) — 7/13
+- [blind · claude-code · 2026-11-10-c](settele-2022-gender-wage-gap-beliefs-policy/blind/claude-code/2026-11-10-c/CELL.md) — 6/13
+- [blind · claude-code · 2026-11-10-d](settele-2022-gender-wage-gap-beliefs-policy/blind/claude-code/2026-11-10-d/CELL.md) — 7/13
+- [blind · pipeline-desktop-opus · 20261110T064353Z](settele-2022-gender-wage-gap-beliefs-policy/blind/pipeline-desktop-opus/20261110T064353Z/CELL.md) — 0/13
+- [blind · pipeline-desktop-opus-run2 · 20261110T112539Z](settele-2022-gender-wage-gap-beliefs-policy/blind/pipeline-desktop-opus-run2/20261110T112539Z/CELL.md) — 1/13
+- [blind · pipeline-desktop-opus-run3 · 20261110T070417Z](settele-2022-gender-wage-gap-beliefs-policy/blind/pipeline-desktop-opus-run3/20261110T070417Z/CELL.md) — 0/13
+- [blind · pipeline-desktop-opus-run4 · 20261110T112304Z](settele-2022-gender-wage-gap-beliefs-policy/blind/pipeline-desktop-opus-run4/20261110T112304Z/CELL.md) — 1/13
 

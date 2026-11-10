@@ -1,0 +1,94 @@
+==== Exp A: 746 rows, 671 cols ====
+Rows with any test answer: 504 (paper 504 )
+Subjects: 504 
+batch x treatment:
+                tr
+                  0  1
+  expAbatch1.csv 10 10
+  expAbatch2.csv 56 43
+  expAbatch3.csv 50 62
+  expAbatch4.csv  6  4
+  expAbatch5.csv 49 63
+  expAbatch6.csv 54 66
+  expAbatch7.csv  6 12
+  expAbatch8.csv 13  0
+'codeWC' non-missing by treatment:
+   nonmissing
+tr  FALSE TRUE
+  0     0  244
+  1   260    0
+'codeWT' non-missing by treatment:
+   nonmissing
+tr  FALSE TRUE
+  0   244    0
+  1     0  260
+'code treat' non-missing by treatment:
+   nonmissing
+tr  FALSE TRUE
+  0   244    0
+  1     0  260
+batch x has 'code treat':
+                has_code
+                 FALSE TRUE
+  expAbatch1.csv    10   10
+  expAbatch2.csv    56   43
+  expAbatch3.csv    50   62
+  expAbatch4.csv     6    4
+  expAbatch5.csv    49   63
+  expAbatch6.csv    54   66
+  expAbatch7.csv     6   12
+  expAbatch8.csv    13    0
+DEVIATION: Experiment A: subjects with a 'code treat' entry are the Substance-Only/Rhetoric-Only arms (split by code word interest/compounding); others are Control (treatment=0) / Treatment (treatment=1)
+arm
+Control    grpC    grpI 
+    244     120     140 
+Experiment A error: missing value where TRUE/FALSE needed 
+==== Exp B: 686 rows, 780 cols ====
+Rows with any test answer: 402 (paper 401 )
+Status values: 0:401 1:1 
+Dropped 1 preview/test responses
+Subjects: 401 
+batch x treatment:
+                tr
+                   0   1
+  expBbatch1.csv  46  54
+  expBbatch2.csv 155 146
+'codeWC' non-missing by treatment:
+   nonmissing
+tr  FALSE TRUE
+  0     0  201
+  1   200    0
+'codeWT' non-missing by treatment:
+   nonmissing
+tr  FALSE TRUE
+  0   201    0
+  1     0  200
+arm
+  Control Treatment 
+      201       200 
+Item keys: t1=2(+0.51) t2=4(+0.66) t3=4(+0.01) t4=7(-0.07) t5=6(+0.36) t6=4(-0.17) t7=3(+0.10) t8=5(-0.01) t9=5(-0.02) t10=3(+0.04) 
+Compound-interest items: 1,2,5,7,10 
+cor with SC0: comp 0.711 ctrl 0.291 total 0.673
+iMPL columns: 420 
+iMPL names (first 4 / 20-23 / last 2): iMPL1-1#1_iMPL1-1_1 | iMPL1-1#1_iMPL1-1_2 | iMPL1-1#1_iMPL1-1_3 | iMPL1-1#1_iMPL1-1_4 | iMPL1-2#1_iMPL1-2_11 | iMPL1-2#1_iMPL1-2_12 | iMPL2-1#1_iMPL2-1_1 | iMPL2-1#1_iMPL2-1_2 | iMPL20-2#1_iMPL20-2_11 | iMPL20-2#1_iMPL20-2_12 
+Tokens per name: 6 ; distinct values by position: 20,2,1,20,2,12 
+iMPL cell values: 1:98344 0:70076 
+Row-position 1: 420 lists, median size 1 -> skipped
+Row-position 4: 420 lists, median size 1 -> skipped
+Row-position 6: 40 lists (size x count: 10x20,11x20), monotone share 0.980
+Lists: 40, mapped to 20 tasks; coarse/fine sizes task1: 11/10; reference code '0'
+DEVIATION: valuations reconstructed from raw iMPL choices: coarse list step = 10% of R, refining list step = 1% of R, interval midpoint (a constant offset that cancels in r^c - r^s)
+Multiple-switcher share (any list with >=2 switches): 0.072 (29; paper 0.132)
+Analysis sample N = 372 : Control=188 Treatment=184 
+Task texts: distinct 20 ; T1 distinct 1 ; e.g. we will pay you $20 in 72 days || we will pay you $18 in 72 days 
+Task-text signatures: 1 parsed into 10 pairs: 1 
+Pairs (simple-complex, most common): 10-19 9-17 8-15 7-13 6-11 5-20 4-18 3-16 2-14 1-12 
+Mean valuation index: simple 49.5, complex 55.2
+
+==== SUMMARY ====
+[B] N=372 excl=switch-count 0.072 | T4 comp 1.727 (0.112) ctrl -0.271 N=372 | DC Control=-19.87 Treatment=-14.60 N=3720
+RESULT:test_score_compounding_treatment_minus_control_expB_table4_col2=1.726641998
+RESULT:test_score_control_module_treatment_minus_control_expB_table4_col4=-0.2712765957
+RESULT:n_obs_table4_expB_cols2_4=372
+RESULT:deliberative_competence_control_expB_table7_col2=-19.86861702
+RESULT:deliberative_competence_treatment_expB_table7_col2=-14.59728261

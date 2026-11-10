@@ -1,0 +1,20 @@
+{
+  "schema": 1,
+  "entry_id": "lopez-2022-patient-demand-prescription-overuse",
+  "mode": "seeded",
+  "run_id": "2026-11-10-b",
+  "reproducer": "claude-code",
+  "language": "r",
+  "final": {"script": "script.R", "stdout": "stdout.txt", "stderr": "stderr.txt", "exit_code": 0},
+  "attempts": [
+    {"dir": "attempt-1", "exit_code": 0, "kind": ""},
+    {"dir": "attempt-2", "exit_code": 0, "kind": ""}
+  ],
+  "deviations": [
+    "Stata's pdslasso/rlasso (lassopack) is not available in R; the post-double-selection lasso was re-implemented by hand: rlasso with cluster-robust (by clinic) penalty loadings, lambda = 2*1.1*sqrt(N)*qnorm(1-gamma/(2p)) with gamma = 0.1/log(number of clusters), initial residuals from the 5 most correlated controls, up to 15 loading iterations using post-lasso residuals, coordinate-descent lasso. Date dummies DD1-DD35 and the constant are partialled out (unpenalised, always kept). Final OLS of the outcome on the voucher dummies, date dummies and the union of selected controls with clinic-clustered SEs (fixest). Small details of lassopack's defaults may differ from this implementation."
+  ],
+  "notes": "Followed docpat_theory_lso in LSS_TablePrograms.do for Table 3: drop dropme==1 (N=2055), pdslasso y patient_voucher doctor_voucher (DD1-DD35 CL1-CL59 CC*), clu(cscomnum) partial(DD1-DD35). The clustering variable 'cscomnum' does not exist in the data; it is Stata's unambiguous abbreviation of cscomnum_OS (60 clinics), which was used. attempt-1 and attempt-2 were exploratory (variable inspection; attempt-1 found cscomnum missing, attempt-2 located cscomnum_OS). The first estimating run became the final run unchanged; it reproduces all 10 coefficients and both Ns (2055, 2053) to the table's displayed precision except severe malaria prescribed, Patient Voucher (-0.0448 vs -0.046). Clustered SEs also match the table. No claim-driven revisions were made. All sandbox runs completed in seconds; nothing hung.",
+  "files_read_outside_mount": [],
+  "started_at": "2026-11-10T06:40:00Z",
+  "finished_at": "2026-11-10T06:44:00Z"
+}

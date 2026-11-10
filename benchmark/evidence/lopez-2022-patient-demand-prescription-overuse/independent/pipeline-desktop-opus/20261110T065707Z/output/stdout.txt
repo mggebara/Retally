@@ -1,0 +1,104 @@
+Rows: 2770  Cols: 4266 
+Vars matching 'acute|ill|sick|sample|elig|keep|incl|main': notacutelyill, desc_othernotacutelyill, chillsintake, daysillness, thinkillness, thinkillness_1, thinkillness_2, thinkillness_3, thinkillness_4, thinkillness_5, thinkillness_6, thinkillness_7, thinkillness_8, thinkillness_9, thinkillness_10, thinkillness_11, thinkillness_12, thinkillness_13, thinkillness_14, thinkillness_15, thinkillness__97, thinkillness__99, desc_illness, desc_illnessI1_c, beforeillness1, beforeillness2, whatillnesswas, whatillnesswas_1, whatillnesswas_2, whatillnesswas_3, whatillnesswas_4, whatillnesswas_5, whatillnesswas_6, whatillnesswas_7, whatillnesswas_8, whatillnesswas_9, whatillnesswas_10, whatillnesswas_11, whatillnesswas_12, whatillnesswas_13, whatillnesswas_14, whatillnesswas_15, whatillnesswas__97, whatillnesswas__99, desc_whatillnesswas, desc_whatillnesswasI1_c, testtypenotdone_sickle_cell_dise, chillshome_H, illnesschange_H, daysillness99, records_rxbill, amoxicillin, RXamoxicillin, H_amoxicillin, U_amoxicillin, NBref_amoxicillin, NBcscom_amoxicillin, ampicilline, RXampicilline, H_ampicilline
+Using PV: patient_voucher  DV: doctor_voucher  clinic: cscomnum_OS  date: date 
+Base sample size: 2753 
+Outcome candidate: RXtreat_sev_simple_mal -> RXtreat_sev_simple_mal 
+Outcome candidate: treat_sev_simple_mal -> treat_sev_simple_mal 
+Outcome candidate: RXtreat_severe_mal -> RXtreat_severe_mal 
+Outcome candidate: treat_severe_mal -> treat_severe_mal 
+Unique id: 2750 
+Sample-restriction candidates:
+                            var rule   n1   n2 score
+13                       dropme  ==0 2055 2053     0
+14              MSSpred_mal_pos  ==0 2055 2053     0
+5         recorded_Malaria_test  ==0 2055 2055     2
+6                  RXvitamine_b  ==0 2050 2050     8
+11          GE_FS_test_only_POS  ==0 2051 2041    16
+12             decline_antibiot  ==0 2065 2065    22
+9  RXtreat_simple_mal_NOvoucher  ==0 2041 2041    26
+2        interventionreceived_1  ==0 2073 2062    27
+7    vouchers_received_not_used  ==0 2073 2062    27
+3                         item2  ==1 2038 2038    32
+8             RXtreat_arte_mono  ==0 2070 2070    32
+10                 RDT_test_POS  ==0 2079 2079    50
+1              thinkillness__97  ==0 2055 1858   192
+17                    CC13xCC29  ==0 2052 1804   252
+15                     CC1xCC11  ==0 2038 1780   290
+18                    CC28xCC41  ==0 2046 1768   294
+4                  highschoolup  ==0 2032 1781   295
+19                    CC39xCC41  ==0 2050 1761   297
+16                      CC5xCC9  ==0 2032 1775   301
+DEVIATION: Restricted to analysis sample via dropme ==0 (n=2055) to match the paper's 2,055 acutely ill patients; the exact sample flag is not named in the paper
+Sample size after restrictions: 2055 
+y_voucher : non-missing = 2055  mean = 0.2141119 
+y_any_rx : non-missing = 2053  mean = 0.6536775 
+y_any_buy : non-missing = 2053  mean = 0.5484657 
+y_sev_rx : non-missing = 2053  mean = 0.2761812 
+y_sev_buy : non-missing = 2053  mean = 0.2357526 
+OLS estimation, Dep. Var.: y_voucher
+Observations: 2,055
+Fixed-effects: datefe: 36
+Standard-errors: Clustered (clinic) 
+   Estimate Std. Error t value   Pr(>|t|)    
+PV 0.351746   0.030588 11.4996  < 2.2e-16 ***
+DV 0.268245   0.025167 10.6586 2.2332e-15 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+RMSE: 0.376133     Adj. R2: 0.143797
+                 Within R2: 0.123519
+OLS estimation, Dep. Var.: y_any_rx
+Observations: 2,053
+Fixed-effects: datefe: 36
+Standard-errors: Clustered (clinic) 
+   Estimate Std. Error  t value Pr(>|t|)    
+PV 0.066654   0.026610 2.504847 0.015032 *  
+DV 0.023020   0.025838 0.890949 0.376575    
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+RMSE: 0.459085     Adj. R2: 0.051921
+                 Within R2: 0.00329 
+OLS estimation, Dep. Var.: y_any_buy
+Observations: 2,053
+Fixed-effects: datefe: 36
+Standard-errors: Clustered (clinic) 
+   Estimate Std. Error t value   Pr(>|t|)    
+PV 0.152583   0.031039 4.91591 7.3925e-06 ***
+DV 0.092187   0.027363 3.36900 1.3342e-03 ** 
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+RMSE: 0.480674     Adj. R2: 0.049915
+                 Within R2: 0.014929
+OLS estimation, Dep. Var.: y_sev_rx
+Observations: 2,053
+Fixed-effects: datefe: 36
+Standard-errors: Clustered (clinic) 
+    Estimate Std. Error  t value Pr(>|t|)    
+PV -0.032981   0.018788 -1.75537 0.084387 .  
+DV -0.057704   0.023149 -2.49268 0.015505 *  
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+RMSE: 0.436506     Adj. R2: 0.029357
+                 Within R2: 0.002695
+OLS estimation, Dep. Var.: y_sev_buy
+Observations: 2,053
+Fixed-effects: datefe: 36
+Standard-errors: Clustered (clinic) 
+    Estimate Std. Error   t value Pr(>|t|)    
+PV -0.011268   0.021456 -0.525189 0.601420    
+DV -0.051432   0.020103 -2.558410 0.013102 *  
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+RMSE: 0.414494     Adj. R2: 0.028933
+                 Within R2: 0.002723
+RESULT:voucher_used_patient_voucher_table3_col1=0.351746
+RESULT:voucher_used_doctor_voucher_table3_col1=0.268245
+RESULT:any_malaria_treatment_prescribed_patient_voucher_table3_col2=0.066654
+RESULT:any_malaria_treatment_prescribed_doctor_voucher_table3_col2=0.023020
+RESULT:any_malaria_treatment_purchased_patient_voucher_table3_col3=0.152583
+RESULT:any_malaria_treatment_purchased_doctor_voucher_table3_col3=0.092187
+RESULT:severe_malaria_treatment_prescribed_patient_voucher_table3_col4=-0.032981
+RESULT:severe_malaria_treatment_prescribed_doctor_voucher_table3_col4=-0.057704
+RESULT:severe_malaria_treatment_purchased_patient_voucher_table3_col5=-0.011268
+RESULT:severe_malaria_treatment_purchased_doctor_voucher_table3_col5=-0.051432
+RESULT:n_obs_table3_col1=2055.000000
+RESULT:n_obs_table3_cols2_5=2053.000000

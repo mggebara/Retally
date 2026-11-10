@@ -1,0 +1,109 @@
+
+===== A 
+allc: 504  allc by Status/Finished:
+   
+      0   1
+  0  15 489
+allc & testNA dist:
+
+  0   1 
+503   1 
+nm 53 ; nmL1 35 ; nmL2 39 ; two 28 ; two1 21 ; two2 18 ; rev1 22 ; rev2 27 ; two_or_rev1 41 ; 
+dup ids among allc: A63759KWVJ94F 
+
+===== B 
+allc: 402  allc by Status/Finished:
+   
+      0   1
+  0   9 392
+  1   0   1
+allc & testNA dist:
+
+  0 
+402 
+nm 55 ; nmL1 39 ; nmL2 46 ; two 30 ; two1 23 ; two2 24 ; rev1 26 ; rev2 30 ; two_or_rev1 46 ; 
+Distribution channel among allc:
+           
+              0   1
+  anonymous 401   0
+  preview     0   1
+dup ids among allc: A3AY0315YWWNXY 
+
+A sample excl nm : N = 451 
+
+  C  G0  G1   T 
+108 111 126 106 
+# A tibble: 4 × 4
+  cond   comp  ctrl     n
+  <chr> <dbl> <dbl> <int>
+1 C      1.98  3.30   108
+2 G0     2.48  2.22   111
+3 G1     3.25  1.95   126
+4 T      3.41  2.23   106
+
+A sample excl two : N = 476 
+
+  C  G0  G1   T 
+115 117 134 110 
+# A tibble: 4 × 4
+  cond   comp  ctrl     n
+  <chr> <dbl> <dbl> <int>
+1 C      1.93  3.21   115
+2 G0     2.47  2.22   117
+3 G1     3.17  1.92   134
+4 T      3.33  2.2    110
+
+B SC0 regression coefs > 0.5:
+ test12  test24  test34  test47  test56  test63  test74  test82  test93 test103 
+      1       1       1       1       1       1       1       1       1       1 
+R2 1 
+B key7= 1 excl nm N= 347 :  treatment     comp     ctrl   n
+1         0 1.849162 2.815642 179
+2         1 3.446429 2.494048 168
+B key7= 1 excl two N= 372 :  treatment     comp     ctrl   n
+1         0 1.808511 2.803191 188
+2         1 3.358696 2.472826 184
+B key7= 2 excl nm N= 347 :  treatment     comp     ctrl   n
+1         0 1.849162 2.832402 179
+2         1 3.446429 2.500000 168
+B key7= 2 excl two N= 372 :  treatment     comp     ctrl   n
+1         0 1.808511 2.829787 188
+2         1 3.358696 2.478261 184
+B key7= 3 excl nm N= 347 :  treatment     comp     ctrl   n
+1         0 1.849162 3.089385 179
+2         1 3.446429 2.845238 168
+B key7= 3 excl two N= 372 :  treatment     comp     ctrl   n
+1         0 1.808511 3.074468 188
+2         1 3.358696 2.826087 184
+B key7= 4 excl nm N= 347 :  treatment     comp     ctrl   n
+1         0 1.849162 2.927374 179
+2         1 3.446429 2.636905 168
+B key7= 4 excl two N= 372 :  treatment     comp     ctrl   n
+1         0 1.808511 2.909574 188
+2         1 3.358696 2.614130 184
+B key7= 5 excl nm N= 347 :  treatment     comp     ctrl   n
+1         0 1.849162 3.078212 179
+2         1 3.446429 2.696429 168
+B key7= 5 excl two N= 372 :  treatment     comp     ctrl   n
+1         0 1.808511 3.053191 188
+2         1 3.358696 2.673913 184
+
+DC excl nm  A nobs 4510 
+  cond         d        c        s    n
+1    C -23.70579 59.26360 72.11619 1080
+2   G0 -18.77608 78.00115 77.71193 1110
+3   G1 -21.47415 63.69287 72.18278 1260
+4    T -22.54152 73.89787 72.47321 1060
+  cond         d        c        s    n
+1    C -25.06901 60.85240 72.23918 1790
+2    T -17.30664 76.14674 80.05148 1680
+
+DC excl two  A nobs 4760 
+  cond         d        c        s    n
+1    C -23.77451 59.83014 71.94806 1150
+2   G0 -19.48718 78.18410 78.28358 1170
+3   G1 -21.28832 63.22301 71.38631 1340
+4    T -22.89739 73.94545 72.63947 1100
+  cond        d        c        s    n
+1    C -25.6162 61.02153 72.27000 1880
+2    T -19.0937 76.42194 79.58275 1840

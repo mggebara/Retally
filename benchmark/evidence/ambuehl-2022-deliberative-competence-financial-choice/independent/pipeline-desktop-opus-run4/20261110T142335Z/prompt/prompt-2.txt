@@ -1,0 +1,360 @@
+You are fixing R code that was generated to reproduce results from an econometrics paper.
+
+## Original Code
+```r
+suppressPackageStartupMessages({
+  library(readr)
+  library(dplyr)
+  library(fixest)
+})
+set.seed(42)
+options(warn = 1)
+
+base <- "<repo>/.cache/datasets/ambuehl_2022_deliberative_competence_financial_choice.script-free"
+raw <- file.path(base, "data", "raw")
+
+num <- function(x) suppressWarnings(as.numeric(as.character(x)))
+dg <- function(...) cat("DIAG:", ..., "\n")
+
+rd <- function(f) {
+  d <- readr::read_csv(file.path(raw, f),
+                       col_types = readr::cols(.default = readr::col_character()),
+                       show_col_types = FALSE, progress = FALSE,
+                       name_repair = "minimal")
+  nm <- names(d)
+  nm <- gsub("﻿", "", nm, fixed = TRUE)
+  nm <- trimws(nm)
+  blank <- nm == "" | is.na(nm)
+  if (any(blank)) nm[blank] <- paste0("X_blank_", seq_len(sum(blank)))
+  nm <- make.unique(nm)
+  names(d) <- nm
+  as.data.frame(d, stringsAsFactors = FALSE)
+}
+
+res <- list()
+emit_store <- function(name, val) { res[[name]] <<- val }
+
+lab_arm <- function(x) {
+  x <- tolower(as.character(x))
+  ifelse(grepl("contr", x), "Control",
+    ifelse(grepl("rhet", x), "Rhetoric",
+      ifelse(grepl("subst", x), "Substance",
+        ifelse(grepl("treat|full|comp", x), "Treatment", NA_character_))))
+}
+
+score_cands <- function(d) {
+  cs <- grep("^SC", names(d), value = TRUE)
+  keep <- character(0)
+  for (c in cs) {
+    x <- num(d[[c]])
+    if (sum(is.finite(x)) == 0) next
+    if (mean(is.finite(x)) > 0.8 && max(x, na.rm = TRUE) <= 5 && min(x, na.rm = TRUE) >= 0) keep <- c(keep, c)
+  }
+  keep
+}
+
+multi_flag <- function(d, label) {
+  sw <- grep("^switch[0-9]+$", names(d), value = TRUE, ignore.case = TRUE)
+  if (length(sw) == 0) {
+    dg(label, "no switch columns found")
+    if ("excluded" %in% names(d)) return(num(d$excluded) %in% 1)
+    return(rep(FALSE, nrow(d)))
+  }
+  S <- sapply(sw, function(c) num(d[[c]]))
+  if (is.null(dim(S))) S <- matrix(S, nrow = nrow(d))
+  mxs <- apply(S, 1, function(x) if (all(is.na(x))) NA else max(x, na.rm = TRUE))
+  vals <- unique(as.vector(S)); vals <- vals[is.finite(vals)]
+  shr1 <- mean(mxs >= 1, na.rm = TRUE)
+  dg(label, "switch cols:", length(sw), "| distinct values:", paste(sort(vals), collapse = " "),
+     "| share any>=1:", round(shr1, 3))
+  if (all(vals %in% c(0, 1)) && shr1 < 0.5) m <- mxs >= 1 else m <- mxs >= 2
+  m[is.na(m)] <- FALSE
+  m
+}
+
+build_dc <- function(V, label) {
+  allv <- as.vector(V); allv <- allv[is.finite(allv)]
+  mx <- max(allv)
+  dg(label, "valuation summary: min", min(allv), "median", median(allv), "max", mx)
+  tmax <- apply(V, 2, function(x) max(x, na.rm = TRUE))
+  tmean <- colMeans(V, na.rm = TRUE)
+  dg(label, "task max:", paste(round(tmax, 2), collapse = " "))
+  dg(label, "task mean:", paste(round(tmean, 2), collapse = " "))
+  schemes <- list(block = cbind(1:10, 11:20), alt = cbind(seq(1, 19, 2), seq(2, 20, 2)))
+  if (mx <= 1.5) {
+    pick <- "block"
+    pr <- schemes[[pick]]
+    P <- V * 100
+  } else if (mx <= 25) {
+    Rhat <- pmin(20, pmax(12, 2 * round(tmax / 2)))
+    sc <- sapply(schemes, function(s) sum(Rhat[s[, 1]] == Rhat[s[, 2]]))
+    dg(label, "Rhat:", paste(Rhat, collapse = " "), "| scheme matches:",
+       paste(names(sc), sc, collapse = " "))
+    pick <- names(sc)[which.max(sc)]
+    pr <- schemes[[pick]]
+    Rpair <- pmin(20, pmax(12, 2 * round(pmax(tmax[pr[, 1]], tmax[pr[, 2]]) / 2)))
+    dg(label, "R per pair:", paste(Rpair, collapse = " "))
+    P <- V
+    for (k in seq_len(nrow(pr))) {
+      P[, pr[k, 1]] <- V[, pr[k, 1]] / Rpair[k] * 100
+      P[, pr[k, 2]] <- V[, pr[k, 2]] / Rpair[k] * 100
+    }
+  } else {
+    pick <- "block"
+    pr <- schemes[[pick]]
+    P <- V
+  }
+  dg(label, "pairing scheme:", pick)
+  D <- -abs(P[, pr[, 1], drop = FALSE] - P[, pr[, 2], drop = FALSE])
+  D
+}
+
+find_T_cols <- function(d) {
+  tc <- paste0("T", 1:20)
+  if (all(tc %in% names(d))) return(tc)
+  alt <- grep("^(T|r|val|value|v|task)[_ ]?[0-9]+$", names(d), value = TRUE, ignore.case = TRUE)
+  if (length(alt) == 20) {
+    o <- order(num(gsub("[^0-9]", "", alt)))
+    return(alt[o])
+  }
+  NULL
+}
+
+dc_regression <- function(D, arm, levels_) {
+  n <- nrow(D)
+  long <- data.frame(sid = rep(seq_len(n), times = ncol(D)),
+                     arm = rep(arm, times = ncol(D)),
+                     d = as.vector(D), stringsAsFactors = FALSE)
+  long <- long[is.finite(long$d), ]
+  for (l in levels_) long[[paste0("arm_", l)]] <- as.integer(long$arm == l)
+  fml <- as.formula(paste("d ~ 0 +", paste(paste0("arm_", levels_), collapse = " + ")))
+  m <- feols(fml, data = long, cluster = ~sid)
+  print(summary(m))
+  list(coef = coef(m), nobs = nobs(m))
+}
+
+compA <- NULL
+
+# ------------------------- Experiment A -------------------------
+tryCatch({
+  A <- dplyr::bind_rows(lapply(1:8, function(b) {
+    d <- rd(sprintf("expAbatch%d.csv", b)); d$batch_ <- b; d
+  }))
+  if ("V1" %in% names(A)) A <- A[is.na(A$V1) | A$V1 != "ResponseID", ]
+  dg("A rows:", nrow(A))
+  tA <- find_T_cols(A)
+  if (is.null(tA)) stop("A: valuation columns not found")
+  VA <- sapply(tA, function(c) num(A[[c]]))
+  okV <- rowSums(is.finite(VA)) == 20
+  okT <- !is.na(A$treatment) & trimws(A$treatment) != ""
+  scA <- score_cands(A[okV & okT, , drop = FALSE])
+  dg("A score candidates:", paste(scA, collapse = " "))
+  if (length(scA) < 2) stop("A: fewer than 2 score columns")
+  s1all <- num(A[[scA[1]]]); s2all <- num(A[[scA[2]]])
+  completeA <- okV & okT & is.finite(s1all) & is.finite(s2all)
+  mA <- multi_flag(A, "A")
+  dg("A completed:", sum(completeA), "| multi-switchers among completed:", sum(mA & completeA))
+  if ("excluded" %in% names(A)) {
+    dg("A table excluded vs multi (completed):")
+    print(table(excluded = A$excluded[completeA], multi = mA[completeA], useNA = "ifany"))
+  }
+  keep <- completeA & !mA
+  dg("A kept:", sum(keep))
+  trtA <- trimws(A$treatment[keep])
+  dg("A treatment values:"); print(table(trtA))
+  s1 <- s1all[keep]; s2 <- s2all[keep]
+  labs <- lab_arm(trtA)
+  if (all(!is.na(labs)) && length(unique(labs)) == 4) {
+    armA <- labs
+    d1 <- mean(s1[armA == "Treatment"]) - mean(s1[armA == "Control"])
+    d2 <- mean(s2[armA == "Treatment"]) - mean(s2[armA == "Control"])
+    comp <- if (d1 >= d2) 1 else 2
+  } else {
+    codes <- unique(trtA)
+    cn <- num(codes)
+    codes <- if (all(!is.na(cn))) codes[order(cn)] else sort(codes)
+    dj <- sapply(codes, function(k) mean(s1[trtA == k] - s2[trtA == k]))
+    dist <- sapply(seq_along(codes), function(j) abs(dj[j] - mean(dj[-j])))
+    cj <- which.max(dist)
+    comp <- if (dj[cj] < mean(dj[-cj])) 1 else 2
+    compS <- if (comp == 1) s1 else s2
+    map <- character(length(codes))
+    if (cj == 1) {
+      map <- c("Control", "Treatment", "Substance", "Rhetoric")[seq_along(codes)]
+    } else {
+      map[cj] <- "Control"
+      oth <- setdiff(seq_along(codes), cj)
+      cm <- sapply(oth, function(j) mean(compS[trtA == codes[j]]))
+      rj <- oth[which.min(cm)]
+      map[rj] <- "Rhetoric"
+      rest <- setdiff(oth, rj)
+      map[rest] <- c("Treatment", "Substance")[seq_along(rest)]
+    }
+    dg("A code mapping:", paste(codes, map, sep = "->", collapse = " "))
+    armA <- map[match(trtA, codes)]
+  }
+  compA <<- scA[comp]
+  ctrlA <- scA[3 - comp]
+  dg("A compound score col:", compA, "| control-module score col:", ctrlA)
+  scoreComp <- if (comp == 1) s1 else s2
+  scoreCtrl <- if (comp == 1) s2 else s1
+  print(tapply(scoreComp, armA, mean)); print(tapply(scoreCtrl, armA, mean))
+
+  # Table 4, Experiment A
+  ct <- armA %in% c("Control", "Treatment")
+  t4 <- data.frame(comp = scoreComp[ct], ctrl = scoreCtrl[ct], treat = as.integer(armA[ct] == "Treatment"))
+  m1 <- feols(comp ~ treat, data = t4, vcov = "iid")
+  m3 <- feols(ctrl ~ treat, data = t4, vcov = "iid")
+  print(summary(m1)); print(summary(m3))
+  emit_store("test_score_compounding_treatment_minus_control_expA_table4_col1", unname(coef(m1)["treat"]))
+  emit_store("test_score_control_module_treatment_minus_control_expA_table4_col3", unname(coef(m3)["treat"]))
+  emit_store("n_obs_table4_expA_cols1_3", nobs(m1))
+
+  # Table 7, Experiment A
+  DA <- build_dc(VA[keep, , drop = FALSE], "A")
+  rA <- dc_regression(DA, armA, c("Control", "Treatment", "Substance", "Rhetoric"))
+  emit_store("deliberative_competence_control_expA_table7_col1", unname(rA$coef["arm_Control"]))
+  emit_store("deliberative_competence_treatment_expA_table7_col1", unname(rA$coef["arm_Treatment"]))
+  emit_store("deliberative_competence_substance_only_expA_table7_col1", unname(rA$coef["arm_Substance"]))
+  emit_store("deliberative_competence_rhetoric_only_expA_table7_col1", unname(rA$coef["arm_Rhetoric"]))
+  emit_store("n_obs_table7_expA_col1", rA$nobs)
+}, error = function(e) dg("Experiment A error:", conditionMessage(e)))
+
+# ------------------------- Experiment B -------------------------
+tryCatch({
+  B <- dplyr::bind_rows(rd("expBbatch1.csv"), rd("expBbatch2.csv"))
+  if ("StartDate" %in% names(B)) B <- B[grepl("^[0-9]", B$StartDate), ]
+  dg("B rows:", nrow(B), "| cols:", ncol(B))
+  nmB <- names(B)
+  interesting <- grep("treat|cond|group|arm|^T[0-9]|switch|^SC|exclu|score|amt|line|val",
+                      nmB, value = TRUE, ignore.case = TRUE)
+  dg("B interesting cols:", paste(head(interesting, 200), collapse = ","))
+  trcol <- nmB[tolower(nmB) == "treatment"]
+  if (length(trcol) == 0) trcol <- grep("^treat", nmB, value = TRUE, ignore.case = TRUE)
+  if (length(trcol) == 0) trcol <- grep("condition|^group$|^arm$", nmB, value = TRUE, ignore.case = TRUE)
+  if (length(trcol) == 0) {
+    dg("B first 300 cols:", paste(head(nmB, 300), collapse = ","))
+    stop("B: treatment column not found")
+  }
+  trcol <- trcol[1]
+  dg("B treatment col:", trcol)
+  tB <- find_T_cols(B)
+  if (is.null(tB)) {
+    dg("B first 300 cols:", paste(head(nmB, 300), collapse = ","))
+    stop("B: valuation columns not found")
+  }
+  VB <- sapply(tB, function(c) num(B[[c]]))
+  okV <- rowSums(is.finite(VB)) == 20
+  okT <- !is.na(B[[trcol]]) & trimws(B[[trcol]]) != ""
+  scB <- score_cands(B[okV & okT, , drop = FALSE])
+  dg("B score candidates:", paste(scB, collapse = " "))
+  if (length(scB) < 2) stop("B: fewer than 2 score columns")
+  if (!is.null(compA) && compA %in% scB) {
+    compB <- compA
+    ctrlB <- setdiff(scB, compB)[1]
+  } else {
+    compB <- scB[1]; ctrlB <- scB[2]
+  }
+  sc_all <- num(B[[compB]]); sk_all <- num(B[[ctrlB]])
+  completeB <- okV & okT & is.finite(sc_all) & is.finite(sk_all)
+  mB <- multi_flag(B, "B")
+  dg("B completed:", sum(completeB), "| multi-switchers among completed:", sum(mB & completeB))
+  keepB <- completeB & !mB
+  dg("B kept:", sum(keepB))
+  trtB <- trimws(B[[trcol]][keepB])
+  dg("B treatment values:"); print(table(trtB))
+  sc <- sc_all[keepB]; sk <- sk_all[keepB]
+  labs <- lab_arm(trtB)
+  if (all(!is.na(labs)) && all(c("Control", "Treatment") %in% labs) && length(unique(labs)) == 2) {
+    armB <- labs
+    if (mean(sc[armB == "Treatment"]) - mean(sc[armB == "Control"]) <
+        mean(sk[armB == "Treatment"]) - mean(sk[armB == "Control"])) {
+      tmp <- sc; sc <- sk; sk <- tmp
+      tmpn <- compB; compB <- ctrlB; ctrlB <- tmpn
+    }
+  } else {
+    codes <- unique(trtB)
+    cn <- num(codes)
+    codes <- if (all(!is.na(cn))) codes[order(cn)] else sort(codes)
+    mc <- sapply(codes, function(k) mean(sc[trtB == k]))
+    ctrl_code <- codes[which.min(mc)]
+    armB <- ifelse(trtB == ctrl_code, "Control", "Treatment")
+    dg("B control code:", ctrl_code)
+  }
+  dg("B compound score col:", compB, "| control-module score col:", ctrlB)
+  print(tapply(sc, armB, mean)); print(tapply(sk, armB, mean))
+
+  t4 <- data.frame(comp = sc, ctrl = sk, treat = as.integer(armB == "Treatment"))
+  m2 <- feols(comp ~ treat, data = t4, vcov = "iid")
+  m4 <- feols(ctrl ~ treat, data = t4, vcov = "iid")
+  print(summary(m2)); print(summary(m4))
+  emit_store("test_score_compounding_treatment_minus_control_expB_table4_col2", unname(coef(m2)["treat"]))
+  emit_store("test_score_control_module_treatment_minus_control_expB_table4_col4", unname(coef(m4)["treat"]))
+  emit_store("n_obs_table4_expB_cols2_4", nobs(m2))
+
+  DB <- build_dc(VB[keepB, , drop = FALSE], "B")
+  rB <- dc_regression(DB, armB, c("Control", "Treatment"))
+  emit_store("deliberative_competence_control_expB_table7_col2", unname(rB$coef["arm_Control"]))
+  emit_store("deliberative_competence_treatment_expB_table7_col2", unname(rB$coef["arm_Treatment"]))
+}, error = function(e) dg("Experiment B error:", conditionMessage(e)))
+
+# ------------------------- Output -------------------------
+order_names <- c(
+  "test_score_compounding_treatment_minus_control_expA_table4_col1",
+  "test_score_compounding_treatment_minus_control_expB_table4_col2",
+  "test_score_control_module_treatment_minus_control_expA_table4_col3",
+  "test_score_control_module_treatment_minus_control_expB_table4_col4",
+  "n_obs_table4_expA_cols1_3",
+  "n_obs_table4_expB_cols2_4",
+  "deliberative_competence_control_expA_table7_col1",
+  "deliberative_competence_treatment_expA_table7_col1",
+  "deliberative_competence_substance_only_expA_table7_col1",
+  "deliberative_competence_rhetoric_only_expA_table7_col1",
+  "deliberative_competence_control_expB_table7_col2",
+  "deliberative_competence_treatment_expB_table7_col2",
+  "n_obs_table7_expA_col1"
+)
+for (nm in order_names) {
+  v <- res[[nm]]
+  if (!is.null(v) && length(v) == 1 && is.finite(v)) {
+    cat(sprintf("RESULT:%s=%.6f\n", nm, as.numeric(v)))
+  }
+}
+```
+
+## Error / Unexpected Output
+```
+No RESULT: lines found in output
+```
+
+## Last run's stdout (excerpt: first/last 3000 characters)
+```
+DIAG: A rows: 746 
+DIAG: A score candidates:  
+DIAG: Experiment A error: A: fewer than 2 score columns 
+DIAG: B rows: 686 | cols: 779 
+DIAG: B interesting cols: Duration (in seconds),amt_id,TimeTreat_First Click,TimeTreat_Last Click,TimeTreat_Page Submit,TimeTreat_Click Count,Q381_0_GROUP_1,Q381_0_GROUP_2,Q381_0_GROUP_3,Q381_1_GROUP_1,Q381_1_GROUP_2,Q381_1_GROUP_3,Q381_2_GROUP_1,Q381_2_GROUP_2,Q381_2_GROUP_3,Q383_0_GROUP_1,Q383_0_GROUP_2,Q383_0_GROUP_3,Q383_1_GROUP_1,Q383_1_GROUP_2,Q383_1_GROUP_3,Q383_2_GROUP_1,Q383_2_GROUP_2,Q383_2_GROUP_3,Q389_0_GROUP_1,Q389_0_GROUP_2,Q389_0_GROUP_3,Q389_1_GROUP_1,Q389_1_GROUP_2,Q389_1_GROUP_3,Q389_2_GROUP_1,Q389_2_GROUP_2,Q389_2_GROUP_3,Q391_0_GROUP_1,Q391_0_GROUP_2,Q391_0_GROUP_3,Q391_1_GROUP_1,Q391_1_GROUP_2,Q391_1_GROUP_3,Q391_2_GROUP_1,Q391_2_GROUP_2,Q391_2_GROUP_3,SC0,treatment,line1,line2,amt1,amt2,T1,T2,T3,T4,T5,T6,T7,T8,T9,T10,T11,T12,T13,T14,T15,T16,T17,T18,T19,T20,exclude2,exclude3,exclude4,exclude5,switch1,switch2,switch3,switch4,switch5,switch6,switch7,switch8,switch9,switch10,switch11,switch12,switch13,switch14,switch15,switch16,switch17,switch18,switch19,switch20 
+DIAG: B treatment col: treatment 
+DIAG: B score candidates:  
+DIAG: Experiment B error: B: fewer than 2 score columns
+```
+
+## Task
+Fix specifically the identified problem above. Do not rewrite the entire approach unless necessary.
+
+## Reminder: Output Convention
+The fixed R code MUST emit each reproduced metric on its own line using EXACTLY this format:
+    RESULT:<metric_name>=<numeric_value>
+For example:  cat('RESULT:beta=0.342\n')
+Use snake_case metric names.
+
+## Reminder: Constraints
+- The dataset is a directory tree at '<repo>/.cache/datasets/ambuehl_2022_deliberative_competence_financial_choice.script-free' — see the file listing under Dataset Information.  Load the actual data file(s) by the exact paths listed there (readr::read_csv() for .csv, haven::read_dta() for Stata .dta, load() for .RData/.rda, which creates the objects listed for the file under exactly those names: use them, do not guess others; readRDS() for .rds).
+- Installed packages (no network; nothing else can be installed): jsonlite, fixest, lfe, AER, ivreg, plm, estimatr, lme4, quantreg, car, sandwich, lmtest, clubSandwich, multiwayvcov, marginaleffects, MatchIt, optmatch, CBPS, WeightIt, cobalt, did, rdrobust, rddensity, Synth, modelsummary, stargazer, texreg, broom, tidyverse, dplyr, tidyr, readr, stringr, lubridate, data.table, haven, readxl, janitor, zoo, ggplot2, ggridges, ggrepel, gridExtra, cowplot, gtable, extrafont, sf, MASS, nnet, survival, splines, Matrix, boot, stats, utils.
+- Prefer fixest for fixed effects, IV and clustered SEs; use the other installed packages where the paper's method calls for them.
+- Do NOT access the internet.
+- Do NOT call system() / system2().
+- Use set.seed(42) for reproducibility.
+- Print all RESULT: lines at the end via cat().
+
+Output ONLY the corrected R code — no explanation, no markdown fences.

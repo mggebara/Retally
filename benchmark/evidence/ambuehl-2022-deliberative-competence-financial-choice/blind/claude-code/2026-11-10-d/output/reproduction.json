@@ -1,0 +1,29 @@
+{
+  "schema": 1,
+  "entry_id": "ambuehl-2022-deliberative-competence-financial-choice",
+  "mode": "blind",
+  "run_id": "2026-11-10-d",
+  "reproducer": "claude-code",
+  "language": "r",
+  "final": {"script": "script.R", "stdout": "stdout.txt", "stderr": "stderr.txt", "exit_code": 0},
+  "attempts": [
+    {"dir": "attempt-1", "exit_code": 0, "kind": ""},
+    {"dir": "attempt-2", "exit_code": 0, "kind": ""},
+    {"dir": "attempt-3", "exit_code": 0, "kind": ""},
+    {"dir": "attempt-4", "exit_code": 0, "kind": ""},
+    {"dir": "attempt-5", "exit_code": 0, "kind": ""},
+    {"dir": "attempt-6", "exit_code": 0, "kind": ""},
+    {"dir": "attempt-7", "exit_code": 0, "kind": ""}
+  ],
+  "deviations": [
+    "Multiple switching is defined as any monotonicity violation (a switch back from the future reward to the immediate payment) in either the first or the second list of any of the 20 iterated price lists. This flags 53 of 504 rows in A and 55 of 401 in B; the paper reports 49 and 53, so the retained samples (A 451, B 346) are slightly smaller than the paper's 455 and 348. No alternative definition I tried (counting switches, combined fine-grid list, ignoring line 1, and others) matched both counts.",
+    "Experiment A conditions are not coded in the data: treatment is 0/1 within batches. Batches 1, 2, 4 and 5 were taken as Treatment vs. Control (index-fund attention code 'funds'); batches 3, 6, 7 and 8 as Substance-Only (treatment==1, the shorter video, with high Q1 rule-of-72 accuracy) vs. Rhetoric-Only (treatment==0). This was inferred from attention-check answers, video timers and Q1 accuracy.",
+    "Exam answer key: the compound-interest key (test1-5 = 2,4,4,7,6) and the Exp A control key (test6-10 = 3,4,2,3,3) were inferred from Qualtrics' Score-sum (exact fit, R2=1). The Qualtrics score in Exp B applies the Exp A key to B's different control questions, so for B's diversification questions I used content-based answers in display order from Table C.2: GM & Microsoft, 0.7, stocks, stocks, 1 (codes 4,5,5,5,1).",
+    "Valuations are interval midpoints: 2*n1 - 0.1 - 0.2*m2, where n1 is the number of future choices in list 1 and m2 the number of immediate choices in list 2. They are normalized by the paired simple reward R (Table 2), and the edge cases (n1=0 or 11) are not truncated.",
+    "Exp B has one worker id among 402 completers twice; the first participation is kept (401 subjects). Completers are subjects with price-list data and at least 9 of the 10 test answers (A: 504 rows, including the paper's duplicate subject, whose two rows are both flagged as multiple switchers)."
+  ],
+  "notes": "Independent blind reproduction from the raw Qualtrics CSVs. Table 4: OLS of the test score on a Treatment dummy (IID SEs), with Exp A restricted to Treatment+Control. Table 7: no-constant OLS of -|r_c - r_s|*100 on condition dummies, one row per subject x task pair (10 pairs), SEs clustered by subject (fixest). Runs attempt-1 to attempt-7 were exploratory (data structure, answer-key inference, condition identification, multiple-switch definitions) and printed no RESULT lines. readMe.pdf in the mount was read for the file list only. No run hung.",
+  "files_read_outside_mount": [],
+  "started_at": "2026-11-10T06:54:56Z",
+  "finished_at": "2026-11-10T11:25:00Z"
+}

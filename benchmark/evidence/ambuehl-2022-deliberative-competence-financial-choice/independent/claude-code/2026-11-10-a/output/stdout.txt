@@ -1,0 +1,58 @@
+Completed subjects: Exp A 504  Exp B 401 
+Multiple switchers: Exp A 53 of 504 ; Exp B 54 of 401 
+
+      Control  RhetoricOnly SubstanceOnly     Treatment 
+          108           111           126           106 
+
+  Control Treatment 
+      179       168 
+
+Table 4 (iid SEs)
+c1: Control 1.981 (0.137)  Difference 1.424 (0.194)  Treatment level 3.406  N=214
+c2: Control 1.849 (0.100)  Difference 1.597 (0.144)  Treatment level 3.446  N=347
+c3: Control 3.296 (0.103)  Difference -1.070 (0.147)  Treatment level 2.226  N=214
+c4: Control 3.078 (0.098)  Difference -0.382 (0.141)  Treatment level 2.696  N=347
+
+Table 7 col 1 (Exp A, both delays), SEs clustered by subject
+                   Estimate Std. Error   t value     Pr(>|t|)
+condControl       -23.70579   1.572085 -15.07920 7.005710e-42
+condTreatment     -22.54152   1.660572 -13.57455 2.007082e-35
+condSubstanceOnly -21.47415   1.410774 -15.22154 1.669519e-42
+condRhetoricOnly  -18.77608   1.288691 -14.56989 1.143801e-39
+attr(,"vcov_type")
+[1] "Clustered (sid)"
+N obs 4510  subjects 451 
+
+Table 7 col 2 (Exp B, both delays)
+               Estimate Std. Error   t value     Pr(>|t|)
+condControl   -25.06901   1.330243 -18.84544 5.168973e-55
+condTreatment -17.30664   1.112186 -15.56092 9.178237e-42
+attr(,"vcov_type")
+[1] "Clustered (sid)"
+N obs 3470  subjects 347 
+                      Estimate Std. Error     t value     Pr(>|t|)
+(Intercept)         -23.705791   1.572085 -15.0792005 7.005710e-42
+cond::Treatment       1.164274   2.286690   0.5091524 6.108950e-01
+cond::SubstanceOnly   2.231641   2.112282   1.0565071 2.913034e-01
+cond::RhetoricOnly    4.929707   2.032776   2.4251114 1.569627e-02
+attr(,"vcov_type")
+[1] "Clustered (sid)"
+                  Estimate Std. Error    t value     Pr(>|t|)
+(Intercept)     -25.069010   1.330243 -18.845436 5.168973e-55
+cond::Treatment   7.762375   1.733927   4.476759 1.030291e-05
+attr(,"vcov_type")
+[1] "Clustered (sid)"
+
+RESULT:test_score_compounding_treatment_minus_control_expA_table4_col1=1.424179
+RESULT:test_score_compounding_treatment_minus_control_expB_table4_col2=1.597267
+RESULT:test_score_control_module_treatment_minus_control_expA_table4_col3=-1.069881
+RESULT:test_score_control_module_treatment_minus_control_expB_table4_col4=-0.381784
+RESULT:n_obs_table4_expA_cols1_3=214.000000
+RESULT:n_obs_table4_expB_cols2_4=347.000000
+RESULT:deliberative_competence_control_expA_table7_col1=-23.705791
+RESULT:deliberative_competence_treatment_expA_table7_col1=-22.541517
+RESULT:deliberative_competence_substance_only_expA_table7_col1=-21.474150
+RESULT:deliberative_competence_rhetoric_only_expA_table7_col1=-18.776083
+RESULT:deliberative_competence_control_expB_table7_col2=-25.069010
+RESULT:deliberative_competence_treatment_expB_table7_col2=-17.306635
+RESULT:n_obs_table7_expA_col1=4510.000000

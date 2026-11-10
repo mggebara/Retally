@@ -1,0 +1,89 @@
+Exp A completed: 504  multiple switchers: 51 
+Exp B completed: 402  (duplicate participations: 1 )
+Exp B completed, first participations: 401  multiple switchers among them: 53 
+
+Exp A condition x video check (treatment-block word / control-block word):
+               
+                 / 'n' or funds  / compounding  / funds compounding / 
+  Control                     1              0      120              0
+  RhetoricOnly                0            123        0              0
+  SubstanceOnly               0              0        0              0
+  Treatment                   0              0        0            120
+               
+                interest (or stock, depending on what you consider the first slide) / 
+  Control                                                                            0
+  RhetoricOnly                                                                       0
+  SubstanceOnly                                                                      1
+  Treatment                                                                          0
+               
+                interest / 
+  Control                 0
+  RhetoricOnly            0
+  SubstanceOnly         139
+  Treatment               0
+Exp A condition x 'did you use rule of 72' (3 = I don't know the rule of 72):
+               
+                  1   2   3
+  Control        16  27  78
+  RhetoricOnly   28  34  61
+  SubstanceOnly 106  31   3
+  Treatment      84  31   5
+Exp B condition x rule72:
+           
+              1   2   3
+  Control    65  58  78
+  Treatment 184  16   1
+
+Exp A analysis sample by condition:
+
+      Control  RhetoricOnly SubstanceOnly     Treatment 
+          108           112           126           107 
+Exp B analysis sample by condition:
+
+  Control Treatment 
+      179       169 
+
+Table 4:
+            Estimate Std. Error t value Pr(>|t|)
+(Intercept)    1.981      0.137  14.502        0
+treat          1.411      0.194   7.285        0
+            Estimate Std. Error t value Pr(>|t|)
+(Intercept)    1.855      0.100  18.539        0
+treat          1.589      0.144  11.068        0
+            Estimate Std. Error t value Pr(>|t|)
+(Intercept)    3.296      0.103  31.932        0
+treat         -1.072      0.146  -7.326        0
+            Estimate Std. Error t value Pr(>|t|)
+(Intercept)    3.067      0.099  31.130    0.000
+treat         -0.375      0.141  -2.651    0.008
+
+Table 7 col 1 (Exp A):
+                   Estimate Std. Error   t value     Pr(>|t|)
+condControl       -23.70579   1.572075 -15.07930 6.500996e-42
+condTreatment     -22.42461   1.649164 -13.59756 1.522483e-35
+condSubstanceOnly -21.47415   1.410765 -15.22164 1.545900e-42
+condRhetoricOnly  -19.11658   1.321519 -14.46561 3.019972e-39
+attr(,"vcov_type")
+[1] "Clustered (sid)"
+nobs 4530 
+Table 7 col 2 (Exp B):
+               Estimate Std. Error   t value     Pr(>|t|)
+condControl   -24.89516   1.336878 -18.62187 3.772590e-54
+condTreatment -17.28481   1.105815 -15.63084 4.541346e-42
+attr(,"vcov_type")
+[1] "Clustered (sid)"
+nobs 3480 
+
+RESULT:test_score_compounding_treatment_minus_control_expA_table4_col1=1.411042
+RESULT:test_score_compounding_treatment_minus_control_expB_table4_col2=1.589038
+RESULT:test_score_control_module_treatment_minus_control_expA_table4_col3=-1.071997
+RESULT:test_score_control_module_treatment_minus_control_expB_table4_col4=-0.374731
+RESULT:n_obs_table4_expA_cols1_3=215
+RESULT:n_obs_table4_expB_cols2_4=348
+RESULT:deliberative_competence_control_expA_table7_col1=-23.705791
+RESULT:deliberative_competence_treatment_expA_table7_col1=-22.424611
+RESULT:deliberative_competence_substance_only_expA_table7_col1=-21.474150
+RESULT:deliberative_competence_rhetoric_only_expA_table7_col1=-19.116578
+RESULT:deliberative_competence_control_expB_table7_col2=-24.895165
+RESULT:deliberative_competence_treatment_expB_table7_col2=-17.284815
+RESULT:n_obs_table7_expA_col1=4530

@@ -1,0 +1,46 @@
+Experiment A: completed (all 20 price lists answered) = 504; multiple switchers = 53; analysis sample = 451
+Experiment B: completed (all 20 price lists answered) = 401; multiple switchers = 54; analysis sample = 347
+
+  Control  Rhetoric Substance Treatment 
+      108       111       126       106 
+
+  Control Treatment 
+      179       168 
+Table 4: (1) A comp diff 1.424 (0.194) ctrl-level 1.981 N=214
+         (2) B comp diff 1.597 (0.144) ctrl-level 1.849 N=347
+         (3) A ctrl-module diff -1.070 (0.147) ctrl-level 3.296 N=214
+         (4) B ctrl-module diff -0.382 (0.141) ctrl-level 3.078 N=347
+OLS estimation, Dep. Var.: d
+Observations: 4,510
+Standard-errors: Clustered (id) 
+            Estimate Std. Error  t value  Pr(>|t|)    
+I_Control   -23.7058    1.57209 -15.0792 < 2.2e-16 ***
+I_Treatment -22.5415    1.66057 -13.5745 < 2.2e-16 ***
+I_Substance -21.4741    1.41077 -15.2215 < 2.2e-16 ***
+I_Rhetoric  -18.7761    1.28869 -14.5699 < 2.2e-16 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+RMSE: 22.8   Adj. R2: 0.005325
+OLS estimation, Dep. Var.: d
+Observations: 3,470
+Standard-errors: Clustered (id) 
+            Estimate Std. Error  t value  Pr(>|t|)    
+I_Control   -25.0690    1.33024 -18.8454 < 2.2e-16 ***
+I_Treatment -17.3066    1.11219 -15.5609 < 2.2e-16 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+RMSE: 23.0   Adj. R2: 0.027157
+RESULT:test_score_compounding_treatment_minus_control_expA_table4_col1=1.4242
+RESULT:test_score_compounding_treatment_minus_control_expB_table4_col2=1.5973
+RESULT:test_score_control_module_treatment_minus_control_expA_table4_col3=-1.0699
+RESULT:test_score_control_module_treatment_minus_control_expB_table4_col4=-0.3818
+RESULT:n_obs_table4_expA_cols1_3=214
+RESULT:n_obs_table4_expB_cols2_4=347
+RESULT:deliberative_competence_control_expA_table7_col1=-23.7058
+RESULT:deliberative_competence_treatment_expA_table7_col1=-22.5415
+RESULT:deliberative_competence_substance_only_expA_table7_col1=-21.4741
+RESULT:deliberative_competence_rhetoric_only_expA_table7_col1=-18.7761
+RESULT:deliberative_competence_control_expB_table7_col2=-25.0690
+RESULT:deliberative_competence_treatment_expB_table7_col2=-17.3066
+RESULT:n_obs_table7_expA_col1=4510
+DEVIATION: multiple switching operationalised as any non-monotone choice pattern (a later line returning to the immediate option) within either list of any of the 20 tasks; this flags 53 of 504 (A) and 54 of 401 (B) subjects vs. 49 and 53 reported, so samples are 451 (A) and 347 (B) instead of 455 and 348.

@@ -1,0 +1,319 @@
+You are refining R code that reproduces results from an econometrics paper.
+The code RAN SUCCESSFULLY but the reproduced values do not match the
+paper's claims within the allowed tolerance.  Identify what is causing
+the gap and adjust the code to close it.
+
+## Paper
+Title: Policy Research Working Paper
+Methodology: - **Design / identification:** Field RCT with 2,055 acutely ill patients at 60 public community clinics (CSComs) in Bamako, Mali (Nov–Dec 2016). Vouchers for a free course of ACT tablets (simple-malaria treatment) were randomized *within clinic across days*. Clinics were split into 3 geographic cohorts of 20, and each clinic was randomly assigned one of 20 intervention schedules (Figure 2) over a two-week, 6-day observation window: 2 Control days, 2 Doctor Voucher (DV) days and 2 Patient Voucher (PV) days. Under PV, all acutely ill patients got a voucher at arrival; under DV, providers got the vouchers and handed them out at their discretion. Clinics were reimbursed at retail price for redeemed vouchers, so provider and clinic financial incentives were the same in every arm. A separate Patient Information video treatment and a clinic-level RDT-trust training were cross-randomized; these are analysed elsewhere, with interactions shown in Appendix Tables B3–B4.
+- **Estimating equation (used throughout):** y_ict = β0 + βP·PV_ct + βD·DV_ct + γ_t + ε_ict, a linear (OLS/LPM) regression of patient i at clinic c on day t on PV and DV dummies, with Control as the omitted group. γ_t are **date fixed effects**, included because the share of PV/DV/C days varies by date. There are no other controls in the baseline specification. Coefficients are in raw units (percentage-point changes for binary outcomes); nothing is standardised.
+- **Standard errors and tests:** Standard errors are **clustered at the clinic level** (60 clusters), the level at which rotation schedules were assigned. Reported alongside are the F-test p-value for H0: βP = βD (the key PV-vs-DV comparison) and the joint F-test p-value for βP = βD = 0. Each outcome row is a separate regression (Table 2 balance format).
+- **Outcomes:** These are voucher redemption (from administrative voucher data); antimalarial prescription and purchase, split into simple (ACT) and severe treatment; and costs. Severe treatment is coded when the patient received artemisinin monotherapy or quinine as an injectable, or as tablets together with an ACT. Treatment–illness "match" means a malaria-positive patient purchased treatment, or a negative patient did not.
+- **Data sources and sample restrictions:**
+  - **In-clinic survey:** every consenting acutely ill patient. This means feeling sick plus at least one of fever, chills, sweating, nausea, vomiting, diarrhoea, poor appetite, headache, cough, weakness, fatigue or reduced consciousness.
+  - **Home follow-up the next day:** 1,735 patients randomly selected (up to 6 per clinic-day, with oversampling later), of whom 1,495 (86%) were interviewed.
+  - **Home RDT** (CareStart HRP2 Pf): 1,126 patients with a valid result. Analyses of illness–treatment match are restricted to this subsample.
+  - The Control group has 628 patients (Table 1 descriptives).
+  - **Clinic sampling frame:** CSComs in Bamako, Kati and Kalaban Coro. Clinics that had closed, were more than 15 km from Bamako, or were among the 21 working with an NGO were dropped, leaving 60.
+- **Randomization and attrition checks:** Table 2 regresses baseline patient and household characteristics on PV/DV using equation (1). Appendix Table B5 tests selection into the home survey, completion and valid RDT by arm (no significant differences). Appendix Table B6 checks balance on selection and interview; patients who consented to the RDT are sicker and more likely to have bought an antimalarial.
+- **Heterogeneity by malaria risk:** Following Cohen, Dupas & Schaner (2015), the RDT result is regressed on observable clinic-survey patient characteristics to get predicted malaria risk (π). Treatment effects are then compared across predicted-risk groups, e.g. the patients with the fewest symptoms, to test model Predictions 1–4. These are: PV > DV voucher use means gatekeeping costs; higher any-treatment in PV means patient-driven demand; higher severe treatment in DV means doctor-driven demand; and whether the marginal patients are low- or high-risk. The text is cut off before the exact predictor set and model are given.
+- **No ML components:** There is no train/test split, cross-validation or hyperparameter tuning. Inference uses clustered-SE hypothesis tests on the experimental contrasts.
+
+
+## Current Code
+```r
+suppressPackageStartupMessages({
+  library(haven)
+  library(fixest)
+})
+set.seed(42)
+
+f <- "<repo>/.cache/datasets/lopez_2022_patient_demand_prescription_overuse/Lopez_Sautmann_Schaner_2020/Data/LSS_analysis_datasets_20201108.dta"
+d <- read_dta(f)
+d <- as.data.frame(zap_labels(d))
+
+# drop if dropme==1
+if ("dropme" %in% names(d)) {
+  keep <- is.na(d$dropme) | d$dropme != 1
+  d <- d[keep, , drop = FALSE]
+}
+
+nms <- names(d)
+
+# ---------------- resolve variable names robustly ----------------
+resolve_var <- function(target, alts = character(0), patterns = character(0), required = TRUE) {
+  cands <- c(target, alts)
+  for (cn in cands) if (cn %in% nms) return(cn)
+  for (cn in cands) {
+    hit <- nms[tolower(nms) == tolower(cn)]
+    if (length(hit)) return(hit[1])
+  }
+  for (pt in patterns) {
+    hit <- grep(pt, nms, value = TRUE, ignore.case = TRUE)
+    if (length(hit)) return(hit[1])
+  }
+  hit <- agrep(target, nms, max.distance = 0.15, value = TRUE, ignore.case = TRUE)
+  if (length(hit)) return(hit[1])
+  if (required) {
+    cat("Could not find variable:", target, "\n")
+    cat("Variables containing 'vouch':", paste(grep("vouch", nms, value = TRUE, ignore.case = TRUE), collapse = " "), "\n")
+    cat("Variables containing 'cscom':", paste(grep("cscom", nms, value = TRUE, ignore.case = TRUE), collapse = " "), "\n")
+    cat("Variables containing 'treat':", paste(head(grep("treat", nms, value = TRUE, ignore.case = TRUE), 60), collapse = " "), "\n")
+    stop(paste("Missing required variable", target))
+  }
+  NA_character_
+}
+
+pvn <- resolve_var("patient_voucher", c("patientvoucher", "pat_voucher", "PV", "patient_vouch"),
+                   c("^patient.*vouch", "^pat.*vouch"))
+dvn <- resolve_var("doctor_voucher", c("doctorvoucher", "doc_voucher", "DV", "doctor_vouch"),
+                   c("^doctor.*vouch", "^doc.*vouch"))
+cln <- resolve_var("cscomnum", c("cscom_num", "cscom", "cscomid", "cscom_id", "clinic", "clinic_id"),
+                   c("^cscom"))
+cat("Treatment/cluster variables used:", pvn, dvn, cln, "\n")
+d$patient_voucher <- as.numeric(d[[pvn]])
+d$doctor_voucher  <- as.numeric(d[[dvn]])
+d$cscomnum        <- d[[cln]]
+nms <- names(d)
+
+varrange <- function(nms, a, b, pattern) {
+  ia <- match(a, nms); ib <- match(b, nms)
+  if (!is.na(ia) && !is.na(ib) && ib >= ia) nms[ia:ib] else grep(pattern, nms, value = TRUE)
+}
+datev <- varrange(nms, "DD1", "DD35", "^DD[0-9]+$")
+clinv <- varrange(nms, "CL1", "CL59", "^CL[0-9]+$")
+patv  <- grep("^CC", nms, value = TRUE)
+controls <- setdiff(unique(c(clinv, patv)), c(datev, "patient_voucher", "doctor_voucher", "cscomnum", pvn, dvn, cln))
+isnum <- vapply(d[controls], function(z) is.numeric(z) || is.logical(z), logical(1))
+controls <- controls[isnum]
+for (v in c(datev, controls)) d[[v]] <- as.numeric(d[[v]])
+
+cat("Date dummies:", length(datev), " Clinic dummies:", length(clinv), " Patient controls:", length(patv), "\n")
+
+# ---------------- weighted lasso via coordinate descent (active set) ----------------
+# minimizes (1/2)||y - Xb||^2 + sum_j pen_j |b_j|
+lasso_cd <- function(X, y, pen, xx, b) {
+  p <- ncol(X)
+  nz <- which(b != 0)
+  r <- if (length(nz)) as.vector(y - X[, nz, drop = FALSE] %*% b[nz]) else y
+  active <- nz
+  ytol <- 1e-9 * sqrt(sum(y^2)) + 1e-14
+  for (outer in 1:500) {
+    g <- as.vector(crossprod(X, r))
+    inact <- rep(TRUE, p); inact[active] <- FALSE
+    viol <- which(inact & abs(g) > pen * (1 + 1e-9))
+    if (outer > 1 && length(viol) == 0) break
+    active <- c(active, viol)
+    if (length(active) == 0) break
+    for (inner in 1:20000) {
+      maxd <- 0
+      for (j in active) {
+        old <- b[j]
+        xj <- X[, j]
+        z <- sum(xj * r) + xx[j] * old
+        az <- abs(z) - pen[j]
+        new <- if (az > 0) sign(z) * az / xx[j] else 0
+        if (new != old) {
+          r <- r - xj * (new - old)
+          b[j] <- new
+          dd <- abs(new - old) * sqrt(xx[j])
+          if (dd > maxd) maxd <- dd
+        }
+      }
+      if (maxd < ytol) break
+    }
+    active <- active[b[active] != 0]
+  }
+  b
+}
+
+ols_resid <- function(X, y, sel) {
+  if (length(sel) == 0) return(y)
+  as.vector(qr.resid(qr(X[, sel, drop = FALSE]), y))
+}
+
+# rlasso with cluster-robust penalty loadings (Belloni, Chernozhukov, Hansen, Kozbur 2016)
+rlasso_sel <- function(X, y, cl, c0 = 1.1, maxpsiiter = 15, tol = 1e-5) {
+  N <- nrow(X); p <- ncol(X); G <- length(unique(cl))
+  if (p == 0) return(integer(0))
+  gamma <- 0.1 / log(G)
+  lambda <- 2 * c0 * sqrt(N) * qnorm(1 - gamma / (2 * p))
+  xx <- colSums(X^2)
+  cors <- as.vector(crossprod(X, y)) / sqrt(xx * sum(y^2))
+  cors[!is.finite(cors)] <- 0
+  top <- order(-abs(cors))[seq_len(min(5, p))]
+  e <- ols_resid(X, y, top)
+  b <- rep(0, p)
+  psi_old <- NULL
+  sel <- integer(0)
+  for (it in seq_len(maxpsiiter)) {
+    S <- rowsum(X * e, cl)
+    psi <- sqrt(colSums(S^2) / N)
+    psi[psi < 1e-12] <- 1e-12
+    if (!is.null(psi_old) && max(abs(psi - psi_old)) < tol) break
+    pen <- lambda * psi / 2
+    b <- lasso_cd(X, y, pen, xx, b)
+    sel <- which(b != 0)
+    e <- ols_resid(X, y, sel)
+    psi_old <- psi
+  }
+  sel
+}
+
+# ---------------- PDS lasso for each outcome ----------------
+run_pds <- function(yname) {
+  yv <- resolve_var(yname, required = FALSE)
+  if (is.na(yv)) {
+    cat("Outcome", yname, "not found in data; skipping\n")
+    return(list(pv = NA_real_, dv = NA_real_, n = NA_integer_))
+  }
+  if (yv != yname) cat("Outcome", yname, "resolved to", yv, "\n")
+  d[[yname]] <- as.numeric(d[[yv]])
+  need <- c(yname, "patient_voucher", "doctor_voucher", "cscomnum", datev)
+  ok <- complete.cases(d[, need, drop = FALSE])
+  sub <- d[ok, , drop = FALSE]
+  N <- nrow(sub)
+  ctrl <- setdiff(controls, yv)
+  Xc <- as.matrix(sub[, ctrl, drop = FALSE])
+  goodc <- colSums(is.na(Xc)) == 0
+  Xc <- Xc[, goodc, drop = FALSE]
+  Z <- cbind(1, as.matrix(sub[, datev, drop = FALSE]))
+  qz <- qr(Z)
+  yt  <- as.vector(qr.resid(qz, sub[[yname]]))
+  pvt <- as.vector(qr.resid(qz, sub$patient_voucher))
+  dvt <- as.vector(qr.resid(qz, sub$doctor_voucher))
+  Xt <- qr.resid(qz, Xc)
+  colnames(Xt) <- colnames(Xc)
+  ss <- colSums(Xt^2)
+  Xt <- Xt[, ss > 1e-8, drop = FALSE]
+  cl <- sub$cscomnum
+  s_y  <- rlasso_sel(Xt, yt, cl)
+  s_pv <- rlasso_sel(Xt, pvt, cl)
+  s_dv <- rlasso_sel(Xt, dvt, cl)
+  selnames <- colnames(Xt)[sort(unique(c(s_y, s_pv, s_dv)))]
+  cat(yname, ": N =", N, " candidate controls =", ncol(Xt),
+      " selected (y/PV/DV/union) =", length(s_y), length(s_pv), length(s_dv), length(selnames), "\n")
+  if (length(selnames)) cat("  selected:", paste(selnames, collapse = " "), "\n")
+  rhs <- c("patient_voucher", "doctor_voucher", datev, selnames)
+  fml <- as.formula(paste0("`", yname, "` ~ ", paste0("`", rhs, "`", collapse = " + ")))
+  m <- feols(fml, data = sub, cluster = ~cscomnum, warn = FALSE, notes = FALSE)
+  cf <- coef(m); se <- sqrt(diag(vcov(m)))
+  cat(sprintf("  PV = %.4f (%.4f)  DV = %.4f (%.4f)  N = %d\n",
+              cf["patient_voucher"], se["patient_voucher"],
+              cf["doctor_voucher"], se["doctor_voucher"], nobs(m)))
+  list(pv = unname(cf["patient_voucher"]), dv = unname(cf["doctor_voucher"]), n = nobs(m))
+}
+
+outs <- c("used_vouchers_admin", "RXtreat_sev_simple_mal", "treat_sev_simple_mal",
+          "RXtreat_severe_mal", "treat_severe_mal")
+res <- lapply(outs, run_pds)
+names(res) <- outs
+
+cat(sprintf("RESULT:voucher_used_patient_voucher_table3_col1=%.6f\n", res$used_vouchers_admin$pv))
+cat(sprintf("RESULT:voucher_used_doctor_voucher_table3_col1=%.6f\n", res$used_vouchers_admin$dv))
+cat(sprintf("RESULT:any_malaria_treatment_prescribed_patient_voucher_table3_col2=%.6f\n", res$RXtreat_sev_simple_mal$pv))
+cat(sprintf("RESULT:any_malaria_treatment_prescribed_doctor_voucher_table3_col2=%.6f\n", res$RXtreat_sev_simple_mal$dv))
+cat(sprintf("RESULT:any_malaria_treatment_purchased_patient_voucher_table3_col3=%.6f\n", res$treat_sev_simple_mal$pv))
+cat(sprintf("RESULT:any_malaria_treatment_purchased_doctor_voucher_table3_col3=%.6f\n", res$treat_sev_simple_mal$dv))
+cat(sprintf("RESULT:severe_malaria_treatment_prescribed_patient_voucher_table3_col4=%.6f\n", res$RXtreat_severe_mal$pv))
+cat(sprintf("RESULT:severe_malaria_treatment_prescribed_doctor_voucher_table3_col4=%.6f\n", res$RXtreat_severe_mal$dv))
+cat(sprintf("RESULT:severe_malaria_treatment_purchased_patient_voucher_table3_col5=%.6f\n", res$treat_severe_mal$pv))
+cat(sprintf("RESULT:severe_malaria_treatment_purchased_doctor_voucher_table3_col5=%.6f\n", res$treat_severe_mal$dv))
+cat(sprintf("RESULT:n_obs_table3_col1=%d\n", as.integer(res$used_vouchers_admin$n)))
+cat(sprintf("RESULT:n_obs_table3_cols2_5=%d\n", as.integer(res$RXtreat_sev_simple_mal$n)))
+```
+
+## What the code produced
+  voucher_used_patient_voucher_table3_col1 = 0.347934
+  voucher_used_doctor_voucher_table3_col1 = 0.265285
+  any_malaria_treatment_prescribed_patient_voucher_table3_col2 = 0.062118
+  any_malaria_treatment_prescribed_doctor_voucher_table3_col2 = 0.018601
+  any_malaria_treatment_purchased_patient_voucher_table3_col3 = 0.147486
+  any_malaria_treatment_purchased_doctor_voucher_table3_col3 = 0.085029
+  severe_malaria_treatment_prescribed_patient_voucher_table3_col4 = -0.032976
+  severe_malaria_treatment_prescribed_doctor_voucher_table3_col4 = -0.051612
+  severe_malaria_treatment_purchased_patient_voucher_table3_col5 = -0.010591
+  severe_malaria_treatment_purchased_doctor_voucher_table3_col5 = -0.046064
+  n_obs_table3_col1 = 2055.0
+  n_obs_table3_cols2_5 = 2053.0
+
+## Last run's stdout (excerpt: first/last 3000 characters)
+```
+Treatment/cluster variables used: patient_voucher doctor_voucher cscom_day 
+Date dummies: 35  Clinic dummies: 59  Patient controls: 272 
+used_vouchers_admin : N = 2055  candidate controls = 331  selected (y/PV/DV/union) = 2 0 0 2 
+  selected: CC23 CC23xCC35 
+  PV = 0.3479 (0.0259)  DV = 0.2653 (0.0228)  N = 2055
+RXtreat_sev_simple_mal : N = 2053  candidate controls = 331  selected (y/PV/DV/union) = 12 0 0 12 
+  selected: CC23 CC1xCC9 CC3xCC7 CC5xCC9 CC5xCC31 CC9xCC25 CC9xCC31 CC9xCC41 CC13xCC31 CC23xCC25 CC23xCC27 CC23xCC28 
+  PV = 0.0621 (0.0343)  DV = 0.0186 (0.0345)  N = 2053
+treat_sev_simple_mal : N = 2053  candidate controls = 331  selected (y/PV/DV/union) = 8 0 0 8 
+  selected: CC23 CC31 CC1xCC9 CC5xCC9 CC5xCC31 CC9xCC25 CC15xCC23 CC23xCC35 
+  PV = 0.1475 (0.0344)  DV = 0.0850 (0.0330)  N = 2053
+RXtreat_severe_mal : N = 2053  candidate controls = 331  selected (y/PV/DV/union) = 8 0 0 8 
+  selected: CC23 CC1xCC5 CC1xCC9 CC1xCC31 CC3xCC7 CC5xCC7 CC5xCC31 CC11xCC15 
+  PV = -0.0330 (0.0272)  DV = -0.0516 (0.0269)  N = 2053
+treat_severe_mal : N = 2053  candidate controls = 331  selected (y/PV/DV/union) = 9 0 0 9 
+  selected: CC23 CC1xCC5 CC1xCC9 CC3xCC7 CC5xCC7 CC5xCC9 CC5xCC31 CC11xCC15 CC23xCC35 
+  PV = -0.0106 (0.0268)  DV = -0.0461 (0.0257)  N = 2053
+RESULT:voucher_used_patient_voucher_table3_col1=0.347934
+RESULT:voucher_used_doctor_voucher_table3_col1=0.265285
+RESULT:any_malaria_treatment_prescribed_patient_voucher_table3_col2=0.062118
+RESULT:any_malaria_treatment_prescribed_doctor_voucher_table3_col2=0.018601
+RESULT:any_malaria_treatment_purchased_patient_voucher_table3_col3=0.147486
+RESULT:any_malaria_treatment_purchased_doctor_voucher_table3_col3=0.085029
+RESULT:severe_malaria_treatment_prescribed_patient_voucher_table3_col4=-0.032976
+RESULT:severe_malaria_treatment_prescribed_doctor_voucher_table3_col4=-0.051612
+RESULT:severe_malaria_treatment_purchased_patient_voucher_table3_col5=-0.010591
+RESULT:severe_malaria_treatment_purchased_doctor_voucher_table3_col5=-0.046064
+RESULT:n_obs_table3_col1=2055
+RESULT:n_obs_table3_cols2_5=2053
+```
+
+## Claims still failing
+1. voucher_used_doctor_voucher_table3_col1: paper claims 0.26 change in the probability of using a voucher (share of patients) (coefficient), your code produced 0.265285, tolerance 0.02, gap 2.03% relative
+2. any_malaria_treatment_prescribed_patient_voucher_table3_col2: paper claims 0.052 change in the probability of an antimalarial prescription (coefficient), your code produced 0.062118, tolerance 0.02, gap 19.46% relative
+3. any_malaria_treatment_prescribed_doctor_voucher_table3_col2: paper claims 0.016 change in the probability of an antimalarial prescription (coefficient), your code produced 0.018601, tolerance 0.03125, gap 16.26% relative
+4. any_malaria_treatment_purchased_patient_voucher_table3_col3: paper claims 0.14 change in the probability of purchasing an antimalarial (coefficient), your code produced 0.147486, tolerance 0.03571, gap 5.35% relative
+5. severe_malaria_treatment_prescribed_patient_voucher_table3_col4: paper claims -0.046 change in the probability of a severe malaria treatment prescription (coefficient), your code produced -0.032976, tolerance 0.02, gap 28.31% relative
+6. severe_malaria_treatment_prescribed_doctor_voucher_table3_col4: paper claims -0.054 change in the probability of a severe malaria treatment prescription (coefficient), your code produced -0.051612, tolerance 0.02, gap 4.42% relative
+7. severe_malaria_treatment_purchased_patient_voucher_table3_col5: paper claims -0.022 change in the probability of purchasing severe malaria treatment (coefficient), your code produced -0.010591, tolerance 0.02273, gap 51.86% relative
+8. severe_malaria_treatment_purchased_doctor_voucher_table3_col5: paper claims -0.05 change in the probability of purchasing severe malaria treatment (coefficient), your code produced -0.046064, tolerance 0.02, gap 7.87% relative
+
+## Previous attempts (oldest first)
+  Attempt 1: voucher_used_patient_voucher_table3_col1=0.347934, voucher_used_doctor_voucher_table3_col1=0.265285, any_malaria_treatment_prescribed_patient_voucher_table3_col2=0.062118, any_malaria_treatment_prescribed_doctor_voucher_table3_col2=0.018601, any_malaria_treatment_purchased_patient_voucher_table3_col3=0.147486, any_malaria_treatment_purchased_doctor_voucher_table3_col3=0.085029, severe_malaria_treatment_prescribed_patient_voucher_table3_col4=-0.032976, severe_malaria_treatment_prescribed_doctor_voucher_table3_col4=-0.051612, severe_malaria_treatment_purchased_patient_voucher_table3_col5=-0.010591, severe_malaria_treatment_purchased_doctor_voucher_table3_col5=-0.046064, n_obs_table3_col1=2055.0, n_obs_table3_cols2_5=2053.0
+
+These attempts have already been tried.  Do not repeat a strategy
+that has already produced the same values.
+
+## Task
+Adjust the code minimally to close the gap on the failing claims.
+Prefer changes that align more closely with the paper's stated methodology:
+re-read the methodology summary above and check the model specification,
+covariate selection, fixed effects, clustering, and seed against what the
+paper actually specifies.  In econometrics papers, common gap-closers are:
+  - getting the cluster-robust SE right (vcovCL / cluster_var argument)
+  - matching the paper's exact fixed-effects structure
+  - using the same sample-restriction filters the paper applied
+  - matching the paper's weighting scheme (weights= argument)
+
+## Deviation reporting
+If you must change something the paper did NOT specify in order to close
+the gap, emit a ``DEVIATION:`` line via cat() describing the change:
+
+    cat('DEVIATION: Used HC1 robust SE because the paper does not specify but the default did not converge\n')
+
+## When to give up
+If after re-reading the methodology and the previous attempts you judge
+the gap cannot be closed without unreasonable deviation, return the SAME
+R CODE you were given, BYTE-FOR-BYTE unchanged.  The pipeline will record
+the claim as unreproducible.
+
+## Output convention (unchanged)
+Emit every metric as ``cat('RESULT:<name>=<value>\n')``.
+The dataset is a directory tree at '<repo>/.cache/datasets/lopez_2022_patient_demand_prescription_overuse' — see the file listing under Dataset Information.  Load the actual data file(s) by the exact paths listed there (readr::read_csv() for .csv, haven::read_dta() for Stata .dta, load() for .RData/.rda, which creates the objects listed for the file under exactly those names: use them, do not guess others; readRDS() for .rds).
+Installed packages (no network; nothing else can be installed): jsonlite, fixest, lfe, AER, ivreg, plm, estimatr, lme4, quantreg, car, sandwich, lmtest, clubSandwich, multiwayvcov, marginaleffects, MatchIt, optmatch, CBPS, WeightIt, cobalt, did, rdrobust, rddensity, Synth, modelsummary, stargazer, texreg, broom, tidyverse, dplyr, tidyr, readr, stringr, lubridate, data.table, haven, readxl, janitor, zoo, ggplot2, ggridges, ggrepel, gridExtra, cowplot, gtable, extrafont, sf, MASS, nnet, survival, splines, Matrix, boot, stats, utils.
+Prefer fixest for fixed effects, IV and clustered SEs; use the other installed packages where the paper's method calls for them.
+No network, no system().  set.seed(42).
+
+Output ONLY the R code — no explanation, no markdown fences.

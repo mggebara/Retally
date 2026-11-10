@@ -1,0 +1,13 @@
+library(haven)
+d <- read_dta("<repo>/benchmark/.cache/claude-code/lopez-2022-patient-demand-prescription-overuse/blind/2026-11-10-d/mount/lopez_2022_patient_demand_prescription_overuse/Lopez_Sautmann_Schaner_2020/Data/LSS_analysis_datasets_20201108.dta")
+cat(dim(d), "\n")
+nm <- names(d)
+lab <- sapply(d, function(x) { l <- attr(x, "label"); if (is.null(l)) "" else l })
+simple <- !grepl("x", nm, fixed = TRUE) | !grepl("^[A-Za-z0-9_]+x[A-Za-z0-9_]+$", nm) | grepl("^(max|min|exp|box|ex)", nm)
+simple <- !grepl("[A-Za-z0-9]x[A-Z0-9]", nm)
+cat("N simple:", sum(simple), "\n")
+for (v in nm[simple]) cat(v, "|", lab[v], "|", class(d[[v]])[1], "| nNA", sum(is.na(d[[v]])), "| mean",
+  tryCatch(round(mean(as.numeric(d[[v]]), na.rm = TRUE), 3), error = function(e) NA), "\n")
+cat("interaction examples:\n"); print(head(nm[!simple], 80))
+pre <- unique(sub("x.*$", "", nm[!simple])); cat("n int prefixes", length(pre), "\n"); print(pre)
+cat("n interactions", sum(!simple), "\n")

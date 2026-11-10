@@ -1,0 +1,29 @@
+{
+  "schema": 1,
+  "entry_id": "settele-2022-gender-wage-gap-beliefs-policy",
+  "mode": "independent",
+  "run_id": "2026-11-10-d",
+  "reproducer": "claude-code",
+  "language": "r",
+  "final": {"script": "script.R", "stdout": "stdout.txt", "stderr": "stderr.txt", "exit_code": 0},
+  "attempts": [
+    {"dir": "attempt-1", "exit_code": 0, "kind": ""},
+    {"dir": "attempt-2", "exit_code": 1, "kind": ""},
+    {"dir": "attempt-3", "exit_code": 0, "kind": ""},
+    {"dir": "attempt-4", "exit_code": 0, "kind": ""},
+    {"dir": "attempt-5", "exit_code": 0, "kind": ""},
+    {"dir": "attempt-6", "exit_code": 0, "kind": "claim"},
+    {"dir": "attempt-7", "exit_code": 0, "kind": "claim"}
+  ],
+  "deviations": [
+    "Policy demand index: the wave-A item (wage transparency within firms) and the wave-B item (gender pay-gap reporting website) share one raw variable (transparencyanchor); each is z-scored on its own wave's pure control group and they enter the Anderson index as one combined input (5 inputs, no missing), since the two items are never observed for the same respondent and a 6x6 covariance matrix cannot be estimated.",
+    "Anderson (2008) index: inputs z-scored on the pure control group (unweighted), weights = row sums of the inverse covariance matrix of the standardized inputs over the full sample (follow-up index: full follow-up sample); the index is the weighted mean and is not re-standardized (attempt-6 re-standardized it; changed after claim comparison).",
+    "Table 3/4 trimming uses the 5th/95th percentiles of the pure control group's prior distribution (50 and 113), strictly between, as in the claim description; Appendix G of the paper quotes cutoffs 50 and 116, which are the full-sample percentiles (used in attempt-6, gave N=925).",
+    "Posterior belief z-scored within the treatment-arm sample (Table 5 estimation sample); attempt-6 used the pure control group and attempt-7 the full sample. Chosen after claim comparison.",
+    "Posterior belief pooled across the five randomized statistics without dummies for the statistic (Table 5 notes list none). Log household income uses bracket midpoints (the values carried in the cleaned follow-up covariates, which map one-to-one onto the bracket answers). Robust (HC1) SEs; probability weights per Appendix G."
+  ],
+  "notes": "Built all variables from the raw LimeSurvey exports (main survey waves A and B, follow-up waves A and B); item and answer codes were read from the .lss survey files, and covariate codings (party, region, age, employment, education, children, income) were checked against the cleaned covariates carried in the follow-up files via panelID. RAND==1 is T74 (N=1,531), RAND==2 T94, RAND==0 pure control (1,034). Attempts 1-5 were exploratory (attempt-2 crashed on a bad table() call in exploration code). One additional exploratory docker run was launched before its script file had been copied (Docker created script.R as an empty directory, nothing ran); that directory was removed and the run redone as attempt-5. Attempt-6 was the first scored run (index re-standardized, full-sample trimming cutoffs, control-group posterior z-score): 6 claims off target. Attempt-7 fixed those (all claims within tolerance); the final run additionally z-scores the posterior on the treatment-arm sample. No run hung.",
+  "files_read_outside_mount": [],
+  "started_at": "2026-11-10T06:32:52Z",
+  "finished_at": "2026-11-10T06:41:00Z"
+}

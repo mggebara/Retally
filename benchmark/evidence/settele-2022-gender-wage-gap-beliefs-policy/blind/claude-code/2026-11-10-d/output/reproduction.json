@@ -1,0 +1,26 @@
+{
+  "schema": 1,
+  "entry_id": "settele-2022-gender-wage-gap-beliefs-policy",
+  "mode": "blind",
+  "run_id": "2026-11-10-d",
+  "reproducer": "claude-code",
+  "language": "r",
+  "final": {"script": "script.R", "stdout": "stdout.txt", "stderr": "stderr.txt", "exit_code": 0},
+  "attempts": [
+    {"dir": "attempt-1", "exit_code": 0, "kind": ""},
+    {"dir": "attempt-2", "exit_code": 0, "kind": ""}
+  ],
+  "deviations": [
+    "Analysis data rebuilt from the raw LimeSurvey exports (Stage I waves A and B, 4,065 respondents). Answer codes were mapped using the survey instruments (.lss) in the package. Covariate construction (party, region, age, children, education, employment, log household income from bracket, prior) and the Wave B probability weights (gender x age-bracket cells) were checked against the constructed variables in the follow-up files; all matched on the 1,105 linked respondents (prior matched for 1,104).",
+    "T74 = RAND==1 (the ACS $74 screen is shown for RAND0 1-4); pure control = RAND==0.",
+    "z-scores use the unweighted mean/SD of the full pure control group (both waves, untrimmed); the prior is z-scored the same way. The posterior belief (pooled over the five versions) is z-scored on the pure control group's posterior. No dummies for the posterior-statistic version, because Table 5's notes do not list them.",
+    "Anderson (2008) indices: z-scored items weighted by the row sums of the inverse covariance matrix (pairwise-complete covariance over the whole main sample, or the whole follow-up sample for Table 6). Missing items are skipped in the weighted mean, and the index is re-standardized on the pure control group (on the full follow-up sample for Table 6). Wage transparency (Wave A) and the reporting website (Wave B) are never observed together, so their covariance is set to 0.",
+    "Trimming for Tables 3-4: prior strictly between the 5th and 95th percentiles of the pooled pure-control prior distribution, unweighted, Stata-style percentiles (R quantile type 2).",
+    "All regressions: weighted least squares with pweights and HC1 robust SEs (fixest). The 2SLS instruments the z-scored posterior with T74 and uses the full Table 5 control set.",
+    "Follow-up Wave B: the item order was randomized (randorder2). In the second ordering (wageproblem2) sub-items 3 and 4 are low-/high-skilled, so they were swapped back before pooling. Table 6 controls come from the follow-up files."
+  ],
+  "notes": "Two exploratory runs printed no RESULT lines: attempt-1 listed variables, and attempt-2 checked the variable mappings and the merge with the follow-up. The final run was the first scored run and succeeded on the first try, with no error repairs and no claim comparisons. The trimmed control sample has N=921. The Table 5 posterior and 2SLS regressions use N=3,022 (9 treated respondents have no posterior). Table 6 uses N=1,105. Besides the data files, I read the LimeSurvey .lss instruments in the mount's surveys/ folder to decode answer codes, using a small host-side Python XML dump of question and answer text. That was reading only; all analysis ran in R in the sandbox. I did not open any script, log, .tex or result file in the package, and I read nothing outside the mount and paper.txt.",
+  "files_read_outside_mount": [],
+  "started_at": "2026-11-10T06:32:53Z",
+  "finished_at": "2026-11-10T06:37:30Z"
+}

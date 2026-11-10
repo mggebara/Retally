@@ -1,0 +1,30 @@
+{
+  "schema": 1,
+  "entry_id": "ambuehl-2022-deliberative-competence-financial-choice",
+  "mode": "independent",
+  "run_id": "2026-11-10-d",
+  "reproducer": "claude-code",
+  "language": "r",
+  "final": {"script": "script.R", "stdout": "stdout.txt", "stderr": "stderr.txt", "exit_code": 0},
+  "attempts": [
+    {"dir": "attempt-1", "exit_code": 0, "kind": ""},
+    {"dir": "attempt-2", "exit_code": 0, "kind": ""},
+    {"dir": "attempt-3", "exit_code": 0, "kind": ""},
+    {"dir": "attempt-4", "exit_code": 0, "kind": ""},
+    {"dir": "attempt-5", "exit_code": 0, "kind": ""},
+    {"dir": "attempt-6", "exit_code": 0, "kind": ""},
+    {"dir": "attempt-7", "exit_code": 0, "kind": ""},
+    {"dir": "attempt-8", "exit_code": 0, "kind": ""}
+  ],
+  "deviations": [
+    "Multiple-switching rule reconstructed from the paper: a subject is excluded if any first or second price list has a future-reward choice followed by an immediate-payment choice; second lists that follow an all-future first list (x = $20) are not checked. This rule reproduces the paper's analysis samples of 215 (Exp. A Treatment+Control) and 348 (Exp. B), but flags 51 rather than 49 Exp. A subjects, so Exp. A has 453 subjects (4,530 observations) in Table 7 instead of 455 (4,550). The 2 extra are in the Substance-Only/Rhetoric-Only sessions.",
+    "Exp. A conditions are not coded in the data (treatment is 0/1 only). Sessions 1, 2, 4 and 5 ran Treatment vs Control (Control video = index funds, as shown by the video-check answers). Sessions 3, 6, 7 and 8 ran the two compound-interest variants; the arm with the higher compounding test score is labeled Substance-Only, as the paper describes.",
+    "Answer keys were derived from the question content: compounding questions 7.2 years, 18%, 20 years, 36%, $250. Exp. A control module: Franklin = 'money makes money', 90%, Sinclair = 'salary' quote, 50-70%, index fund = market portfolio. Exp. B control module: GM & Microsoft, 0.7, stocks, stocks, +1. The Qualtrics score fields (SC0) do not match any 10-item key and were not used.",
+    "Valuation = midpoint of the $0.20 interval in the second list (2s - 2.1 + 0.2k, where s and k count future-reward choices in lists 1 and 2); s = 0 is coded as 0. The simple frame is normalized by the reward R. The complex frame is normalized by the exact daily-compounded payoff a(1+X)^t (the paper says the analysis 'controls for' the rule-of-72 approximation). Deliberative competence = -|r_c - r_s| in percentage points, one observation per subject x task pair.",
+    "Table 4 uses plain OLS of the score on a Treatment dummy, with one observation per subject. Table 7 uses OLS without a constant on condition dummies (fixest), with SEs clustered by subject."
+  ],
+  "notes": "Data: raw Qualtrics CSVs only. Exp. A: 8 batches, 504 subjects who reached the final test (one MTurk ID appears twice; both rows are multiple switchers and are excluded). Exp. B: 2 batches, 401 subjects after dropping 1 author 'preview' response. Attempts 1-8 were exploratory and printed no RESULT lines: variable layout, price-list coding, condition identification, answer keys, exclusion-rule variants, and checks of normalization against the paper's non-claim text values. attempt-8 was executed twice in place (the second run added diagnostics), so its directory holds only the second run. The first scored run (the final run) was compared with the claims using check_attempt, which reported all claims within tolerance, so the script was not changed and no claim attempt was recorded. The remaining gaps: Exp. A Table 7 levels are about 0.5-1.1 pp less negative than published, and Table 7 col 1 has N = 4530 vs 4550 because the exclusion count differs by 2 subjects. No run hung. A usage-limit pause between finishing the final run (about 07:05Z) and copying the files here explains the late finished_at. Scripts were run from a private scratch directory with the task's exact docker command and then copied here.",
+  "files_read_outside_mount": [],
+  "started_at": "2026-11-10T06:54:56Z",
+  "finished_at": "2026-11-10T11:23:00Z"
+}

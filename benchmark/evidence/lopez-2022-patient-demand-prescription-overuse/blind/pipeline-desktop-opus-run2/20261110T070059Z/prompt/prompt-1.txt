@@ -1,0 +1,116 @@
+You are reproducing results from an econometrics paper for validation purposes.
+Write R code (not Python) — the paper's reference implementation is in R.
+
+## Paper Information
+Title: Policy Research Working Paper
+Abstract (first 500 chars): The Policy Research Working Paper Series disseminates the findings of work in progress to encourage the exchange of ideas about development 
+issues. An objective of the series is to get the findings out quickly, even if the presentations are less than fully polished. The papers carry the 
+names of the authors and should be cited accordingly. The findings, interpretations, and conclusions expressed in this paper are entirely those 
+of the authors. They do not necessarily represent the views of th
+Methodology Summary: - **Design / estimation method:** Within-clinic randomized field experiment in 60 public community health clinics (CSComs) in Bamako, Kati and Kalaban Coro, Mali (Nov–Dec 2016), with 2,055 acutely ill patients. Each clinic was observed for 6 days over a two-week window. It had 2 Control days, 2 Doctor Voucher (DV) days, where providers got vouchers for free ACT (simple malaria) treatment and handed them out at their discretion, and 2 Patient Voucher (PV) days, where all acutely ill patients got a voucher at intake. Clinics were split into 3 geographic cohorts of 20, and within each cohort every clinic was randomly assigned to one of 20 intervention schedules (Figure 2). Days were unannounced. Clinics were reimbursed at retail price for redeemed vouchers, so providers' financial incentives stayed the same across arms. A cross-cut "Patient Information" video treatment and a clinic-level RDT-trust training (half of clinics) are analysed elsewhere; their interactions with PV/DV appear in Appendix Tables B3–B4.
+- **Estimating equation (used throughout, OLS / linear probability model):** y_ict = β0 + βP·PV_ct + βD·DV_ct + γ_t + ε_ict. Here y_ict is the outcome for patient i at clinic c on day t. PV_ct and DV_ct are indicators for the two voucher arms, with Control days as the omitted category. γ_t are date fixed effects, included because the shares of PV/DV/Control days vary by date. No other controls appear in the baseline specification. Coefficients are in raw outcome units (percentage-point effects for binary outcomes), not standardised. Each table row is a separate regression.
+- **Standard errors and tests:** Standard errors are clustered at the clinic level (the level at which rotation schedules were assigned; 60 clusters). Tables report an F-test p-value for H0: βP = βD (the key PV vs DV comparison) and a joint F-test p-value for βP = βD = 0.
+- **Outcomes / test logic:** Outcomes come from the in-clinic survey and administrative data. They are: voucher redemption (administrative voucher data), whether any antimalarial was prescribed and purchased, simple (ACT) and severe malaria treatment, and treatment–illness match. Severe treatment is defined as artemisinin monotherapy or quinine given as an injectable, or recorded as tablets together with an ACT. The model's predictions map to tests as follows: (1) gatekeeping costs if voucher use is higher in PV than DV; (2) patient-driven demand if any-antimalarial prescription/purchase is higher in PV than DV; (3) doctor-driven demand if severe treatment is higher in DV than PV; (4) heterogeneity by predicted malaria risk (low-risk marginal patients point to patient-driven demand).
+- **Malaria status / match:** A random subsample of 1,735 patients was selected for a home follow-up survey the next day (1,495 interviewed). Of these, 1,126 consented to a home RDT (CareStart HRP2 P. falciparum) and got a valid result. The match outcome is "appropriate" treatment: a malaria-positive patient purchased treatment, or a malaria-negative patient did not. It is estimated on the subsample with a valid home RDT. The home-survey sampling rule was up to 6 patients per clinic-day, with oversampling at busier clinics from 18 Nov until 60 patients per study day were sampled.
+- **Predicted malaria risk (preprocessing):** Following Cohen, Dupas and Schaner (2015), the home RDT result is regressed on patient characteristics observed in the clinic survey (demographics, symptoms, illness duration, etc.). The fitted model gives every patient a predicted malaria probability (π), which is used to split patients by risk for the heterogeneity analysis (e.g. patients with the fewest malaria symptoms or lowest risk).
+- **Sample definition:** Clinics that had closed, were more than 15 km from Bamako, or worked with an NGO offering subsidised care to mothers and children (21 clinics) were dropped, leaving 60 clinics. Patients are "acutely ill" consenting patients presenting with listed symptoms: fever, chills, sweating, nausea, vomiting, diarrhoea, poor appetite, headache, cough, weakness, fatigue or reduced consciousness. The Control group has 628 patient observations. Randomisation balance is checked with the same specification on baseline characteristics (Table 2). Selection into the home survey and RDT is checked in Appendix Tables B5–B6.
+- **No ML train/test split or cross-validation:** Identification comes from the randomized within-clinic assignment of voucher conditions across days.
+
+
+## Quantities to Compute
+Compute each quantity below and print it under the given name.  The paper's reported values are deliberately not shown.
+1. voucher_used_patient_voucher_table3_col1 [type: coefficient; unit: change in the probability of using a voucher (share of patients)]
+   Location: Table 3, column (1) Used Voucher, beta_P: Patient Voucher
+   Context: Table 3 ("Impacts on Malaria Treatment Outcomes"), column (1). Linear probability model of an indicator that the patient redeemed a voucher for a free course of ACT tablets (simple malaria treatment), from the administrative voucher records, on dummies for Patient Voucher days (vouchers handed to patients on arrival, before the consultation) and Doctor Voucher days (vouchers given to the health workers to assign at their discretion), relative to Control days, with clinic visit date fixed effects and additional controls chosen by post-double-selection lasso (Belloni, Chernozhukov and Hansen 201…
+2. voucher_used_doctor_voucher_table3_col1 [type: coefficient; unit: change in the probability of using a voucher (share of patients)]
+   Location: Table 3, column (1) Used Voucher, beta_D: Doctor Voucher
+   Context: Table 3, column (1): the same lasso-controlled regression of voucher use on the Patient Voucher and Doctor Voucher day dummies with date fixed effects. The entry is the Doctor Voucher coefficient (voucher use relative to Control days, where no vouchers were available). Standard errors clustered by clinic.
+3. any_malaria_treatment_prescribed_patient_voucher_table3_col2 [type: coefficient; unit: change in the probability of an antimalarial prescription]
+   Location: Table 3, column (2) Any Malaria Treatment, Prescribed, beta_P: Patient Voucher
+   Context: Table 3, column (2). Linear probability model of an indicator that the patient was prescribed any malaria treatment (simple or severe) at the consultation, on the Patient Voucher and Doctor Voucher day dummies with clinic visit date fixed effects and the post-double-selection lasso controls of column (1). The entry is the Patient Voucher coefficient. Standard errors clustered by clinic.
+4. any_malaria_treatment_prescribed_doctor_voucher_table3_col2 [type: coefficient; unit: change in the probability of an antimalarial prescription]
+   Location: Table 3, column (2) Any Malaria Treatment, Prescribed, beta_D: Doctor Voucher
+   Context: Table 3, column (2): any malaria treatment prescribed, same specification (date fixed effects, lasso-selected controls, clinic-clustered standard errors). The entry is the Doctor Voucher coefficient.
+5. any_malaria_treatment_purchased_patient_voucher_table3_col3 [type: coefficient; unit: change in the probability of purchasing an antimalarial]
+   Location: Table 3, column (3) Any Malaria Treatment, Purchased, beta_P: Patient Voucher
+   Context: Table 3, column (3). Linear probability model of an indicator that the patient purchased (obtained) any malaria treatment at the clinic, on the Patient Voucher and Doctor Voucher day dummies with clinic visit date fixed effects and the post-double-selection lasso controls. The entry is the Patient Voucher coefficient. Standard errors clustered by clinic.
+6. any_malaria_treatment_purchased_doctor_voucher_table3_col3 [type: coefficient; unit: change in the probability of purchasing an antimalarial]
+   Location: Table 3, column (3) Any Malaria Treatment, Purchased, beta_D: Doctor Voucher
+   Context: Table 3, column (3): any malaria treatment purchased, same specification. The entry is the Doctor Voucher coefficient; standard errors clustered by clinic.
+7. severe_malaria_treatment_prescribed_patient_voucher_table3_col4 [type: coefficient; unit: change in the probability of a severe malaria treatment prescription]
+   Location: Table 3, column (4) Severe Malaria Treatment, Prescribed, beta_P: Patient Voucher
+   Context: Table 3, column (4). Linear probability model of an indicator that the patient was prescribed severe malaria treatment (the more expensive treatment, usually an injection or IV drip), on the Patient Voucher and Doctor Voucher day dummies with clinic visit date fixed effects and the post-double-selection lasso controls. The entry is the Patient Voucher coefficient. Standard errors clustered by clinic.
+8. severe_malaria_treatment_prescribed_doctor_voucher_table3_col4 [type: coefficient; unit: change in the probability of a severe malaria treatment prescription]
+   Location: Table 3, column (4) Severe Malaria Treatment, Prescribed, beta_D: Doctor Voucher
+   Context: Table 3, column (4): severe malaria treatment prescribed, same specification. The entry is the Doctor Voucher coefficient; standard errors clustered by clinic.
+9. severe_malaria_treatment_purchased_patient_voucher_table3_col5 [type: coefficient; unit: change in the probability of purchasing severe malaria treatment]
+   Location: Table 3, column (5) Severe Malaria Treatment, Purchased, beta_P: Patient Voucher
+   Context: Table 3, column (5). Linear probability model of an indicator that the patient purchased severe malaria treatment at the clinic, on the Patient Voucher and Doctor Voucher day dummies with clinic visit date fixed effects and the post-double-selection lasso controls. The entry is the Patient Voucher coefficient. Standard errors clustered by clinic.
+10. severe_malaria_treatment_purchased_doctor_voucher_table3_col5 [type: coefficient; unit: change in the probability of purchasing severe malaria treatment]
+   Location: Table 3, column (5) Severe Malaria Treatment, Purchased, beta_D: Doctor Voucher
+   Context: Table 3, column (5): severe malaria treatment purchased, same specification. The entry is the Doctor Voucher coefficient; standard errors clustered by clinic.
+11. n_obs_table3_col1 [type: count; unit: patients]
+   Location: Table 3, N, column (1)
+   Context: Number of observations in Table 3, column (1) (voucher use): all patients interviewed in the in-clinic survey.
+12. n_obs_table3_cols2_5 [type: count; unit: patients]
+   Location: Table 3, N, columns (2)-(5)
+   Context: Number of observations in Table 3, columns (2) through (5) (malaria treatment prescribed and purchased): the in-clinic survey patients with prescription and purchase outcomes recorded.
+
+## Dataset Information
+Name: lopez-2022-patient-demand-prescription-overuse
+Local path: <repo>/.cache/datasets/lopez_2022_patient_demand_prescription_overuse.script-free
+File format: csv
+Files in the dataset directory (paths relative to the local path above):
+- Lopez_Sautmann_Schaner_2020/Data/LSS_analysis_datasets_20201108.dta (53.4 MB) — 2770 rows, 4266 columns: patient, home, date_home_survey, date, time, gender, french, intake, records, malaria, week, voucher_number_DV, voucher_used_DV, simple_malaria_DV, comments_DV, voucher_number_PV, voucher_time_delivered_PV, voucher_used_PV, simple_malaria_PV, comments_PV, selected_home_survey, respondent, primary_bambara, pregnancy, patient_shows_records, records_tests, recorded_tests, recorded_RDT, recorded_Malaria_test, quinine, quinine_injectable, antibiotic, vouchers_received_used, patient_video_received, vouchers_received, injection_IV, patient_voucher, doctor_voucher, treat_ACT, treat_quinine…
+- Lopez_Sautmann_Schaner_2020/Data/LSS_DoctorEndlineInterview.dta (314.3 KB) — 162 rows, 247 columns: pharmacy, challenges, training_part, trained, doctor, act_simple, correct_treat_simple_mal, correct_treat_severe_mal, simplemalaria_rdtpos, simplemalaria_rdtneg, severemalaria_rdtpos, severemalaria_rdtneg, notmalaria_rdtpos, notmalaria_rdtneg, simplemalaria_gepos, simplemalaria_geneg, severemalaria_gepos, severemalaria_geneg, notmalaria_gepos, notmalaria_geneg, whichmedicines_antimalarial, whichmedicines_antibiotic, surveyorid, timecarryoutrdt, training_part_other, attendance…
+- Lopez_Sautmann_Schaner_2020/Data/LSS_CSComCensus.dta (50.8 KB) — 60 rows, 43 columns: Date, q1_doc_open, q1_doc_close, q2_pharm_open_MF, q2_pharm_close_MF, q2_pharm_open_we, q2_pharm_close_we, q1_open, q1_close, q3_intern_open_MF, q3_intern_close_MF, q3_intern_open_we, q3_intern_close_we, q4_num_intern, cscomnum_OS, q4_num_saldoc, q4_othRX, q5a, q5b, q5c, q5d, q6a, q6b, q6c, q6d, q7a, q7b, q8a, q8b, q9a, q9b, q10a, q10b, q11a, q11b, q12a, q12b, q13_1, q13_2, q13_3, q13_4, q13_5a, q13_5b
+- Lopez_Sautmann_Schaner_2020/1_README.pdf (211.2 KB)
+- Lopez_Sautmann_Schaner_2020/Figures/1_DocPat-graphs-theory-figure-2020-08-28.pdf (137.2 KB)
+- Lopez_Sautmann_Schaner_2020/Figures/2_DocPat-InterventionScheduleDiagram.pdf (58.3 KB)
+- Lopez_Sautmann_Schaner_2020/Figures/3_outcomeXpredpos_control.pdf (30.4 KB)
+- Lopez_Sautmann_Schaner_2020/Figures/4_tmtXpredpos.pdf (48.2 KB)
+- Lopez_Sautmann_Schaner_2020/Figures/5_voucher_tmt.pdf (17.6 KB)
+- Lopez_Sautmann_Schaner_2020/Figures/B1_misallocation.pdf (17.0 KB)
+- Lopez_Sautmann_Schaner_2020/Figures/B2_dist_pred_pos.pdf (25.4 KB)
+- Lopez_Sautmann_Schaner_2020/Figures/B3_outcomeXpredpos_control_home.pdf (35.4 KB)
+- Lopez_Sautmann_Schaner_2020/Figures/B4_vouchersXbins.pdf (21.0 KB)
+- Lopez_Sautmann_Schaner_2020/LSS_Appendix_Replication.tex (6.1 KB)
+- Lopez_Sautmann_Schaner_2020/LSS_Main_Replication.tex (5.4 KB)
+- Lopez_Sautmann_Schaner_2020/Survey Instruments/CSComPatientInterview_Questionnaire.pdf (13.6 MB)
+- Lopez_Sautmann_Schaner_2020/Survey Instruments/DocPat-ClinicCensus-FR-2016-05-17.pdf (214.5 KB)
+- Lopez_Sautmann_Schaner_2020/Survey Instruments/DoctorEndlineInterview_Questionnaire.pdf (196.4 KB)
+- Lopez_Sautmann_Schaner_2020/Survey Instruments/HomePatientInterview_Questionnaire.pdf (580.2 KB)
+- Lopez_Sautmann_Schaner_2020/Survey Instruments/Interventions_Notes.pdf (135.1 KB)
+- Lopez_Sautmann_Schaner_2020/Survey Instruments/MorningCSComID_Questionnaire.pdf (135.8 KB)
+- Lopez_Sautmann_Schaner_2020/Tables/1_control_group.tex (14.1 KB)
+- Lopez_Sautmann_Schaner_2020/Tables/A1_theory_table.tex (3.5 KB)
+- Lopez_Sautmann_Schaner_2020/Tables/B1_clinic_census.tex (13.4 KB)
+- Lopez_Sautmann_Schaner_2020/Tables/B2_means_doctor.tex (6.7 KB)
+- metadata.json (241 B)
+
+## Required Output Convention
+Emit each reproduced metric on its own line to stdout using EXACTLY this format:
+    RESULT:<metric_name>=<numeric_value>
+For example:  cat('RESULT:beta=0.342\n')
+Use snake_case metric names matching the claim descriptions.
+
+## Code Requirements
+Write a complete, self-contained R script that runs under Rscript.
+The dataset is a directory tree at '<repo>/.cache/datasets/lopez_2022_patient_demand_prescription_overuse.script-free' — see the file listing under Dataset Information.  Load the actual data file(s) by the exact paths listed there (readr::read_csv() for .csv, haven::read_dta() for Stata .dta, load() for .RData/.rda, which creates the objects listed for the file under exactly those names: use them, do not guess others; readRDS() for .rds).
+Installed packages (no network; nothing else can be installed): jsonlite, fixest, lfe, AER, ivreg, plm, estimatr, lme4, quantreg, car, sandwich, lmtest, clubSandwich, multiwayvcov, marginaleffects, MatchIt, optmatch, CBPS, WeightIt, cobalt, did, rdrobust, rddensity, Synth, modelsummary, stargazer, texreg, broom, tidyverse, dplyr, tidyr, readr, stringr, lubridate, data.table, haven, readxl, janitor, zoo, ggplot2, ggridges, ggrepel, gridExtra, cowplot, gtable, extrafont, sf, MASS, nnet, survival, splines, Matrix, boot, stats, utils.
+Prefer fixest for fixed effects, IV and clustered SEs; use the other installed packages where the paper's method calls for them.
+Set a deterministic seed with ``set.seed(42)`` for any randomness.
+Do NOT access the internet; the container runs with --network none.
+Do NOT shell out via system() / system2().
+Emit RESULT:<name>=<value> lines to stdout at the end via cat().
+
+## Algorithm Hints
+This paper reports regression coefficients with standard errors. Default to fixest::feols() for OLS with fixed effects; switch to AER::ivreg() for instrumental variables and plm::plm() for panel data.  Use the cluster argument or cluster_var argument in feols() / vcovCL() from sandwich for cluster-robust standard errors.  Extract each coefficient via ``coef(model)['varname']`` and each SE via ``sqrt(diag(vcov(model)))['varname']`` so they can be emitted as separate RESULT: lines.
+
+## Independent Reproduction
+This is an INDEPENDENT reproduction: reconstruct the analysis from the paper's description alone.  The authors' own analysis code is deliberately withheld.  Do NOT open, read, source, or execute any script files that may appear in the dataset directory listing (.do, .ado, .R, .Rmd, .py, .sas, .sps, .m, and similar) — load data files only.  Derive the estimating equation, sample restrictions, fixed effects, and standard-error clustering from the paper information and claims above.
+
+## Blind Reproduction
+This reproduction is also BLIND: the paper's reported values for the quantities above are deliberately withheld, and you will not be told how close your numbers are.  Compute each quantity as the paper's method defines it; do not tune the specification toward any number you expect.  Do NOT read result tables, logs, or output files that may appear in the dataset directory (.tex, .log, .pdf, .html, and similar) to recover the paper's numbers — compute everything from the data files.  Print a RESULT: line for every quantity listed, using its name exactly.
+
+Now write the complete R script. Output ONLY the code — no explanation, no markdown fences.

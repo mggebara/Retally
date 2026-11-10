@@ -1,0 +1,15 @@
+PV var: patient_voucher  DV var: doctor_voucher
+Base sample (non-missing PV/DV/date): 2753
+No exact 2055 indicator found; using base sample of 2753
+Cluster var: cscomnum_OS
+Voucher used var: constructed from voucher_used_PV/DV
+Any prescribed:
+  candidates: RXmalacur, RXtreat_other_antimal, RXmal_correct, RXover_treat_optA_B1, RXunder_treat_optA, RXover_under_treat_optA, RXover_treat_optB1, RXunder_treat_optB1_B2, RXover_under_treat_optB1, RXover_treat_optB2, RXunder_treat_optB2, RXover_under_treat_optB2, decline_mal_prescrip, RXisantimal1, RXisantimal2, RXisantimal3, RXisantimal4, RXisantimal5, RXisantimal6, RXisantimal7, RXisantimal8, RXisantimal9, RXisantimal10, RXisantimal11, RXisantimal12, RXisantimal13, RXisantimal15, RXovertreatment
+  -> RXmalacur
+Any purchased:
+  -> NONE
+Severe prescribed:
+  candidates: RXtreat_severe_mal, RXtreat_severe_mal_alt, RXtreat_severe_mal_voucher, RXtreat_severe_mal_NOvoucher, RXcorrect_severe_mal, RXsymp_sev_mal_simp_trt, RXNsymp_sev_mal_sev_treat, RXsevere_overtreatment
+  -> RXNsymp_sev_mal_sev_treat
+Severe purchased:
+  -> NONE

@@ -1,0 +1,428 @@
+{
+  "usage": {
+    "api_calls": 7,
+    "llm_cache_hits": 0,
+    "llm_cache_served": false,
+    "by_model": {
+      "desktop-opus-run4": {
+        "input_tokens": 0,
+        "output_tokens": 0,
+        "cache_creation_input_tokens": 0,
+        "cache_read_input_tokens": 0,
+        "api_calls": 7
+      }
+    },
+    "rows_from_result_cache": 0,
+    "estimated_usd": 0.0,
+    "unpriced_models": [
+      "desktop-opus-run4"
+    ]
+  },
+  "results": [
+    {
+      "entry_id": "lopez-2022-patient-demand-prescription-overuse",
+      "mode": "independent",
+      "reproducer": "pipeline",
+      "skipped": false,
+      "skip_reason": null,
+      "error": null,
+      "transient": false,
+      "error_kind": null,
+      "retally_ran": true,
+      "agrees_with_paper": false,
+      "agrees_with_i4r": false,
+      "n_claims_in_catalog": 12,
+      "n_claims_with_paper_match": 4,
+      "n_claims_with_i4r_match": 4,
+      "n_claims_with_paper_match_first_attempt": 4,
+      "n_refinements": 1,
+      "n_executions": 2,
+      "n_claims_with_paper_match_first_scored": 4,
+      "first_scored_attempt_index": 0,
+      "n_error_refinements": 0,
+      "n_claim_refinements": 1,
+      "n_files_stripped": 36,
+      "claim_details": [
+        {
+          "description": "voucher_used_patient_voucher_table3_col1",
+          "claim_type": "coefficient",
+          "claimed": 0.35,
+          "reproduced": 0.299555,
+          "tolerance": 0.08571428571428572,
+          "rel_err": 0.14412857142857133,
+          "passed": false,
+          "passed_first_attempt": false,
+          "passed_first_scored": false,
+          "tolerance_source": "se_band"
+        },
+        {
+          "description": "voucher_used_doctor_voucher_table3_col1",
+          "claim_type": "coefficient",
+          "claimed": 0.26,
+          "reproduced": 0.21765,
+          "tolerance": 0.09230769230769231,
+          "rel_err": 0.16288461538461538,
+          "passed": false,
+          "passed_first_attempt": false,
+          "passed_first_scored": false,
+          "tolerance_source": "se_band"
+        },
+        {
+          "description": "any_malaria_treatment_prescribed_patient_voucher_table3_col2",
+          "claim_type": "coefficient",
+          "claimed": 0.052,
+          "reproduced": 0.043841,
+          "tolerance": 0.48076923076923084,
+          "rel_err": 0.15690384615384614,
+          "passed": true,
+          "passed_first_attempt": true,
+          "passed_first_scored": true,
+          "tolerance_source": "se_band"
+        },
+        {
+          "description": "any_malaria_treatment_prescribed_doctor_voucher_table3_col2",
+          "claim_type": "coefficient",
+          "claimed": 0.016,
+          "reproduced": 0.020201,
+          "tolerance": 1.5625,
+          "rel_err": 0.2625625,
+          "passed": true,
+          "passed_first_attempt": true,
+          "passed_first_scored": true,
+          "tolerance_source": "se_band"
+        },
+        {
+          "description": "any_malaria_treatment_purchased_patient_voucher_table3_col3",
+          "claim_type": "coefficient",
+          "claimed": 0.14,
+          "reproduced": 0.104805,
+          "tolerance": 0.19285714285714284,
+          "rel_err": 0.25139285714285725,
+          "passed": false,
+          "passed_first_attempt": false,
+          "passed_first_scored": false,
+          "tolerance_source": "se_band"
+        },
+        {
+          "description": "any_malaria_treatment_purchased_doctor_voucher_table3_col3",
+          "claim_type": "coefficient",
+          "claimed": 0.085,
+          "reproduced": 0.084293,
+          "tolerance": 0.29411764705882354,
+          "rel_err": 0.00831764705882352,
+          "passed": true,
+          "passed_first_attempt": true,
+          "passed_first_scored": true,
+          "tolerance_source": "se_band"
+        },
+        {
+          "description": "severe_malaria_treatment_prescribed_patient_voucher_table3_col4",
+          "claim_type": "coefficient",
+          "claimed": -0.046,
+          "reproduced": -0.023104,
+          "tolerance": 0.3913043478260869,
+          "rel_err": 0.49773913043478263,
+          "passed": false,
+          "passed_first_attempt": false,
+          "passed_first_scored": false,
+          "tolerance_source": "se_band"
+        },
+        {
+          "description": "severe_malaria_treatment_prescribed_doctor_voucher_table3_col4",
+          "claim_type": "coefficient",
+          "claimed": -0.054,
+          "reproduced": -0.048232,
+          "tolerance": 0.3888888888888889,
+          "rel_err": 0.10681481481481486,
+          "passed": true,
+          "passed_first_attempt": true,
+          "passed_first_scored": true,
+          "tolerance_source": "se_band"
+        },
+        {
+          "description": "severe_malaria_treatment_purchased_patient_voucher_table3_col5",
+          "claim_type": "coefficient",
+          "claimed": -0.022,
+          "reproduced": null,
+          "tolerance": 0.9090909090909092,
+          "rel_err": null,
+          "passed": false,
+          "passed_first_attempt": false,
+          "passed_first_scored": false,
+          "tolerance_source": "se_band"
+        },
+        {
+          "description": "severe_malaria_treatment_purchased_doctor_voucher_table3_col5",
+          "claim_type": "coefficient",
+          "claimed": -0.05,
+          "reproduced": null,
+          "tolerance": 0.37999999999999995,
+          "rel_err": null,
+          "passed": false,
+          "passed_first_attempt": false,
+          "passed_first_scored": false,
+          "tolerance_source": "se_band"
+        },
+        {
+          "description": "n_obs_table3_col1",
+          "claim_type": "count",
+          "claimed": 2055.0,
+          "reproduced": 2753.0,
+          "tolerance": 0.05,
+          "rel_err": 0.3396593673965937,
+          "passed": false,
+          "passed_first_attempt": false,
+          "passed_first_scored": false,
+          "tolerance_source": "relative"
+        },
+        {
+          "description": "n_obs_table3_cols2_5",
+          "claim_type": "count",
+          "claimed": 2053.0,
+          "reproduced": 2753.0,
+          "tolerance": 0.05,
+          "rel_err": 0.34096444227959083,
+          "passed": false,
+          "passed_first_attempt": false,
+          "passed_first_scored": false,
+          "tolerance_source": "relative"
+        }
+      ],
+      "split": "holdout",
+      "data_access": "manual",
+      "components": {
+        "parsed": true,
+        "claims_extracted": true,
+        "dataset_extracted": false,
+        "dataset_downloaded": true,
+        "code_generated": true,
+        "code_executed": true
+      },
+      "cached": false,
+      "usage": {
+        "api_calls": 4,
+        "llm_cache_hits": 0,
+        "llm_cache_served": false,
+        "by_model": {
+          "desktop-opus-run4": {
+            "input_tokens": 0,
+            "output_tokens": 0,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 0,
+            "api_calls": 4
+          }
+        },
+        "estimated_usd": 0.0,
+        "unpriced_models": [
+          "desktop-opus-run4"
+        ]
+      },
+      "artifacts_dir": "benchmark/results/artifacts/lopez-2022-patient-demand-prescription-overuse/independent/pipeline/20261110T112343Z"
+    },
+    {
+      "entry_id": "lopez-2022-patient-demand-prescription-overuse",
+      "mode": "blind",
+      "reproducer": "pipeline",
+      "skipped": false,
+      "skip_reason": null,
+      "error": null,
+      "transient": false,
+      "error_kind": null,
+      "retally_ran": true,
+      "agrees_with_paper": false,
+      "agrees_with_i4r": false,
+      "n_claims_in_catalog": 12,
+      "n_claims_with_paper_match": 2,
+      "n_claims_with_i4r_match": 2,
+      "n_claims_with_paper_match_first_attempt": 2,
+      "n_refinements": 0,
+      "n_executions": 1,
+      "n_claims_with_paper_match_first_scored": 2,
+      "first_scored_attempt_index": 0,
+      "n_error_refinements": 0,
+      "n_claim_refinements": 0,
+      "n_files_stripped": 36,
+      "claim_details": [
+        {
+          "description": "voucher_used_patient_voucher_table3_col1",
+          "claim_type": "coefficient",
+          "claimed": 0.35,
+          "reproduced": 0.299555,
+          "tolerance": 0.08571428571428572,
+          "rel_err": 0.14412857142857133,
+          "passed": false,
+          "passed_first_attempt": false,
+          "passed_first_scored": false,
+          "tolerance_source": "se_band"
+        },
+        {
+          "description": "voucher_used_doctor_voucher_table3_col1",
+          "claim_type": "coefficient",
+          "claimed": 0.26,
+          "reproduced": 0.21765,
+          "tolerance": 0.09230769230769231,
+          "rel_err": 0.16288461538461538,
+          "passed": false,
+          "passed_first_attempt": false,
+          "passed_first_scored": false,
+          "tolerance_source": "se_band"
+        },
+        {
+          "description": "any_malaria_treatment_prescribed_patient_voucher_table3_col2",
+          "claim_type": "coefficient",
+          "claimed": 0.052,
+          "reproduced": -0.00049,
+          "tolerance": 0.48076923076923084,
+          "rel_err": 1.009423076923077,
+          "passed": false,
+          "passed_first_attempt": false,
+          "passed_first_scored": false,
+          "tolerance_source": "se_band"
+        },
+        {
+          "description": "any_malaria_treatment_prescribed_doctor_voucher_table3_col2",
+          "claim_type": "coefficient",
+          "claimed": 0.016,
+          "reproduced": 0.002949,
+          "tolerance": 1.5625,
+          "rel_err": 0.8156875,
+          "passed": true,
+          "passed_first_attempt": true,
+          "passed_first_scored": true,
+          "tolerance_source": "se_band"
+        },
+        {
+          "description": "any_malaria_treatment_purchased_patient_voucher_table3_col3",
+          "claim_type": "coefficient",
+          "claimed": 0.14,
+          "reproduced": null,
+          "tolerance": 0.19285714285714284,
+          "rel_err": null,
+          "passed": false,
+          "passed_first_attempt": false,
+          "passed_first_scored": false,
+          "tolerance_source": "se_band"
+        },
+        {
+          "description": "any_malaria_treatment_purchased_doctor_voucher_table3_col3",
+          "claim_type": "coefficient",
+          "claimed": 0.085,
+          "reproduced": null,
+          "tolerance": 0.29411764705882354,
+          "rel_err": null,
+          "passed": false,
+          "passed_first_attempt": false,
+          "passed_first_scored": false,
+          "tolerance_source": "se_band"
+        },
+        {
+          "description": "severe_malaria_treatment_prescribed_patient_voucher_table3_col4",
+          "claim_type": "coefficient",
+          "claimed": -0.046,
+          "reproduced": -0.023104,
+          "tolerance": 0.3913043478260869,
+          "rel_err": 0.49773913043478263,
+          "passed": false,
+          "passed_first_attempt": false,
+          "passed_first_scored": false,
+          "tolerance_source": "se_band"
+        },
+        {
+          "description": "severe_malaria_treatment_prescribed_doctor_voucher_table3_col4",
+          "claim_type": "coefficient",
+          "claimed": -0.054,
+          "reproduced": -0.048232,
+          "tolerance": 0.3888888888888889,
+          "rel_err": 0.10681481481481486,
+          "passed": true,
+          "passed_first_attempt": true,
+          "passed_first_scored": true,
+          "tolerance_source": "se_band"
+        },
+        {
+          "description": "severe_malaria_treatment_purchased_patient_voucher_table3_col5",
+          "claim_type": "coefficient",
+          "claimed": -0.022,
+          "reproduced": null,
+          "tolerance": 0.9090909090909092,
+          "rel_err": null,
+          "passed": false,
+          "passed_first_attempt": false,
+          "passed_first_scored": false,
+          "tolerance_source": "se_band"
+        },
+        {
+          "description": "severe_malaria_treatment_purchased_doctor_voucher_table3_col5",
+          "claim_type": "coefficient",
+          "claimed": -0.05,
+          "reproduced": null,
+          "tolerance": 0.37999999999999995,
+          "rel_err": null,
+          "passed": false,
+          "passed_first_attempt": false,
+          "passed_first_scored": false,
+          "tolerance_source": "se_band"
+        },
+        {
+          "description": "n_obs_table3_col1",
+          "claim_type": "count",
+          "claimed": 2055.0,
+          "reproduced": 2753.0,
+          "tolerance": 0.05,
+          "rel_err": 0.3396593673965937,
+          "passed": false,
+          "passed_first_attempt": false,
+          "passed_first_scored": false,
+          "tolerance_source": "relative"
+        },
+        {
+          "description": "n_obs_table3_cols2_5",
+          "claim_type": "count",
+          "claimed": 2053.0,
+          "reproduced": 2429.0,
+          "tolerance": 0.05,
+          "rel_err": 0.18314661471018023,
+          "passed": false,
+          "passed_first_attempt": false,
+          "passed_first_scored": false,
+          "tolerance_source": "relative"
+        }
+      ],
+      "split": "holdout",
+      "data_access": "manual",
+      "components": {
+        "parsed": true,
+        "claims_extracted": true,
+        "dataset_extracted": false,
+        "dataset_downloaded": true,
+        "code_generated": true,
+        "code_executed": true
+      },
+      "cached": false,
+      "usage": {
+        "api_calls": 3,
+        "llm_cache_hits": 0,
+        "llm_cache_served": false,
+        "by_model": {
+          "desktop-opus-run4": {
+            "input_tokens": 0,
+            "output_tokens": 0,
+            "cache_creation_input_tokens": 0,
+            "cache_read_input_tokens": 0,
+            "api_calls": 3
+          }
+        },
+        "estimated_usd": 0.0,
+        "unpriced_models": [
+          "desktop-opus-run4"
+        ]
+      },
+      "artifacts_dir": "benchmark/results/artifacts/lopez-2022-patient-demand-prescription-overuse/blind/pipeline/20261110T065844Z"
+    }
+  ],
+  "rescored": {
+    "policy": "count-5pct",
+    "date": "2026-11-03",
+    "flipped": 0
+  }
+}

@@ -1,0 +1,535 @@
+You are refining R code that reproduces results from an econometrics paper.
+The code RAN SUCCESSFULLY but the reproduced values do not match the
+paper's claims within the allowed tolerance.  Identify what is causing
+the gap and adjust the code to close it.
+
+## Paper
+Title: EVALUATING DELIBERATIVE COMPETENCE:
+Methodology: - **Design / data**: Two randomized online experiments on Amazon Mechanical Turk (US residents, 18+). Experiment A (Apr–May 2014, 8 sessions, 504 subjects) has 4 between-subject arms: Control (index-fund video), Treatment (compound-interest video based on Malkiel & Ellis 2013, including the rule of 72), Substance-Only and Rhetoric-Only. Experiment B (Oct 2018, 2 sessions, 401 subjects; required ≥500 completed HITs and ≥98% approval) has 2 arms: Control (portfolio diversification) and Treatment (the compound-interest video split into 3 parts, plus 6 practice problems with individualized feedback). Each subject was in exactly one arm. Each experiment has 3 stages: education intervention → 10 pairs of valuation tasks → incentivized 10-question test (5 on compound interest, 5 on the control module). The two experiments are analyzed separately because their samples differ; they are not compared directly.
+- **Valuation measurement**: Iterated multiple price lists (Andersen et al. 2006) with a $0.20 resolution give the immediate dollar equivalent of a reward R ∈ {$20, $18, $16, $14, $12} paid in t ∈ {36, 72} days (Table 2). Each reward is shown twice: in a simple frame ("We will pay you $R in t days") and in a complex frame (invest $a at X% daily interest, compounded daily). Task order is randomized at the subject level. Payment: with 75% probability one randomly chosen decision is paid, with 25% probability the test score is paid ($1 per correct answer). Everyone also gets a $10 completion fee.
+- **Preprocessing**: Valuations are interval-coded, and the midpoint of the interval is used. Each valuation is normalized as r^f_{i,R,t} = r̃^f_{i,R,t}/R and expressed in percentage points (0–100, i.e. cents per future $1). This is a rescaling, not a standardization; coefficients are in percentage points of the future reward, and test scores are numbers of correct answers out of 5.
+- **Sample restrictions**: Subjects who switched two or more times in any price list are dropped (49 of 504 in A, 53 of 401 in B), following Harrison et al. (2005). This leaves 803 subjects who respected monotonicity: 455 in Experiment A across all 4 arms, of which 215 are in Control+Treatment, and 348 in Experiment B. Attrition is reported (4 subjects in A; in B, 2 in Control and 9 in Treatment, a difference significant at 5%) but not adjusted for. Balance was checked with 68 F-tests on demographics (2 significant at 5%, 5 at 10%).
+- **Conventional-metric regressions (OLS on treatment indicators, levels parameterization with no constant)**:
+  - Table 4: test score (out of 5) on Control/Treatment dummies, one observation per subject (N = 215 in A, 348 in B). Columns 1–2 use compound-interest questions; columns 3–4 use control-module questions. Headline differences are 1.442 (SE 0.194) for A and 1.601 (0.143) for B.
+  - Table 5: normalized complex-frame valuation r^c on treatment dummies, using all 10 tasks per subject (2,150 obs in A, 3,480 in B), with SEs clustered by subject. Columns 3–6 split by 72- and 36-day delay (1,075 / 1,740 obs). Headline Treatment–Control differences are 14.312 (3.431) for A and 15.134 (2.834) for B.
+  - Table 6 (Experiment A, all 4 arms, 455 subjects): the dependent variables are the compound-interest score, the control-module score, the complex-frame valuation and the simple-frame valuation (4,550 obs), each regressed on the 4 arm dummies with SEs clustered by subject. It reports p-values for each arm's difference from Control.
+  - No additional controls appear in the main tables. Robustness checks with controls are in Appendix D. The note to Table 2 says differences between rule-of-72 and exact future values are controlled for.
+- **Distributional analysis**: Empirical CDFs of the valuation difference r^c − r^s for each task, by arm and experiment (Figure 3). Mass below 0 indicates exponential growth bias, and mass above 0 indicates overestimation.
+- **Proposed outcome metric (deliberative competence)**: d^M_{i,R,t} = −|r^c_{i,R,t} − r^s_{i,R,t}|, the negative absolute price-metric bias. It is averaged over each subject's 10 tasks, then over subjects, and compared across treatment arms. A squared version is also mentioned. The excerpt is cut off before the results for this metric.
+- **Inference**: OLS, with conventional SEs for the subject-level test-score regressions and SEs clustered by subject for task-level valuation regressions. Significance stars are at 1%, 5% and 10%. No train/test split or cross-validation, and no ML hyperparameters (not applicable).
+
+
+## Current Code
+```r
+suppressPackageStartupMessages({
+  library(readr)
+  library(dplyr)
+  library(fixest)
+})
+set.seed(42)
+
+base <- "<repo>/.cache/datasets/ambuehl_2022_deliberative_competence_financial_choice.script-free"
+num <- function(x) suppressWarnings(as.numeric(as.character(x)))
+results <- list()
+emit <- function(name, val) {
+  if (!is.null(val) && length(val) == 1 && is.finite(as.numeric(val))) results[[name]] <<- unname(as.numeric(val))
+}
+cl <- function(x) { r <- trimws(as.character(x)); r[!is.na(r) & r == ""] <- NA; r }
+short <- function(s, n = 14) { s <- as.character(s); ifelse(nchar(s) > n, paste0(substr(s, 1, n), "~"), s) }
+
+# ---------------------------------------------------------------- reading
+read_batch <- function(f) {
+  d <- readr::read_csv(f, col_types = readr::cols(.default = readr::col_character()),
+                       name_repair = "minimal", show_col_types = FALSE, progress = FALSE)
+  nm <- names(d)
+  nm <- gsub("﻿", "", nm, fixed = TRUE)
+  nm <- gsub("^\\s+|\\s+$", "", nm)
+  empty <- is.na(nm) | nm == ""
+  nm[empty] <- paste0("X_", seq_along(nm))[empty]
+  names(d) <- make.unique(nm)
+  d <- as.data.frame(d, stringsAsFactors = FALSE)
+  keep <- rep(TRUE, nrow(d))
+  idc <- intersect(c("V1", "ResponseId", "ResponseID"), names(d))
+  if (length(idc) > 0) {
+    k <- grepl("^R_", d[[idc[1]]])
+    if (sum(k) > 0) keep <- k
+  }
+  if (all(keep) && nrow(d) > 0) {
+    bad <- apply(d[, seq_len(min(6, ncol(d))), drop = FALSE], 1,
+                 function(r) any(grepl("ImportId|ResponseI[dD]|Response ID", r)))
+    keep <- !bad
+  }
+  d <- d[keep, , drop = FALSE]
+  d$batch_file <- basename(f)
+  d
+}
+
+truthy <- function(x) {
+  x <- cl(x); lx <- tolower(x)
+  v <- num(x)
+  out <- (!is.na(v) & v != 0) | (is.na(v) & !is.na(x) & !(lx %in% c("false", "no", "n", "na", "none", "keep", "included", "include")))
+  out[is.na(x)] <- FALSE
+  out
+}
+
+# ---------------------------------------------------------------- loop & merge structure
+loop_cols <- function(nm, k) {
+  a <- grep(paste0("^", k, "_"), nm, value = TRUE)
+  b <- grep(paste0("\\(", k, "\\)$"), nm, value = TRUE)
+  if (!length(a) && !length(b)) return(NULL)
+  stem <- c(sub(paste0("^", k, "_"), "", a), sub(paste0("\\(", k, "\\)$"), "", b))
+  data.frame(col = c(a, b), stem = stem, base = sub("_[0-9]+$", "", stem),
+             row = ifelse(grepl("_[0-9]+$", stem), num(sub("^.*_", "", stem)), NA_real_),
+             stringsAsFactors = FALSE)
+}
+
+describe_iter <- function(d, k = 1) {
+  lc <- loop_cols(names(d), k)
+  if (is.null(lc)) return("none")
+  gs <- split(lc, factor(lc$base, levels = unique(lc$base)))
+  paste(vapply(gs, function(g) {
+    vals <- unique(na.omit(unlist(lapply(g$col, function(cn) cl(d[[cn]])))))
+    cov <- mean(vapply(g$col, function(cn) mean(!is.na(cl(d[[cn]]))), numeric(1)))
+    sprintf("%s[n=%d,cov=%.2f,nv=%d:%s]", g$base[1], nrow(g), cov, length(vals),
+            paste(short(head(vals, 3), 10), collapse = "/"))
+  }, character(1)), collapse = " ")
+}
+
+later_of <- function(M, gl) {
+  v <- unique(na.omit(as.vector(M)))
+  if (!length(v)) return(NA_character_)
+  if (all(nchar(v) <= 2)) {
+    if (!is.na(gl) && gl %in% v) return(gl)
+    return(names(which.max(table(M))))
+  }
+  cc <- vapply(v, function(x) sum(colSums(M == x, na.rm = TRUE) > 0), numeric(1))
+  if (sum(cc == max(cc)) == 1) return(v[which.max(cc)])
+  names(which.max(table(M)))
+}
+
+# decode iterated multiple price lists: returns valuation (% of R) and max switch count per task
+decode_vals <- function(d, K = 20) {
+  n <- nrow(d); nm <- names(d)
+  L <- vector("list", K)
+  for (k in 1:K) {
+    lc <- loop_cols(nm, k); if (is.null(lc)) next
+    lists <- list()
+    for (g in split(lc, lc$base)) {
+      g <- g[!is.na(g$row), , drop = FALSE]
+      if (nrow(g) < 3) next
+      g <- g[order(g$row), , drop = FALSE]
+      M <- matrix(sapply(g$col, function(cn) cl(d[[cn]])), nrow = n)
+      if (all(is.na(M))) next
+      nd <- apply(M, 2, function(z) length(unique(na.omit(z))))
+      if (max(nd) > 2) next
+      lists[[length(lists) + 1]] <- M
+    }
+    if (!length(lists)) {
+      st <- sub(paste0("^", k, "_"), "", lc$col)
+      okc <- vapply(lc$col, function(cn) { z <- cl(d[[cn]]); u <- length(unique(na.omit(z))); u >= 1 && u <= 2 }, logical(1))
+      cand <- lc$col[okc]
+      if (length(cand) >= 3) {
+        o <- order(num(sub("^.*?([0-9]+)[^0-9]*$", "\\1", st[okc])))
+        lists[[1]] <- matrix(sapply(cand[o], function(cn) cl(d[[cn]])), nrow = n)
+      }
+    }
+    L[[k]] <- lists
+  }
+  nl <- vapply(L, length, numeric(1))
+  cat("MPL lists found per loop iteration:", paste(nl, collapse = ","), "\n")
+  if (sum(nl > 0) < K) return(NULL)
+  cidx <- lapply(L, function(ls) which.max(vapply(ls, function(M) mean(rowSums(!is.na(M)) > 0), numeric(1))))
+  cv <- unlist(lapply(1:K, function(k) as.vector(L[[k]][[cidx[[k]]]])))
+  cv <- cv[!is.na(cv) & nchar(cv) <= 2]
+  gl <- if (length(cv)) names(which.max(table(cv))) else NA_character_
+  RF <- matrix(NA_real_, n, K); SW <- matrix(NA_real_, n, K)
+  dims <- character(K)
+  for (k in 1:K) {
+    ls <- L[[k]]; ic <- cidx[[k]]
+    Bm <- lapply(ls, function(M) { lat <- later_of(M, gl); B <- ifelse(is.na(M), NA_real_, as.numeric(M == lat)); matrix(B, nrow = n) })
+    n1 <- ncol(ls[[ic]])
+    dims[k] <- paste(vapply(ls, ncol, numeric(1)), collapse = "+")
+    if (n1 < 2) next
+    for (i in seq_len(n)) {
+      cvec <- Bm[[ic]][i, ]; cvec <- cvec[!is.na(cvec)]
+      if (!length(cvec)) next
+      sw <- if (length(cvec) > 1) sum(diff(cvec) != 0) else 0
+      m <- sum(cvec); fr <- NA_real_
+      for (j in setdiff(seq_along(ls), ic)) {
+        f <- Bm[[j]][i, ]; f <- f[!is.na(f)]
+        if (length(f)) {
+          if (length(f) > 1) sw <- max(sw, sum(diff(f) != 0))
+          fr <- (sum(f) + 0.5) / (ncol(ls[[j]]) + 1)
+        }
+      }
+      if (is.na(fr)) fr <- 0.5
+      RF[i, k] <- 100 * (max(m, 1) - 1 + fr) / (n1 - 1)
+      SW[i, k] <- sw
+    }
+  }
+  cat("List sizes per iteration (coarse+fine):", paste(dims, collapse = " "), "; 'later' code:", gl, "\n")
+  list(RF = RF, SW = SW)
+}
+
+parse_task <- function(s) {
+  if (is.na(s)) return(data.frame(R = NA_real_, days = NA_real_, cx = NA, fv = NA_real_))
+  s <- tolower(s)
+  days <- num(sub("^.*?([0-9]+)\\s*days.*$", "\\1", s, perl = TRUE))
+  cx <- grepl("invest", s)
+  if (cx) {
+    a <- num(sub("^.*invest\\s*\\$\\s*([0-9.]+).*$", "\\1", s, perl = TRUE))
+    x <- num(sub("^.*?([0-9.]+)\\s*%.*$", "\\1", s, perl = TRUE))
+    fv <- a * (1 + x / 100)^days
+  } else fv <- num(sub("^.*?\\$\\s*([0-9.]+).*$", "\\1", s, perl = TRUE))
+  Rs <- c(12, 14, 16, 18, 20)
+  data.frame(R = if (isTRUE(is.finite(fv))) Rs[which.min(abs(Rs - fv))] else NA_real_, days = days, cx = cx, fv = fv)
+}
+
+task_pairs <- function(d) {
+  tt <- vapply(paste0("T", 1:20), function(cn) {
+    if (!(cn %in% names(d))) return(NA_character_)
+    z <- na.omit(cl(d[[cn]])); if (length(z)) z[1] else NA_character_
+  }, character(1))
+  ti <- do.call(rbind, lapply(tt, parse_task))
+  S <- which(ti$cx %in% FALSE); C <- which(ti$cx %in% TRUE)
+  if (length(S) != 10 || length(C) != 10 || any(is.na(ti$R))) {
+    cat("Task parsing failed; pairing k with k+10\n")
+    return(data.frame(s = 1:10, c = 11:20, R = NA, days = NA))
+  }
+  used <- integer(0); pr <- list()
+  for (cc in C) {
+    cand <- setdiff(S[ti$days[S] == ti$days[cc]], used)
+    if (!length(cand)) cand <- setdiff(S, used)
+    s <- cand[which.min(abs(ti$R[cand] - ti$fv[cc]))]
+    used <- c(used, s)
+    pr[[length(pr) + 1]] <- data.frame(s = s, c = cc, R = ti$R[s], days = ti$days[s])
+  }
+  pr <- do.call(rbind, pr)
+  cat("Task pairs (simple,complex,R,days):", paste(sprintf("%d-%d/%g/%g", pr$s, pr$c, pr$R, pr$days), collapse = " "), "\n")
+  pr
+}
+
+# ---------------------------------------------------------------- arms
+assign_arms <- function(d, A, exp) {
+  nm <- names(d)
+  cands <- unique(c(nm[tolower(nm) == "treatment"],
+                    grep("treat|condition|^arm$|^group$", nm, value = TRUE, ignore.case = TRUE)))
+  cands <- cands[!grepl("^TimeTreat|^[0-9]+_|\\([0-9]+\\)$", cands, ignore.case = TRUE)]
+  if (!length(cands)) stop("no treatment column found")
+  k <- if (exp == "A") 4 else 2
+  nval <- vapply(cands, function(cn) length(unique(na.omit(cl(d[[cn]])))), numeric(1))
+  cat("Arm column candidates:", paste(sprintf("'%s'=%d", cands, nval), collapse = " "), "\n")
+  pick <- cands[nval == k]
+  if (!length(pick)) { o <- which(nval > k); pick <- cands[o][order(nval[o])] }
+  if (!length(pick)) pick <- cands
+  tc <- pick[1]
+  raw <- cl(d[[tc]])
+  tab <- sort(table(raw), decreasing = TRUE)
+  cat("Arm column:", tc, "values:", paste(sprintf("%s:%d", short(names(tab), 20), as.integer(tab)), collapse = " "), "\n")
+  if ("treatment" %in% nm && tc != "treatment") {
+    ct <- table(short(raw, 12), cl(d[["treatment"]]))
+    cat("Cross-tab with 'treatment':", paste(capture.output(print(ct)), collapse = " | "), "\n")
+  }
+  codes <- names(tab)[seq_len(min(k, length(tab)))]
+  raw[!(raw %in% codes)] <- NA
+  lr <- tolower(codes); lab <- rep(NA_character_, length(codes))
+  lab[grepl("rhet", lr)] <- "Rhetoric"
+  lab[is.na(lab) & grepl("subs", lr)] <- "Substance"
+  lab[is.na(lab) & grepl("control|ctrl|index|divers|portfolio", lr)] <- "Control"
+  lab[is.na(lab) & grepl("treat|full|compound|interest|feedback|practice", lr)] <- "Treatment"
+  if (all(!is.na(lab)) && "Control" %in% lab && "Treatment" %in% lab) {
+    cat("Arms mapped from string labels.\n")
+    return(unname(setNames(lab, codes)[raw]))
+  }
+  if (all(!is.na(num(codes)))) codes <- codes[order(num(codes))] else codes <- sort(codes)
+  if (k == 2 && all(codes %in% c("0", "1"))) {
+    cat("Binary 0/1 treatment indicator: 0 = Control, 1 = Treatment\n")
+    return(ifelse(raw == "1", "Treatment", ifelse(raw == "0", "Control", NA)))
+  }
+  levs <- lapply(1:10, function(i) { tb <- sort(table(A[, i]), decreasing = TRUE); names(tb)[tb / sum(tb) >= 0.03] })
+  shr <- function(idx, i) { x <- A[idx, i]; x <- x[!is.na(x)]; vapply(levs[[i]], function(v) mean(x == v), numeric(1)) }
+  if (k > 2) {
+    dist <- vapply(codes, function(cd) sum(vapply(1:10, function(i) max(abs(shr(which(raw == cd), i) - shr(which(raw != cd), i))), numeric(1))), numeric(1))
+    cat("Answer-profile distinctness by code:", paste(sprintf("%s:%.2f", codes, dist), collapse = " "), "\n")
+    ctrl <- codes[which.max(dist)]
+    others <- setdiff(codes, ctrl)
+    map <- setNames(c("Control", c("Treatment", "Substance", "Rhetoric")[seq_along(others)]), c(ctrl, others))
+    cat("DEVIATION: Experiment A arm codes are unlabeled; Control = code with the most distinct test-answer profile, remaining codes mapped in code order to Treatment, Substance-Only, Rhetoric-Only\n")
+  } else {
+    ds <- sum(vapply(1:10, function(i) { dd <- shr(which(raw == codes[2]), i) - shr(which(raw == codes[1]), i); max(dd) - max(-dd) }, numeric(1)))
+    map <- if (ds >= 0) setNames(c("Control", "Treatment"), codes) else setNames(c("Treatment", "Control"), codes)
+  }
+  cat("Code -> arm:", paste(names(map), map, sep = "=", collapse = " "), "\n")
+  unname(map[raw])
+}
+
+# answer keys: compound items keyed by Treatment-arm modal answer, control-module items by Control-arm modal answer
+fit_keys <- function(A, arm) {
+  keys <- character(10); dir <- numeric(10)
+  sh <- function(x, v) mean(x == v, na.rm = TRUE)
+  for (i in 1:10) {
+    xT <- A[which(arm == "Treatment"), i]; xC <- A[which(arm == "Control"), i]
+    mT <- names(which.max(table(xT))); mC <- names(which.max(table(xC)))
+    d1 <- sh(xT, mT) - sh(xC, mT); d2 <- sh(xC, mC) - sh(xT, mC)
+    if (d1 >= d2) { keys[i] <- mT; dir[i] <- d1 } else { keys[i] <- mC; dir[i] <- -d2 }
+  }
+  comp <- sort(order(dir, decreasing = TRUE)[1:5])
+  cat("Item keys:", paste(sprintf("t%d=%s(%+.2f)", 1:10, short(keys, 8), dir), collapse = " "), "\n")
+  cat("Compound-interest items:", paste(comp, collapse = ","), "\n")
+  I <- sapply(1:10, function(i) ifelse(is.na(A[, i]), 0, as.numeric(A[, i] == keys[i])))
+  I <- matrix(I, nrow = nrow(A))
+  list(comp = rowSums(I[, comp, drop = FALSE]), ctrl = rowSums(I[, setdiff(1:10, comp), drop = FALSE]))
+}
+
+arm_reg <- function(df, y, arms, cluster = NULL) {
+  for (a in arms) df[[paste0("d_", a)]] <- as.numeric(df$arm == a)
+  fml <- as.formula(paste(y, "~ 0 +", paste0("d_", arms, collapse = " + ")))
+  if (is.null(cluster)) feols(fml, data = df, vcov = "iid") else feols(fml, data = df, cluster = cluster)
+}
+
+# ---------------------------------------------------------------- experiment pipeline
+process_exp <- function(files, exp) {
+  out <- list()
+  d <- dplyr::bind_rows(lapply(files, read_batch))
+  nm <- names(d)
+  isloop <- grepl("^[0-9]+_", nm) | grepl("\\([0-9]+\\)$", nm)
+  p <- gsub("[0-9]+", "#", nm[!isloop]); tb <- sort(table(p), decreasing = TRUE)
+  cat(sprintf("==== Exp %s: %d rows, %d cols (%d loop-prefixed) ====\n", exp, nrow(d), ncol(d), sum(isloop)))
+  cat("Non-loop name patterns:", substr(paste(sprintf("%s:%d", names(tb), as.integer(tb)), collapse = " "), 1, 1100), "\n")
+  it1 <- describe_iter(d, 1)
+  cat("Loop iter 1:", substr(it1, 1, 800), "\n")
+  out$struct <- substr(it1, 1, 450)
+
+  tc <- paste0("test", 1:10)
+  if (!all(tc %in% nm)) stop("test1..test10 not all present")
+  A <- matrix(sapply(tc, function(cn) cl(d[[cn]])), nrow = nrow(d), dimnames = list(NULL, tc))
+  nans <- rowSums(!is.na(A))
+  fc <- intersect(c("Finished", "V10"), nm)
+  fin <- if (length(fc)) d[[fc[1]]] %in% c("1", "True", "TRUE", "true") else rep(TRUE, nrow(d))
+  cat(sprintf("Rows: any test answer %d; all 10 answers %d; finished & any answer %d\n", sum(nans > 0), sum(nans == 10), sum(nans > 0 & fin)))
+  k0 <- nans > 0
+  d <- d[k0, , drop = FALSE]; A <- A[k0, , drop = FALSE]
+  cat("DEVIATION: sample defined by having answered the test (no Qualtrics 'Finished' filter)\n")
+
+  d$arm <- assign_arms(d, A, exp)
+  sc <- fit_keys(A, d$arm)
+  d$score_comp <- sc$comp; d$score_ctrl <- sc$ctrl
+  scc <- grep("^SC[0-9]", names(d), value = TRUE)
+  if (length(scc)) cat("cor(our total, ", scc[1], ") = ", round(suppressWarnings(cor(sc$comp + sc$ctrl, num(d[[scc[1]]]), use = "pairwise.complete.obs")), 3), "\n", sep = "")
+
+  # valuations from price lists
+  dec <- tryCatch(decode_vals(d), error = function(e) { cat("decode error:", conditionMessage(e), "\n"); NULL })
+  ina <- !is.na(d$arm)
+  expected <- if (exp == "A") 49 / 504 else 53 / 401
+  multi <- NULL; exinfo <- "none"
+  if (!is.null(dec)) {
+    ms <- rowSums(dec$SW >= 2, na.rm = TRUE) > 0
+    shm <- mean(ms[ina])
+    cat(sprintf("Multiple-switcher share (any list with >=2 switches): %.3f (paper %.3f)\n", shm, expected))
+    if (shm >= 0.03 && shm <= 0.30) { multi <- ms; exinfo <- sprintf("switch-count %.3f", shm) }
+  }
+  if (is.null(multi)) {
+    flags <- list()
+    for (cn in grep("^exclu", names(d), value = TRUE, ignore.case = TRUE)) {
+      tbx <- sort(table(short(cl(d[[cn]]), 12), useNA = "ifany"), decreasing = TRUE)
+      cat("Column", cn, ":", paste(sprintf("%s:%d", names(tbx), as.integer(tbx))[seq_len(min(5, length(tbx)))], collapse = " "), "\n")
+      flags[[cn]] <- truthy(d[[cn]])
+    }
+    if (length(flags) > 1) flags[["any_exclude"]] <- Reduce(`|`, flags)
+    if (length(flags)) {
+      sh <- vapply(flags, function(f) mean(f[ina]), numeric(1))
+      cat("Exclusion flag shares:", paste(sprintf("%s:%.3f", names(sh), sh), collapse = " "), "\n")
+      okf <- names(sh)[sh >= 0.03 & sh <= 0.30]
+      if (length(okf)) {
+        pk <- okf[which.min(abs(sh[okf] - expected))]
+        multi <- flags[[pk]]; exinfo <- sprintf("flag %s %.3f", pk, sh[pk])
+        cat(sprintf("DEVIATION: multiple-switcher exclusion implemented via '%s'\n", pk))
+      }
+    }
+  }
+  if (is.null(multi)) multi <- rep(FALSE, nrow(d))
+  keep <- !multi & ina
+  s <- d[keep, , drop = FALSE]
+  s$sid <- seq_len(nrow(s))
+  at <- table(s$arm)
+  cat("Analysis sample N =", nrow(s), ":", paste(names(at), as.integer(at), sep = "=", collapse = " "), "\n")
+
+  ct <- s[s$arm %in% c("Control", "Treatment"), , drop = FALSE]
+  m4c <- arm_reg(ct, "score_comp", c("Control", "Treatment"))
+  m4k <- arm_reg(ct, "score_ctrl", c("Control", "Treatment"))
+  dfun <- function(m) {
+    b <- coef(m); V <- vcov(m)
+    c(est = unname(b["d_Treatment"] - b["d_Control"]),
+      se = unname(sqrt(V["d_Treatment", "d_Treatment"] + V["d_Control", "d_Control"] - 2 * V["d_Treatment", "d_Control"])))
+  }
+  r4c <- dfun(m4c); r4k <- dfun(m4k)
+  out$t4_comp <- r4c["est"]; out$t4_ctrl <- r4k["est"]; out$n_t4 <- nobs(m4c)
+
+  out$t7 <- NULL; dcs <- ""
+  if (!is.null(dec)) tryCatch({
+    pr <- task_pairs(d)
+    RF <- dec$RF[keep, , drop = FALSE]
+    cat(sprintf("Mean valuation (%% of R): simple %.1f, complex %.1f\n",
+                mean(RF[, pr$s], na.rm = TRUE), mean(RF[, pr$c], na.rm = TRUE)))
+    dcl <- do.call(rbind, lapply(seq_len(nrow(pr)), function(j)
+      data.frame(sid = s$sid, arm = s$arm, pair = j, dc = -abs(RF[, pr$c[j]] - RF[, pr$s[j]]))))
+    comp <- tapply(!is.na(dcl$dc), dcl$sid, all)
+    dcl <- dcl[dcl$sid %in% as.integer(names(comp)[comp]), , drop = FALSE]
+    arms_present <- intersect(c("Control", "Treatment", "Substance", "Rhetoric"), unique(dcl$arm))
+    m7 <- arm_reg(dcl, "dc", arms_present, cluster = ~sid)
+    out$t7 <- coef(m7); out$n7 <- nobs(m7)
+    dcs <- paste(sprintf("%s=%.2f", sub("d_", "", names(coef(m7))), coef(m7)), collapse = " ")
+    cat("DEVIATION: valuations reconstructed from raw price-list choices assuming evenly spaced lists from 0 to R (coarse) refined by the second list; midpoint of final interval\n")
+  }, error = function(e) cat("DC stage error:", conditionMessage(e), "\n"))
+
+  out$summ <- sprintf("[%s] N=%d excl=%s | T4 comp %.3f (%.3f) ctrl %.3f N=%d | DC %s N=%s\n[%s iter1] %s\n",
+                      exp, nrow(s), exinfo, r4c["est"], r4c["se"], r4k["est"], nobs(m4c), dcs,
+                      if (is.null(out$n7)) "NA" else out$n7, exp, out$struct)
+  out
+}
+
+fa <- file.path(base, "data/raw", paste0("expAbatch", 1:8, ".csv"))
+fb <- file.path(base, "data/raw", paste0("expBbatch", 1:2, ".csv"))
+resA <- tryCatch(process_exp(fa, "A"), error = function(e) { cat("Experiment A error:", conditionMessage(e), "\n"); NULL })
+resB <- tryCatch(process_exp(fb, "B"), error = function(e) { cat("Experiment B error:", conditionMessage(e), "\n"); NULL })
+
+if (!is.null(resA)) {
+  emit("test_score_compounding_treatment_minus_control_expA_table4_col1", resA$t4_comp)
+  emit("test_score_control_module_treatment_minus_control_expA_table4_col3", resA$t4_ctrl)
+  emit("n_obs_table4_expA_cols1_3", resA$n_t4)
+  if (!is.null(resA$t7)) {
+    emit("deliberative_competence_control_expA_table7_col1", resA$t7["d_Control"])
+    emit("deliberative_competence_treatment_expA_table7_col1", resA$t7["d_Treatment"])
+    emit("deliberative_competence_substance_only_expA_table7_col1", resA$t7["d_Substance"])
+    emit("deliberative_competence_rhetoric_only_expA_table7_col1", resA$t7["d_Rhetoric"])
+    emit("n_obs_table7_expA_col1", resA$n7)
+  }
+}
+if (!is.null(resB)) {
+  emit("test_score_compounding_treatment_minus_control_expB_table4_col2", resB$t4_comp)
+  emit("test_score_control_module_treatment_minus_control_expB_table4_col4", resB$t4_ctrl)
+  emit("n_obs_table4_expB_cols2_4", resB$n_t4)
+  if (!is.null(resB$t7)) {
+    emit("deliberative_competence_control_expB_table7_col2", resB$t7["d_Control"])
+    emit("deliberative_competence_treatment_expB_table7_col2", resB$t7["d_Treatment"])
+  }
+}
+
+cat("\n==== SUMMARY ====\n")
+if (!is.null(resA)) cat(resA$summ)
+if (!is.null(resB)) cat(resB$summ)
+for (n in names(results)) cat(sprintf("RESULT:%s=%s\n", n, format(results[[n]], digits = 10)))
+```
+
+## What the code produced
+  test_score_compounding_treatment_minus_control_expA_table4_col1 = 0.8070175439
+  test_score_control_module_treatment_minus_control_expA_table4_col3 = -0.1929824561
+  n_obs_table4_expA_cols1_3 = 114.0
+  test_score_compounding_treatment_minus_control_expB_table4_col2 = 1.661691542
+  test_score_control_module_treatment_minus_control_expB_table4_col4 = -0.263681592
+  n_obs_table4_expB_cols2_4 = 402.0
+
+## Last run's stdout (excerpt: first/last 3000 characters)
+```
+==== Exp A: 746 rows, 671 cols (0 loop-prefixed) ====
+Non-loop name patterns: iMPL#_#_#: #:420 time#-#_#:80 switch#:20 T#:20 Q#:17 TimeInstr#_#:12 test#:10 V#:10 Q#_#:8 FinLit#:5 P_test_#:4 time_demog_#:4 time#_#:4 TimeContro_#:4 TImeFinLit_#:4 TimeTreat_#:4 SC#_#:3 amt#:2 line#:2 X_#:2 age:1 amt_id:1 attention:1 attn_video:1 batch_file:1 calculate:1 code treat:1 codeWC:1 codeWT:1 consent:1 decision_index:1 educ:1 employed:1 ethnicity:1 excluded:1 gender:1 help_test:1 hh_size:1 income:1 info:1 LocationAccuracy:1 LocationLatitude:1 LocationLongitude:1 marital:1 one:1 P#:1 payment_for_test:1 payment_test:1 rule#:1 rule#_inv:1 stocks:1 suggestion:1 tech_diffi:1 test_payment:1 treatment:1 urban:1 
+Loop iter 1: none 
+Rows: any test answer 504; all 10 answers 503; finished & any answer 489
+DEVIATION: sample defined by having answered the test (no Qualtrics 'Finished' filter)
+Arm column candidates: 'treatment'=2 'code treat'=5 
+Arm column: code treat values: Interest:82 Compounding:63 compounding:57 interest:57 Interest (or stock, ~:1 
+Cross-tab with 'treatment':                 |                  0  1 |   compounding    0 57 |   Compounding    0 63 |   interest       0 57 |   Interest       0 82 |   Interest (or~  0  1 
+Answer-profile distinctness by code: compounding:0.90 Compounding:0.67 interest:0.90 Interest:0.71 
+DEVIATION: Experiment A arm codes are unlabeled; Control = code with the most distinct test-answer profile, remaining codes mapped in code order to Treatment, Substance-Only, Rhetoric-Only
+Code -> arm: interest=Control compounding=Treatment Compounding=Substance Interest=Rhetoric 
+Item keys: t1=2(-0.04) t2=4(+0.07) t3=4(+0.16) t4=7(+0.02) t5=6(+0.26) t6=3(+0.28) t7=3(-0.05) t8=2(+0.04) t9=1(-0.16) t10=2(+0.04) 
+Compound-interest items: 2,3,5,6,8 
+cor(our total, SC0_0) = 0.746
+MPL lists found per loop iteration: 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 
+Column excluded : A2YBZFSUD5OP~:151 A10YUF81V3PW~:122 amt_id / "A1~:112 A1T2VMIY43RT~:99 NA:20 
+Exclusion flag shares: excluded:0.961 
+Analysis sample N = 259 : Control=57 Rhetoric=82 Substance=63 Treatment=57 
+==== Exp B: 686 rows, 780 cols (0 loop-prefixed) ====
+Non-loop name patterns: iMPL#-###_iMPL#-#_#:420 Q#_#_#_RANK:36 Q#_#_GROUP_#:36 switch#:20 T#:20 time#-#_Click Count:20 time#-#_First Click:20 time#-#_Last Click:20 time#-#_Page Submit:20 Q#:19 Q#_Click Count:12 Q#_First Click:12 Q#_Last Click:12 Q#_Page Submit:12 test#:10 FinLit#:5 exclude#:4 TimeInstr#_Click Count:3 TimeInstr#_First Click:3 TimeInstr#_Last Click:3 TimeInstr#_Page Submit:3 amt#:2 line#:2 age:1 amt_id:1 attention:1 attn_video:1 batch_file:1 calculate:1 codeWC:1 codeWT:1 decision_index:1 DistributionChannel:1 Duration (in seconds):1 educ:1 employed:1 EndDate:1 ethnicity:1 ExternalReference:1 Finished:1 gender:1 help_test:1 hh_size:1 income:1 IPAddress:1 LocationLatitude:1 LocationLongitude:1 marital:1 one:1 P_test_Click Count:1 P_test_First Click:1 P_test_Last Click:1 P_test_Page Submit:1 payment_for_test:1 payment_test:1 Progress:1 RecipientEmail:1 RecipientFirstName:1 RecipientLastName:1 RecordedDate:1 ResponseId:1 rule#:1 rule#_inv:1 SC#:1 StartDate:1 Status:1 stocks:1 suggestion:1 tech_diffi:1 test_payment:1 time_demog_Click Count:1 time_demog_First Click:1 time_demog_Last Click:1 time_de 
+Loop iter 1: none 
+Rows: any test answer 402; all 10 answers 402; finished & any answer 393
+DEVIATION: sample defined by having answered the test (no Qualtrics 'Finished' filter)
+Arm column candidates: 'treatment'=2 
+Arm column: treatment values: 0:201 1:201 
+Binary 0/1 treatment indicator: 0 = Control, 1 = Treatment
+Item keys: t1=2(+0.51) t2=4(+0.66) t3=4(+0.01) t4=7(-0.07) t5=6(+0.36) t6=4(-0.17) t7=3(+0.09) t8=5(-0.01) t9=5(-0.02) t10=3(+0.04) 
+Compound-interest items: 1,2,5,7,10 
+cor(our total, SC0) = 0.673
+MPL lists found per loop iteration: 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 
+Column exclude2 : A1T2VMIY43RT~:402 
+Column exclude3 : A1102MP1CZI3~:402 
+Column exclude4 : A2OVWCQ4B9AH~:402 
+Column exclude5 : A2I6ZS386UJV~:402 
+Exclusion flag shares: exclude2:1.000 exclude3:1.000 exclude4:1.000 exclude5:1.000 any_exclude:1.000 
+Analysis sample N = 402 : Control=201 Treatment=201 
+
+==== SUMMARY ====
+[A] N=259 excl=none | T4 comp 0.807 (0.260) ctrl -0.193 N=114 | DC  N=NA
+[A iter1] none
+[B] N=402 excl=none | T4 comp 1.662 (0.110) ctrl -0.264 N=402 | DC  N=NA
+[B iter1] none
+RESULT:test_score_compounding_treatment_minus_control_expA_table4_col1=0.8070175439
+RESULT:test_score_control_module_treatment_minus_control_expA_table4_col3=-0.1929824561
+RESULT:n_obs_table4_expA_cols1_3=114
+RESULT:test_score_compounding_treatment_minus_control_expB_table4_col2=1.661691542
+RESULT:test_score_control_module_treatment_minus_control_expB_table4_col4=-0.263681592
+RESULT:n_obs_table4_expB_cols2_4=402
+```
+
+## Claims still failing
+1. test_score_compounding_treatment_minus_control_expA_table4_col1: paper claims 1.442 correct answers out of 5 (compound-interest questions) (coefficient), your code produced 0.807018, tolerance 0.1345, gap 44.03% relative
+2. test_score_control_module_treatment_minus_control_expA_table4_col3: paper claims -1.058 correct answers out of 5 (control-module questions) (coefficient), your code produced -0.192982, tolerance 0.138, gap 81.76% relative
+3. n_obs_table4_expA_cols1_3: paper claims 215.0 subjects (count), your code produced 114, tolerance 0.05, gap 46.98% relative
+4. n_obs_table4_expB_cols2_4: paper claims 348.0 subjects (count), your code produced 402, tolerance 0.05, gap 15.52% relative
+5. deliberative_competence_control_expA_table7_col1: paper claims -24.448 percentage points of the future reward (minus the absolute valuation gap) (coefficient), your code produced N/A, tolerance 0.06679
+6. deliberative_competence_treatment_expA_table7_col1: paper claims -22.864 percentage points of the future reward (minus the absolute valuation gap) (coefficient), your code produced N/A, tolerance 0.07615
+7. deliberative_competence_substance_only_expA_table7_col1: paper claims -22.012 percentage points of the future reward (minus the absolute valuation gap) (coefficient), your code produced N/A, tolerance 0.0651
+8. deliberative_competence_rhetoric_only_expA_table7_col1: paper claims -19.797 percentage points of the future reward (minus the absolute valuation gap) (coefficient), your code produced N/A, tolerance 0.07102
+9. deliberative_competence_control_expB_table7_col2: paper claims -25.673 percentage points of the future reward (minus the absolute valuation gap) (coefficient), your code produced N/A, tolerance 0.05286
+10. deliberative_competence_treatment_expB_table7_col2: paper claims -18.569 percentage points of the future reward (minus the absolute valuation gap) (coefficient), your code produced N/A, tolerance 0.06339
+11. n_obs_table7_expA_col1: paper claims 4550.0 subject-by-task-pair observations (count), your code produced N/A, tolerance 0.05
+
+## Previous attempts (oldest first)
+  Attempt 1: test_score_compounding_treatment_minus_control_expA_table4_col1=0.5233502647, test_score_control_module_treatment_minus_control_expA_table4_col3=0.03091579331, n_obs_table4_expA_cols1_3=611.0, test_score_compounding_treatment_minus_control_expB_table4_col2=1.468248213, test_score_control_module_treatment_minus_control_expB_table4_col4=0.08865119652, n_obs_table4_expB_cols2_4=393.0
+  Attempt 2: test_score_compounding_treatment_minus_control_expA_table4_col1=0.3040631071, test_score_control_module_treatment_minus_control_expA_table4_col3=-0.6981476519, n_obs_table4_expA_cols1_3=489.0, deliberative_competence_control_expA_table7_col1=-14.75666667, deliberative_competence_treatment_expA_table7_col1=-14.75666667, n_obs_table7_expA_col1=4890.0, test_score_compounding_treatment_minus_control_expB_table4_col2=0.8078317621, test_score_control_module_treatment_minus_control_expB_table4_col4=0.07409613592, n_obs_table4_expB_cols2_4=393.0, deliberative_competence_control_expB_table7_col2=-14.75666667, deliberative_competence_treatment_expB_table7_col2=-14.75666667
+  Attempt 3: test_score_compounding_treatment_minus_control_expA_table4_col1=0.8070175439, test_score_control_module_treatment_minus_control_expA_table4_col3=-0.1929824561, n_obs_table4_expA_cols1_3=114.0, test_score_compounding_treatment_minus_control_expB_table4_col2=1.661691542, test_score_control_module_treatment_minus_control_expB_table4_col4=-0.263681592, n_obs_table4_expB_cols2_4=402.0
+
+These attempts have already been tried.  Do not repeat a strategy
+that has already produced the same values.
+
+## Task
+Adjust the code minimally to close the gap on the failing claims.
+Prefer changes that align more closely with the paper's stated methodology:
+re-read the methodology summary above and check the model specification,
+covariate selection, fixed effects, clustering, and seed against what the
+paper actually specifies.  In econometrics papers, common gap-closers are:
+  - getting the cluster-robust SE right (vcovCL / cluster_var argument)
+  - matching the paper's exact fixed-effects structure
+  - using the same sample-restriction filters the paper applied
+  - matching the paper's weighting scheme (weights= argument)
+
+## Deviation reporting
+If you must change something the paper did NOT specify in order to close
+the gap, emit a ``DEVIATION:`` line via cat() describing the change:
+
+    cat('DEVIATION: Used HC1 robust SE because the paper does not specify but the default did not converge\n')
+
+## When to give up
+If after re-reading the methodology and the previous attempts you judge
+the gap cannot be closed without unreasonable deviation, return the SAME
+R CODE you were given, BYTE-FOR-BYTE unchanged.  The pipeline will record
+the claim as unreproducible.
+
+## Output convention (unchanged)
+Emit every metric as ``cat('RESULT:<name>=<value>\n')``.
+The dataset is a directory tree at '<repo>/.cache/datasets/ambuehl_2022_deliberative_competence_financial_choice.script-free' — see the file listing under Dataset Information.  Load the actual data file(s) by the exact paths listed there (readr::read_csv() for .csv, haven::read_dta() for Stata .dta, load() for .RData/.rda, which creates the objects listed for the file under exactly those names: use them, do not guess others; readRDS() for .rds).
+Installed packages (no network; nothing else can be installed): jsonlite, fixest, lfe, AER, ivreg, plm, estimatr, lme4, quantreg, car, sandwich, lmtest, clubSandwich, multiwayvcov, marginaleffects, MatchIt, optmatch, CBPS, WeightIt, cobalt, did, rdrobust, rddensity, Synth, modelsummary, stargazer, texreg, broom, tidyverse, dplyr, tidyr, readr, stringr, lubridate, data.table, haven, readxl, janitor, zoo, ggplot2, ggridges, ggrepel, gridExtra, cowplot, gtable, extrafont, sf, MASS, nnet, survival, splines, Matrix, boot, stats, utils.
+Prefer fixest for fixed effects, IV and clustered SEs; use the other installed packages where the paper's method calls for them.
+No network, no system().  set.seed(42).
+
+Output ONLY the R code — no explanation, no markdown fences.

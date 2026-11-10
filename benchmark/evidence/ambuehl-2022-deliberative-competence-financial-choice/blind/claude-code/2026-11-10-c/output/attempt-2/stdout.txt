@@ -1,0 +1,431 @@
+A test labels:
+                                                                                       test1 
+"if the interest rate is 10% per year (interest is compounded / yearly), how many years doe" 
+                                                                                       test2 
+"If somebody tells you an investment should double in four years, / what rate of return (pe" 
+                                                                                       test3 
+"If the interest rate is 7% per year (interest is compounded / yearly), about how long does" 
+                                                                                       test4 
+"If an investment grows at 8 percent per year (interest is / compounded yearly), by how muc" 
+                                                                                       test5 
+"Paul had invested his money into an account which paid 9% interest / per year (interest is" 
+                                                                                       test6 
+                         "Which of the following quotes is attributed to Benjamin Franklin?" 
+                                                                                       test7 
+"Professional investors as a whole are responsible for what / percentage of stock market tr" 
+                                                                                       test8 
+                                    "Which quote is attributed to the author Upton Sinclair" 
+                                                                                       test9 
+"What percentage of mutual funds tends to be outperformed by the /  market (S&P 500 Index) " 
+                                                                                      test10 
+                                              "What is an \"indexing\" investment strategy?" 
+B test labels:
+                                                                                                           test1 
+"if the interest rate is 10% per year (interest is compounded yearly), how many years does it take until an inv" 
+                                                                                                           test2 
+"If somebody tells you an investment should double in four years, what rate of return (per year) is he promisin" 
+                                                                                                           test3 
+"If the interest rate is 7% per year (interest is compounded yearly), about how long does it take until an inve" 
+                                                                                                           test4 
+"If an investment grows at 8 percent per year (interest is compounded yearly), by how much has it grown after 4" 
+                                                                                                           test5 
+"Paul had invested his money into an account which paid 9% interest per year (interest is compounded yearly). A" 
+                                                                                                           test6 
+                      "In order to limit your risk, you might invest in which of the following pairs of stocks?" 
+                                                                                                           test7 
+"We would expect the degree of relation between the returns of Coca-Cola stock and the returns of Pepsi stock t" 
+                                                                                                           test8 
+   "Considering a long time period (for example 10 or 20 years), which asset normally gives the highest return?" 
+                                                                                                           test9 
+                                            "Normally, which asset displays the highest fluctuations over time?" 
+                                                                                                          test10 
+                         "A degree of relation of __________ between two assets will NOT help reduce your risk." 
+
+######## Experiment A rows 746 
+any test: 504  all test: 503  all 20 list1 answered: 504 
+       all20
+anytest FALSE TRUE
+  FALSE   242    0
+  TRUE      0  504
+completes: 504  dup amt_id among completes: 1 
+[1] "A63759KWVJ94F"
+subjects with >=2 changes in some list1: 21 
+subjects with >=2 changes in some list1 or list2: 28 
+subjects with any 1->0 in list1: 35  in list1 or 2: 53 
+subjects with >=2 changes OR any 1->0 (list1/2): 53 
+switch == number of 1s in list1 (share): 1  NA switch: 0 
+list2 NA counts table:
+na2
+    0 
+10080 
+list1 n ones table:
+n1
+   0    1    2    3    4    5    6    7    8    9   10   11 
+  68  309  475  795 1096 1521 1378 1250 1265  929  663  331 
+list2 n ones when list1 all ones (11):
+
+  0   1   2   3   4   5   6   7   8   9  10 
+ 36   2  34  22   5  16   2   7   8   8 191 
+list2 n ones when list1 no ones (0):
+
+ 0  6  9 10 
+19  2  1 46 
+
+ 0 
+68 
+treatment:
+   
+     1  2  3  4  5  6  7  8
+  0 10 56 50  6 49 54  6 13
+  1 10 43 62  4 63 66 12  0
+test 1 by treatment:
+   
+      0   1
+  1  48   6
+  2  90 229
+  3  56   7
+  4  11   4
+  5  39  14
+test 2 by treatment:
+   
+      0   1
+  1  19  11
+  2   7   6
+  3   8   4
+  4  73 209
+  5  59   7
+  6  78  23
+test 3 by treatment:
+    
+       0   1
+  1    4   6
+  10  15  25
+  2   26  41
+  3   20  28
+  4  127 127
+  5   16   9
+  6   14   8
+  7    5   2
+  8   11   7
+  9    6   7
+test 4 by treatment:
+    
+       0   1
+  1   10  11
+  10   2   1
+  11  15  25
+  2    4   3
+  3   68  81
+  4    2   2
+  5   10   8
+  6   12  12
+  7  112 108
+  8    3   4
+  9    6   5
+test 5 by treatment:
+    
+       0   1
+  1   19  20
+  10   8   9
+  11  14   5
+  12   7   3
+  13   2   0
+  14   1   4
+  15   0   1
+  16   3   0
+  17   7   5
+  18   1   3
+  2    6   9
+  20   1   1
+  21   6   3
+  3    4   9
+  4   11   4
+  5    6   7
+  6  117 151
+  7   17   9
+  8   10   9
+  9    4   8
+test 6 by treatment:
+   
+      0   1
+  1  43  41
+  2  39  35
+  3 162 184
+test 7 by treatment:
+   
+      0   1
+  1  36  74
+  2  23  38
+  3  48 100
+  4 137  48
+test 8 by treatment:
+      
+         0   1
+  1     23  19
+  2    171 185
+  3     15   8
+  4     35  47
+  <NA>   0   1
+test 9 by treatment:
+   
+      0   1
+  1  57  99
+  2  44  77
+  3 111  48
+  4  32  36
+test 10 by treatment:
+   
+      0   1
+  1  26  53
+  2 131 112
+  3  66  69
+  4  21  26
+rule72 by batch x treatment:
+   
+    1 0 1 1 2 0 2 1 3 0 3 1 4 0 4 1 5 0 5 1 6 0 6 1 7 0 7 1 8 0
+  1   1   7   8  29  16  42   0   3   7  45   6  55   0   9   6
+  2   2   3  10  11  11  19   0   1  15  16  20   9   1   3   2
+  3   7   0  38   3  23   1   6   0  27   2  28   2   5   0   5
+score var table:
+sc
+ 0  1  2  3  4  5  6  7  8  9 
+ 4 24 43 58 81 73 79 73 55 14 
+test_payment:
+
+  1 
+504 
+mean score var by option, test 1 :
+   1    2    3    4    5 
+3.57 5.65 4.73 4.00 3.21 
+mean score var by option, test 2 :
+   1    2    3    4    5    6 
+2.77 2.85 2.42 5.80 5.83 3.51 
+mean score var by option, test 3 :
+   1   10    2    3    4    5    6    7    8    9 
+3.10 4.55 3.73 3.94 6.28 3.32 3.14 2.86 3.67 3.08 
+mean score var by option, test 4 :
+   1   10   11    2    3    4    5    6    7    8    9 
+3.57 2.00 4.12 4.14 3.99 3.25 3.44 3.71 6.45 3.71 4.18 
+mean score var by option, test 5 :
+   1   10   11   12   13   14   15   16   17   18    2   20   21    3    4    5 
+2.85 4.24 3.53 3.00 3.00 3.60 3.00 3.00 3.75 2.50 3.93 4.00 3.44 2.69 3.33 4.00 
+   6    7    8    9 
+6.25 4.81 3.95 3.50 
+mean score var by option, test 6 :
+   1    2    3 
+3.62 3.62 5.64 
+mean score var by option, test 7 :
+   1    2    3    4 
+4.45 4.75 4.64 5.72 
+mean score var by option, test 8 :
+   1    2    3    4 
+3.74 5.69 3.39 3.17 
+mean score var by option, test 9 :
+   1    2    3    4 
+4.53 4.11 5.78 5.90 
+mean score var by option, test 10 :
+   1    2    3    4 
+3.94 4.85 6.18 4.26 
+
+######## Experiment B rows 685 
+any test: 401  all test: 401  all 20 list1 answered: 401 
+       all20
+anytest FALSE TRUE
+  FALSE   284    0
+  TRUE      0  401
+completes: 401  dup amt_id among completes: 1 
+[1] "A3AY0315YWWNXY"
+subjects with >=2 changes in some list1: 22 
+subjects with >=2 changes in some list1 or list2: 29 
+subjects with any 1->0 in list1: 38  in list1 or 2: 54 
+subjects with >=2 changes OR any 1->0 (list1/2): 54 
+switch == number of 1s in list1 (share): 1  NA switch: 0 
+list2 NA counts table:
+na2
+   0 
+8020 
+list1 n ones table:
+n1
+   0    1    2    3    4    5    6    7    8    9   10   11 
+  83  212  376  635  953 1228 1065  979 1013  740  502  234 
+list2 n ones when list1 all ones (11):
+
+  0   1   2   3   4   5   6   7   8   9  10 
+ 45   8   5   9   4   5   2   3   8   9 136 
+list2 n ones when list1 no ones (0):
+
+ 0  1  2  5  7  8 10 
+30  4  2  1  2  1 43 
+
+ 0 
+83 
+treatment:
+   
+      1   2
+  0  46 155
+  1  54 146
+test 1 by treatment:
+   
+      0   1
+  1  24   7
+  2  67 169
+  3  43  11
+  4  15   2
+  5  52  11
+test 2 by treatment:
+   
+      0   1
+  1  31   2
+  2   8   6
+  3   6   5
+  4  32 164
+  5  41   5
+  6  83  18
+test 3 by treatment:
+    
+      0  1
+  1   8  1
+  10 11 44
+  2  25 21
+  3  14 15
+  4  90 92
+  5  18  8
+  6  19  4
+  7   3  3
+  8   9  7
+  9   4  5
+test 4 by treatment:
+    
+      0  1
+  1   6 13
+  11  5 37
+  2   2  2
+  3  73 56
+  4  11  8
+  5  10  3
+  6   8  7
+  7  80 66
+  8   4  7
+  9   2  1
+test 5 by treatment:
+    
+       0   1
+  1   14  15
+  10  12   0
+  11  14   2
+  12   2   0
+  13   3   3
+  14   4   1
+  15   2   1
+  16   7   1
+  17   7   0
+  18   1   0
+  19   1   0
+  2    5   5
+  20   3   0
+  21   4   3
+  3    2   3
+  4    7   1
+  5    6   5
+  6   82 154
+  7    9   4
+  8    6   2
+  9   10   0
+test 6 by treatment:
+   
+      0   1
+  1  20  48
+  2   5   2
+  3  35  48
+  4 136 101
+  5   5   1
+test 7 by treatment:
+   
+     0  1
+  1 14 11
+  2 20 14
+  3 66 85
+  4 39 41
+  5 62 49
+test 8 by treatment:
+   
+      0   1
+  1   7  29
+  2  21  11
+  3  11  11
+  4  13   2
+  5 149 147
+test 9 by treatment:
+   
+      0   1
+  1   1   7
+  2  13  11
+  3   5   3
+  4   3   4
+  5 179 175
+test 10 by treatment:
+   
+     0  1
+  1 67 46
+  2 26 21
+  3 81 89
+  4  7 15
+  5 20 29
+rule72 by batch x treatment:
+   
+    1 0 1 1 2 0 2 1
+  1  12  48  53 136
+  2  16   5  42  10
+  3  18   1  60   0
+score var table:
+sc
+ 0  1  2  3  4  5  6  7 
+13 45 64 77 85 84 26  7 
+test_payment:
+
+  1 
+401 
+mean score var by option, test 1 :
+   1    2    3    4    5 
+1.58 4.27 2.54 2.00 2.25 
+mean score var by option, test 2 :
+   1    2    3    4    5    6 
+1.67 2.93 2.09 4.50 3.26 2.16 
+mean score var by option, test 3 :
+   1   10    2    3    4    5    6    7    8    9 
+2.78 3.56 2.78 2.59 4.20 2.35 1.65 2.67 2.62 2.56 
+mean score var by option, test 4 :
+   1   11    2    3    4    5    6    7    8    9 
+2.84 3.81 3.50 2.75 2.42 2.62 2.40 4.23 4.09 2.67 
+mean score var by option, test 5 :
+   1   10   11   12   13   14   15   16   17   18   19    2   20   21    3    4 
+2.38 1.42 1.81 3.50 2.67 2.40 2.33 1.50 1.86 0.00 2.00 2.00 1.33 2.43 2.60 1.50 
+   5    6    7    8    9 
+3.36 4.24 3.00 2.88 2.00 
+mean score var by option, test 6 :
+   1    2    3    4    5 
+3.22 2.00 4.14 3.28 2.33 
+mean score var by option, test 7 :
+   1    2    3    4    5 
+3.00 2.97 3.20 4.05 3.48 
+mean score var by option, test 8 :
+   1    2    3    4    5 
+3.75 3.69 2.27 2.20 3.49 
+mean score var by option, test 9 :
+   1    2    3    4    5 
+3.75 3.38 3.88 3.43 3.40 
+mean score var by option, test 10 :
+   1    2    3    4    5 
+3.22 2.64 3.79 3.14 3.41 
+B preview rows: 1  B status table:
+   
+    FALSE TRUE
+  0   269  401
+  1     0    1
+  8    15    0
+A status x anytest:
+   
+    FALSE TRUE
+  0   195  504
+  1     1    0
+  8    46    0

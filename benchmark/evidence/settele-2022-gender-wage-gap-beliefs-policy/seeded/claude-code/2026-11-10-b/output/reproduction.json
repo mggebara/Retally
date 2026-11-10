@@ -1,0 +1,15 @@
+{
+  "schema": 1,
+  "entry_id": "settele-2022-gender-wage-gap-beliefs-policy",
+  "mode": "seeded",
+  "run_id": "2026-11-10-b",
+  "reproducer": "claude-code",
+  "language": "r",
+  "final": {"script": "script.R", "stdout": "stdout.txt", "stderr": "stderr.txt", "exit_code": 0},
+  "attempts": [],
+  "deviations": [],
+  "notes": "Single run, no attempts. Translated the authors' cleaning do-files (03, 04, 05 for the main survey; 06 for the follow-up) and the Table 3-6 regressions in 08_MainTables.do into R (haven + fixest). Main survey: z-scoring on the pure control group, Anderson-style indices weighted by the row sums of the inverse correlation matrix, wave-B probability weights. Tables 3/4: pure control group, prior z-scored, then trimmed strictly between the unweighted 5th/95th percentiles (Stata summarize-detail definition, R quantile type 2), N=921. Table 5: treatment arms, posterior z-scored with aweights (zscore.ado), OLS and 2SLS (fixest IV) with the baseline controls, pweights and HC1 SEs. Table 6: the follow-up, outcomes z-scored on the full follow-up sample, 4-item index, N=1105. Intermediate checks agree with the authors' All.log: index correlation obs 4065/1105, control group 1034, Table 5 N 3022/3031, and the Table 5 col 1 T74 coefficient -12.95017, identical to the log. The paper's -12.955 is therefore presumably a rounding or typo issue in the paper. All other claims match to the reported precision. The script was developed and run in a private scratch directory and copied here, and the run-dir passed to run_sandbox was that scratch directory. Besides the mount and the paper, I read only the task.md for this cell.",
+  "files_read_outside_mount": [],
+  "started_at": "2026-11-10T06:27:08Z",
+  "finished_at": "2026-11-10T06:35:00Z"
+}

@@ -1,0 +1,18 @@
+Error in `d[[ac]]`:
+! Can't extract column with `ac`.
+✖ Subscript `ac` must be a location, not a character `NA`.
+Backtrace:
+     ▆
+  1. └─global prep(A, TRUE, "Experiment A")
+  2.   ├─global label_arms(d[[ac]], d$comp, four)
+  3.   │ └─base::unique(raw[!is.na(raw) & raw != ""])
+  4.   ├─d[[ac]]
+  5.   └─tibble:::`[[.tbl_df`(d, ac)
+  6.     └─tibble:::tbl_subset2(x, j = i, j_arg = substitute(i))
+  7.       └─tibble:::vectbl_as_col_location2(...)
+  8.         ├─tibble:::subclass_col_index_errors(...)
+  9.         │ └─base::withCallingHandlers(...)
+ 10.         └─vctrs::vec_as_location2(j, n, names, call = call)
+ 11.           └─vctrs:::result_get(...) at vctrs/R/subscript-loc.R:160:3
+ 12.             └─rlang::cnd_signal(x$err) at vctrs/R/utils.R:91:5
+Execution halted

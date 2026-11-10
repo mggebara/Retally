@@ -1,0 +1,58 @@
+Rows in file: 2770 
+Rows with dropme==0 (main analysis sample): 2055 
+Candidate controls: clinic dummies 59 | main 23 | interactions 249 | total 331 
+Main CC vars: CC1 CC3 CC5 CC7 CC9 CC11 CC13 CC15 CC17 CC19 CC21 CC23 CC25 CC27 CC28 CC29 CC31 CC33 CC34 CC35 CC37 CC39 CC41 
+treatment table (patient_voucher, doctor_voucher):
+   
+      0   1
+  0 628 712
+  1 715   0
+clinics: 60  dates: 36 
+
+[used_vouchers_admin] N=2055, candidates after partialling=331; selected: y=2 PV=2 DV=0 union=4
+  selected: CL33 CL54 CC1xCC23 CC23xCC35 
+                 Estimate Std. Error  t value     Pr(>|t|)
+patient_voucher 0.3464594 0.03072687 11.27546 2.367850e-16
+doctor_voucher  0.2642224 0.02445834 10.80296 1.315453e-15
+  Control mean: 0 
+
+[RXtreat_sev_simple_mal] N=2053, candidates after partialling=331; selected: y=10 PV=2 DV=0 union=12
+  selected: CL33 CL54 CC23 CC1xCC9 CC3xCC9 CC5xCC9 CC9xCC25 CC9xCC31 CC15xCC23 CC23xCC25 CC23xCC27 CC23xCC35 
+                  Estimate Std. Error   t value   Pr(>|t|)
+patient_voucher 0.05315919 0.02548079 2.0862454 0.04128839
+doctor_voucher  0.01668104 0.02502624 0.6665421 0.50766286
+  Control mean: 0.61563 
+
+[treat_sev_simple_mal] N=2053, candidates after partialling=331; selected: y=8 PV=2 DV=0 union=10
+  selected: CL33 CL54 CC1xCC5 CC1xCC9 CC5xCC9 CC9xCC25 CC9xCC31 CC15xCC23 CC23xCC35 CC31xCC41 
+                  Estimate Std. Error  t value     Pr(>|t|)
+patient_voucher 0.14090988 0.02798359 5.035448 4.788332e-06
+doctor_voucher  0.08549044 0.02532018 3.376376 1.304625e-03
+  Control mean: 0.460925 
+
+[RXtreat_severe_mal] N=2053, candidates after partialling=331; selected: y=8 PV=2 DV=0 union=10
+  selected: CL33 CL54 CC23 CC1xCC5 CC1xCC9 CC1xCC31 CC3xCC7 CC3xCC9 CC5xCC31 CC9xCC25 
+                   Estimate Std. Error   t value   Pr(>|t|)
+patient_voucher -0.04484344 0.01822499 -2.460547 0.01681899
+doctor_voucher  -0.05414516 0.02173141 -2.491562 0.01554930
+  Control mean: 0.3030303 
+
+[treat_severe_mal] N=2053, candidates after partialling=331; selected: y=9 PV=2 DV=0 union=11
+  selected: CL33 CL54 CC23 CC1xCC5 CC1xCC9 CC3xCC9 CC5xCC25 CC5xCC31 CC9xCC25 CC9xCC41 CC23xCC35 
+                   Estimate Std. Error   t value   Pr(>|t|)
+patient_voucher -0.02189006 0.02010494 -1.088790 0.28067407
+doctor_voucher  -0.05026815 0.01963190 -2.560535 0.01303042
+  Control mean: 0.2551834 
+
+RESULT:voucher_used_patient_voucher_table3_col1=0.346459
+RESULT:voucher_used_doctor_voucher_table3_col1=0.264222
+RESULT:any_malaria_treatment_prescribed_patient_voucher_table3_col2=0.053159
+RESULT:any_malaria_treatment_prescribed_doctor_voucher_table3_col2=0.016681
+RESULT:any_malaria_treatment_purchased_patient_voucher_table3_col3=0.140910
+RESULT:any_malaria_treatment_purchased_doctor_voucher_table3_col3=0.085490
+RESULT:severe_malaria_treatment_prescribed_patient_voucher_table3_col4=-0.044843
+RESULT:severe_malaria_treatment_prescribed_doctor_voucher_table3_col4=-0.054145
+RESULT:severe_malaria_treatment_purchased_patient_voucher_table3_col5=-0.021890
+RESULT:severe_malaria_treatment_purchased_doctor_voucher_table3_col5=-0.050268
+RESULT:n_obs_table3_col1=2055
+RESULT:n_obs_table3_cols2_5=2053

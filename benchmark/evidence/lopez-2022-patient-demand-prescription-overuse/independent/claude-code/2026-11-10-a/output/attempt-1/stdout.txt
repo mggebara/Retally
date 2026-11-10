@@ -1,0 +1,550 @@
+2770 4266 
+1 id numeric 21 Individual identifier 
+2 cscom_day numeric 0 IDs each cscomXday cluster 
+3 type_observation haven_labelled 0 Type of obs in this dataset 
+4 morning numeric 3 Flag: 1 if MorningID 
+5 patient numeric 17 Flag: 1 if CSCom Patient survey 
+6 home numeric 1187 Flag: 1 if Home survey 
+7 cscomnum_OS numeric 0 id CSCom with an unique number 
+8 surveyorid_M numeric 3 S: Please select your id and name from the list. 
+9 officerid_M numeric 447 S: Please select the id and name of the intervention officer from the list. 
+10 officerid_corrections_OS numeric 436 Officer ID: scheduled with posterior corrections 
+11 date_scheduled_check Date 0 Scheduled date for the intervention 
+12 date_morning_survey Date 0 Date MorningID Survey 
+13 date_today_survey Date 17 Date CSCom Patient Survey 
+14 date_home_survey Date 17 Date Home Survey 
+15 treat_scheduled haven_labelled 0 Treat as in the calendar: C=1, PI=2, PV=3, DV=4, PI-PV=5, PI-DV=6 
+16 treatment_OS character 0 Original variable in the calendar 
+17 treat_morning haven_labelled 0 Treat according to the morning survey: C=1, PI=2, PV=3, DV=4, PI-PV=5, PI-DV=6 
+18 screeningOK haven_labelled 17 Screening procedure 
+19 merge_morning_patient_home numeric 0 Merge results: morning-patient & home survey 
+20 patient_complete_survey haven_labelled 17 Patient surveys that completed several stages of the survey 
+21 date_scheduled_OS character 0 Officer ID: ID of the person that should have been recorded by the surveyors-new 
+22 submissiondate_M character 0 SubmissionDate 
+23 starttime_M character 0 Start time: MorningID Survey 
+24 endtime_M character 0 End time: MorningID Survey 
+25 datemorning_M character 0 Please confirm the date: 
+26 timemorning_M character 0 Please confirm the time: 
+27 interventionmorning_M character 0 S: Select the intervention carried out at the CSCom today.Tick all relevant int 
+28 interventionmorning_1_M haven_labelled 3 Patient video 
+29 interventionmorning_2_M haven_labelled 3 Malaria treatment vouchers given to patients 
+30 interventionmorning_3_M haven_labelled 3 Malaria treatment vouchers given to doctors 
+31 interventionmorning_4_M haven_labelled 3 None 
+32 absentany_M haven_labelled 3 S: Was any of the regular staff absent or any part of the clinic closed today a 
+33 doctorpresent_M haven_labelled 1576 S: Were both the head doctor or his/her representative absent at any time? 
+34 timesnohealthworkerpresent_M haven_labelled 1576 S: Was there any time in which no one was at the clinic who can prescribe medic 
+35 laboratoryopen_M haven_labelled 1576 S: Was the laboratory closed or a lab technician absent at any time today? 
+36 absentpharmacy_M haven_labelled 1576 S: Was the pharmacy closed or the pharmacist absent at any time today? 
+37 absentcomments_M character 0 S: any additional comments on absences or closures? Enter -96 if no comments. 
+38 stockoutsany_M haven_labelled 3 S: Was this clinic experiencing any kind of stockout today? 
+39 stockoutsmalariatest_M haven_labelled 2471 Were there any stockouts of malaria test materials? Probe about RDTs and other 
+40 stockoutsmalariadrugs_M haven_labelled 2471 Were there any stockouts of malaria drugs? Probe about ACTs and treatment for s 
+41 desc_stockoutsmalariadrugs_M character 0 Specify other malaria treatment stocked out: 
+42 stockoutscomments_M character 0 S: any additional comments on stockouts? Enter -96 if no comments. 
+43 submissiondate character 0 Submission time: CSCom Patient Survey 
+44 starttime character 0 Start time: CSCom Patient Survey 
+45 endtime character 0 End time: CSCom Patient Survey 
+46 date character 0 Please confirm the date: 
+47 time character 0 Please confirm the time: 
+48 confirmation character 0 Please confirm: The patient… 
+49 confirmation_1 haven_labelled 17 The patient is present 
+50 confirmation_2 haven_labelled 17 Is at the CSCOM for an acute illness 
+51 symptomsscreening character 0 Please confirm: the patient has at least one of the following symptoms 
+52 symptomsscreening_1 haven_labelled 0 Fever 
+53 symptomsscreening_2 haven_labelled 0 Chills or Excessive Sweating 
+54 symptomsscreening_3 haven_labelled 0 Nausea, Vomiting, or Diarrhea 
+55 symptomsscreening_4 haven_labelled 0 Reduced Appetite 
+56 symptomsscreening_5 haven_labelled 0 Headache 
+57 symptomsscreening_6 haven_labelled 0 Cough 
+58 symptomsscreening_7 haven_labelled 0 Weakness, Fatigue, or Reduced Consciousness 
+59 notacutelyill haven_labelled 2327 What is the reason for the CSCom visit? 
+60 desc_othernotacutelyill character 0 Specify other reason 
+61 desc_otherpatientsymptoms character 0 What symptoms does the patient have? 
+62 patientrespondent haven_labelled 17 Is the patient the same as the respondent? 
+63 appearsableconsent haven_labelled 1395 Does the patient appear able to give informed consent? 
+64 confirmage haven_labelled 18 Please confirm the age of the respondent for consent purposes. 
+65 confirmconsent haven_labelled 18 Please confirm: the respondent consented to the interview. 
+66 consentrespondent haven_labelled 2758 Please confirm: a parent or guardian of the respondent consented to the intervi 
+67 gender haven_labelled 21 Male (Resp.) 
+68 age numeric 21 Age (respondent) 
+69 relationship haven_labelled 1393 What is your relationship with the patient? 
+70 desc_relationship character 0 Other relationship: 
+71 genderpatient haven_labelled 21 Patient is Male 
+72 agepatient numeric 0 Age Patient 
+73 monthschild numeric 2442 How many months old is the child? 
+74 estimateagechild6 haven_labelled 1802 S: How certain is the child's age? 
+75 ethnic haven_labelled 21 What ethnic group do you identify with? 
+76 primarylanguage haven_labelled 21 What is your primary language? 
+77 french haven_labelled 21 Can you speak French? 
+78 fluency haven_labelled 1405 What is your level of fluency? 
+79 niveduc haven_labelled 21 What is your highest level of education? 
+80 feverintake haven_labelled 86 Fever 
+81 chillsintake haven_labelled 86 Chills and/or excessive sweating 
+82 nauseaintake haven_labelled 86 Nausea or vomiting 
+83 diarrheaintake haven_labelled 86 Diarrhea 
+84 digestiveproblemsintake haven_labelled 86 Digestive problems (swelling of the belly, abdominal pain) 
+85 poorappetiteintake haven_labelled 86 Poor appetite, unwilling to eat or to breastfeed 
+86 headacheintake haven_labelled 86 Headache 
+87 stiffnessneckintake haven_labelled 86 Stiffness of the neck 
+88 earpainintake haven_labelled 86 Ear pain or swelling behind the ear 
+89 swellingcheeksintake haven_labelled 86 Swelling of the cheeks 
+90 nosebleedintake haven_labelled 86 Nose bleed 
+91 coughintake haven_labelled 86 Dry cough 
+92 productivecoughintake haven_labelled 86 Wet/productive cough 
+93 breathingintake haven_labelled 86 Difficulty breathing, rapid or deep breathing 
+94 skinintake haven_labelled 86 Skin outbreak, blisters, rash 
+95 eyesintake haven_labelled 86 Red or infected eyes 
+96 mouthulcersintake haven_labelled 86 Mouth ulcers 
+97 jaundiceintake haven_labelled 86 Jaundice (ictère, jaunisse; yellow eyes or skin) 
+98 weaknessintake haven_labelled 86 Weakness, fatigue, malaise 
+99 prostationintake haven_labelled 86 Prostration: inability to sit up / inability to breastfeed (small children) 
+100 musclestiffnessintake haven_labelled 86 Muscle stiffness, hypertonia 
+101 convulsionsintake haven_labelled 86 Convulsions 
+102 consciousnessintake haven_labelled 86 Reduced consciousness, confusion, coma (irresponsive to sound or touch) 
+103 fevertypeintake haven_labelled 474 You mentioned fever. Is the fever permanent or recurrent? 
+104 headachetypeintake haven_labelled 870 You mentioned headache. Is the headache only in front or whole head? 
+105 daysillness numeric 493 For how many days have you / has the patient had the illness? 
+106 thinkillness character 0 What illness do you think you/the patient suffer(s) from? 
+107 thinkillness_1 haven_labelled 493 Simple malaria 
+108 thinkillness_2 haven_labelled 493 Severe malaria 
+109 thinkillness_3 haven_labelled 493 Malaria (simple or severe not specified) 
+110 thinkillness_4 haven_labelled 493 Typhoid Fever 
+111 thinkillness_5 haven_labelled 493 Bronchitis 
+112 thinkillness_6 haven_labelled 493 Influenza/flu 
+113 thinkillness_7 haven_labelled 493 (Acute) respiratory infection (IRA) 
+114 thinkillness_8 haven_labelled 493 Pneumonia 
+115 thinkillness_9 haven_labelled 493 Dysentery 
+116 thinkillness_10 haven_labelled 493 Gastrointestinal infection, stomach infection 
+117 thinkillness_11 haven_labelled 493 Cardiovascular disease 
+118 thinkillness_12 haven_labelled 493 High blood pressure 
+119 thinkillness_13 haven_labelled 493 Diabetes 
+120 thinkillness_14 haven_labelled 493 Measles 
+121 thinkillness_15 haven_labelled 493 Ear infection 
+122 thinkillness__97 haven_labelled 493 Other 
+123 thinkillness__99 haven_labelled 493 Don’t know 
+124 desc_illness character 0 Specify illness: 
+125 desc_illnessI1_c haven_labelled 2549 desc_illnessI1_c 
+126 beforeillness1 haven_labelled 1671 Have you had an illness with the same or similar symptoms before? 
+127 beforeillness2 haven_labelled 1592 Has {namepatient} had an illness with the same or similar symptoms before? 
+128 whatillnesswas character 0 Do you know what the illness was last time? 
+129 whatillnesswas_1 haven_labelled 1913 Simple malaria 
+130 whatillnesswas_2 haven_labelled 1913 Severe malaria 
+131 whatillnesswas_3 haven_labelled 1913 Malaria (simple or severe not specified) 
+132 whatillnesswas_4 haven_labelled 1913 Typhoid Fever 
+133 whatillnesswas_5 haven_labelled 1913 Bronchitis 
+134 whatillnesswas_6 haven_labelled 1913 Influenza/flu 
+135 whatillnesswas_7 haven_labelled 1913 (Acute) respiratory infection (IRA) 
+136 whatillnesswas_8 haven_labelled 1913 Pneumonia 
+137 whatillnesswas_9 haven_labelled 1913 Dysentery 
+138 whatillnesswas_10 haven_labelled 1913 Gastrointestinal infection, stomach infection 
+139 whatillnesswas_11 haven_labelled 1913 Cardiovascular disease 
+140 whatillnesswas_12 haven_labelled 1913 High blood pressure 
+141 whatillnesswas_13 haven_labelled 1913 Diabetes 
+142 whatillnesswas_14 haven_labelled 1913 Measles 
+143 whatillnesswas_15 haven_labelled 1913 Ear infection 
+144 whatillnesswas__97 haven_labelled 1913 Other 
+145 whatillnesswas__99 haven_labelled 1913 Don’t know 
+146 desc_whatillnesswas character 0 Specify what illness: 
+147 desc_whatillnesswasI1_c haven_labelled 2708 desc_whatillnesswasI1_c 
+148 diagnosebefore1 haven_labelled 1671 For the current illness, have you been diagnosed by a doctor or other health pr 
+149 diagnosebefore2 haven_labelled 1592 For the current illness, has {namepatient} been diagnosed by a doctor or other 
+150 previousdiagnosis character 0 What was the previous diagnosis for the illness? 
+151 previousdiagnosis_1 haven_labelled 2637 Simple malaria 
+152 previousdiagnosis_2 haven_labelled 2637 Severe malaria 
+153 previousdiagnosis_3 haven_labelled 2637 Malaria (simple or severe not specified) 
+154 previousdiagnosis_4 haven_labelled 2637 Typhoid Fever 
+155 previousdiagnosis_5 haven_labelled 2637 Bronchitis 
+156 previousdiagnosis_6 haven_labelled 2637 Influenza/flu 
+157 previousdiagnosis_7 haven_labelled 2637 (Acute) respiratory infection (IRA) 
+158 previousdiagnosis_8 haven_labelled 2637 Pneumonia 
+159 previousdiagnosis_9 haven_labelled 2637 Dysentery 
+160 previousdiagnosis_10 haven_labelled 2637 Gastrointestinal infection, stomach infection 
+161 previousdiagnosis_11 haven_labelled 2637 Cardiovascular disease 
+162 previousdiagnosis_12 haven_labelled 2637 High blood pressure 
+163 previousdiagnosis_13 haven_labelled 2637 Diabetes 
+164 previousdiagnosis_14 haven_labelled 2637 Measles 
+165 previousdiagnosis_15 haven_labelled 2637 Ear infection 
+166 previousdiagnosis__97 haven_labelled 2637 Other 
+167 previousdiagnosis__99 haven_labelled 2637 Was told but cannot remember or did not understand 
+168 previousdiagnosis__100 haven_labelled 2637 Was not told 
+169 previousdiagnosis__88 haven_labelled 2638 Patient has no acute illness 
+170 desc_previousdiagnosis character 0 Specify previous diagnosis: 
+171 desc_previousdiagnosisD1_c haven_labelled 2763 desc_previousdiagnosisD1_c 
+172 itembefore1_1 haven_labelled 1671 For the current illness, have you taken any medicine before coming here? 
+173 itembefore1_2 haven_labelled 1592 For the current illness, has {namepatient} taken any medicine before coming he 
+174 typeitembefore1 haven_labelled 1871 Which type of item? (1) 
+175 namemedbefore1 haven_labelled 2135 Which is the name of the drug/medication? 
+176 desc_othernamemedbefore1 character 0 Specify other drug/medication: 
+177 desc_othernamemedbeforeM1_c1 haven_labelled 2688 1 desc_othernamemedbeforeM1_c 
+178 desc_othernamemedbeforeE1_c1 haven_labelled 2767 1 desc_othernamemedbeforeE1_c 
+179 typemedbefore1 numeric 2666 Which is the type of the drug/medication? 
+180 desc_othertypemedbefore1 character 0 Specify other type of drug/medication: 
+181 equipbefore1 numeric 2760 Which is the equipment/material? 
+182 testsbefore1 haven_labelled 1671 For the current illness, have you had any blood tests done before coming here? 
+183 testsbefore2 haven_labelled 1592 For the current illness, has {namepatient} had any blood tests done before com 
+184 testtypebefore1 character 0 What type of test was done? (Test 1) 
+185 desc_othertestbefore1 character 0 Specify other test: 
+186 desc_othertestbeforeT1_c1 haven_labelled 2768 1 desc_othertestbeforeT1_c 
+187 bloodputinbefore1 haven_labelled 2763 What did they do with the blood after it was collected? 
+188 testreportedresult1before1 haven_labelled 2725 Do you know what the test result was? 
+189 testreportedresult2before1 haven_labelled 2768 Do you know what the test result was? 
+190 otherbloodtestbefore2 haven_labelled 2720 Were any other blood tests done/ordered? 
+191 testtypebefore2 character 0 What type of test was done? (Test 2) 
+192 desc_othertestbefore2 character 0 Specify other test: 
+193 desc_othertestbeforeT1_c2 haven_labelled 2769 2 desc_othertestbeforeT1_c 
+194 bloodputinbefore2 haven_labelled 2769 What did they do with the blood after it was collected? 
+195 testreportedresult1before2 haven_labelled 2766 Do you know what the test result was? 
+196 testreportedresult2before2 haven_labelled 2768 Do you know what the test result was? 
+197 otherbloodtestbefore3 haven_labelled 2763 Were any other blood tests done/ordered? 
+198 testtypebefore3 character 0 What type of test was done? (Test 3) 
+199 bloodputinbefore3 haven_labelled 2769 What did they do with the blood after it was collected? 
+200 otherbloodtestbefore4 haven_labelled 2769 Were any other blood tests done/ordered? 
+201 testtypebefore4 character 0 What type of test was done? (Test 4) 
+202 testreportedresult1before4 haven_labelled 2769 Do you know what the test result was? 
+203 otherbloodtestbefore5 haven_labelled 2769 Were any other blood tests done/ordered? 
+204 testtypebefore5 character 0 What type of test was done? (Test 5) 
+205 testreportedresult1before5 haven_labelled 2769 Do you know what the test result was? 
+206 phonenum_yesno haven_labelled 21 Is there a phone number we can call to reach you? 
+207 livesameplace haven_labelled 1393 Do you and the patient stay or live in the same place? 
+208 preferedmoment haven_labelled 416 What time of day do you prefer? 
+209 preferedtime character 0 Time 
+210 desc_time character 0 Comments 
+211 intake haven_labelled 21 S: Please confirm that the intake interview is complete. 
+212 indiv haven_labelled 118 S: Please confirm the name of the respondent from the first part of this inter 
+213 respondentavailable numeric 123 S: Is the respondent available to continue with the (exit) interview at the CSC 
+214 records haven_labelled 330 Could I please see the paper records of your CSCom visit? 
+215 whichrecords character 0 S: Which records are available? Check all that apply. 
+216 whichrecords_1 haven_labelled 580 Medical test(s) 
+217 whichrecords_2 haven_labelled 580 Diagnosis 
+218 whichrecords_3 haven_labelled 580 Prescription/Bill 
+219 interventionreceived character 0 S: if the intervention is currently taking place at this CSCOM, please record i 
+220 interventionreceived_1 haven_labelled 330 Voucher received but not used 
+221 interventionreceived_2 haven_labelled 330 Voucher received and used 
+222 interventionreceived_3 haven_labelled 330 Patient video seen 
+223 interventionreceived_4 haven_labelled 330 No interv received (incl. no interv day) 
+224 reportedtests_1 haven_labelled 1577 During this CSCom visit, was any blood taken from you for testing? It might hav 
+225 reportedtests_2 haven_labelled 1523 During the CSCom visit, was any blood from {namepatient} for testing? It might 
+226 testtypereported1 haven_labelled 1518 What type of test was done? (Test 1) 
+227 desc_testtypereported1 character 0 Specify other test: 
+228 desc_testtypereportedT1_c1 haven_labelled 2752 1 desc_testtypereportedT1_c 
+229 testreportedbloodafter1 haven_labelled 2589 What was done with the blood after it was collected? 
+230 testreportedduration1 numeric 1518 How much time did the test approximately take, from taking blood until getting 
+231 testreported1result1 haven_labelled 1622 Do you know what the test result was? 
+232 testreported2result1 haven_labelled 2737 Do you know what the test result was? 
+233 testreportedprice1 numeric 185 How much money did you pay for this test? 
+234 otherreportedtest2 haven_labelled 1518 Were any other blood tests done/ordered? 
+235 testtypereported2 haven_labelled 2474 What type of test was done? (Test 2) 
+236 desc_testtypereported2 character 0 Specify other test: 
+237 desc_testtypereportedT1_c2 haven_labelled 2744 2 desc_testtypereportedT1_c 
+238 testreportedbloodafter2 haven_labelled 2759 What was done with the blood after it was collected? 
+239 testreportedduration2 numeric 2474 How much time did the test approximately take, from taking blood until getting 
+240 testreported1result2 haven_labelled 2529 Do you know what the test result was? 
+241 testreported2result2 haven_labelled 2725 Do you know what the test result was? 
+242 testreportedprice2 numeric 77 How much money did you pay for this test? 
+243 otherreportedtest3 haven_labelled 2474 Were any other blood tests done/ordered? 
+244 testtypereported3 haven_labelled 2707 What type of test was done? (Test 3) 
+245 desc_testtypereported3 character 0 Specify other test: 
+246 desc_testtypereportedT1_c3 haven_labelled 2755 3 desc_testtypereportedT1_c 
+247 testreportedduration3 numeric 2707 How much time did the test approximately take, from taking blood until getting 
+248 testreported1result3 haven_labelled 2734 Do you know what the test result was? 
+249 testreported2result3 haven_labelled 2743 Do you know what the test result was? 
+250 testreportedprice3 numeric 19 How much money did you pay for this test? 
+251 otherreportedtest4 haven_labelled 2707 Were any other blood tests done/ordered? 
+252 testtypereported4 haven_labelled 2764 What type of test was done? (Test 4) 
+253 testreportedduration4 numeric 2764 How much time did the test approximately take, from taking blood until getting 
+254 testreported1result4 haven_labelled 2768 Do you know what the test result was? 
+255 testreported2result4 haven_labelled 2766 Do you know what the test result was? 
+256 testreportedprice4 numeric 1 How much money did you pay for this test? 
+257 otherreportedtest5 haven_labelled 2764 Were any other blood tests done/ordered? 
+258 testtypereported5 haven_labelled 2769 What type of test was done? (Test 5) 
+259 testreportedduration5 numeric 2769 How much time did the test approximately take, from taking blood until getting 
+260 testreported2result5 haven_labelled 2769 Do you know what the test result was? 
+261 testreportedprice5 numeric 0 How much money did you pay for this test? 
+262 otherreportedtest6 haven_labelled 2769 Were any other blood tests done/ordered? 
+263 recordedtests1 haven_labelled 1674 S: Are there any blood tests stated on the record? 
+264 testtyperecorded1 haven_labelled 2360 S: What type of test done? (Test 1 on paper record) 
+265 desc_testtyperecorded1 character 0 Specify other test: 
+266 desc_testtyperecordedT1_c1 haven_labelled 2758 1 desc_testtyperecordedT1_c 
+267 testrecorded1result1 numeric 2382 S: Which was the result? 
+268 testrecorded2result1 numeric 2748 S: Which was the result? 
+269 testrecordedprice1 numeric 153 S: Price stated on the record 
+270 otherrecordedtest2 haven_labelled 2360 S: Is there another blood test on the record? 
+271 testtyperecorded2 haven_labelled 2580 S: What type of test done? (Test 2 on paper record) 
+272 desc_testtyperecorded2 character 0 Specify other test: 
+273 desc_testtyperecordedT1_c2 haven_labelled 2752 2 desc_testtyperecordedT1_c 
+274 testrecorded1result2 numeric 2610 S: Which was the result? 
+275 testrecorded2result2 numeric 2740 S: Which was the result? 
+276 testrecordedprice2 numeric 77 S: Price stated on the record 
+277 otherrecordedtest3 haven_labelled 2580 S: Is there another blood test on the record? 
+278 testtyperecorded3 haven_labelled 2736 S: What type of test done? (Test 3 on paper record) 
+279 desc_testtyperecorded3 character 0 Specify other test: 
+280 desc_testtyperecordedT1_c3 haven_labelled 2763 3 desc_testtyperecordedT1_c 
+281 testrecorded1result3 numeric 2751 S: Which was the result? 
+282 testrecorded2result3 numeric 2755 S: Which was the result? 
+283 testrecordedprice3 numeric 14 S: Price stated on the record 
+284 otherrecordedtest4 haven_labelled 2736 S: Is there another blood test on the record? 
+285 testtyperecorded4 haven_labelled 2767 S: What type of test done? (Test 4 on paper record) 
+286 desc_testtyperecorded4 character 0 Specify other test: 
+287 desc_testtyperecordedT1_c4 haven_labelled 2769 4 desc_testtyperecordedT1_c 
+288 testrecorded2result4 numeric 2767 S: Which was the result? 
+289 testrecordedprice4 numeric 1 S: Price stated on the record 
+290 otherrecordedtest5 haven_labelled 2767 S: Is there another blood test on the record? 
+291 testtyperecorded5 haven_labelled 2768 S: What type of test done? (Test 5 on paper record) 
+292 desc_testtyperecorded5 character 0 Specify other test: 
+293 desc_testtyperecordedT1_c5 haven_labelled 2769 5 desc_testtyperecordedT1_c 
+294 testrecorded2result5 numeric 2768 S: Which was the result? 
+295 testrecordedprice5 numeric 1 S: Price stated on the record 
+296 otherrecordedtest6 haven_labelled 2768 S: Is there another blood test on the record? 
+297 testtyperecorded6 haven_labelled 2769 S: What type of test done? (Test 6 on paper record) 
+298 desc_testtyperecorded6 character 0 Specify other test: 
+299 desc_testtyperecordedT1_c6 haven_labelled 2769 6 desc_testtyperecordedT1_c 
+300 testrecorded2result6 numeric 2769 S: Which was the result? 
+301 testrecordedprice6 numeric 1 S: Price stated on the record 
+302 otherrecordedtest7 haven_labelled 2769 S: Is there another blood test on the record? 
+303 testtyperecorded7 haven_labelled 2769 S: What type of test done? (Test 7 on paper record) 
+304 desc_testtyperecorded7 character 0 Specify other test: 
+305 desc_testtyperecordedT1_c7 haven_labelled 2769 7 desc_testtyperecordedT1_c 
+306 testrecorded2result7 numeric 2769 S: Which was the result? 
+307 testrecordedprice7 numeric 1 S: Price stated on the record 
+308 otherrecordedtest8 haven_labelled 2769 S: Is there another blood test on the record? 
+309 testtyperecorded8 haven_labelled 2769 S: What type of test done? (Test 8 on paper record) 
+310 desc_testtyperecorded8 character 0 Specify other test: 
+311 desc_testtyperecordedT1_c8 haven_labelled 2769 8 desc_testtyperecordedT1_c 
+312 testrecorded2result8 numeric 2769 S: Which was the result? 
+313 testrecordedprice8 numeric 1 S: Price stated on the record 
+314 otherrecordedtest9 haven_labelled 2769 S: Is there another blood test on the record? 
+315 testtyperecorded9 haven_labelled 2769 S: What type of test done? (Test 9 on paper record) 
+316 desc_testtyperecorded9 character 0 Specify other test: 
+317 desc_testtyperecordedT1_c9 haven_labelled 2769 9 desc_testtyperecordedT1_c 
+318 testrecorded2result9 numeric 2769 S: Which was the result? 
+319 testrecordedprice9 numeric 1 S: Price stated on the record 
+320 otherrecordedtest10 haven_labelled 2769 S: Is there another blood test on the record? 
+321 testtyperecorded10 haven_labelled 2769 S: What type of test done? (Test 10 on paper record) 
+322 desc_testtyperecorded10 character 0 Specify other test: 
+323 desc_testtyperecordedT1_c10 haven_labelled 2769 10 desc_testtyperecordedT1_c 
+324 testrecorded2result10 numeric 2769 S: Which was the result? 
+325 testrecordedprice10 numeric 1 S: Price stated on the record 
+326 otherdiagnostictests haven_labelled 580 Were any other diagnostic tests performed or samples taken? 
+327 whichotherdiagnostictests character 0 Which tests? 
+328 whichotherdiagnostictests_1 haven_labelled 2713 Urine 
+329 whichotherdiagnostictests_2 haven_labelled 2713 Stool 
+330 whichotherdiagnostictests_3 haven_labelled 2713 Lung /breathing test (stethoscope) 
+331 whichotherdiagnostictests_4 haven_labelled 2713 Weight 
+332 whichotherdiagnostictests_5 haven_labelled 2713 Height 
+333 whichotherdiagnostictests_6 haven_labelled 2713 Arm circumference 
+334 whichotherdiagnostictests_7 haven_labelled 2713 Counting breaths 
+335 whichotherdiagnostictests_8 haven_labelled 2713 Squeezing foot 
+336 whichotherdiagnostictests_9 haven_labelled 2713 Skin pinch 
+337 whichotherdiagnostictests__97 haven_labelled 2713 Other 
+338 desc_otherdiagnostictest character 0 Specify other test: 
+339 desc_otherdiagnostictestT1_c haven_labelled 2758 desc_otherdiagnostictestT1_c 
+340 testnotdone haven_labelled 330 Were there any other tests the doctor mentioned or recommended that you couldn 
+341 testtypenotdone character 0 Which tests? 
+342 testtypenotdone_malaria__test_ty haven_labelled 2711 Malaria_(test_type_not_specified) 
+343 testtypenotdone_rdt haven_labelled 2711 RDT 
+344 testtypenotdone_goutte_epaisse_o haven_labelled 2711 Goutte_epaisse_or_Frottis_Sanguin 
+345 testtypenotdone_widal haven_labelled 2711 Widal 
+346 testtypenotdone_typhoid_test haven_labelled 2711 Typhoid_test 
+347 testtypenotdone_blood_panel haven_labelled 2711 Blood_panel 
+348 testtypenotdone_syphilis haven_labelled 2711 Syphilis 
+349 testtypenotdone_hepatitis haven_labelled 2711 Hepatitis 
+350 testtypenotdone_sickle_cell_dise haven_labelled 2711 Sickle_cell_disease 
+351 testtypenotdone_other haven_labelled 2711 Other 
+352 testtypenotdone_unspecified_bloo haven_labelled 2711 Unspecified_blood_test_(purpose_not_known) 
+353 desc_testtypenotdone character 0 Specify other test: 
+354 desc_testtypenotdoneT1_c haven_labelled 2738 desc_testtypenotdoneT1_c 
+355 testnotdonereasons haven_labelled 2711 Why was the test not done? 
+356 desc_testnotdonereasons character 0 Specify other reason: 
+357 reporteddiagnosis character 0 What illness did the doctor diagnose? 
+358 reporteddiagnosis_1 haven_labelled 330 Simple malaria 
+359 reporteddiagnosis_2 haven_labelled 330 Severe malaria 
+360 reporteddiagnosis_3 haven_labelled 330 Malaria (simple or severe not specified) 
+361 reporteddiagnosis_4 haven_labelled 330 Typhoid Fever 
+362 reporteddiagnosis_5 haven_labelled 330 Bronchitis 
+363 reporteddiagnosis_6 haven_labelled 330 Influenza/flu 
+364 reporteddiagnosis_7 haven_labelled 330 (Acute) respiratory infection (IRA) 
+365 reporteddiagnosis_8 haven_labelled 330 Pneumonia 
+366 reporteddiagnosis_9 haven_labelled 330 Dysentery 
+367 reporteddiagnosis_10 haven_labelled 330 Gastrointestinal infection, stomach infection 
+368 reporteddiagnosis_11 haven_labelled 330 Cardiovascular disease 
+369 reporteddiagnosis_12 haven_labelled 330 High blood pressure 
+370 reporteddiagnosis_13 haven_labelled 330 Diabetes 
+371 reporteddiagnosis_14 haven_labelled 330 Measles 
+372 reporteddiagnosis_15 haven_labelled 330 Ear infection 
+373 reporteddiagnosis__97 haven_labelled 330 Other 
+374 reporteddiagnosis__99 haven_labelled 330 Was told but cannot remember or did not understand 
+375 reporteddiagnosis__100 haven_labelled 330 Was not told 
+376 reporteddiagnosis__88 haven_labelled 335 Patient has no acute illness 
+377 desc_reporteddiagnosis character 0 Specify other diagnosis: 
+378 desc_reporteddiagnosisD1_c haven_labelled 2580 desc_reporteddiagnosisD1_c 
+379 recordeddiagnosis character 0 S: What is the (written) diagnosis? 
+380 recordeddiagnosis_1 haven_labelled 1849 Simple malaria 
+381 recordeddiagnosis_2 haven_labelled 1849 Severe malaria 
+382 recordeddiagnosis_3 haven_labelled 1849 Malaria (simple or severe not specified) 
+383 recordeddiagnosis_4 haven_labelled 1849 Typhoid Fever 
+384 recordeddiagnosis_5 haven_labelled 1849 Bronchitis 
+385 recordeddiagnosis_6 haven_labelled 1849 Influenza/flu 
+386 recordeddiagnosis_7 haven_labelled 1849 Respiratory infection (IRA) 
+387 recordeddiagnosis_8 haven_labelled 1849 Pneumonia 
+388 recordeddiagnosis_9 haven_labelled 1849 Dysentery 
+389 recordeddiagnosis_10 haven_labelled 1849 Gastrointestinal infection, stomach infection 
+390 recordeddiagnosis_11 haven_labelled 1849 Cardiovascular disease 
+391 recordeddiagnosis_12 haven_labelled 1849 High blood pressure 
+392 recordeddiagnosis_13 haven_labelled 1849 Diabetes 
+393 recordeddiagnosis_14 haven_labelled 1849 Measles 
+394 recordeddiagnosis_15 haven_labelled 1849 Ear infection 
+395 recordeddiagnosis__100 haven_labelled 1849 No diagnosis specified 
+396 recordeddiagnosis__97 haven_labelled 1849 Other 
+397 desc_recordeddiagnosis character 0 Specify other diagnosis: 
+398 desc_recordeddiagnosisD1_c haven_labelled 2614 desc_recordeddiagnosisD1_c 
+399 malaria haven_labelled 1622 Did the doctor or other staff mention malaria? 
+400 severemalaria haven_labelled 2466 Did the doctor mention severe Malaria? 
+pre
+        knowmedisfora                    CC         knowmedisforb 
+                  285                   272                   266 
+                 desc                     H                     U 
+                  263                   143                   143 
+              NBcscom                 NBref    knowmedisforaftera 
+                  142                   142                   114 
+   knowmedisforafterb                RXdesc                  MISS 
+                  114                   112                    79 
+                cscom                    CL        knowtestisfora 
+                   61                    59                    55 
+                 date             costitemb             costitemd 
+                   45                    42                    42 
+           officerdum                  cost                    DD 
+                   40                    38                    35 
+       knowtestisforb                     M                strata 
+                   33                    30                    30 
+               taking      helpedcuringmeda            takingmeda 
+                   29                    28                    28 
+     helpedcuringmedb            takingmedb                 treat 
+                   26                    26                    21 
+    previousdiagnosis     reporteddiagnosis               patient 
+                   20                    20                    18 
+    recordeddiagnosis              reported          thinkillness 
+                   18                    18                    18 
+       whatillnesswas               RXtreat                 equip 
+                   18                    17                    16 
+betterevenwithoutmeda             costitema             isantimal 
+                   15                    15                    15 
+                 item               namemed        purchaseditema 
+                   15                    15                    15 
+             recorded           RXisantimal             RXnamemed 
+                   15                    15                    15 
+             typeitem betterevenwithoutmedb        purchaseditemb 
+                   15                    14                    14 
+       purchaseditemd               RXequip          whynottaking 
+                   14                    14                    14 
+            costitemc        purchaseditemc     reasonnotbuyitema 
+                   13                    13                    13 
+    reasonnotbuyitemb          testrecorded        wouldpaiditema 
+                   13                    13                    13 
+CC vars:
+CC1 0 Fever -- missings coded to sample mean (dropme=0) 
+CC3 0 Chills or Excessive Sweating -- missings coded to sample mean (dropme=0) 
+CC5 0 Nausea, Vomiting, or Diarrhea -- missings coded to sample mean (dropme=0) 
+CC7 0 Reduced Appetite -- missings coded to sample mean (dropme=0) 
+CC9 0 Headache -- missings coded to sample mean (dropme=0) 
+CC11 0 Cough -- missings coded to sample mean (dropme=0) 
+CC13 0 Weakness, Fatigue, or Reduced Consciousness -- missings coded to sample mean (dr 
+CC15 0 Duration of Illness in Days -- missings coded to sample mean (dropme=0) 
+CC17 0 daysillness99_sq -- missings coded to sample mean (dropme=0) 
+CC19 0 Age Patient -- missings coded to sample mean (dropme=0) 
+CC21 0 What is the age of the patient (squared)? -- missings coded to sample mean (drop 
+CC23 0 Patient Under 5 Years Old -- missings coded to sample mean (dropme=0) 
+CC25 0 Patient is Male -- missings coded to sample mean (dropme=0) 
+CC27 0 Patient is Pregnant -- missings coded to sample mean (dropme=0) 
+CC28 0 Dummy=1 if pregnancy missing 
+CC29 0 Patient Answered Clinic Survey -- missings coded to sample mean (dropme=0) 
+CC31 0 Male (Resp.) -- missings coded to sample mean (dropme=0) 
+CC33 0 Ethnic group: Bambara -- missings coded to sample mean (dropme=0) 
+CC34 0 Dummy=1 if ethnic_bambara missing 
+CC35 0 Respondent Speaks French -- missings coded to sample mean (dropme=0) 
+CC37 0 Respondent is Literate in French -- missings coded to sample mean (dropme=0) 
+CC39 0 Respondent Has Primary Education or Less -- missings coded to sample mean (dropm 
+CC41 0 In home survey -- missings coded to sample mean (dropme=0) 
+vars with x: 366 
+ [1] "explaintests_H"           "explaindiagnosis_1_H"    
+ [3] "explaindiagnosis_2_H"     "records_rxbill"          
+ [5] "amoxicillin"              "RXamoxicillin"           
+ [7] "H_amoxicillin"            "U_amoxicillin"           
+ [9] "NBref_amoxicillin"        "NBcscom_amoxicillin"     
+[11] "ceftriaxone"              "RXceftriaxone"           
+[13] "H_ceftriaxone"            "U_ceftriaxone"           
+[15] "NBref_ceftriaxone"        "NBcscom_ceftriaxone"     
+[17] "ciprofloxacine"           "RXciprofloxacine"        
+[19] "H_ciprofloxacine"         "U_ciprofloxacine"        
+[21] "NBref_ciprofloxacine"     "NBcscom_ciprofloxacine"  
+[23] "dexamethasone"            "RXdexamethasone"         
+[25] "H_dexamethasone"          "U_dexamethasone"         
+[27] "NBref_dexamethasone"      "NBcscom_dexamethasone"   
+[29] "amodix"                   "RXamodix"                
+[31] "H_amodix"                 "U_amodix"                
+[33] "NBref_amodix"             "NBcscom_amodix"          
+[35] "amoxicilline_cla"         "RXamoxicilline_cla"      
+[37] "H_amoxicilline_cla"       "U_amoxicilline_cla"      
+[39] "NBref_amoxicilline_cla"   "NBcscom_amoxicilline_cla"
+[41] "amoxitem"                 "RXamoxitem"              
+[43] "H_amoxitem"               "U_amoxitem"              
+[45] "NBref_amoxitem"           "NBcscom_amoxitem"        
+[47] "bactox"                   "RXbactox"                
+[49] "H_bactox"                 "U_bactox"                
+== records 
+    Min.  1st Qu.   Median     Mean  3rd Qu.     Max.      NAs 
+-98.0000   1.0000   1.0000   0.6516   1.0000   2.0000      330 
+
+ -98    1    2 <NA> 
+  11 2190  239  330 
+== malaria 
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max.     NAs 
+0.00000 0.00000 0.00000 0.04268 0.00000 1.00000    1622 
+
+   0    1 <NA> 
+1099   49 1622 
+== patient 
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max.     NAs 
+      1       1       1       1       1       1      17 
+
+   1 <NA> 
+2753   17 
+== home 
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max.     NAs 
+      1       1       1       1       1       1    1187 
+
+   1 <NA> 
+1583 1187 
+== patient_voucher 
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+ 0.0000  0.0000  0.0000  0.3325  1.0000  1.0000 
+
+   0    1 <NA> 
+1849  921    0 
+== doctor_voucher 
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+ 0.0000  0.0000  0.0000  0.3487  1.0000  1.0000 
+
+   0    1 <NA> 
+1804  966    0 
+== date 
+   Length  N.unique   N.blank Min.nchar Max.nchar 
+     2770        37        17         0        12 
+
+              Dec 1, 2016 Dec 10, 2016 Dec 13, 2016 Dec 14, 2016 Dec 15, 2016 
+          17           73           46           81           46           78 
+Dec 16, 2016 Dec 17, 2016  Dec 2, 2016 Dec 20, 2016 
+          97          117           74          156 
+== cscomnum_OS 
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+   1.00   10.00   27.00   27.48   42.00   61.00 
+
+  1   2   3   4   5   6   7   8   9  10 
+ 63  19 130  75  36  15 159  60  81 123 
+== selected_home_survey 
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max.     NAs 
+ 0.0000  1.0000  1.0000  0.8197  1.0000  1.0000     491 
+
+   0    1 <NA> 
+ 411 1868  491 
+remaining names (401+):
+costconsultation item1 typeitem1 namemed1 desc_othernamemed1 desc_othernamemedM1_c1 desc_othernamemedE1_c1 desc_othernamemedE2_c1 desc_othernamemedE3_c1 equip1 desc_otherequip1 desc_otherequipE1_c1 desc_otherequipM1_c1 purchaseditema1 purchaseditemb1 purchaseditemc1 purchaseditemd1 reasonnotbuyitema1 reasonnotbuyitemb1 reasonnotbuyitemc1 reasonnotbuyitemd1 desc_otherreasonnotbuy1 costitema1 costitemb1 costitemc1 costitemd1 wouldpaiditema1 wouldpaiditemb1 item2 typeitem2 namemed2 desc_othernamemed2 desc_othernamemedM1_c2 desc_othernamemedE1_c2 equip2 desc_otherequip2 desc_otherequipE1_c2 desc_otherequipE2_c2 desc_otherequipE3_c2 purchaseditema2 purchaseditemb2 purchaseditemc2 purchaseditemd2 reasonnotbuyitema2 reasonnotbuyitemb2 reasonnotbuyitemc2 desc_otherreasonnotbuy2 costitema2 costitemb2 costitemc2 costitemd2 wouldpaiditema2 wouldpaiditemb2 item3 typeitem3 namemed3 desc_othernamemed3 desc_othernamemedM1_c3 desc_othernamemedE1_c3 equip3 desc_otherequip3 desc_otherequipE1_c3 desc_otherequipE2_c3 desc_otherequipE3_c3 desc_otherequipM1_c3 purchaseditema3 purchaseditemb3 purchaseditemc3 purchaseditemd3 reasonnotbuyitema3 reasonnotbuyitemb3 reasonnotbuyitemc3 reasonnotbuyitemd3 desc_otherreasonnotbuy3 costitema3 costitemb3 costitemc3 costitemd3 wouldpaiditema3 wouldpaiditemb3 item4 typeitem4 namemed4 desc_othernamemed4 desc_othernamemedM1_c4 desc_othernamemedE1_c4 equip4 desc_otherequip4 desc_otherequipE1_c4 desc_otherequipE2_c4 desc_otherequipE3_c4 desc_otherequipM1_c4 purchaseditema4 purchaseditemb4 purchaseditemc4 purchaseditemd4 reasonnotbuyitema4 reasonnotbuyitemb4 reasonnotbuyitemc4 reasonnotbuyitemd4 desc_otherreasonnotbuy4 costitema4 costitemb4 costitemc4 costitemd4 wouldpaiditema4 wouldpaiditemb4 item5 typeitem5 namemed5 desc_othernamemed5 desc_othernamemedM1_c5 desc_othernamemedE1_c5 equip5 desc_otherequip5 desc_otherequipE1_c5 desc_otherequipE2_c5 desc_otherequipE3_c5 desc_otherequipE4_c5 desc_otherequipM1_c5 purchaseditema5 purchaseditemb5 purchaseditemc5 purchaseditemd5 reasonnotbuyitema5 reasonnotbuyitemb5 reasonnotbuyitemc5 reasonnotbuyitemd5 desc_otherreasonnotbuy5 costitema5 costitemb5 costitemc5 costitemd5 wouldpaiditema5 wouldpaiditemb5 item6 typeitem6 namemed6 desc_othernamemed6 desc_othernamemedM1_c6 desc_othernamemedE1_c6 equip6 desc_otherequip6 desc_otherequipE1_c6 desc_otherequipE2_c6 desc_otherequipE3_c6 desc_otherequipE4_c6 desc_otherequipM1_c6 purchaseditema6 purchaseditemb6 purchaseditemc6 purchaseditemd6 reasonnotbuyitema6 reasonnotbuyitemb6 reasonnotbuyitemc6 desc_otherreasonnotbuy6 costitema6 costitemb6 costitemc6 costitemd6 wouldpaiditema6 wouldpaiditemb6 item7 typeitem7 namemed7 desc_othernamemed7 desc_othernamemedM1_c7 desc_othernamemedE1_c7 desc_othernamemedE2_c7 equip7 desc_otherequip7 desc_otherequipE1_c7 desc_otherequipE2_c7 desc_otherequipE3_c7 desc_otherequipE4_c7 desc_otherequipM1_c7 purchaseditema7 purchaseditemb7 purchaseditemc7 purchaseditemd7 reasonnotbuyitema7 reasonnotbuyitemb7 reasonnotbuyitemc7 reasonnotbuyitemd7 desc_otherreasonnotbuy7 costitema7 costitemb7 costitemc7 costitemd7 wouldpaiditema7 wouldpaiditemb7 item8 typeitem8 namemed8 desc_othernamemed8 desc_othernamemedM1_c8 desc_othernamemedE1_c8 equip8 desc_otherequip8 desc_otherequipE1_c8 desc_otherequipE2_c8 desc_otherequipE3_c8 desc_otherequipE4_c8 desc_otherequipM1_c8 purchaseditema8 purchaseditemb8 purchaseditemc8 purchaseditemd8 reasonnotbuyitema8 reasonnotbuyitemb8 reasonnotbuyitemc8 reasonnotbuyitemd8 costitema8 costitemb8 costitemc8 costitemd8 wouldpaiditema8 wouldpaiditemb8 item9 typeitem9 namemed9 desc_othernamemed9 desc_othernamemedM1_c9 desc_othernamemedE1_c9 desc_othernamemedE2_c9 equip9 desc_otherequip9 desc_otherequipE1_c9 desc_otherequipE2_c9 desc_otherequipE3_c9 desc_otherequipE4_c9 desc_otherequipM1_c9 purchaseditema9 purchaseditemb9 purchaseditemc9 purchaseditemd9 reasonnotbuyitema9 reasonnotbuyitemb9 reasonnotbuyitemc9 reasonnotbuyitemd9 costitema9 costitemb9 costitemc9 costitemd9 wouldpaiditema9 wouldpaiditemb9 item10 typeitem10 namemed10 desc_othernamemed10 desc_othernamemedM1_c10 equip10 desc_otherequip10 desc_otherequipE1_c10 desc_otherequipE2_c10 desc_otherequipE3_c10 desc_otherequipM1_c10 purchaseditema10 purchaseditemb10 purchaseditemc10 purchaseditemd10 reasonnotbuyitema10 reasonnotbuyitemb10 reasonnotbuyitemc10 costitema10 costitemb10 costitemc10 costitemd10 wouldpaiditema10 wouldpaiditemb10 item11 typeitem11 namemed11 desc_othernamemed11 desc_othernamemedM1_c11 equip11 desc_otherequip11 desc_otherequipE1_c11 desc_otherequipE2_c11 purchaseditema11 purchaseditemb11 purchaseditemc11 purchaseditemd11 reasonnotbuyitema11 reasonnotbuyitemb11 reasonnotbuyitemc11 costitema11 costitemb11 costitemc11 costitemd11 wouldpaiditema11 wouldpaiditemb11 item12 typeitem12 namemed12 desc_othernamemed12 desc_othernamemedM1_c12 equip12 desc_otherequip12 desc_otherequipE1_c12 desc_otherequipE2_c12 purchaseditema12 purchaseditemb12 purchaseditemc12 purchaseditemd12 reasonnotbuyitema12 reasonnotbuyitemb12 costitema12 costitemb12 costitemc12 costitemd12 wouldpaiditema12 wouldpaiditemb12 item13 typeitem13 namemed13 desc_othernamemed13 desc_othernamemedM1_c13 desc_othernamemedE1_c13 desc_othernamemedE2_c13 equip13 desc_otherequip13 desc_otherequipE1_c13 desc_otherequipE2_c13 desc_otherequipE3_c13 desc_otherequipM1_c13 purchaseditema13 purchaseditemb13 purchaseditemc13 purchaseditemd13 reasonnotbuyitema13 reasonnotbuyitemb13 costitema13 costitemb13 costitemc13 costitemd13 wouldpaiditema13 wouldpaiditemb13 item14 typeitem14 namemed14 desc_othernamemed14 desc_othernamemedM1_c14 equip14 desc_otherequip14 desc_otherequipE1_c14 desc_otherequipE2_c14 purchaseditema14 purchaseditemb14 purchaseditemd14 costitema14 costitemb14 costitemd14 item15 typeitem15 namemed15 purchaseditema15 costitema15 totalsum1 totalsum2 otheritem othertypeitem othernamemednotbought desc_othernamemednotbought desc_othernamemednotboughtM1_c desc_othernamemednotboughtM2_c othertypemed desc_othertypemed desc_othertypemedM1_c otherequip pregnant1 pregnant2 trimester1 trimester2 observation1 observation2 ivinjection1 ivinjection2 hospital1 hospital2 num_symptoms submissiondate_H starttime_H endtime_H duration_H sameindiv1_H sameindiv2_H roomshousehold_H owndwelling_H estimatedrent_H rentamount_H rentperiodowner_H rentperiodrenter_H members14oryounger_H members15orolder_H membersjob_H totalincome_H radios_H tvs_H motorcycles_H mosquitonets_H sourcedrinkingwater_H desc_othersource_H walls_H desc_otherwalls_H roof_H desc_otherroof_H floor_H desc_otherfloor_H feverhome_H chillshome_H nauseahome_H diarrheahome_H digestiveproblemshome_H poorappetitehome_H headachehome_H stiffnessneckhome_H earpainhome_H swellingcheekshome_H nosebleedhome_H coughhome_H productivecoughhome_H breathinghome_H skinhome_H eyeshome_H mouthulcershome_H jaundicehome_H weaknesshome_H prostationhome_H musclestiffnesshome_H convulsionshome_H consciousnesshome_H fevertypehome_H headachetypehome_H illnesschange_H knowtestisfora1_H knowtestisfora1_1_H knowtestisfora1_2_H knowtestisfora1_3_H knowtestisfora1_4_H knowtestisfora1_5_H knowtestisfora1_6_H knowtestisfora1_7_H knowtestisfora1_8_H knowtestisfora1__99_H knowtestisfora1__100_H testnecessarya1_1_H testnecessarya1_2_H knowtestisforb1_H knowtestisforb1_1_H knowtestisforb1_2_H knowtestisforb1_3_H knowtestisforb1_4_H knowtestisforb1_5_H knowtestisforb1_6_H knowtestisforb1_7_H knowtestisforb1_8_H knowtestisforb1__99_H knowtestisforb1__100_H testnecessaryb1_1_H testnecessaryb1_2_H knowtestisfora2_H knowtestisfora2_1_H knowtestisfora2_2_H knowtestisfora2_3_H knowtestisfora2_4_H knowtestisfora2_5_H knowtestisfora2_6_H knowtestisfora2_7_H knowtestisfora2_8_H knowtestisfora2__99_H knowtestisfora2__100_H testnecessarya2_1_H testnecessarya2_2_H knowtestisforb2_H knowtestisforb2_1_H knowtestisforb2_2_H knowtestisforb2_3_H knowtestisforb2_4_H knowtestisforb2_5_H knowtestisforb2_6_H knowtestisforb2_7_H knowtestisforb2_8_H knowtestisforb2__99_H knowtestisforb2__100_H testnecessaryb2_1_H testnecessaryb2_2_H knowtestisfora3_H knowtestisfora3_1_H knowtestisfora3_2_H knowtestisfora3_3_H knowtestisfora3_4_H knowtestisfora3_5_H knowtestisfora3_6_H knowtestisfora3_7_H knowtestisfora3_8_H knowtestisfora3__99_H knowtestisfora3__100_H testnecessarya3_1_H testnecessarya3_2_H knowtestisforb3_H knowtestisforb3_1_H knowtestisforb3_2_H knowtestisforb3_3_H knowtestisforb3_4_H knowtestisforb3_5_H knowtestisforb3_6_H knowtestisforb3_7_H knowtestisforb3_8_H knowtestisforb3__99_H knowtestisforb3__100_H testnecessaryb3_1_H testnecessaryb3_2_H knowtestisfora4_H knowtestisfora4_1_H knowtestisfora4_2_H knowtestisfora4_3_H knowtestisfora4_4_H knowtestisfora4_5_H knowtestisfora4_6_H knowtestisfora4_7_H knowtestisfora4_8_H knowtestisfora4__99_H knowtestisfora4__100_H testnecessarya4_1_H testnecessarya4_2_H knowtestisfora5_H knowtestisfora5_1_H knowtestisfora5_2_H knowtestisfora5_3_H knowtestisfora5_4_H knowtestisfora5_5_H knowtestisfora5_6_H knowtestisfora5_7_H knowtestisfora5_8_H knowtestisfora5__99_H knowtestisfora5__100_H testnecessarya5_1_H knowmedisfora1_H knowmedisfora1_1_H knowmedisfora1_2_H knowmedisfora1_3_H knowmedisfora1_4_H knowmedisfora1_5_H knowmedisfora1_6_H knowmedisfora1_7_H knowmedisfora1_8_H knowmedisfora1_9_H knowmedisfora1_10_H knowmedisfora1_11_H knowmedisfora1_12_H knowmedisfora1_13_H knowmedisfora1_14_H knowmedisfora1_15_H knowmedisfora1__97_H knowmedisfora1__99_H knowmedisfora1__100_H knowmedisforb1_H knowmedisforb1_1_H knowmedisforb1_2_H knowmedisforb1_3_H knowmedisforb1_4_H knowmedisforb1_5_H knowmedisforb1_6_H knowmedisforb1_7_H knowmedisforb1_8_H knowmedisforb1_9_H knowmedisforb1_10_H knowmedisforb1_11_H knowmedisforb1_12_H knowmedisforb1_13_H knowmedisforb1_14_H knowmedisforb1_15_H knowmedisforb1__97_H knowmedisforb1__99_H knowmedisforb1__100_H desc_otherknowmedisfora1_H desc_otherknowmedisforb1_H takingmeda1_1_H takingmeda1_2_H takingmedb1_1_H takingmedb1_2_H whynottaking1_H desc_otherwhynottakinga1_1_H desc_otherwhynottakinga1_2_H desc_otherwhynottakingb1_1_H helpedcuringmeda1_1_H helpedcuringmeda1_2_H helpedcuringmedb1_1_H helpedcuringmedb1_2_H betterevenwithoutmeda1_H betterevenwithoutmedb1_H knowmedisfora2_H knowmedisfora2_1_H knowmedisfora2_2_H knowmedisfora2_3_H knowmedisfora2_4_H knowmedisfora2_5_H knowmedisfora2_6_H knowmedisfora2_7_H knowmedisfora2_8_H knowmedisfora2_9_H knowmedisfora2_10_H knowmedisfora2_11_H knowmedisfora2_12_H knowmedisfora2_13_H knowmedisfora2_14_H knowmedisfora2_15_H knowmedisfora2__97_H knowmedisfora2__99_H knowmedisfora2__100_H knowmedisforb2_H knowmedisforb2_1_H knowmedisforb2_2_H knowmedisforb2_3_H knowmedisforb2_4_H knowmedisforb2_5_H knowmedisforb2_6_H knowmedisforb2_7_H knowmedisforb2_8_H knowmedisforb2_9_H knowmedisforb2_10_H knowmedisforb2_11_H knowmedisforb2_12_H knowmedisforb2_13_H knowmedisforb2_14_H knowmedisforb2_15_H knowmedisforb2__97_H knowmedisforb2__99_H knowmedisforb2__100_H desc_otherknowmedisfora2_H desc_otherknowmedisforb2_H takingmeda2_1_H takingmeda2_2_H takingmedb2_1_H takingmedb2_2_H whynottaking2_H desc_otherwhynottakinga2_1_H desc_otherwhynottakinga2_2_H desc_otherwhynottakingb2_1_H helpedcuringmeda2_1_H helpedcuringmeda2_2_H helpedcuringmedb2_1_H helpedcuringmedb2_2_H betterevenwithoutmeda2_H betterevenwithoutmedb2_H knowmedisfora3_H knowmedisfora3_1_H knowmedisfora3_2_H knowmedisfora3_3_H knowmedisfora3_4_H knowmedisfora3_5_H knowmedisfora3_6_H knowmedisfora3_7_H knowmedisfora3_8_H knowmedisfora3_9_H knowmedisfora3_10_H knowmedisfora3_11_H knowmedisfora3_12_H knowmedisfora3_13_H knowmedisfora3_14_H knowmedisfora3_15_H knowmedisfora3__97_H knowmedisfora3__99_H knowmedisfora3__100_H knowmedisforb3_H knowmedisforb3_1_H knowmedisforb3_2_H knowmedisforb3_3_H knowmedisforb3_4_H knowmedisforb3_5_H knowmedisforb3_6_H knowmedisforb3_7_H knowmedisforb3_8_H knowmedisforb3_9_H knowmedisforb3_10_H knowmedisforb3_11_H knowmedisforb3_12_H knowmedisforb3_13_H knowmedisforb3_14_H knowmedisforb3_15_H knowmedisforb3__97_H knowmedisforb3__99_H knowmedisforb3__100_H desc_otherknowmedisfora3_H desc_otherknowmedisforb3_H takingmeda3_1_H takingmeda3_2_H takingmedb3_1_H takingmedb3_2_H whynottaking3_H desc_otherwhynottakinga3_1_H desc_otherwhynottakinga3_2_H desc_otherwhynottakingb3_1_H desc_otherwhynottakingb3_2_H helpedcuringmeda3_1_H helpedcuringmeda3_2_H helpedcuringmedb3_1_H helpedcuringmedb3_2_H betterevenwithoutmeda3_H betterevenwithoutmedb3_H knowmedisfora4_H knowmedisfora4_1_H knowmedisfora4_2_H knowmedisfora4_3_H knowmedisfora4_4_H knowmedisfora4_5_H knowmedisfora4_6_H knowmedisfora4_7_H knowmedisfora4_8_H knowmedisfora4_9_H knowmedisfora4_10_H knowmedisfora4_11_H knowmedisfora4_12_H knowmedisfora4_13_H knowmedisfora4_14_H knowmedisfora4_15_H knowmedisfora4__97_H knowmedisfora4__99_H knowmedisfora4__100_H knowmedisforb4_H knowmedisforb4_1_H knowmedisforb4_2_H knowmedisforb4_3_H knowmedisforb4_4_H knowmedisforb4_5_H knowmedisforb4_6_H knowmedisforb4_7_H knowmedisforb4_8_H knowmedisforb4_9_H knowmedisforb4_10_H knowmedisforb4_11_H knowmedisforb4_12_H knowmedisforb4_13_H knowmedisforb4_14_H knowmedisforb4_15_H knowmedisforb4__97_H knowmedisforb4__99_H knowmedisforb4__100_H desc_otherknowmedisfora4_H desc_otherknowmedisforb4_H takingmeda4_1_H takingmeda4_2_H takingmedb4_1_H takingmedb4_2_H whynottaking4_H desc_otherwhynottakinga4_1_H desc_otherwhynottakinga4_2_H desc_otherwhynottakingb4_2_H helpedcuringmeda4_1_H helpedcuringmeda4_2_H helpedcuringmedb4_1_H helpedcuringmedb4_2_H betterevenwithoutmeda4_H betterevenwithoutmedb4_H knowmedisfora5_H knowmedisfora5_1_H knowmedisfora5_2_H knowmedisfora5_3_H knowmedisfora5_4_H knowmedisfora5_5_H knowmedisfora5_6_H knowmedisfora5_7_H knowmedisfora5_8_H knowmedisfora5_9_H knowmedisfora5_10_H knowmedisfora5_11_H knowmedisfora5_12_H knowmedisfora5_13_H knowmedisfora5_14_H knowmedisfora5_15_H knowmedisfora5__97_H knowmedisfora5__99_H knowmedisfora5__100_H knowmedisforb5_H knowmedisforb5_1_H knowmedisforb5_2_H knowmedisforb5_3_H knowmedisforb5_4_H knowmedisforb5_5_H knowmedisforb5_6_H knowmedisforb5_7_H knowmedisforb5_8_H knowmedisforb5_9_H knowmedisforb5_10_H knowmedisforb5_11_H knowmedisforb5_12_H knowmedisforb5_13_H knowmedisforb5_14_H knowmedisforb5_15_H knowmedisforb5__97_H knowmedisforb5__99_H knowmedisforb5__100_H desc_otherknowmedisfora5_H desc_otherknowmedisforb5_H takingmeda5_1_H takingmeda5_2_H takingmedb5_1_H takingmedb5_2_H whynottaking5_H desc_otherwhynottakinga5_1_H desc_otherwhynottakingb5_1_H desc_otherwhynottakingb5_2_H helpedcuringmeda5_1_H helpedcuringmeda5_2_H helpedcuringmedb5_1_H helpedcuringmedb5_2_H betterevenwithoutmeda5_H betterevenwithoutmedb5_H knowmedisfora6_H knowmedisfora6_1_H knowmedisfora6_2_H knowmedisfora6_3_H knowmedisfora6_4_H knowmedisfora6_5_H knowmedisfora6_6_H knowmedisfora6_7_H knowmedisfora6_8_H knowmedisfora6_9_H knowmedisfora6_10_H knowmedisfora6_11_H knowmedisfora6_12_H knowmedisfora6_13_H knowmedisfora6_14_H knowmedisfora6_15_H knowmedisfora6__97_H knowmedisfora6__99_H knowmedisfora6__100_H knowmedisforb6_H knowmedisforb6_1_H knowmedisforb6_2_H knowmedisforb6_3_H knowmedisforb6_4_H knowmedisforb6_5_H knowmedisforb6_6_H knowmedisforb6_7_H knowmedisforb6_8_H knowmedisforb6_9_H knowmedisforb6_10_H knowmedisforb6_11_H knowmedisforb6_12_H knowmedisforb6_13_H knowmedisforb6_14_H knowmedisforb6_15_H knowmedisforb6__97_H knowmedisforb6__99_H knowmedisforb6__100_H desc_otherknowmedisfora6_H desc_otherknowmedisforb6_H takingmeda6_1_H takingmeda6_2_H takingmedb6_1_H takingmedb6_2_H whynottaking6_H desc_otherwhynottakinga6_1_H desc_otherwhynottakinga6_2_H helpedcuringmeda6_1_H helpedcuringmeda6_2_H helpedcuringmedb6_1_H helpedcuringmedb6_2_H betterevenwithoutmeda6_H betterevenwithoutmedb6_H knowmedisfora7_H knowmedisfora7_1_H knowmedisfora7_2_H knowmedisfora7_3_H knowmedisfora7_4_H knowmedisfora7_5_H knowmedisfora7_6_H knowmedisfora7_7_H knowmedisfora7_8_H knowmedisfora7_9_H knowmedisfora7_10_H knowmedisfora7_11_H knowmedisfora7_12_H knowmedisfora7_13_H knowmedisfora7_14_H knowmedisfora7_15_H knowmedisfora7__97_H knowmedisfora7__99_H knowmedisfora7__100_H knowmedisforb7_H knowmedisforb7_1_H knowmedisforb7_2_H knowmedisforb7_3_H knowmedisforb7_4_H knowmedisforb7_5_H knowmedisforb7_6_H knowmedisforb7_7_H knowmedisforb7_8_H knowmedisforb7_9_H knowmedisforb7_10_H knowmedisforb7_11_H knowmedisforb7_12_H knowmedisforb7_13_H knowmedisforb7_14_H knowmedisforb7_15_H knowmedisforb7__97_H knowmedisforb7__99_H knowmedisforb7__100_H desc_otherknowmedisfora7_H takingmeda7_1_H takingmeda7_2_H takingmedb7_1_H takingmedb7_2_H whynottaking7_H desc_otherwhynottakinga7_1_H helpedcuringmeda7_1_H helpedcuringmeda7_2_H helpedcuringmedb7_1_H helpedcuringmedb7_2_H betterevenwithoutmeda7_H betterevenwithoutmedb7_H knowmedisfora8_H knowmedisfora8_1_H knowmedisfora8_2_H knowmedisfora8_3_H knowmedisfora8_4_H knowmedisfora8_5_H knowmedisfora8_6_H knowmedisfora8_7_H knowmedisfora8_8_H knowmedisfora8_9_H knowmedisfora8_10_H knowmedisfora8_11_H knowmedisfora8_12_H knowmedisfora8_13_H knowmedisfora8_14_H knowmedisfora8_15_H knowmedisfora8__97_H knowmedisfora8__99_H knowmedisfora8__100_H knowmedisforb8_H knowmedisforb8_1_H knowmedisforb8_2_H knowmedisforb8_3_H knowmedisforb8_4_H knowmedisforb8_5_H knowmedisforb8_6_H knowmedisforb8_7_H knowmedisforb8_8_H knowmedisforb8_9_H knowmedisforb8_10_H knowmedisforb8_11_H knowmedisforb8_12_H knowmedisforb8_13_H knowmedisforb8_14_H knowmedisforb8_15_H knowmedisforb8__97_H knowmedisforb8__99_H knowmedisforb8__100_H desc_otherknowmedisfora8_H desc_otherknowmedisforb8_H takingmeda8_1_H takingmeda8_2_H takingmedb8_1_H takingmedb8_2_H whynottaking8_H desc_otherwhynottakinga8_1_H desc_otherwhynottakingb8_2_H helpedcuringmeda8_1_H helpedcuringmeda8_2_H helpedcuringmedb8_1_H helpedcuringmedb8_2_H betterevenwithoutmeda8_H betterevenwithoutmedb8_H knowmedisfora9_H knowmedisfora9_1_H knowmedisfora9_2_H knowmedisfora9_3_H knowmedisfora9_4_H knowmedisfora9_5_H knowmedisfora9_6_H knowmedisfora9_7_H knowmedisfora9_8_H knowmedisfora9_9_H knowmedisfora9_10_H knowmedisfora9_11_H knowmedisfora9_12_H knowmedisfora9_13_H knowmedisfora9_14_H knowmedisfora9_15_H knowmedisfora9__97_H knowmedisfora9__99_H knowmedisfora9__100_H knowmedisforb9_H knowmedisforb9_1_H knowmedisforb9_2_H knowmedisforb9_3_H knowmedisforb9_4_H knowmedisforb9_5_H knowmedisforb9_6_H knowmedisforb9_7_H knowmedisforb9_8_H knowmedisforb9_9_H knowmedisforb9_10_H knowmedisforb9_11_H knowmedisforb9_12_H knowmedisforb9_13_H knowmedisforb9_14_H knowmedisforb9_15_H knowmedisforb9__97_H knowmedisforb9__99_H knowmedisforb9__100_H desc_otherknowmedisfora9_H takingmeda9_1_H takingmeda9_2_H takingmedb9_1_H takingmedb9_2_H whynottaking9_H desc_otherwhynottakinga9_1_H desc_otherwhynottakinga9_2_H desc_otherwhynottakingb9_1_H helpedcuringmeda9_1_H helpedcuringmeda9_2_H helpedcuringmedb9_1_H helpedcuringmedb9_2_H betterevenwithoutmeda9_H betterevenwithoutmedb9_H knowmedisfora10_H knowmedisfora10_1_H knowmedisfora10_2_H knowmedisfora10_3_H knowmedisfora10_4_H knowmedisfora10_5_H knowmedisfora10_6_H knowmedisfora10_7_H knowmedisfora10_8_H knowmedisfora10_9_H knowmedisfora10_10_H knowmedisfora10_11_H knowmedisfora10_12_H knowmedisfora10_13_H knowmedisfora10_14_H knowmedisfora10_15_H knowmedisfora10__97_H knowmedisfora10__99_H knowmedisfora10__100_H knowmedisforb10_H knowmedisforb10_1_H knowmedisforb10_2_H knowmedisforb10_3_H knowmedisforb10_4_H knowmedisforb10_5_H knowmedisforb10_6_H knowmedisforb10_7_H knowmedisforb10_8_H knowmedisforb10_9_H knowmedisforb10_10_H knowmedisforb10_11_H knowmedisforb10_12_H knowmedisforb10_13_H knowmedisforb10_14_H knowmedisforb10_15_H knowmedisforb10__97_H knowmedisforb10__99_H knowmedisforb10__100_H desc_otherknowmedisfora10_H desc_otherknowmedisforb10_H takingmeda10_1_H takingmeda10_2_H takingmedb10_1_H takingmedb10_2_H whynottaking10_H desc_otherwhynottakinga10_1_H desc_otherwhynottakinga10_2_H helpedcuringmeda10_1_H helpedcuringmeda10_2_H helpedcuringmedb10_1_H helpedcuringmedb10_2_H betterevenwithoutmeda10_H betterevenwithoutmedb10_H knowmedisfora11_H knowmedisfora11_1_H knowmedisfora11_2_H knowmedisfora11_3_H knowmedisfora11_4_H knowmedisfora11_5_H knowmedisfora11_6_H knowmedisfora11_7_H knowmedisfora11_8_H knowmedisfora11_9_H knowmedisfora11_10_H knowmedisfora11_11_H knowmedisfora11_12_H knowmedisfora11_13_H knowmedisfora11_14_H knowmedisfora11_15_H knowmedisfora11__97_H knowmedisfora11__99_H knowmedisfora11__100_H knowmedisforb11_H knowmedisforb11_1_H knowmedisforb11_2_H knowmedisforb11_3_H knowmedisforb11_4_H knowmedisforb11_5_H knowmedisforb11_6_H knowmedisforb11_7_H knowmedisforb11_8_H knowmedisforb11_9_H knowmedisforb11_10_H knowmedisforb11_11_H knowmedisforb11_12_H knowmedisforb11_13_H knowmedisforb11_14_H knowmedisforb11_15_H knowmedisforb11__97_H knowmedisforb11__99_H knowmedisforb11__100_H desc_otherknowmedisfora11_H takingmeda11_1_H takingmeda11_2_H takingmedb11_1_H takingmedb11_2_H whynottaking11_H desc_otherwhynottakinga11_1_H desc_otherwhynottakinga11_2_H helpedcuringmeda11_1_H helpedcuringmeda11_2_H helpedcuringmedb11_1_H helpedcuringmedb11_2_H betterevenwithoutmeda11_H betterevenwithoutmedb11_H knowmedisfora12_H knowmedisfora12_1_H knowmedisfora12_2_H knowmedisfora12_3_H knowmedisfora12_4_H knowmedisfora12_5_H knowmedisfora12_6_H knowmedisfora12_7_H knowmedisfora12_8_H knowmedisfora12_9_H knowmedisfora12_10_H knowmedisfora12_11_H knowmedisfora12_12_H knowmedisfora12_13_H knowmedisfora12_14_H knowmedisfora12_15_H knowmedisfora12__97_H knowmedisfora12__99_H knowmedisfora12__100_H knowmedisforb12_H knowmedisforb12_1_H knowmedisforb12_2_H knowmedisforb12_3_H knowmedisforb12_4_H knowmedisforb12_5_H knowmedisforb12_6_H knowmedisforb12_7_H knowmedisforb12_8_H knowmedisforb12_9_H knowmedisforb12_10_H knowmedisforb12_11_H knowmedisforb12_12_H knowmedisforb12_13_H knowmedisforb12_14_H knowmedisforb12_15_H knowmedisforb12__97_H knowmedisforb12__99_H knowmedisforb12__100_H takingmeda12_1_H takingmeda12_2_H takingmedb12_1_H whynottaking12_H helpedcuringmeda12_1_H helpedcuringmeda12_2_H helpedcuringmedb12_1_H betterevenwithoutmeda12_H betterevenwithoutmedb12_H knowmedisfora13_H knowmedisfora13_1_H knowmedisfora13_2_H knowmedisfora13_3_H knowmedisfora13_4_H knowmedisfora13_5_H knowmedisfora13_6_H knowmedisfora13_7_H knowmedisfora13_8_H knowmedisfora13_9_H knowmedisfora13_10_H knowmedisfora13_11_H knowmedisfora13_12_H knowmedisfora13_13_H knowmedisfora13_14_H knowmedisfora13_15_H knowmedisfora13__97_H knowmedisfora13__99_H knowmedisfora13__100_H knowmedisforb13_H knowmedisforb13_1_H knowmedisforb13_2_H knowmedisforb13_3_H knowmedisforb13_4_H knowmedisforb13_5_H knowmedisforb13_6_H knowmedisforb13_7_H knowmedisforb13_8_H knowmedisforb13_9_H knowmedisforb13_10_H knowmedisforb13_11_H knowmedisforb13_12_H knowmedisforb13_13_H knowmedisforb13_14_H knowmedisforb13_15_H knowmedisforb13__97_H knowmedisforb13__99_H knowmedisforb13__100_H takingmeda13_1_H takingmeda13_2_H takingmedb13_1_H whynottaking13_H helpedcuringmeda13_1_H helpedcuringmeda13_2_H helpedcuringmedb13_1_H betterevenwithoutmeda13_H betterevenwithoutmedb13_H knowmedisfora14_H knowmedisfora14_1_H knowmedisfora14_2_H knowmedisfora14_3_H knowmedisfora14_4_H knowmedisfora14_5_H knowmedisfora14_6_H knowmedisfora14_7_H knowmedisfora14_8_H knowmedisfora14_9_H knowmedisfora14_10_H knowmedisfora14_11_H knowmedisfora14_12_H knowmedisfora14_13_H knowmedisfora14_14_H knowmedisfora14_15_H knowmedisfora14__97_H knowmedisfora14__99_H knowmedisfora14__100_H knowmedisforb14_H knowmedisforb14_1_H knowmedisforb14_2_H knowmedisforb14_3_H knowmedisforb14_4_H knowmedisforb14_5_H knowmedisforb14_6_H knowmedisforb14_7_H knowmedisforb14_8_H knowmedisforb14_9_H knowmedisforb14_10_H knowmedisforb14_11_H knowmedisforb14_12_H knowmedisforb14_13_H knowmedisforb14_14_H knowmedisforb14_15_H knowmedisforb14__97_H knowmedisforb14__99_H knowmedisforb14__100_H takingmeda14_1_H takingmedb14_1_H takingmedb14_2_H whynottaking14_H helpedcuringmeda14_1_H helpedcuringmedb14_1_H helpedcuringmedb14_2_H betterevenwithoutmeda14_H betterevenwithoutmedb14_H knowmedisfora15_H knowmedisfora15_1_H knowmedisfora15_2_H knowmedisfora15_3_H knowmedisfora15_4_H knowmedisfora15_5_H knowmedisfora15_6_H knowmedisfora15_7_H knowmedisfora15_8_H knowmedisfora15_9_H knowmedisfora15_10_H knowmedisfora15_11_H knowmedisfora15_12_H knowmedisfora15_13_H knowmedisfora15_14_H knowmedisfora15_15_H knowmedisfora15__97_H knowmedisfora15__99_H knowmedisfora15__100_H takingmeda15_2_H helpedcuringmeda15_2_H betterevenwithoutmeda15_H itemafter1_H typeitemafter1_H namemedafter1_H desc_othernamemedafter1 desc_othernamemedafterM1_c1 equipafter1_H desc_otherequipafter1 desc_otherequipafterE1_c1 desc_otherequipafterM1_c1 prescrmedaftera1_H prescrmedafterb1_H costitemaftera1_H costitemafterb1_H costitemafferc1_H costitemafterd1_H wheregetmedaftera1_H wheregetmedafterb1_H desc_otherwheregetmedaftera1_H desc_otherwheregetmedafterb1_H knowmedisforaftera1_H knowmedisforaftera1_1_H knowmedisforaftera1_2_H knowmedisforaftera1_3_H knowmedisforaftera1_4_H knowmedisforaftera1_5_H knowmedisforaftera1_6_H knowmedisforaftera1_7_H knowmedisforaftera1_8_H knowmedisforaftera1_9_H knowmedisforaftera1_10_H knowmedisforaftera1_11_H knowmedisforaftera1_12_H knowmedisforaftera1_13_H knowmedisforaftera1_14_H knowmedisforaftera1_15_H knowmedisforaftera1__97_H knowmedisforaftera1__99_H knowmedisforaftera1__100_H knowmedisforafterb1_H knowmedisforafterb1_1_H knowmedisforafterb1_2_H knowmedisforafterb1_3_H knowmedisforafterb1_4_H knowmedisforafterb1_5_H knowmedisforafterb1_6_H knowmedisforafterb1_7_H knowmedisforafterb1_8_H knowmedisforafterb1_9_H knowmedisforafterb1_10_H knowmedisforafterb1_11_H knowmedisforafterb1_12_H knowmedisforafterb1_13_H knowmedisforafterb1_14_H knowmedisforafterb1_15_H knowmedisforafterb1__97_H knowmedisforafterb1__99_H knowmedisforafterb1__100_H desc_otherknowmedisforaftera1_H desc_otherknowmedisforafterb1_H takingmedaftera1_1_H takingmedaftera1_2_H takingmedafterb1_1_H takingmedafterb1_2_H whynottakingmedafter1_H desc_whynottakingmedaftera1_1_H desc_whynottakingmedafterb1_1_H helpedcuringmedaftera1_1_H helpedcuringmedaftera1_2_H helpedcuringmedafterb1_1_H helpedcuringmedafterb1_2_H betterevenwithoutmedaftera1_H betterevenwithoutmedafterb1_H itemafter2_H typeitemafter2_H namemedafter2_H desc_othernamemedafter2 desc_othernamemedafterM1_c2 equipafter2_H desc_otherequipafter2 desc_otherequipafterE1_c2 prescrmedaftera2_H prescrmedafterb2_H costitemaftera2_H costitemafterb2_H costitemafferc2_H costitemafterd2_H wheregetmedaftera2_H wheregetmedafterb2_H desc_otherwheregetmedaftera2_H desc_otherwheregetmedafterb2_H knowmedisforaftera2_H knowmedisforaftera2_1_H knowmedisforaftera2_2_H knowmedisforaftera2_3_H knowmedisforaftera2_4_H knowmedisforaftera2_5_H knowmedisforaftera2_6_H knowmedisforaftera2_7_H knowmedisforaftera2_8_H knowmedisforaftera2_9_H knowmedisforaftera2_10_H knowmedisforaftera2_11_H knowmedisforaftera2_12_H knowmedisforaftera2_13_H knowmedisforaftera2_14_H knowmedisforaftera2_15_H knowmedisforaftera2__97_H knowmedisforaftera2__99_H knowmedisforaftera2__100_H knowmedisforafterb2_H knowmedisforafterb2_1_H knowmedisforafterb2_2_H knowmedisforafterb2_3_H knowmedisforafterb2_4_H knowmedisforafterb2_5_H knowmedisforafterb2_6_H knowmedisforafterb2_7_H knowmedisforafterb2_8_H knowmedisforafterb2_9_H knowmedisforafterb2_10_H knowmedisforafterb2_11_H knowmedisforafterb2_12_H knowmedisforafterb2_13_H knowmedisforafterb2_14_H knowmedisforafterb2_15_H knowmedisforafterb2__97_H knowmedisforafterb2__99_H knowmedisforafterb2__100_H desc_otherknowmedisforaftera2_H desc_otherknowmedisforafterb2_H takingmedaftera2_1_H takingmedaftera2_2_H takingmedafterb2_1_H takingmedafterb2_2_H whynottakingmedafter2_H desc_whynottakingmedaftera2_1_H helpedcuringmedaftera2_1_H helpedcuringmedaftera2_2_H helpedcuringmedafterb2_1_H helpedcuringmedafterb2_2_H betterevenwithoutmedaftera2_H betterevenwithoutmedafterb2_H itemafter3_H typeitemafter3_H namemedafter3_H desc_othernamemedafter3 desc_othernamemedafterM1_c3 equipafter3_H desc_otherequipafter3 desc_otherequipafterE1_c3 desc_otherequipafterE2_c3 prescrmedaftera3_H prescrmedafterb3_H costitemaftera3_H costitemafterb3_H costitemafferc3_H costitemafterd3_H wheregetmedaftera3_H wheregetmedafterb3_H desc_otherwheregetmedaftera3_H knowmedisforaftera3_H knowmedisforaftera3_1_H knowmedisforaftera3_2_H knowmedisforaftera3_3_H knowmedisforaftera3_4_H knowmedisforaftera3_5_H knowmedisforaftera3_6_H knowmedisforaftera3_7_H knowmedisforaftera3_8_H knowmedisforaftera3_9_H knowmedisforaftera3_10_H knowmedisforaftera3_11_H knowmedisforaftera3_12_H knowmedisforaftera3_13_H knowmedisforaftera3_14_H knowmedisforaftera3_15_H knowmedisforaftera3__97_H knowmedisforaftera3__99_H knowmedisforaftera3__100_H knowmedisforafterb3_H knowmedisforafterb3_1_H knowmedisforafterb3_2_H knowmedisforafterb3_3_H knowmedisforafterb3_4_H knowmedisforafterb3_5_H knowmedisforafterb3_6_H knowmedisforafterb3_7_H knowmedisforafterb3_8_H knowmedisforafterb3_9_H knowmedisforafterb3_10_H knowmedisforafterb3_11_H knowmedisforafterb3_12_H knowmedisforafterb3_13_H knowmedisforafterb3_14_H knowmedisforafterb3_15_H knowmedisforafterb3__97_H knowmedisforafterb3__99_H knowmedisforafterb3__100_H takingmedaftera3_1_H takingmedaftera3_2_H takingmedafterb3_1_H takingmedafterb3_2_H whynottakingmedafter3_H helpedcuringmedaftera3_1_H helpedcuringmedaftera3_2_H helpedcuringmedafterb3_1_H helpedcuringmedafterb3_2_H betterevenwithoutmedaftera3_H betterevenwithoutmedafterb3_H itemafter4_H typeitemafter4_H namemedafter4_H desc_othernamemedafter4 desc_othernamemedafterM1_c4 equipafter4_H prescrmedaftera4_H prescrmedafterb4_H costitemaftera4_H costitemafterb4_H costitemafferc4_H wheregetmedaftera4_H wheregetmedafterb4_H knowmedisforaftera4_H knowmedisforaftera4_1_H knowmedisforaftera4_2_H knowmedisforaftera4_3_H knowmedisforaftera4_4_H knowmedisforaftera4_5_H knowmedisforaftera4_6_H knowmedisforaftera4_7_H knowmedisforaftera4_8_H knowmedisforaftera4_9_H knowmedisforaftera4_10_H knowmedisforaftera4_11_H knowmedisforaftera4_12_H knowmedisforaftera4_13_H knowmedisforaftera4_14_H knowmedisforaftera4_15_H knowmedisforaftera4__97_H knowmedisforaftera4__99_H knowmedisforaftera4__100_H knowmedisforafterb4_H knowmedisforafterb4_1_H knowmedisforafterb4_2_H knowmedisforafterb4_3_H knowmedisforafterb4_4_H knowmedisforafterb4_5_H knowmedisforafterb4_6_H knowmedisforafterb4_7_H knowmedisforafterb4_8_H knowmedisforafterb4_9_H knowmedisforafterb4_10_H knowmedisforafterb4_11_H knowmedisforafterb4_12_H knowmedisforafterb4_13_H knowmedisforafterb4_14_H knowmedisforafterb4_15_H knowmedisforafterb4__97_H knowmedisforafterb4__99_H knowmedisforafterb4__100_H takingmedaftera4_1_H takingmedaftera4_2_H takingmedafterb4_1_H takingmedafterb4_2_H whynottakingmedafter4_H helpedcuringmedaftera4_1_H helpedcuringmedaftera4_2_H helpedcuringmedafterb4_1_H helpedcuringmedafterb4_2_H betterevenwithoutmedaftera4_H betterevenwithoutmedafterb4_H itemafter5_H typeitemafter5_H namemedafter5_H desc_othernamemedafter5 desc_othernamemedafterM1_c5 equipafter5_H prescrmedaftera5_H prescrmedafterb5_H costitemaftera5_H costitemafterb5_H costitemafferc5_H wheregetmedaftera5_H wheregetmedafterb5_H knowmedisforaftera5_H knowmedisforaftera5_1_H knowmedisforaftera5_2_H knowmedisforaftera5_3_H knowmedisforaftera5_4_H knowmedisforaftera5_5_H knowmedisforaftera5_6_H knowmedisforaftera5_7_H knowmedisforaftera5_8_H knowmedisforaftera5_9_H knowmedisforaftera5_10_H knowmedisforaftera5_11_H knowmedisforaftera5_12_H knowmedisforaftera5_13_H knowmedisforaftera5_14_H knowmedisforaftera5_15_H knowmedisforaftera5__97_H knowmedisforaftera5__99_H knowmedisforaftera5__100_H knowmedisforafterb5_H knowmedisforafterb5_1_H knowmedisforafterb5_2_H knowmedisforafterb5_3_H knowmedisforafterb5_4_H knowmedisforafterb5_5_H knowmedisforafterb5_6_H knowmedisforafterb5_7_H knowmedisforafterb5_8_H knowmedisforafterb5_9_H knowmedisforafterb5_10_H knowmedisforafterb5_11_H knowmedisforafterb5_12_H knowmedisforafterb5_13_H knowmedisforafterb5_14_H knowmedisforafterb5_15_H knowmedisforafterb5__97_H knowmedisforafterb5__99_H knowmedisforafterb5__100_H takingmedaftera5_1_H takingmedaftera5_2_H takingmedafterb5_1_H takingmedafterb5_2_H whynottakingmedafter5_H helpedcuringmedaftera5_1_H helpedcuringmedaftera5_2_H helpedcuringmedafterb5_1_H helpedcuringmedafterb5_2_H betterevenwithoutmedaftera5_H betterevenwithoutmedafterb5_H itemafter6_H typeitemafter6_H namemedafter6_H desc_othernamemedafter6 desc_othernamemedafterM1_c6 equipafter6_H prescrmedaftera6_H prescrmedafterb6_H costitemaftera6_H costitemafterb6_H costitemafferc6_H wheregetmedaftera6_H wheregetmedafterb6_H desc_otherwheregetmedaftera6_H knowmedisforaftera6_H knowmedisforaftera6_1_H knowmedisforaftera6_2_H knowmedisforaftera6_3_H knowmedisforaftera6_4_H knowmedisforaftera6_5_H knowmedisforaftera6_6_H knowmedisforaftera6_7_H knowmedisforaftera6_8_H knowmedisforaftera6_9_H knowmedisforaftera6_10_H knowmedisforaftera6_11_H knowmedisforaftera6_12_H knowmedisforaftera6_13_H knowmedisforaftera6_14_H knowmedisforaftera6_15_H knowmedisforaftera6__97_H knowmedisforaftera6__99_H knowmedisforaftera6__100_H knowmedisforafterb6_H knowmedisforafterb6_1_H knowmedisforafterb6_2_H knowmedisforafterb6_3_H knowmedisforafterb6_4_H knowmedisforafterb6_5_H knowmedisforafterb6_6_H knowmedisforafterb6_7_H knowmedisforafterb6_8_H knowmedisforafterb6_9_H knowmedisforafterb6_10_H knowmedisforafterb6_11_H knowmedisforafterb6_12_H knowmedisforafterb6_13_H knowmedisforafterb6_14_H knowmedisforafterb6_15_H knowmedisforafterb6__97_H knowmedisforafterb6__99_H knowmedisforafterb6__100_H takingmedaftera6_1_H takingmedaftera6_2_H takingmedafterb6_1_H takingmedafterb6_2_H whynottakingmedafter6_H desc_whynottakingmedaftera6_1_H helpedcuringmedaftera6_1_H helpedcuringmedaftera6_2_H helpedcuringmedafterb6_1_H helpedcuringmedafterb6_2_H betterevenwithoutmedaftera6_H betterevenwithoutmedafterb6_H timewaiting_H timeconsulting_H tellcostbefore_H addmedicaltesting_H fewermedicaltests_H treatbasedresults_1_H treatbasedresults_2_H diffaddmed_1_H diffaddmed_2_H fewermed_1_H fewermed_2_H doctorspatients_H doctorscosts_H doctorsfinancialsituation_H doctorslisten_H doctorsmeddontneed_H availability_H changehealthcare_H rdt_H rdtresult_H malariaresult1_H malariaresult2_H week week_1 week_2 week_3 week_4 week_5 week_6 week_7 day_week day_week_1 day_week_2 day_week_3 day_week_4 day_week_5 day_week_6 strata_1 strata_2 strata_3 strata_4 strata_5 strata_6 strata_7 strata_8 strata_9 strata_10 strata_11 strata_12 strata_13 strata_14 strata_15 strata_16 strata_17 strata_18 strata_19 strata_20 strata_21 strata_22 strata_23 strata_24 strata_25 strata_26 strata_27 strata_28 strata_29 strata_30 flag_1 flag_2 voucher_number_DV voucher_used_DV agepatient_DV same_day_cscom_DV signature_dr_DV only_act_DV amount_DV simple_malaria_DV reimbursement_approved_DV amount_approved_DV comments_DV date_morning_DV voucher_number_PV agepatient_PV voucher_time_delivered_PV voucher_used_PV same_name_age_PV same_day_cscom_PV signature_dr_PV only_act_PV amount_PV simple_malaria_PV reimbursement_approved_PV amount_approved_PV comments_PV date_morning_PV age_PI video_complete_PI video_incomplete_time_PI comments_PI date_morning_PI infotreat info_strata desc_othernamemedE2_c6 desc_othernamemedE3_c6 desc_othernamemedE1_c10 selected_home_survey RXnamemed1 RXdesc_othernamemed1 RXdesc_othernamemedM1_c1 RXdesc_othernamemedE1_c1 RXdesc_othernamemedE2_c1 RXdesc_othernamemedE3_c1 RXequip1 RXdesc_otherequip1 RXdesc_otherequipE1_c1 RXdesc_otherequipM1_c1 RXnamemed2 RXdesc_othernamemed2 RXdesc_othernamemedM1_c2 RXdesc_othernamemedE1_c2 RXequip2 RXdesc_otherequip2 RXdesc_otherequipE1_c2 RXdesc_otherequipE2_c2 RXdesc_otherequipE3_c2 RXnamemed3 RXdesc_othernamemed3 RXdesc_othernamemedM1_c3 RXdesc_othernamemedE1_c3 RXequip3 RXdesc_otherequip3 RXdesc_otherequipE1_c3 RXdesc_otherequipE2_c3 RXdesc_otherequipE3_c3 RXdesc_otherequipM1_c3 RXnamemed4 RXdesc_othernamemed4 RXdesc_othernamemedM1_c4 RXdesc_othernamemedE1_c4 RXequip4 RXdesc_otherequip4 RXdesc_otherequipE1_c4 RXdesc_otherequipE2_c4 RXdesc_otherequipE3_c4 RXdesc_otherequipM1_c4 RXnamemed5 RXdesc_othernamemed5 RXdesc_othernamemedM1_c5 RXdesc_othernamemedE1_c5 RXequip5 RXdesc_otherequip5 RXdesc_otherequipE1_c5 RXdesc_otherequipE2_c5 RXdesc_otherequipE3_c5 RXdesc_otherequipE4_c5 RXdesc_otherequipM1_c5 RXnamemed6 RXdesc_othernamemed6 RXdesc_othernamemedM1_c6 RXdesc_othernamemedE1_c6 RXdesc_othernamemedE2_c6 RXdesc_othernamemedE3_c6 RXequip6 RXdesc_otherequip6 RXdesc_otherequipE1_c6 RXdesc_otherequipE2_c6 RXdesc_otherequipE3_c6 RXdesc_otherequipE4_c6 RXdesc_otherequipM1_c6 RXnamemed7 RXdesc_othernamemed7 RXdesc_othernamemedM1_c7 RXdesc_othernamemedE1_c7 RXdesc_othernamemedE2_c7 RXequip7 RXdesc_otherequip7 RXdesc_otherequipE1_c7 RXdesc_otherequipE2_c7 RXdesc_otherequipE3_c7 RXdesc_otherequipE4_c7 RXdesc_otherequipM1_c7 RXnamemed8 RXdesc_othernamemed8 RXdesc_othernamemedM1_c8 RXdesc_othernamemedE1_c8 RXequip8 RXdesc_otherequip8 RXdesc_otherequipE1_c8 RXdesc_otherequipE2_c8 RXdesc_otherequipE3_c8 RXdesc_otherequipE4_c8 RXdesc_otherequipM1_c8 RXnamemed9 RXdesc_othernamemed9 RXdesc_othernamemedM1_c9 RXdesc_othernamemedE1_c9 RXdesc_othernamemedE2_c9 RXequip9 RXdesc_otherequip9 RXdesc_otherequipE1_c9 RXdesc_otherequipE2_c9 RXdesc_otherequipE3_c9 RXdesc_otherequipE4_c9 RXdesc_otherequipM1_c9 RXnamemed10 RXdesc_othernamemed10 RXdesc_othernamemedM1_c10 RXdesc_othernamemedE1_c10 RXequip10 RXdesc_otherequip10 RXdesc_otherequipE1_c10 RXdesc_otherequipE2_c10 RXdesc_otherequipE3_c10 RXdesc_otherequipM1_c10 RXnamemed11 RXdesc_othernamemed11 RXdesc_othernamemedM1_c11 RXequip11 RXdesc_otherequip11 RXdesc_otherequipE1_c11 RXdesc_otherequipE2_c11 RXnamemed12 RXdesc_othernamemed12 RXdesc_othernamemedM1_c12 RXequip12 RXdesc_otherequip12 RXdesc_otherequipE1_c12 RXdesc_otherequipE2_c12 RXnamemed13 RXdesc_othernamemed13 RXdesc_othernamemedM1_c13 RXdesc_othernamemedE1_c13 RXdesc_othernamemedE2_c13 RXequip13 RXdesc_otherequip13 RXdesc_otherequipE1_c13 RXdesc_otherequipE2_c13 RXdesc_otherequipE3_c13 RXdesc_otherequipM1_c13 RXnamemed14 RXdesc_othernamemed14 RXdesc_othernamemedM1_c14 RXequip14 RXdesc_otherequip14 RXdesc_otherequipE1_c14 RXdesc_otherequipE2_c14 RXnamemed15 cscom_1 cscom_2 cscom_3 cscom_4 cscom_5 cscom_6 cscom_7 cscom_8 cscom_9 cscom_10 cscom_11 cscom_12 cscom_13 cscom_14 cscom_15 cscom_16 cscom_17 cscom_18 cscom_19 cscom_20 cscom_21 cscom_22 cscom_23 cscom_24 cscom_25 cscom_26 cscom_27 cscom_28 cscom_29 cscom_30 cscom_31 cscom_32 cscom_33 cscom_34 cscom_35 cscom_36 cscom_37 cscom_38 cscom_39 cscom_40 cscom_41 cscom_42 cscom_43 cscom_44 cscom_45 cscom_46 cscom_47 cscom_48 cscom_49 cscom_50 cscom_51 cscom_52 cscom_53 cscom_54 cscom_55 cscom_56 cscom_57 cscom_58 cscom_59 cscom_60 treat_1 PI_scheduled PV_scheduled DV_scheduled PI_PV_scheduled PI_DV_scheduled respondent noschooling middleschool highschoolup ltmiddleschool islamicschool prischoolorless agepatient_sq ethnic_bambara speak_french readwrite_fluentlittle_french readwrite_fluent_french primary_bambara daysillness99 thinks_malaria took_meds_before pregnancy pregnancy_trim1 pregnancy_trim2 pregnancy_trim3 genderpatient_pregnancy genderpatient_female genderpatient_male reported_tests reported_RDT reported_RDT_POS reported_Malaria_testnotspec reported_Malaria_testnotspec_POS reported_GE_FS reported_GE_FS_POS reported_Malaria_test reported_Malaria_test_POS patient_shows_records records_tests records_diag recorded_tests recorded_RDT recorded_RDT_POS recorded_Malaria_testnotspec recorded_Malaria_testnotspec_POS recorded_GE_FS recorded_GE_FS_POS recorded_Malaria_test recorded_Malaria_test_POS reported_diag_malaria reported_diag_malaria_simp reported_diag_malaria_sev reported_diag_malaria_notsp reported_diag_nottold recorded_diag_malaria recorded_diag_malaria_simp recorded_diag_malaria_sev recorded_diag_malaria_notsp recorded_diag_notsp meds_prescribed meds_bought num_meds_prescribed num_meds_bought equip_prescribed equip_bought artesunate RXartesunate H_artesunate U_artesunate NBref_artesunate NBcscom_artesunate artesunate_injectable RXartesunate_injectable H_artesunate_injectable U_artesunate_injectable NBref_artesunate_injectable NBcscom_artesunate_injectable artesunate_tablet RXartesunate_tablet H_artesunate_tablet U_artesunate_tablet NBref_artesunate_tablet NBcscom_artesunate_tablet amodiaquine RXamodiaquine H_amodiaquine U_amodiaquine NBref_amodiaquine NBcscom_amodiaquine amoquin RXamoquin H_amoquin U_amoquin NBref_amoquin NBcscom_amoquin camoquin RXcamoquin H_camoquin U_camoquin NBref_camoquin NBcscom_camoquin novaquin RXnovaquin H_novaquin U_novaquin NBref_novaquin NBcscom_novaquin artemether RXartemether H_artemether U_artemether NBref_artemether NBcscom_artemether artemether_injectable RXartemether_injectable H_artemether_injectable U_artemether_injectable NBref_artemether_injectable NBcscom_artemether_injectable artemether_tablet RXartemether_tablet H_artemether_tablet U_artemether_tablet NBref_artemether_tablet NBcscom_artemether_tablet artemet_lumefant RXartemet_lumefant H_artemet_lumefant U_artemet_lumefant NBref_artemet_lumefant NBcscom_artemet_lumefant artemet_lumefant_injec RXartemet_lumefant_injec H_artemet_lumefant_injec U_artemet_lumefant_injec NBref_artemet_lumefant_injec NBcscom_artemet_lumefant_injec artemet_lumefant_tablet RXartemet_lumefant_tablet H_artemet_lumefant_tablet U_artemet_lumefant_tablet NBref_artemet_lumefant_tablet NBcscom_artemet_lumefant_tablet artekin RXartekin H_artekin U_artekin NBref_artekin NBcscom_artekin artesiane RXartesiane H_artesiane U_artesiane NBref_artesiane NBcscom_artesiane artefan RXartefan H_artefan U_artefan NBref_artefan NBcscom_artefan coartem RXcoartem H_coartem U_coartem NBref_coartem NBcscom_coartem cta_adolescent RXcta_adolescent H_cta_adolescent U_cta_adolescent NBref_cta_adolescent NBcscom_cta_adolescent cta_adulte RXcta_adulte H_cta_adulte U_cta_adulte NBref_cta_adulte NBcscom_cta_adulte cta_enfant RXcta_enfant H_cta_enfant U_cta_enfant NBref_cta_enfant NBcscom_cta_enfant malacur RXmalacur H_malacur U_malacur NBref_malacur NBcscom_malacur combiart_adult RXcombiart_adult H_combiart_adult U_combiart_adult NBref_combiart_adult NBcscom_combiart_adult combiart RXcombiart H_combiart U_combiart NBref_combiart NBcscom_combiart sp RXsp H_sp U_sp NBref_sp NBcscom_sp laritem RXlaritem H_laritem U_laritem NBref_laritem NBcscom_laritem chloroquine RXchloroquine H_chloroquine U_chloroquine NBref_chloroquine NBcscom_chloroquine quinine RXquinine H_quinine U_quinine NBref_quinine NBcscom_quinine quinine_tablet RXquinine_tablet H_quinine_tablet U_quinine_tablet NBref_quinine_tablet NBcscom_quinine_tablet quinine_injectable RXquinine_injectable H_quinine_injectable U_quinine_injectable NBref_quinine_injectable NBcscom_quinine_injectable ringer RXringer H_ringer U_ringer NBref_ringer NBcscom_ringer labor_injection_or_perfusion RXlabor_injection_or_perfusion H_labor_injection_or_perfusion U_labor_injection_or_perfusion diazepam RXdiazepam H_diazepam U_diazepam NBref_diazepam NBcscom_diazepam unspecified_ACT RXunspecified_ACT H_unspecified_ACT U_unspecified_ACT NBref_unspecified_ACT NBcscom_unspecified_ACT unspecified_antimalarial RXunspecified_antimalarial H_unspecified_antimalarial U_unspecified_antimalarial NBref_unspecified_antimalarial NBcscom_unspecified_antimalarial chlorphenamine RXchlorphenamine H_chlorphenamine U_chlorphenamine NBref_chlorphenamine NBcscom_chlorphenamine cipronat RXcipronat H_cipronat U_cipronat NBref_cipronat NBcscom_cipronat gentamycin RXgentamycin H_gentamycin U_gentamycin NBref_gentamycin NBcscom_gentamycin ibuprofen RXibuprofen H_ibuprofen U_ibuprofen NBref_ibuprofen NBcscom_ibuprofen metamizole RXmetamizole H_metamizole U_metamizole NBref_metamizole NBcscom_metamizole metopimazine RXmetopimazine H_metopimazine U_metopimazine NBref_metopimazine NBcscom_metopimazine metronidazole RXmetronidazole H_metronidazole U_metronidazole NBref_metronidazole NBcscom_metronidazole novalgin RXnovalgin H_novalgin U_novalgin NBref_novalgin NBcscom_novalgin paracetamol RXparacetamol H_paracetamol U_paracetamol NBref_paracetamol NBcscom_paracetamol vitamine_b RXvitamine_b H_vitamine_b U_vitamine_b NBref_vitamine_b NBcscom_vitamine_b vogalene RXvogalene H_vogalene U_vogalene NBref_vogalene NBcscom_vogalene ampicilline RXampicilline H_ampicilline U_ampicilline NBref_ampicilline NBcscom_ampicilline diclofenac RXdiclofenac H_diclofenac U_diclofenac NBref_diclofenac NBcscom_diclofenac analgin RXanalgin H_analgin U_analgin NBref_analgin NBcscom_analgin paracetamol_cetal RXparacetamol_cetal H_paracetamol_cetal U_paracetamol_cetal NBref_paracetamol_cetal NBcscom_paracetamol_cetal promethazine RXpromethazine H_promethazine U_promethazine NBref_promethazine NBcscom_promethazine debridat RXdebridat H_debridat U_debridat NBref_debridat NBcscom_debridat methylprednisolone RXmethylprednisolone H_methylprednisolone U_methylprednisolone NBref_methylprednisolone NBcscom_methylprednisolone aspegic RXaspegic H_aspegic U_aspegic NBref_aspegic NBcscom_aspegic salbutamol RXsalbutamol H_salbutamol U_salbutamol NBref_salbutamol NBcscom_salbutamol erythromycin RXerythromycin H_erythromycin U_erythromycin NBref_erythromycin NBcscom_erythromycin augmentine RXaugmentine H_augmentine U_augmentine NBref_augmentine NBcscom_augmentine azithromycin RXazithromycin H_azithromycin U_azithromycin NBref_azithromycin NBcscom_azithromycin binozyt RXbinozyt H_binozyt U_binozyt NBref_binozyt NBcscom_binozyt diazole RXdiazole H_diazole U_diazole NBref_diazole NBcscom_diazole erycin RXerycin H_erycin U_erycin NBref_erycin NBcscom_erycin flagyl RXflagyl H_flagyl U_flagyl NBref_flagyl NBcscom_flagyl oleandomycine RXoleandomycine H_oleandomycine U_oleandomycine NBref_oleandomycine NBcscom_oleandomycine oracefal RXoracefal H_oracefal U_oracefal NBref_oracefal NBcscom_oracefal penicillin RXpenicillin H_penicillin U_penicillin NBref_penicillin NBcscom_penicillin synozole RXsynozole H_synozole U_synozole NBref_synozole NBcscom_synozole uclaprim RXuclaprim H_uclaprim U_uclaprim NBref_uclaprim NBcscom_uclaprim unasyn RXunasyn H_unasyn U_unasyn NBref_unasyn NBcscom_unasyn antibiotic RXantibiotic H_antibiotic U_antibiotic NBref_antibiotic NBcscom_antibiotic IV catheter epicranni fluide_intrav infusion_IV_fluids perfuseur syringe injection_perfuseur serum_glucose serum_sale MISS_testreportedprice1 MISS_testrecordedprice1 MISS_costitema1 MISS_costitemb1 MISS_costitemc1 MISS_costitemd1 MISS_testreportedprice2 MISS_testrecordedprice2 MISS_costitema2 MISS_costitemb2 MISS_costitemc2 MISS_costitemd2 MISS_testreportedprice3 MISS_testrecordedprice3 MISS_costitema3 MISS_costitemb3 MISS_costitemc3 MISS_costitemd3 MISS_testreportedprice4 MISS_testrecordedprice4 MISS_costitema4 MISS_costitemb4 MISS_costitemc4 MISS_costitemd4 MISS_testrecordedprice5 MISS_costitema5 MISS_costitemb5 MISS_costitemc5 MISS_costitemd5 MISS_testrecordedprice6 MISS_costitema6 MISS_costitemb6 MISS_costitemc6 MISS_costitemd6 MISS_testrecordedprice7 MISS_costitema7 MISS_costitemb7 MISS_costitemc7 MISS_costitemd7 MISS_testrecordedprice8 MISS_costitema8 MISS_costitemb8 MISS_costitemc8 MISS_costitemd8 MISS_testrecordedprice9 MISS_costitema9 MISS_costitemc9 MISS_testrecordedprice10 MISS_costitema10 MISS_costitemb10 MISS_costitemc10 MISS_costitemd10 MISS_costitema11 MISS_costitemc11 MISS_costitemc12 MISS_costitemc13 reported_totalcost recorded_totalcost testreportedprice_total testrecordedprice_total costitemb1_meds costitemd1_meds MISS_costitemb1_meds MISS_costitemd1_meds costitemb2_meds costitemd2_meds MISS_costitemb2_meds costitemb3_meds costitemd3_meds MISS_costitemb3_meds MISS_costitemd3_meds costitemb4_meds costitemd4_meds MISS_costitemb4_meds MISS_costitemd4_meds costitemb5_meds costitemd5_meds MISS_costitemb5_meds MISS_costitemd5_meds costitemb6_meds costitemd6_meds MISS_costitemb6_meds MISS_costitemd6_meds costitemb7_meds costitemd7_meds MISS_costitemb7_meds MISS_costitemd7_meds costitemb8_meds costitemd8_meds MISS_costitemb8_meds costitemb9_meds costitemd9_meds costitemb10_meds costitemd10_meds MISS_costitemb10_meds MISS_costitemd10_meds costitemb11_meds costitemd11_meds costitemb12_meds costitemd12_meds costitemb13_meds costitemd13_meds costitemb14_meds costitemd14_meds cost_meds_total costitemb1_eq costitemd1_eq MISS_costitemb1_eq costitemb2_eq costitemd2_eq MISS_costitemd2_eq costitemb3_eq costitemd3_eq costitemb4_eq costitemd4_eq MISS_costitemb4_eq costitemb5_eq costitemd5_eq MISS_costitemb5_eq costitemb6_eq costitemd6_eq MISS_costitemd6_eq costitemb7_eq costitemd7_eq MISS_costitemd7_eq costitemb8_eq costitemd8_eq MISS_costitemd8_eq costitemb9_eq costitemd9_eq costitemb10_eq costitemd10_eq costitemb11_eq costitemd11_eq costitemb12_eq costitemd12_eq costitemb13_eq costitemd13_eq costitemb14_eq costitemd14_eq cost_equip_total vouchers_received_used vouchers_received_not_used patient_video_received no_intervention_received vouchers_received voucher_received_notused_PV voucher_received_notused_DV used_vouchers_admin injection_IV meds_with_injection RDTresult_POS RDTresult_NEG rent_value_H total_hh_members_H income_percap_H piped_water_H illness_better_H treatbasedresults_H diffaddmed_H fewermed_H agree_more_tests_H agree_fewer_tests_H agree_only_health_H agree_care_costs_H agree_care_fin_H agree_doc_listen_H agree_med_noneed_H agree_treat_test_H agree_diff_med_H agree_fewer_med_H disagree_more_tests_H disagree_fewer_tests_H disagree_only_health_H disagree_care_costs_H disagree_care_fin_H disagree_doc_listen_H disagree_med_noneed_H disagree_treat_test_H disagree_diff_med_H disagree_fewer_med_H quality_treat_beliefs_all quality_treat_beliefs_disagree quality_treat_beliefs_agree doctors_behaviour_all doctors_behaviour_disagree doctors_behaviour_agree malariaresult_H thinks_malaria_H thinks_nomalaria_H guess_correct_H guess_strong_correct_H patient_info patient_voucher doctor_voucher date_1 date_2 date_3 date_4 date_5 date_6 date_7 date_8 date_9 date_10 date_11 date_12 date_13 date_14 date_15 date_16 date_17 date_18 date_19 date_20 date_21 date_22 date_23 date_24 date_25 date_26 date_27 date_28 date_29 date_30 date_31 date_32 date_33 date_34 date_35 date_36 treat_morning_clean PI_morning PV_morning DV_morning newcough has_valid_rdt_H in_home_survey officerdum_1 officerdum_2 officerdum_3 officerdum_4 officerdum_5 officerdum_6 officerdum_7 officerdum_8 officerdum_9 officerdum_10 officerdum_11 officerdum_12 officerdum_13 officerdum_14 officerdum_15 officerdum_16 officerdum_17 officerdum_18 officerdum_19 officerdum_20 officerdum_21 officerdum_22 officerdum_23 officerdum_24 officerdum_25 officerdum_26 officerdum_27 officerdum_28 officerdum_29 officerdum_30 officerdum_31 officerdum_32 officerdum_33 officerdum_34 officerdum_35 officerdum_36 officerdum_37 officerdum_38 officerdum_39 officerdum_40 diagnosed_before HH_frac_job HH_frac_14under HH_frac_nets referral_observation amodiaquine_aggreg artemether_T artemether_I artesunate_T artesunate_I quinine_T quinine_I artemet_lumefant_T artemet_lumefant_alt_T artemet_lumefant_I ACT_al_I ACT_ar_am_I ACT_artm_am_I ACT_artemether_sp_I ACT_artesunate_sp_I ACT_al_T ACT_al_alt_T ACT_ar_am_T ACT_artm_am_T ACT_artemether_sp_T ACT_artesunate_sp_T specified_ACT_other treat_ACT treat_ACT_alt treat_arte_mono treat_quinine treat_other_antimal treat_simple_mal treat_simple_mal_alt treat_severe_mal treat_severe_mal_alt treat_sev_simple_mal treat_sev_simple_mal_alt antibiot U_amodiaquine_aggreg U_artemether_T U_artemether_I U_artesunate_T U_artesunate_I U_quinine_T U_quinine_I U_artemet_lumefant_T U_artemet_lumefant_alt_T U_artemet_lumefant_I U_ACT_al_I U_ACT_ar_am_I U_ACT_artm_am_I U_ACT_artemether_sp_I U_ACT_artesunate_sp_I U_ACT_al_T U_ACT_al_alt_T U_ACT_ar_am_T U_ACT_artm_am_T U_ACT_artemether_sp_T U_ACT_artesunate_sp_T U_specified_ACT_other U_treat_ACT U_treat_ACT_alt U_treat_arte_mono U_treat_quinine U_treat_other_antimal U_treat_simple_mal U_treat_simple_mal_alt U_treat_severe_mal U_treat_severe_mal_alt U_treat_sev_simple_mal U_treat_sev_simple_mal_alt U_antibiot H_amodiaquine_aggreg H_artemether_T H_artemether_I H_artesunate_T H_artesunate_I H_quinine_T H_quinine_I H_artemet_lumefant_T H_artemet_lumefant_alt_T H_artemet_lumefant_I H_ACT_al_I H_ACT_ar_am_I H_ACT_artm_am_I H_ACT_artemether_sp_I H_ACT_artesunate_sp_I H_ACT_al_T H_ACT_al_alt_T H_ACT_ar_am_T H_ACT_artm_am_T H_ACT_artemether_sp_T H_ACT_artesunate_sp_T H_specified_ACT_other H_treat_ACT H_treat_ACT_alt H_treat_arte_mono H_treat_quinine H_treat_other_antimal H_treat_simple_mal H_treat_simple_mal_alt H_treat_severe_mal H_treat_severe_mal_alt H_treat_sev_simple_mal H_treat_sev_simple_mal_alt H_antibiot RXamodiaquine_aggreg RXartemether_T RXartemether_I RXartesunate_T RXartesunate_I RXquinine_T RXquinine_I RXartemet_lumefant_T RXartemet_lumefant_alt_T RXartemet_lumefant_I RXACT_al_I RXACT_ar_am_I RXACT_artm_am_I RXACT_artemether_sp_I RXACT_artesunate_sp_I RXACT_al_T RXACT_al_alt_T RXACT_ar_am_T RXACT_artm_am_T RXACT_artemether_sp_T RXACT_artesunate_sp_T RXspecified_ACT_other RXtreat_ACT RXtreat_ACT_alt RXtreat_arte_mono RXtreat_quinine RXtreat_other_antimal RXtreat_simple_mal RXtreat_simple_mal_alt RXtreat_severe_mal RXtreat_severe_mal_alt RXtreat_sev_simple_mal RXtreat_sev_simple_mal_alt RXantibiot NBref_amodiaquine_aggreg NBref_artemether_T NBref_artemether_I NBref_artesunate_T NBref_artesunate_I NBref_quinine_T NBref_quinine_I NBref_artemet_lumefant_T NBref_artemet_lumefant_alt_T NBref_artemet_lumefant_I NBref_ACT_al_I NBref_ACT_ar_am_I NBref_ACT_artm_am_I NBref_ACT_artemether_sp_I NBref_ACT_artesunate_sp_I NBref_ACT_al_T NBref_ACT_al_alt_T NBref_ACT_ar_am_T NBref_ACT_artm_am_T NBref_ACT_artemether_sp_T NBref_ACT_artesunate_sp_T NBref_specified_ACT_other NBref_treat_ACT NBref_treat_ACT_alt NBref_treat_arte_mono NBref_treat_quinine NBref_treat_other_antimal NBref_treat_simple_mal NBref_treat_simple_mal_alt NBref_treat_severe_mal NBref_treat_severe_mal_alt NBref_treat_sev_simple_mal NBref_treat_sev_simple_mal_alt NBref_antibiot NBcscom_amodiaquine_aggreg NBcscom_artemether_T NBcscom_artemether_I NBcscom_artesunate_T NBcscom_artesunate_I NBcscom_quinine_T NBcscom_quinine_I NBcscom_artemet_lumefant_T NBcscom_artemet_lumefant_alt_T NBcscom_artemet_lumefant_I NBcscom_ACT_al_I NBcscom_ACT_ar_am_I NBcscom_ACT_artm_am_I NBcscom_ACT_artemether_sp_I NBcscom_ACT_artesunate_sp_I NBcscom_ACT_al_T NBcscom_ACT_al_alt_T NBcscom_ACT_ar_am_T NBcscom_ACT_artm_am_T NBcscom_ACT_artemether_sp_T NBcscom_ACT_artesunate_sp_T NBcscom_specified_ACT_other NBcscom_treat_ACT NBcscom_treat_ACT_alt NBcscom_treat_arte_mono NBcscom_treat_quinine NBcscom_treat_other_antimal NBcscom_treat_simple_mal NBcscom_treat_simple_mal_alt NBcscom_treat_severe_mal NBcscom_treat_severe_mal_alt NBcscom_treat_sev_simple_mal NBcscom_treat_sev_simple_mal_alt NBcscom_antibiot treat_simple_mal_voucher treat_simple_mal_NOvoucher treat_severe_mal_voucher treat_severe_mal_NOvoucher treat_sev_simple_mal_voucher treat_sev_simple_mal_NOvoucher RXtreat_simple_mal_voucher RXtreat_simple_mal_NOvoucher RXtreat_severe_mal_voucher RXtreat_severe_mal_NOvoucher RXtreat_sev_simple_mal_voucher RXtreat_sev_simple_mal_NOvoucher mal_test mal_test_POS RDT_test RDT_test_POS GE_FS_test GE_FS_test_POS mal_notspec mal_notspec_POS RDT_test_only RDT_test_only_POS GE_FS_test_only GE_FS_test_only_POS mal_notspec_only mal_notspec_only_POS more_than_one_mal_test one_mal_test indicator_sev_malaria mal_correct correct_simple_mal correct_severe_mal correct_sev_simple_mal RDT_H_POS_corr_treat RDT_H_NEG_no_treat corr_treat_RDT_result corr_treat_RDT_resultP corr_treat_RDT_resultN over_treat_optA_B1 under_treat_optA over_under_treat_optA match_treat_RDT over_treat_optB1 symp_sev_mal_simp_trt under_treat_optB1_B2 over_under_treat_optB1 Nsymp_sev_mal_sev_treat over_treat_optB2 under_treat_optB2 over_under_treat_optB2 ACT_only mono_only quinine_only quinine_ACT mono_ACT other_combo U_mal_correct U_correct_simple_mal U_correct_severe_mal U_correct_sev_simple_mal U_RDT_H_POS_corr_treat U_RDT_H_NEG_no_treat U_corr_treat_RDT_result U_corr_treat_RDT_resultP U_corr_treat_RDT_resultN U_over_treat_optA_B1 U_under_treat_optA U_over_under_treat_optA U_match_treat_RDT U_over_treat_optB1 U_symp_sev_mal_simp_trt U_under_treat_optB1_B2 U_over_under_treat_optB1 U_Nsymp_sev_mal_sev_treat U_over_treat_optB2 U_under_treat_optB2 U_over_under_treat_optB2 U_ACT_only U_mono_only U_quinine_only U_quinine_ACT U_mono_ACT U_other_combo H_mal_correct H_correct_simple_mal H_correct_severe_mal H_correct_sev_simple_mal H_RDT_H_POS_corr_treat H_RDT_H_NEG_no_treat H_corr_treat_RDT_result H_corr_treat_RDT_resultP H_corr_treat_RDT_resultN H_over_treat_optA_B1 H_under_treat_optA H_over_under_treat_optA H_match_treat_RDT H_over_treat_optB1 H_symp_sev_mal_simp_trt H_under_treat_optB1_B2 H_over_under_treat_optB1 H_Nsymp_sev_mal_sev_treat H_over_treat_optB2 H_under_treat_optB2 H_over_under_treat_optB2 H_ACT_only H_mono_only H_quinine_only H_quinine_ACT H_mono_ACT H_other_combo RXmal_correct RXcorrect_simple_mal RXcorrect_severe_mal RXcorrect_sev_simple_mal RXRDT_H_POS_corr_treat RXRDT_H_NEG_no_treat RXcorr_treat_RDT_result RXcorr_treat_RDT_resultP RXcorr_treat_RDT_resultN RXover_treat_optA_B1 RXunder_treat_optA RXover_under_treat_optA RXmatch_treat_RDT RXover_treat_optB1 RXsymp_sev_mal_simp_trt RXunder_treat_optB1_B2 RXover_under_treat_optB1 RXNsymp_sev_mal_sev_treat RXover_treat_optB2 RXunder_treat_optB2 RXover_under_treat_optB2 RXACT_only RXmono_only RXquinine_only RXquinine_ACT RXmono_ACT RXother_combo NBref_mal_correct NBref_correct_simple_mal NBref_correct_severe_mal NBref_correct_sev_simple_mal NBref_RDT_H_POS_corr_treat NBref_RDT_H_NEG_no_treat NBref_corr_treat_RDT_result NBref_corr_treat_RDT_resultP NBref_corr_treat_RDT_resultN NBref_over_treat_optA_B1 NBref_under_treat_optA NBref_over_under_treat_optA NBref_match_treat_RDT NBref_over_treat_optB1 NBref_symp_sev_mal_simp_trt NBref_under_treat_optB1_B2 NBref_over_under_treat_optB1 NBref_Nsymp_sev_mal_sev_treat NBref_over_treat_optB2 NBref_under_treat_optB2 NBref_over_under_treat_optB2 NBref_ACT_only NBref_mono_only NBref_quinine_only NBref_quinine_ACT NBref_mono_ACT NBref_other_combo NBcscom_mal_correct NBcscom_correct_simple_mal NBcscom_correct_severe_mal NBcscom_correct_sev_simple_mal NBcscom_RDT_H_POS_corr_treat NBcscom_RDT_H_NEG_no_treat NBcscom_corr_treat_RDT_result NBcscom_corr_treat_RDT_resultP NBcscom_corr_treat_RDT_resultN NBcscom_over_treat_optA_B1 NBcscom_under_treat_optA NBcscom_over_under_treat_optA NBcscom_match_treat_RDT NBcscom_over_treat_optB1 NBcscom_symp_sev_mal_simp_trt NBcscom_under_treat_optB1_B2 NBcscom_over_under_treat_optB1 NBcscom_Nsymp_sev_mal_sev_treat NBcscom_over_treat_optB2 NBcscom_under_treat_optB2 NBcscom_over_under_treat_optB2 NBcscom_ACT_only NBcscom_mono_only NBcscom_quinine_only NBcscom_quinine_ACT NBcscom_mono_ACT NBcscom_other_combo decline_mal decline_sev_mal decline_simple_mal decline_corr_mal decline_corr_sev_mal decline_corr_simple_mal decline_mal_prescrip decline_mal_RDT_POS decline_mal_RDT_NEG switch2simple no_mal_test_treat decline_antibiot decline_antibiot_prescrip cost_artesunate isantimal1 RXisantimal1 isantimal2 RXisantimal2 isantimal3 RXisantimal3 isantimal4 RXisantimal4 isantimal5 RXisantimal5 isantimal6 RXisantimal6 isantimal7 RXisantimal7 isantimal8 RXisantimal8 isantimal9 RXisantimal9 isantimal10 RXisantimal10 isantimal11 RXisantimal11 isantimal12 RXisantimal12 isantimal13 RXisantimal13 isantimal14 RXisantimal14 isantimal15 RXisantimal15 cost_artesunate_injectable cost_artesunate_tablet cost_amodiaquine cost_amoquin cost_camoquin cost_novaquin cost_artemether cost_artemether_injectable cost_artemether_tablet cost_artemet_lumefant cost_artemet_lumefant_injec cost_artemet_lumefant_tablet cost_artekin cost_artesiane cost_artefan cost_coartem cost_cta_adolescent cost_cta_adulte cost_cta_enfant cost_malacur cost_combiart_adult cost_combiart cost_sp cost_laritem cost_unspecified_ACT cost_quinine_injectable cost_quinine_tablet cost_all_other_meds cost_quinine cost_ACT_treat_simple cost_ACT pre_discount_ACT post_discount_ACT pre_discount_ACT2 post_discount_ACT2 cost_meds_pre_discount cost_meds_post_discount cost_meds_pre_discount2 cost_meds_post_discount2 totalcost_alt_pre totalcost_alt_post totalcost_alt_pre2 totalcost_alt_post2 costs_nonmeds reported_totalcost_pre num_antimals RXnum_antimals num_other_meds_bought num_other_meds_presc taking_unspecified_ACT taking_artekin taking_artefan taking_coartem taking_cta_adolescent taking_cta_adulte taking_cta_enfant taking_malacur taking_combiart_adult taking_combiart taking_laritem taking_artesunate_injectable taking_artesunate_tablet taking_amodiaquine taking_amoquin taking_camoquin taking_novaquin taking_artemether_tablet taking_artemether_injectable taking_artemet_lumefant_injec taking_artemet_lumefant_tablet taking_quinine_tablet taking_quinine_injectable taking_sp taking_treat_simple_mal_alt taking_treat_simple_mal taking_ACT_tablets taking_treat_severe_mal_alt taking_treat_severe_mal RDT_NEG_treat_simple RDT_NEG_treat_severe RDT_POS_no_symp_treat_severe overtreatment severe_overtreatment RXRDT_NEG_treat_simple RXRDT_NEG_treat_severe RXRDT_POS_no_symp_treat_severe RXovertreatment RXsevere_overtreatment bobs dropme nobs log_reported_totalcost reported_totalcost_pre_mal reported_totalcost_pre_sev Sreported_totalcost_pre Sreported_totalcost Sreported_totalcost_pre_mal Sreported_totalcost_pre_sev agepatient2 agepatient3 agepatient_less15 under5 u5_age u5_age2 pred_mal_pos pred_mal_pos_new above_med_pos below_med_pos above_med_pos_new below_med_pos_new doctor_voucher_high doctor_voucher_low patient_voucher_high patient_voucher_low patient_info_high patient_info_low infotreat_high infotreat_low doctor_voucher_high_new doctor_voucher_low_new patient_voucher_high_new patient_voucher_low_new patient_info_high_new patient_info_low_new infotreat_high_new infotreat_low_new daysillness99_sq MSSin_home_survey M0in_home_survey MSSsymptomsscreening_1 M0symptomsscreening_1 MSSsymptomsscreening_2 M0symptomsscreening_2 MSSsymptomsscreening_3 M0symptomsscreening_3 MSSsymptomsscreening_4 M0symptomsscreening_4 MSSsymptomsscreening_5 M0symptomsscreening_5 MSSsymptomsscreening_6 M0symptomsscreening_6 MSSsymptomsscreening_7 M0symptomsscreening_7 MSSagepatient M0agepatient MSSagepatient_sq M0agepatient_sq MSSu5_age M0u5_age MSSgenderpatient M0genderpatient MSSpregnancy M0pregnancy MSSRDTresult_POS M0RDTresult_POS MSSpred_mal_pos M0pred_mal_pos MSSrespondent M0respondent MSSgender M0gender MSSethnic_bambara M0ethnic_bambara MSSspeak_french M0speak_french MSSunder5 M0under5 MSSreadwrite_fluent_french M0readwrite_fluent_french MSSprischoolorless M0prischoolorless MSStotal_hh_members_H M0total_hh_members_H MSSHH_frac_14 M0HH_frac_14 MSSHH_frac_job M0HH_frac_job MSSincome_percap_H M0income_percap_H MSSrent_value_H M0rent_value_H MSSHH_frac_nets M0HH_frac_nets MSSdaysillness99 M0daysillness99 MSSdaysillness99_sq M0daysillness99_sq CC1 CC3 CC5 CC7 CC9 CC11 CC13 CC15 CC17 CC19 CC21 CC23 CC25 CC27 CC28 CC29 CC31 CC33 CC34 CC35 CC37 CC39 CC41 DD1 DD2 DD3 DD4 DD5 DD6 DD7 DD8 DD9 DD10 DD11 DD12 DD13 DD14 DD15 DD16 DD17 DD18 DD19 DD20 DD21 DD22 DD23 DD24 DD25 DD26 DD27 DD28 DD29 DD30 DD31 DD32 DD33 DD34 DD35 CL1 CL2 CL3 CL4 CL5 CL6 CL7 CL8 CL9 CL10 CL11 CL12 CL13 CL14 CL15 CL16 CL17 CL18 CL19 CL20 CL21 CL22 CL23 CL24 CL25 CL26 CL27 CL28 CL29 CL30 CL31 CL32 CL33 CL34 CL35 CL36 CL37 CL38 CL39 CL40 CL41 CL42 CL43 CL44 CL45 CL46 CL47 CL48 CL49 CL50 CL51 CL52 CL53 CL54 CL55 CL56 CL57 CL58 CL59 temp 

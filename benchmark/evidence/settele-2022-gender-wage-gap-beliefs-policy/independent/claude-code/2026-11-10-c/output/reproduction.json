@@ -1,0 +1,26 @@
+{
+  "schema": 1,
+  "entry_id": "settele-2022-gender-wage-gap-beliefs-policy",
+  "mode": "independent",
+  "run_id": "2026-11-10-c",
+  "reproducer": "claude-code",
+  "language": "r",
+  "final": {"script": "script.R", "stdout": "stdout.txt", "stderr": "stderr.txt", "exit_code": 0},
+  "attempts": [
+    {"dir": "attempt-1", "exit_code": 1, "kind": "error"},
+    {"dir": "attempt-2", "exit_code": 1, "kind": "error"},
+    {"dir": "attempt-3", "exit_code": 0, "kind": "claim"},
+    {"dir": "attempt-4", "exit_code": 0, "kind": ""}
+  ],
+  "deviations": [
+    "Posterior belief (Table 5 col 2 and the 2SLS endogenous regressor) is z-scored on the treatment-arm sample (pooled over the five posterior statistics) rather than on the pure control group; chosen after the attempt-3 claim check (control-group z-scoring gave -0.587 vs claimed -0.658).",
+    "Policy demand index: wage transparency within companies (wave A) and the reporting website (wave B), each z-scored on its own wave's control group, share one slot in a 5-input Anderson index, since the two items are never jointly observed.",
+    "Anderson (2008) indices: weights are row sums of the inverse covariance matrix of the standardised inputs (computed on the full main-survey sample, or on the full follow-up sample for Table 6); the weighted mean is not re-standardised.",
+    "Log household income in the main survey is mapped from the income bracket using the per-bracket values found in the package's follow-up files (loghhinc), which are constant within bracket.",
+    "Probability weights for the main survey are rebuilt from Appendix G.1 (wave B, age 18-24: women 0.6298, men 1.4615; age 55-65: women 0.8691, men 1.0184; else 1); they match the follow-up files' pweight for all 1,105 follow-up respondents."
+  ],
+  "notes": "Raw LimeSurvey exports decoded with the .lss survey definitions in the mount (treatment arms: RAND=1 is the ACS/$74 arm, RAND=2 the CPS/$94 arm, RAND=0 pure control; answer codes A1..An mapped to numeric scales; wave B follow-up wageproblem2 has the high/low-skilled subquestions swapped). Main-survey covariates were cross-checked against the derived variables in the follow-up files (gender, democrat, indep, otherpol, associatemore, anychildren, pweight all agree 1105/1105; prior 1104/1105). Table 3/4 sample: pure control with prior strictly between the control group's 5th and 95th percentiles (50, 113; R quantile type 2), N=921. Outcomes z-scored on the pure control group (follow-up outcomes on the full follow-up sample). WLS with probability weights via fixest; 2SLS via fixest IV. Attempts 1-2 were exploratory runs that crashed on coding errors in the diagnostic code (no RESULT lines). Attempt 3 was the first full run, and its claim check flagged only the posterior z-score. Attempt 4 was an exploratory comparison of standardisation choices for the posterior. Read Me.pdf, output/Display_Output.tex (only its LaTeX header/table list) and the surveys/*.lss files in the mount were consulted. No Docker run hung.",
+  "files_read_outside_mount": [],
+  "started_at": "2026-11-10T06:32:53Z",
+  "finished_at": "2026-11-10T06:41:00Z"
+}

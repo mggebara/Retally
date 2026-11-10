@@ -1,0 +1,44 @@
+In-clinic survey patients: 2753 
+Candidate controls: 331 (CC: 272  CL: 59 ); date dummies partialled: 35 
+Table 3 col1 outcome used_vouchers_admin 
+  lasso for used_vouchers_admin       : 1 selected [CL9]
+  lasso for patient_voucher           : 1 selected [CL33]
+  lasso for doctor_voucher            : 1 selected [CL51]
+  used_vouchers_admin: N=2753, controls=3; bP=0.29484 (se 0.02911), bD=0.21348 (se 0.02284); p(bP=bD)=0.000
+  t-test bP=bD: diff=0.08136, p=0.008 (t dist, G-1 df)
+Table 3 col2 outcome RXtreat_sev_simple_mal 
+  lasso for RXtreat_sev_simple_mal    : 11 selected [CC1 CC5 CC7 CC9 CC1xCC19 CC1xCC31 CC3xCC9 CC9xCC25 CC9xCC31 CC9xCC41 CC13xCC31]
+  lasso for patient_voucher           : 3 selected [CL5 CL33 CL54]
+  lasso for doctor_voucher            : 3 selected [CL47 CL49 CL51]
+  RXtreat_sev_simple_mal: N=2429, controls=17; bP=0.05372 (se 0.02545), bD=0.02588 (se 0.02479); p(bP=bD)=0.104
+  t-test bP=bD: diff=0.02785, p=0.178 (t dist, G-1 df)
+Table 3 col3 outcome treat_sev_simple_mal 
+  lasso for treat_sev_simple_mal      : 9 selected [CC1 CC5 CC9 CC1xCC5 CC1xCC19 CC5xCC31 CC9xCC25 CC23xCC35 CC31xCC41]
+  lasso for patient_voucher           : 3 selected [CL5 CL33 CL54]
+  lasso for doctor_voucher            : 3 selected [CL47 CL49 CL51]
+  treat_sev_simple_mal: N=2429, controls=15; bP=0.12384 (se 0.02763), bD=0.07612 (se 0.02512); p(bP=bD)=0.000
+  t-test bP=bD: diff=0.04773, p=0.051 (t dist, G-1 df)
+Table 3 col4 outcome RXtreat_severe_mal 
+  lasso for RXtreat_severe_mal        : 10 selected [CC5 CC23 CC1xCC3 CC1xCC5 CC1xCC9 CC1xCC31 CC3xCC9 CC5xCC7 CC9xCC25 CC9xCC41]
+  lasso for patient_voucher           : 3 selected [CL5 CL33 CL54]
+  lasso for doctor_voucher            : 3 selected [CL47 CL49 CL51]
+  RXtreat_severe_mal: N=2429, controls=16; bP=-0.03593 (se 0.01799), bD=-0.05056 (se 0.01947); p(bP=bD)=0.025
+  t-test bP=bD: diff=0.01463, p=0.479 (t dist, G-1 df)
+Table 3 col5 outcome treat_severe_mal 
+  lasso for treat_severe_mal          : 11 selected [CC5 CC9 CC23 CC1xCC5 CC1xCC9 CC3xCC9 CC5xCC25 CC5xCC31 CC9xCC25 CC9xCC41 CC23xCC35]
+  lasso for patient_voucher           : 3 selected [CL5 CL33 CL54]
+  lasso for doctor_voucher            : 3 selected [CL47 CL49 CL51]
+  treat_severe_mal: N=2429, controls=17; bP=-0.01560 (se 0.02019), bD=-0.04660 (se 0.01933); p(bP=bD)=0.056
+  t-test bP=bD: diff=0.03100, p=0.121 (t dist, G-1 df)
+RESULT:voucher_used_patient_voucher_table3_col1=0.294839
+RESULT:voucher_used_doctor_voucher_table3_col1=0.213482
+RESULT:any_malaria_treatment_prescribed_patient_voucher_table3_col2=0.053725
+RESULT:any_malaria_treatment_prescribed_doctor_voucher_table3_col2=0.025878
+RESULT:any_malaria_treatment_purchased_patient_voucher_table3_col3=0.123841
+RESULT:any_malaria_treatment_purchased_doctor_voucher_table3_col3=0.076115
+RESULT:severe_malaria_treatment_prescribed_patient_voucher_table3_col4=-0.035932
+RESULT:severe_malaria_treatment_prescribed_doctor_voucher_table3_col4=-0.050564
+RESULT:severe_malaria_treatment_purchased_patient_voucher_table3_col5=-0.015600
+RESULT:severe_malaria_treatment_purchased_doctor_voucher_table3_col5=-0.046596
+RESULT:n_obs_table3_col1=2753
+RESULT:n_obs_table3_cols2_5=2429

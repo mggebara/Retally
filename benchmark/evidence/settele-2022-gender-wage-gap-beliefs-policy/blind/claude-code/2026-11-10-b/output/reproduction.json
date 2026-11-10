@@ -1,0 +1,23 @@
+{
+  "schema": 1,
+  "entry_id": "settele-2022-gender-wage-gap-beliefs-policy",
+  "mode": "blind",
+  "run_id": "2026-11-10-b",
+  "reproducer": "claude-code",
+  "language": "r",
+  "final": {"script": "script.R", "stdout": "stdout.txt", "stderr": "stderr.txt", "exit_code": 0},
+  "attempts": [
+    {"dir": "attempt-1", "exit_code": 0, "kind": ""},
+    {"dir": "attempt-2", "exit_code": 0, "kind": ""}
+  ],
+  "deviations": [
+    "Policy demand index: wage transparency within firms (wave A) and the reporting website (wave B) were never elicited jointly, so their covariance is not identified; each is z-scored on its own wave's pure control group and they share one slot in the Anderson (2008) index, which therefore has 5 inverse-covariance-weighted inputs instead of 6 separate ones.",
+    "Anderson index implementation (paper gives no formula): items z-scored on the pure control group (unweighted); weights are row sums of the inverse covariance matrix of the standardized items over the full main-survey sample (all 4,065, unweighted); index is the weighted mean of the non-missing items, re-standardized on the pure control group. The follow-up index uses the full follow-up sample for z-scoring, covariance and re-standardization.",
+    "Trimming for Tables 3-4: 5th/95th percentiles of the prior computed on the full main-survey sample (type-2 quantiles, giving 50 and 116, the cut-offs the paper reports in Appendix G); the task text says the control group's distribution, whose percentiles would be 50 and 113. Kept control respondents with 50 < prior < 116 (strict).",
+    "Prior (Table 3/4 Panel B) and posterior (Table 5 col 2 and the 2SLS) z-scored with the pure control group's mean and SD (both waves pooled, unweighted). Posterior regressions have no dummies for the posterior-statistic version (Table 5 notes list none)."
+  ],
+  "notes": "Independent blind reproduction from the raw LimeSurvey exports (Stage I wave A/B main surveys, Stage II follow-ups). Response codes were decoded from the .lss survey-structure files (XML data, not scripts): RAND 0 = pure control, 1 = T74 (ACS), 2 = T94 (CPS); prior = incentivized or non-incentivized elicitation by RAND12; posterior pooled over the five randomized statistics (9 treated respondents have no posterior). Covariates were built from Stage I (Democrat = Dem + Ind. leaning Dem; Independent; 'other'; Republican + leaning Rep reference; region, 5 age brackets, employment dummies with retired/out-of-labor-force reference, >= 2-year degree, any children, log household income). Bracket-to-log-income values were taken from the author-coded loghhinc in the Stage II files; the constructed covariates match the Stage II coding for all 1,105 follow-up respondents. Probability weights per Appendix G (wave B ages 18-24 and 55-65, by gender). OLS and 2SLS with fixest, HC1-robust SEs, probability weights. Table 6 uses the Stage II files' own covariates; wave B's alternate item order (wageproblem2, where SQ003/SQ004 are swapped) was merged in. Two exploratory runs (variable listing; construction checks) printed no RESULT lines; the final run is the first and only scored run. Nothing hung.",
+  "files_read_outside_mount": [],
+  "started_at": "2026-11-10T06:19:00Z",
+  "finished_at": "2026-11-10T06:30:00Z"
+}

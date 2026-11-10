@@ -1,0 +1,22 @@
+{
+  "schema": 1,
+  "entry_id": "lopez-2022-patient-demand-prescription-overuse",
+  "mode": "blind",
+  "run_id": "2026-11-10-b",
+  "reproducer": "claude-code",
+  "language": "r",
+  "final": {"script": "script.R", "stdout": "stdout.txt", "stderr": "stderr.txt", "exit_code": 0},
+  "attempts": [
+    {"dir": "attempt-1", "exit_code": 0, "kind": ""},
+    {"dir": "attempt-2", "exit_code": 0, "kind": ""},
+    {"dir": "attempt-3", "exit_code": 1, "kind": "error"}
+  ],
+  "deviations": [
+    "Post-double-selection lasso implemented by hand in base R (coordinate descent) because glmnet/hdm/lassopack are not available; it follows Stata lassopack rlasso/pdslasso defaults as best known: date FE and constant partialled out, standardized controls, lambda = 2*1.1*sqrt(N)*qnorm(1-gamma/(2p)), cluster-robust (clinic) penalty loadings with gamma = 0.1/log(number of clinics), initial residuals from OLS on the 5 most correlated controls, 2 lasso-based loading updates with post-lasso residuals. The exact options the authors passed to pdslasso (heteroskedastic vs cluster loadings, gamma, iterations) are not stated in the paper, so selected controls may differ slightly.",
+    "Candidate controls taken from the dataset's pre-built control set: CC* main effects (23 patient/respondent controls, mean-imputed, with missing dummies), their 249 pairwise interactions CCixCCj, and 59 clinic dummies CL1-CL59 (331 candidates), matching the Table 3 notes."
+  ],
+  "notes": "Data: LSS_analysis_datasets_20201108.dta only. Sample: in-clinic survey patients (patient==1), N=2753 for voucher use (used_vouchers_admin, administrative match); N=2429 for columns 2-5 (non-missing prescription/purchase outcomes). Outcomes: col2 RXtreat_sev_simple_mal, col3 treat_sev_simple_mal, col4 RXtreat_severe_mal, col5 treat_severe_mal. Treatments: patient_voucher, doctor_voucher (control days omitted). Date FE = date_morning_survey (36 dates); final OLS via fixest with date FE, the union of lasso-selected controls, SEs clustered by clinic (cscomnum_OS, 60 clinics). attempt-1 and attempt-2 were exploratory (variable listing, sample flags; no RESULT lines). attempt-3 crashed on a diagnostic p-value call (fixest::wald syntax) before printing RESULT lines; fixed by computing the p-value by hand, estimates unchanged. No runs hung. No author scripts, result tables (.tex), logs or PDFs from the package were opened. The no-controls version of equation (1) is printed in stdout for reference only.",
+  "files_read_outside_mount": [],
+  "started_at": "2026-11-10T06:44:37Z",
+  "finished_at": "2026-11-10T06:49:30Z"
+}

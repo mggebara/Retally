@@ -1,0 +1,90 @@
+A feature sums:
+    fsw2     ssw2  frevmid frevedge  srevmid srevedge     comb    fdev2 
+      21       18       16        7       23        9       39       35 
+   sdev2  frevtop  frevbot  n1ext_s 
+      39        3        4        2 
+B feature sums:
+    fsw2     ssw2  frevmid frevedge  srevmid srevedge     comb    fdev2 
+      22       23       20        7       22       10       45       38 
+   sdev2  frevtop  frevbot  n1ext_s 
+      45        3        4        5 
+                                              rule A_excl A_TC B_excl
+              sw2+frevtop+frevbot+srevmid+srevedge     49  217     52
+                          sw2+frevtop+frevbot+comb     49  217     52
+                  sw2+frevtop+frevbot+srevmid+comb     49  217     52
+                 sw2+frevtop+frevbot+srevedge+comb     49  217     52
+         sw2+frevtop+frevbot+srevmid+srevedge+comb     49  217     52
+                      sw2+frevmid+srevmid+srevedge     49  215     51
+              sw2+frevmid+frevbot+srevmid+srevedge     51  215     53
+                                  sw2+frevmid+comb     49  215     51
+                          sw2+frevmid+frevbot+comb     51  215     53
+                          sw2+frevmid+srevmid+comb     49  215     51
+                  sw2+frevmid+frevbot+srevmid+comb     51  215     53
+                         sw2+frevmid+srevedge+comb     49  215     51
+                 sw2+frevmid+frevbot+srevedge+comb     51  215     53
+                 sw2+frevmid+srevmid+srevedge+comb     49  215     51
+         sw2+frevmid+frevbot+srevmid+srevedge+comb     51  215     53
+                       sw2+frevmid+frevbot+srevmid     49  215     50
+              sw2+frevmid+frevtop+srevmid+srevedge     51  214     52
+                          sw2+frevmid+frevtop+comb     51  214     52
+                  sw2+frevmid+frevtop+srevmid+comb     51  214     52
+                 sw2+frevmid+frevtop+srevedge+comb     51  214     52
+         sw2+frevmid+frevtop+srevmid+srevedge+comb     51  214     52
+                       sw2+frevmid+frevtop+srevmid     49  214     49
+               sw2+frevmid+frevtop+frevbot+srevmid     51  214     51
+                      sw2+frevbot+srevmid+srevedge     47  218     51
+                                  sw2+frevbot+comb     47  218     51
+                          sw2+frevbot+srevmid+comb     47  218     51
+                         sw2+frevbot+srevedge+comb     47  218     51
+                 sw2+frevbot+srevmid+srevedge+comb     47  218     51
+                      sw2+frevtop+srevmid+srevedge     47  217     50
+      sw2+frevmid+frevtop+frevbot+srevmid+srevedge     53  214     54
+                                  sw2+frevtop+comb     47  217     50
+                  sw2+frevmid+frevtop+frevbot+comb     53  214     54
+                          sw2+frevtop+srevmid+comb     47  217     50
+          sw2+frevmid+frevtop+frevbot+srevmid+comb     53  214     54
+                         sw2+frevtop+srevedge+comb     47  217     50
+         sw2+frevmid+frevtop+frevbot+srevedge+comb     53  214     54
+                 sw2+frevtop+srevmid+srevedge+comb     47  217     50
+ sw2+frevmid+frevtop+frevbot+srevmid+srevedge+comb     53  214     54
+                               sw2+frevmid+srevmid     47  215     48
+                              sw2+srevmid+srevedge     45  218     49
+                                          sw2+comb     45  218     49
+                                  sw2+srevmid+comb     45  218     49
+                                 sw2+srevedge+comb     45  218     49
+                         sw2+srevmid+srevedge+comb     45  218     49
+                       sw2+frevtop+frevbot+srevmid     46  217     47
+              sw2+frevmid+frevtop+frevbot+srevedge     45  218     48
+                               sw2+frevbot+srevmid     44  218     46
+                      sw2+frevmid+frevbot+srevedge     43  219     47
+                               sw2+frevtop+srevmid     44  217     45
+                      sw2+frevmid+frevtop+srevedge     43  218     46
+                       sw2+frevmid+frevtop+frevbot     41  219     45
+                                       sw2+srevmid     42  218     44
+                              sw2+frevmid+srevedge     41  219     45
+                               sw2+frevmid+frevbot     39  220     44
+                               sw2+frevmid+frevtop     39  219     43
+                                       sw2+frevmid     37  220     42
+                      sw2+frevtop+frevbot+srevedge     38  223     39
+                              sw2+frevbot+srevedge     36  224     38
+                              sw2+frevtop+srevedge     36  223     36
+                                      sw2+srevedge     34  224     35
+                               sw2+frevtop+frevbot     32  224     33
+                                       sw2+frevbot     30  225     32
+                                       sw2+frevtop     30  224     30
+                                               sw2     28  225     29
+dev2 rule: A 53  A_TC 214  B 54 
+A dup flagged:
+     fsw2  ssw2 frevmid frevedge srevmid srevedge  comb fdev2 sdev2 frevtop
+242 FALSE FALSE    TRUE    FALSE    TRUE    FALSE  TRUE  TRUE  TRUE   FALSE
+270 FALSE FALSE    TRUE    FALSE   FALSE    FALSE FALSE  TRUE FALSE   FALSE
+    frevbot n1ext_s
+242   FALSE   FALSE
+270   FALSE   FALSE
+B dup flagged:
+     fsw2  ssw2 frevmid frevedge srevmid srevedge  comb fdev2 sdev2 frevtop
+352 FALSE FALSE   FALSE    FALSE   FALSE    FALSE FALSE FALSE FALSE   FALSE
+393 FALSE FALSE   FALSE    FALSE   FALSE    FALSE FALSE FALSE FALSE   FALSE
+    frevbot n1ext_s
+352   FALSE   FALSE
+393   FALSE   FALSE

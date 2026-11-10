@@ -1,0 +1,28 @@
+{
+  "schema": 1,
+  "entry_id": "ambuehl-2022-deliberative-competence-financial-choice",
+  "mode": "independent",
+  "run_id": "2026-11-10-c",
+  "reproducer": "claude-code",
+  "language": "r",
+  "final": {"script": "script.R", "stdout": "stdout.txt", "stderr": "stderr.txt", "exit_code": 0},
+  "attempts": [
+    {"dir": "attempt-1", "exit_code": 0, "kind": ""},
+    {"dir": "attempt-2", "exit_code": 0, "kind": ""},
+    {"dir": "attempt-3", "exit_code": 0, "kind": ""},
+    {"dir": "attempt-4", "exit_code": 0, "kind": ""},
+    {"dir": "attempt-5", "exit_code": 0, "kind": ""},
+    {"dir": "attempt-6", "exit_code": 0, "kind": ""},
+    {"dir": "attempt-7", "exit_code": 0, "kind": ""}
+  ],
+  "deviations": [
+    "The paper does not spell out its exact multiple-switching rule. We count as multiple switchers subjects with >=2 switches in any list or a wrong-way (future-to-immediate) switch. Single wrong-way switches confined to the top line of list 1 are not counted. In Experiment A, single wrong-way switches confined to the bottom ($0) line are not counted either. This rule reproduces the paper's reported counts (49 of 504 in A, 53 of 401 in B) and its sample sizes (455 and 215 subjects in A, 348 in B). The literal '>=2 switches' rule would exclude only 28 and 29 subjects.",
+    "The answer keys for the exam-style questions were derived from the question content: compound interest codes 2,4,4,7,6; Experiment A control codes 3,4,2,3,3; Experiment B control codes 4,5,5,5,1. They were not given in the data.",
+    "The Experiment A conditions were identified from the session and video code words. Sessions 1, 2, 4 and 5 ran Treatment vs Control. In sessions 3 and 6-8, treatment==1 is Substance-Only, identified by its high rule-of-72 Q1 score, and treatment==0 is Rhetoric-Only.",
+    "Valuations use the midpoint of the interval from the iterated price list: 2*switch - 2.1 + 0.2*(# future choices in list 2). They are normalized by the nominal future reward R from Table 2 and are not clipped at zero."
+  ],
+  "notes": "Seven exploratory runs (no RESULT lines) inspected the raw Qualtrics files and worked out the price-list coding, the condition assignment and the multiple-switching rule. The completed-study sample is the subjects who answered the final test, excluding Qualtrics preview responses: 504 in A and 401 in B. Table 4 uses OLS of the test score on a Treatment dummy with IID SEs. Table 7 uses OLS without a constant of -|r_c - r_s| on the condition dummies, with SEs clustered by subject and one observation per subject x task pair. The first scored run is the final run. Its RESULT values were checked with check_attempt ('All claims within tolerance'), and the script was not changed afterwards, so there is no claim attempt. Reading readMe.pdf in the mount (data documentation, not code) was the only non-data file consulted. The doFiles directory in the mount was empty. No run hung.",
+  "files_read_outside_mount": [],
+  "started_at": "2026-11-10T06:54:54Z",
+  "finished_at": "2026-11-10T11:23:00Z"
+}
