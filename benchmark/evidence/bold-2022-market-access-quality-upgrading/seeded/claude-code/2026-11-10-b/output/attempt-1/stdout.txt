@@ -1,0 +1,613 @@
+g1 names:
+  [1] "ea_code"                  "survey_season"           
+  [3] "group"                    "buy_treatment"           
+  [5] "main_road_min"            "hhr_n"                   
+  [7] "seeds_1"                  "seeds_2"                 
+  [9] "seeds_3"                  "seeds_4"                 
+ [11] "seeds_5"                  "seeds_6"                 
+ [13] "seeds_7"                  "form_used"               
+ [15] "survey_round"             "maize_tot_plotn"         
+ [17] "plot_size_1"              "plot_size_2"             
+ [19] "seeds_types_1"            "seeds_kg_1"              
+ [21] "seeds_cost_1"             "seeds_types_2"           
+ [23] "seeds_kg_2"               "seeds_cost_2"            
+ [25] "manure_kg_1"              "manure_cost_1"           
+ [27] "manure_kg_2"              "manure_cost_2"           
+ [29] "fert_kg_1"                "fert_spec_1"             
+ [31] "fert_cost_1"              "fert_kg_2"               
+ [33] "fert_spec_2"              "fert_cost_2"             
+ [35] "booster_kg_1"             "booster_cost_1"          
+ [37] "booster_kg_2"             "booster_cost_2"          
+ [39] "equipment_cost_1"         "tot_lab_costs_1"         
+ [41] "equipment_cost_2"         "tot_lab_costs_2"         
+ [43] "tot_chem_costs_1"         "tot_chem_costs_2"        
+ [45] "harvest_cost_1"           "harvest_kg_1"            
+ [47] "harvest_cost_2"           "harvest_kg_2"            
+ [49] "harvest_kg"               "acres_tot"               
+ [51] "dry_how"                  "labor_cost_dry"          
+ [53] "drying_cost"              "storage"                 
+ [55] "labor_cost_store"         "storage_cost"            
+ [57] "labor_cost_ph"            "otherph_cost"            
+ [59] "sold_crop"                "sold_kg"                 
+ [61] "sold_kg_p_1"              "sale_transport_yn_1"     
+ [63] "sale_transport_cost_1"    "sold_kg_p_2"             
+ [65] "sale_transport_yn_2"      "sale_transport_cost_2"   
+ [67] "seeds_kg"                 "seeds_type"              
+ [69] "seeds_cost"               "fert_spec"               
+ [71] "fert_kg"                  "fert_cost"               
+ [73] "tot_rev_told_tot"         "tot_transport_cost"      
+ [75] "sold_kg_p_3"              "plot_size_3"             
+ [77] "plot_size_4"              "seeds_types_3"           
+ [79] "seeds_kg_3"               "seeds_cost_3"            
+ [81] "seeds_types_4"            "seeds_kg_4"              
+ [83] "seeds_cost_4"             "manure_kg_3"             
+ [85] "manure_kg_4"              "fert_spec_3"             
+ [87] "fert_kg_3"                "fert_cost_3"             
+ [89] "fert_spec_4"              "fert_kg_4"               
+ [91] "fert_cost_4"              "lh_prep_unit1"           
+ [93] "lh_prep_hours_unit1"      "lh_plant_unit1"          
+ [95] "lh_plant_hours_unit1"     "lh_weed_unit1"           
+ [97] "lh_weed_hours_unit1"      "lh_spray_unit1"          
+ [99] "lh_spray_hours_unit1"     "lh_harv_unit1"           
+[101] "lh_harv_hours_unit1"      "lh_prep_hours_season1"   
+[103] "lh_plant_hours_season1"   "lh_weed_hours_season1"   
+[105] "lh_spray_hours_season1"   "lh_harv_hours_season1"   
+[107] "lh_prep_unit2"            "lh_prep_hours_unit2"     
+[109] "lh_plant_unit2"           "lh_plant_hours_unit2"    
+[111] "lh_weed_unit2"            "lh_weed_hours_unit2"     
+[113] "lh_spray_unit2"           "lh_spray_hours_unit2"    
+[115] "lh_harv_unit2"            "lh_harv_hours_unit2"     
+[117] "lh_prep_hours_season2"    "lh_plant_hours_season2"  
+[119] "lh_weed_hours_season2"    "lh_spray_hours_season2"  
+[121] "lh_harv_hours_season2"    "lh_prep_unit3"           
+[123] "lh_prep_hours_unit3"      "lh_plant_unit3"          
+[125] "lh_plant_hours_unit3"     "lh_weed_unit3"           
+[127] "lh_weed_hours_unit3"      "lh_spray_unit3"          
+[129] "lh_spray_hours_unit3"     "lh_harv_unit3"           
+[131] "lh_harv_hours_unit3"      "lh_prep_hours_season3"   
+[133] "lh_plant_hours_season3"   "lh_weed_hours_season3"   
+[135] "lh_spray_hours_season3"   "lh_harv_hours_season3"   
+[137] "lh_prep_unit4"            "lh_prep_hours_unit4"     
+[139] "lh_plant_unit4"           "lh_plant_hours_unit4"    
+[141] "lh_weed_unit4"            "lh_weed_hours_unit4"     
+[143] "lh_spray_unit4"           "lh_spray_hours_unit4"    
+[145] "lh_harv_unit4"            "lh_harv_hours_unit4"     
+[147] "lh_prep_hours_season4"    "lh_plant_hours_season4"  
+[149] "lh_weed_hours_season4"    "lh_spray_hours_season4"  
+[151] "lh_harv_hours_season4"    "lc_prep_unit1"           
+[153] "lc_prep_costs_unit1"      "lc_plant_unit1"          
+[155] "lc_plant_costs_unit1"     "lc_weed_unit1"           
+[157] "lc_weed_costs_unit1"      "lc_spray_unit1"          
+[159] "lc_spray_costs_unit1"     "lc_harv_unit1"           
+[161] "lc_harv_costs_unit1"      "lc_prep_costs_season1"   
+[163] "lc_plant_costs_season1"   "lc_weed_costs_season1"   
+[165] "lc_spray_costs_season1"   "lc_harv_costs_season1"   
+[167] "lc_prep_unit2"            "lc_prep_costs_unit2"     
+[169] "lc_plant_unit2"           "lc_plant_costs_unit2"    
+[171] "lc_weed_unit2"            "lc_weed_costs_unit2"     
+[173] "lc_spray_unit2"           "lc_spray_costs_unit2"    
+[175] "lc_harv_unit2"            "lc_harv_costs_unit2"     
+[177] "lc_prep_costs_season2"    "lc_plant_costs_season2"  
+[179] "lc_weed_costs_season2"    "lc_spray_costs_season2"  
+[181] "lc_harv_costs_season2"    "lc_prep_unit3"           
+[183] "lc_prep_costs_unit3"      "lc_plant_unit3"          
+[185] "lc_plant_costs_unit3"     "lc_weed_unit3"           
+[187] "lc_weed_costs_unit3"      "lc_spray_unit3"          
+[189] "lc_spray_costs_unit3"     "lc_harv_unit3"           
+[191] "lc_harv_costs_unit3"      "lc_prep_costs_season3"   
+[193] "lc_plant_costs_season3"   "lc_weed_costs_season3"   
+[195] "lc_spray_costs_season3"   "lc_harv_costs_season3"   
+[197] "lc_prep_unit4"            "lc_prep_costs_unit4"     
+[199] "lc_plant_unit4"           "lc_plant_costs_unit4"    
+[201] "lc_weed_unit4"            "lc_weed_costs_unit4"     
+[203] "lc_spray_unit4"           "lc_spray_costs_unit4"    
+[205] "lc_harv_unit4"            "lc_harv_costs_unit4"     
+[207] "lc_prep_costs_season4"    "lc_plant_costs_season4"  
+[209] "lc_weed_costs_season4"    "lc_spray_costs_season4"  
+[211] "lc_harv_costs_season4"    "tot_lab_costs_3"         
+[213] "tot_lab_costs_4"          "tot_chem_costs_3"        
+[215] "tot_chem_costs_4"         "harvest_kg_3"            
+[217] "harvest_kg_4"             "decob"                   
+[219] "lh_decob_hours"           "lc_decob_labour_costs"   
+[221] "lc_decob_labmaize_costs"  "lc_decob_price"          
+[223] "lc_decob_other_costs"     "winnow"                  
+[225] "lh_winnow_hours"          "lc_winnow_labour_costs"  
+[227] "lc_winnow_labmaize_costs" "lc_winnow_other_costs"   
+[229] "sort"                     "lh_sort_hours"           
+[231] "lc_sort_labour_costs"     "lc_sort_labmaize_costs"  
+[233] "lc_sort_other_costs"      "bag"                     
+[235] "lh_bag_hours"             "lc_bag_labour_costs"     
+[237] "lc_bag_labmaize_costs"    "lc_bag_price"            
+[239] "lc_bag_other_costs"       "sale_transport_yn_3"     
+[241] "sold_kg_p_4"              "sale_transport_yn_4"     
+[243] "sold_kg_p_5"              "sale_transport_yn_5"     
+[245] "sale_transport_cost_5"    "sale_transport_cost_3"   
+[247] "sold_kg_p_6"              "sale_transport_yn_6"     
+[249] "sold_kg_p_7"              "sale_transport_yn_7"     
+[251] "plot_size_5"              "plot_size_6"             
+[253] "seeds_types_5"            "seeds_kg_5"              
+[255] "seeds_cost_5"             "seeds_types_6"           
+[257] "seeds_kg_6"               "seeds_cost_6"            
+[259] "manure_kg_5"              "manure_kg_6"             
+[261] "fert_spec_5"              "fert_spec_6"             
+[263] "lh_prep_unit5"            "lh_prep_hours_unit5"     
+[265] "lh_plant_unit5"           "lh_plant_hours_unit5"    
+[267] "lh_weed_unit5"            "lh_weed_hours_unit5"     
+[269] "lh_spray_unit5"           "lh_spray_hours_unit5"    
+[271] "lh_harv_unit5"            "lh_harv_hours_unit5"     
+[273] "lh_prep_hours_season5"    "lh_plant_hours_season5"  
+[275] "lh_weed_hours_season5"    "lh_spray_hours_season5"  
+[277] "lh_harv_hours_season5"    "lh_prep_unit6"           
+[279] "lh_prep_hours_unit6"      "lh_plant_unit6"          
+[281] "lh_plant_hours_unit6"     "lh_weed_unit6"           
+[283] "lh_weed_hours_unit6"      "lh_spray_unit6"          
+[285] "lh_spray_hours_unit6"     "lh_harv_unit6"           
+[287] "lh_harv_hours_unit6"      "lh_prep_hours_season6"   
+[289] "lh_plant_hours_season6"   "lh_weed_hours_season6"   
+[291] "lh_spray_hours_season6"   "lh_harv_hours_season6"   
+[293] "lc_prep_unit5"            "lc_prep_costs_unit5"     
+[295] "lc_plant_unit5"           "lc_plant_costs_unit5"    
+[297] "lc_weed_unit5"            "lc_weed_costs_unit5"     
+[299] "lc_spray_unit5"           "lc_spray_costs_unit5"    
+[301] "lc_harv_unit5"            "lc_harv_costs_unit5"     
+[303] "lc_prep_costs_season5"    "lc_plant_costs_season5"  
+[305] "lc_weed_costs_season5"    "lc_spray_costs_season5"  
+[307] "lc_harv_costs_season5"    "lc_prep_costs_unit6"     
+[309] "lc_plant_unit6"           "lc_plant_costs_unit6"    
+[311] "lc_weed_unit6"            "lc_weed_costs_unit6"     
+[313] "lc_spray_unit6"           "lc_spray_costs_unit6"    
+[315] "lc_harv_unit6"            "lc_harv_costs_unit6"     
+[317] "lc_prep_costs_season6"    "lc_plant_costs_season6"  
+[319] "lc_weed_costs_season6"    "lc_spray_costs_season6"  
+[321] "lc_harv_costs_season6"    "tot_lab_costs_5"         
+[323] "tot_lab_costs_6"          "tot_chem_costs_5"        
+[325] "tot_chem_costs_6"         "harvest_kg_5"            
+[327] "harvest_kg_6"             "lc_winnow_price"         
+[329] "lc_sort_price"            "fert_kg_5"               
+[331] "fert_cost_5"              "booster_kg_3"            
+[333] "booster_cost_3"           "booster_kg_4"            
+[335] "booster_cost_4"           "booster_kg_5"            
+[337] "booster_cost_5"           "equipment_cost_3"        
+[339] "equipment_cost_4"         "equipment_cost_5"        
+[341] "harvest_cost_3"           "harvest_cost_4"          
+[343] "harvest_cost_5"           "decobbing_cost_1"        
+[345] "decobbing_cost_2"         "manure_cost_3"           
+[347] "decobbing_cost_3"         "hhh_id"                  
+[349] "season_spring2017"        "season_fall2017"         
+[351] "season_spring2018"        "season_fall2018"         
+[353] "season_spring2019"        "season_fall2019"         
+[355] "season_spring2020"        "season_post"             
+[357] "season_ante"              "plot_size_7"             
+[359] "plot_size_8"              "plot_size_9"             
+[361] "plot_size_10"             "plot_size_11"            
+[363] "plot_size_12"             "seeds_types_7"           
+[365] "booster_cost"             "decobbing_cost_4"        
+[367] "decobbing_cost_5"         "distance_kakumiro"       
+[369] "mdm_female"               "mdm_primary"             
+[371] "cost_transportpre"        "cost_transportpost"      
+[373] "fert_spec_7"              "fert_spec_8"             
+[375] "fert_spec_9"              "fert_kg_6"               
+[377] "harvest_kg_7"             "harvest_kg_8"            
+[379] "harvest_kg_9"             "tot_rev_combined_1"      
+[381] "tot_rev_combined2_1"      "tot_rev_combined_2"      
+[383] "tot_rev_combined2_2"      "tot_rev_combined_3"      
+[385] "tot_rev_combined2_3"      "tot_rev_combined_4"      
+[387] "tot_rev_combined2_4"      "tot_rev_combined_5"      
+[389] "tot_rev_combined2_5"      "tot_rev_combined_6"      
+[391] "tot_rev_combined2_6"      "tot_rev_combined_7"      
+[393] "tot_rev_combined2_7"      "tot_rev_combined_1_1"    
+[395] "tot_rev_combined_1_2"     "tot_rev_combined_1_3"    
+[397] "tot_rev_combined_2_1"     "tot_rev_combined_3_1"    
+[399] "tot_rev_combined_3_2"     "tot_rev_combined_4_1"    
+[401] "tot_rev_combined_5_1"     "tot_rev_combined_6_1"    
+[403] "tot_rev_combined_7_1"     "tot_rev_combined_8_1"    
+[405] "tot_rev_combined_2_2"    
+-- group 
+
+   1 
+1221 
+-- survey_season 
+
+  1   2   3   4   5   6   7 
+178 186 180 176 166 167 168 
+-- survey_round 
+
+  1   2   3   4   5   6   7 
+189 175 180 176 166 167 168 
+-- season_ante 
+
+  0   1 
+677 544 
+-- season_post 
+
+  0   1 
+544 677 
+-- season_spring2018 
+
+   0    1 
+1041  180 
+-- season_spring2020 
+
+   0    1 
+1053  168 
+-- form_used 
+
+                 ANEW_baseline   ANEW_baseline_Vaspecial_WIDE 
+                           178                             11 
+         ANEW_followup_sep2017         Market_Survey_fall2019 
+                           175                            167 
+         Market_Survey_mar2018          Market_Survey_mar2019 
+                           180                            166 
+         Market_Survey_oct2018       Market_Survey_spring2020 
+                           176                            149 
+Phone_Market_Survey_spring2020 
+                            19 
+-- buy_treatment 
+
+  0   1 
+514 707 
+   
+    ANEW_baseline ANEW_baseline_Vaspecial_WIDE ANEW_followup_sep2017
+  1           178                            0                     0
+  2             0                           11                   175
+  3             0                            0                     0
+  4             0                            0                     0
+  5             0                            0                     0
+  6             0                            0                     0
+  7             0                            0                     0
+   
+    Market_Survey_fall2019 Market_Survey_mar2018 Market_Survey_mar2019
+  1                      0                     0                     0
+  2                      0                     0                     0
+  3                      0                   180                     0
+  4                      0                     0                     0
+  5                      0                     0                   166
+  6                    167                     0                     0
+  7                      0                     0                     0
+   
+    Market_Survey_oct2018 Market_Survey_spring2020
+  1                     0                        0
+  2                     0                        0
+  3                     0                        0
+  4                   176                        0
+  5                     0                        0
+  6                     0                        0
+  7                     0                      149
+   
+    Phone_Market_Survey_spring2020
+  1                              0
+  2                              0
+  3                              0
+  4                              0
+  5                              0
+  6                              0
+  7                             19
+   
+      0   1
+  1 178   0
+  2 186   0
+  3 180   0
+  4   0 176
+  5   0 166
+  6   0 167
+  7   0 168
+types:
+tibble [1,221 × 12] (S3: tbl_df/tbl/data.frame)
+ $ lc_prep_unit1      : chr [1:1221] "" "" "" "" ...
+  ..- attr(*, "label")= chr "UNIT"
+  ..- attr(*, "format.stata")= chr "%9s"
+ $ lc_prep_costs_unit1: num [1:1221] NA NA NA NA NA NA NA NA 0 80000 ...
+  ..- attr(*, "label")= chr "costs per UNIT"
+  ..- attr(*, "format.stata")= chr "%12.0g"
+ $ lh_prep_unit1      : chr [1:1221] "" "" "" "" ...
+  ..- attr(*, "label")= chr "UNIT"
+  ..- attr(*, "format.stata")= chr "%9s"
+ $ lh_prep_hours_unit1: num [1:1221] NA NA NA NA NA NA NA NA 4 0 ...
+  ..- attr(*, "label")= chr "HOURS per UNIT"
+  ..- attr(*, "format.stata")= chr "%10.0g"
+ $ sale_transport_yn_1: chr [1:1221] "yes" "" "" "" ...
+  ..- attr(*, "format.stata")= chr "%9s"
+ $ decob              : chr [1:1221] "" "" "" "" ...
+  ..- attr(*, "label")= chr "Did you decob?"
+  ..- attr(*, "format.stata")= chr "%9s"
+ $ storage            : chr [1:1221] "house" "" "" "" ...
+  ..- attr(*, "label")= chr "How did you store the maize after harvesting?"
+  ..- attr(*, "format.stata")= chr "%20s"
+ $ sold_crop          : chr [1:1221] "yes" "" "" "" ...
+  ..- attr(*, "label")= chr "Did you sell at least part of the maize harvested during the last season (planti"
+  ..- attr(*, "format.stata")= chr "%9s"
+ $ dry_how            : chr [1:1221] "garden" "" " ground" "" ...
+  ..- attr(*, "label")= chr "How did you dry the maize?"
+  ..- attr(*, "format.stata")= chr "%92s"
+ $ tot_rev_told_tot   : num [1:1221] NA NA NA NA NA NA NA NA NA NA ...
+  ..- attr(*, "label")= chr "How much money did you get in total for all your maize sold during the last seas"
+  ..- attr(*, "format.stata")= chr "%12.0g"
+ $ ea_code            : chr [1:1221] "EA10078" "EA10078" "EA10078" "EA10078" ...
+  ..- attr(*, "format.stata")= chr "%9s"
+ $ hhh_id             : num [1:1221] 10078006 10078006 10078006 10078013 10078013 ...
+  ..- attr(*, "format.stata")= chr "%10.0g"
+returns names:
+  [1] "hhh_id"                    "Total_weight_of_maize_g"  
+  [3] "Foreign_matter_tot_g"      "Inorganic_matter_tot_g"   
+  [5] "Broken_grains_tot_g"       "Pest_damaged_grains_tot_g"
+  [7] "Rotten_and_diseased_grain" "Discoloured_grains_tot_g" 
+  [9] "Immature_or_shrivelled_gr" "Total_aflatoxins"         
+ [11] "add5_ind_weight1_1"        "add5_ind_weight2_1"       
+ [13] "add5_ind_weight3_1"        "add5_ind_weight4_1"       
+ [15] "add5_ind_weight5_1"        "add5_ind_weight6_1"       
+ [17] "add5_ind_weight7_1"        "add5_ind_weight8_1"       
+ [19] "add5_ind_weight9_1"        "add5_ind_weight10_1"      
+ [21] "add5_ind_weight11_1"       "add5_ind_weight12_1"      
+ [23] "add5_ind_weight13_1"       "add5_ind_weight14_1"      
+ [25] "add5_ind_weight15_1"       "add5_ind_weight16_1"      
+ [27] "add5_ind_weight17_1"       "add5_ind_weight18_1"      
+ [29] "add5_ind_weight19_1"       "add5_ind_weight20_1"      
+ [31] "add5_ind_ded_weight1_1"    "add5_ind_ded_weight2_1"   
+ [33] "add5_ind_ded_weight3_1"    "add5_ind_ded_weight4_1"   
+ [35] "add5_ind_ded_weight5_1"    "add5_ind_ded_weight6_1"   
+ [37] "add5_ind_ded_weight7_1"    "add5_ind_ded_weight8_1"   
+ [39] "add5_ind_ded_weight9_1"    "add5_ind_ded_weight10_1"  
+ [41] "add5_ind_ded_weight11_1"   "add5_ind_ded_weight12_1"  
+ [43] "add5_ind_ded_weight13_1"   "add5_ind_ded_weight14_1"  
+ [45] "add5_ind_ded_weight15_1"   "add5_ind_ded_weight16_1"  
+ [47] "add5_ind_ded_weight17_1"   "add5_ind_ded_weight18_1"  
+ [49] "add5_ind_ded_weight19_1"   "add5_ind_ded_weight20_1"  
+ [51] "add5_ppk_1"                "add5_ind_weight1_2"       
+ [53] "add5_ind_weight2_2"        "add5_ind_weight3_2"       
+ [55] "add5_ind_weight4_2"        "add5_ind_weight5_2"       
+ [57] "add5_ind_weight6_2"        "add5_ind_weight7_2"       
+ [59] "add5_ind_weight8_2"        "add5_ind_weight9_2"       
+ [61] "add5_ind_weight10_2"       "add5_ind_weight11_2"      
+ [63] "add5_ind_weight12_2"       "add5_ind_weight13_2"      
+ [65] "add5_ind_weight14_2"       "add5_ind_weight15_2"      
+ [67] "add5_ind_weight16_2"       "add5_ind_weight17_2"      
+ [69] "add5_ind_weight18_2"       "add5_ind_weight19_2"      
+ [71] "add5_ind_weight20_2"       "add5_ind_ded_weight1_2"   
+ [73] "add5_ind_ded_weight2_2"    "add5_ind_ded_weight3_2"   
+ [75] "add5_ind_ded_weight4_2"    "add5_ind_ded_weight5_2"   
+ [77] "add5_ind_ded_weight6_2"    "add5_ind_ded_weight7_2"   
+ [79] "add5_ind_ded_weight8_2"    "add5_ind_ded_weight9_2"   
+ [81] "add5_ind_ded_weight10_2"   "add5_ind_ded_weight11_2"  
+ [83] "add5_ind_ded_weight12_2"   "add5_ind_ded_weight13_2"  
+ [85] "add5_ind_ded_weight14_2"   "add5_ind_ded_weight15_2"  
+ [87] "add5_ind_ded_weight16_2"   "add5_ind_ded_weight17_2"  
+ [89] "add5_ind_ded_weight18_2"   "add5_ind_ded_weight19_2"  
+ [91] "add5_ind_ded_weight20_2"   "add5_ppk_2"               
+ [93] "add5_ind_weight1_3"        "add5_ind_weight2_3"       
+ [95] "add5_ind_weight3_3"        "add5_ind_weight4_3"       
+ [97] "add5_ind_weight5_3"        "add5_ind_weight6_3"       
+ [99] "add5_ind_weight7_3"        "add5_ind_weight8_3"       
+[101] "add5_ind_weight9_3"        "add5_ind_weight10_3"      
+[103] "add5_ind_weight11_3"       "add5_ind_weight12_3"      
+[105] "add5_ind_weight13_3"       "add5_ind_weight14_3"      
+[107] "add5_ind_weight15_3"       "add5_ind_weight16_3"      
+[109] "add5_ind_weight17_3"       "add5_ind_weight18_3"      
+[111] "add5_ind_weight19_3"       "add5_ind_weight20_3"      
+[113] "add5_ind_ded_weight1_3"    "add5_ind_ded_weight2_3"   
+[115] "add5_ind_ded_weight3_3"    "add5_ind_ded_weight4_3"   
+[117] "add5_ind_ded_weight5_3"    "add5_ind_ded_weight6_3"   
+[119] "add5_ind_ded_weight7_3"    "add5_ind_ded_weight8_3"   
+[121] "add5_ind_ded_weight9_3"    "add5_ind_ded_weight10_3"  
+[123] "add5_ind_ded_weight11_3"   "add5_ind_ded_weight12_3"  
+[125] "add5_ind_ded_weight13_3"   "add5_ind_ded_weight14_3"  
+[127] "add5_ind_ded_weight15_3"   "add5_ind_ded_weight16_3"  
+[129] "add5_ind_ded_weight17_3"   "add5_ind_ded_weight18_3"  
+[131] "add5_ind_ded_weight19_3"   "add5_ind_ded_weight20_3"  
+[133] "add5_ppk_3"                "add5_ind_weight1_4"       
+[135] "add5_ind_weight2_4"        "add5_ind_weight3_4"       
+[137] "add5_ind_weight4_4"        "add5_ind_weight5_4"       
+[139] "add5_ind_weight6_4"        "add5_ind_weight7_4"       
+[141] "add5_ind_weight8_4"        "add5_ind_weight9_4"       
+[143] "add5_ind_weight10_4"       "add5_ind_weight11_4"      
+[145] "add5_ind_weight12_4"       "add5_ind_weight13_4"      
+[147] "add5_ind_weight14_4"       "add5_ind_weight15_4"      
+[149] "add5_ind_weight16_4"       "add5_ind_weight17_4"      
+[151] "add5_ind_weight18_4"       "add5_ind_weight19_4"      
+[153] "add5_ind_weight20_4"       "add5_ind_ded_weight1_4"   
+[155] "add5_ind_ded_weight2_4"    "add5_ind_ded_weight3_4"   
+[157] "add5_ind_ded_weight4_4"    "add5_ind_ded_weight5_4"   
+[159] "add5_ind_ded_weight6_4"    "add5_ind_ded_weight7_4"   
+[161] "add5_ind_ded_weight8_4"    "add5_ind_ded_weight9_4"   
+[163] "add5_ind_ded_weight10_4"   "add5_ind_ded_weight11_4"  
+[165] "add5_ind_ded_weight12_4"   "add5_ind_ded_weight13_4"  
+[167] "add5_ind_ded_weight14_4"   "add5_ind_ded_weight15_4"  
+[169] "add5_ind_ded_weight16_4"   "add5_ind_ded_weight17_4"  
+[171] "add5_ind_ded_weight18_4"   "add5_ind_ded_weight19_4"  
+[173] "add5_ind_ded_weight20_4"   "add5_ppk_4"               
+[175] "add5_sold_when_e_1"        "add5_sold_when_e_2"       
+[177] "add5_sold_when_e_3"        "add5_sold_when_e_4"       
+[179] "ea_code"                   "add4_seeds_1"             
+[181] "add4_chemical_1"           "add4_moisture_1"          
+[183] "add4_weight_1"             "add4_seeds_2"             
+[185] "add4_chemical_2"           "add4_moisture_2"          
+[187] "add4_weight_2"             "add4_seeds_3"             
+[189] "add4_chemical_3"           "add4_moisture_3"          
+[191] "add4_weight_3"             "add4_seeds_4"             
+[193] "add4_chemical_4"           "add4_moisture_4"          
+[195] "add4_weight_4"             "add4_seeds_5"             
+[197] "add4_chemical_5"           "add4_moisture_5"          
+[199] "add4_weight_5"             "add4_seeds_6"             
+[201] "add4_chemical_6"           "add4_moisture_6"          
+[203] "add4_weight_6"             "add4_seeds_7"             
+[205] "add4_chemical_7"           "add4_moisture_7"          
+[207] "add4_weight_7"             "add4_seeds_8"             
+[209] "add4_chemical_8"           "add4_moisture_8"          
+[211] "add4_weight_8"             "add4_seeds_9"             
+[213] "add4_chemical_9"           "add4_moisture_9"          
+[215] "add4_weight_9"             "add4_seeds_10"            
+[217] "add4_chemical_10"          "add4_moisture_10"         
+[219] "add4_weight_10"            "add4_seeds_11"            
+[221] "add4_chemical_11"          "add4_moisture_11"         
+[223] "add4_weight_11"            "add4_seeds_12"            
+[225] "add4_chemical_12"          "add4_moisture_12"         
+[227] "add4_weight_12"            "add4_seeds_13"            
+[229] "add4_chemical_13"          "add4_moisture_13"         
+[231] "add4_weight_13"            "add4_seeds_14"            
+[233] "add4_chemical_14"          "add4_moisture_14"         
+[235] "add4_weight_14"            "add4_seeds_15"            
+[237] "add4_chemical_15"          "add4_moisture_15"         
+[239] "add4_weight_15"            "add4_seeds_16"            
+[241] "add4_chemical_16"          "add4_moisture_16"         
+[243] "add4_weight_16"            "add4_seeds_17"            
+[245] "add4_chemical_17"          "add4_moisture_17"         
+[247] "add4_weight_17"            "add4_seeds_18"            
+[249] "add4_chemical_18"          "add4_moisture_18"         
+[251] "add4_weight_18"            "add4_seeds_19"            
+[253] "add4_chemical_19"          "add4_moisture_19"         
+[255] "add4_weight_19"            "add4_seeds_20"            
+[257] "add4_chemical_20"          "add4_moisture_20"         
+[259] "add4_weight_20"            "add4_random_bag"          
+[261] "add1_acres_tot_1st"        "add1_ap_maize_kg_1"       
+[263] "add1_harvest_new_when_e_1" "treatment"                
+[265] "add4_insect_1"             "add4_insect_2"            
+[267] "add4_insect_3"             "add4_insect_4"            
+[269] "add4_insect_5"             "add4_insect_6"            
+[271] "add4_insect_7"             "add4_insect_8"            
+[273] "add4_insect_9"             "add4_insect_10"           
+[275] "add4_insect_11"            "add4_insect_12"           
+[277] "add4_insect_13"            "add4_insect_14"           
+[279] "add4_insect_15"            "add4_insect_16"           
+[281] "add4_insect_17"            "add4_insect_18"           
+[283] "add4_insect_19"            "add4_insect_20"           
+[285] "add4_insect_live_1"        "add4_insect_live_2"       
+[287] "add4_insect_live_3"        "add4_insect_live_4"       
+[289] "add4_insect_live_5"        "add4_insect_live_6"       
+[291] "add4_insect_live_7"        "add4_insect_live_8"       
+[293] "add4_insect_live_9"        "add4_insect_live_10"      
+[295] "add4_insect_live_11"       "add4_insect_live_12"      
+[297] "add4_insect_live_13"       "add4_insect_live_14"      
+[299] "add4_insect_live_15"       "add4_insect_live_16"      
+[301] "add4_insect_live_17"       "add4_insect_live_18"      
+[303] "add4_insect_live_19"       "add4_insect_live_20"      
+[305] "add4_dirty_1"              "add4_dirty_2"             
+[307] "add4_dirty_3"              "add4_dirty_4"             
+[309] "add4_dirty_5"              "add4_dirty_6"             
+[311] "add4_dirty_7"              "add4_dirty_8"             
+[313] "add4_dirty_9"              "add4_cobs_1"              
+[315] "add4_cobs_2"               "add4_cobs_3"              
+[317] "add4_cobs_4"               "add4_cobs_5"              
+[319] "add4_cobs_6"               "add4_cobs_7"              
+[321] "add4_cobs_8"               "add4_cobs_9"              
+[323] "add4_stones_1"             "add4_stones_2"            
+[325] "add4_stones_3"             "add4_stones_4"            
+[327] "add4_stones_5"             "add4_stones_6"            
+[329] "add4_stones_7"             "add4_stones_8"            
+[331] "add4_stones_9"             "add4_dust_1"              
+[333] "add4_dust_2"               "add4_dust_3"              
+[335] "add4_dust_4"               "add4_dust_5"              
+[337] "add4_dust_6"               "add4_dust_7"              
+[339] "add4_dust_8"               "add4_dust_9"              
+[341] "add4_broken_1"             "add4_broken_2"            
+[343] "add4_broken_3"             "add4_broken_4"            
+[345] "add4_broken_5"             "add4_broken_6"            
+[347] "add4_broken_7"             "add4_broken_8"            
+[349] "add4_broken_9"             "add4_immature_1"          
+[351] "add4_immature_2"           "add4_immature_3"          
+[353] "add4_immature_4"           "add4_immature_5"          
+[355] "add4_immature_6"           "add4_immature_7"          
+[357] "add4_immature_8"           "add4_immature_9"          
+[359] "add4_damage_1"             "add4_damage_2"            
+[361] "add4_damage_3"             "add4_damage_4"            
+[363] "add4_damage_5"             "add4_damage_6"            
+[365] "add4_damage_7"             "add4_damage_8"            
+[367] "add4_damage_9"             "add4_rot_1"               
+[369] "add4_rot_2"                "add4_rot_3"               
+[371] "add4_rot_4"                "add4_rot_5"               
+[373] "add4_rot_6"                "add4_rot_7"               
+[375] "add4_rot_8"                "add4_rot_9"               
+[377] "add4_mould_1"              "add4_mould_2"             
+[379] "add4_mould_3"              "add4_mould_4"             
+[381] "add4_mould_5"              "add4_mould_6"             
+[383] "add4_mould_7"              "add4_mould_8"             
+[385] "add4_mould_9"              "add4_dirty_10"            
+[387] "add4_dirty_11"             "add4_dirty_12"            
+[389] "add4_dirty_13"             "add4_dirty_14"            
+[391] "add4_dirty_15"             "add4_dirty_16"            
+[393] "add4_dirty_17"             "add4_dirty_18"            
+[395] "add4_dirty_19"             "add4_dirty_20"            
+[397] "add4_cobs_10"              "add4_cobs_11"             
+[399] "add4_cobs_12"              "add4_cobs_13"             
+[401] "add4_cobs_14"              "add4_cobs_15"             
+[403] "add4_cobs_16"              "add4_cobs_17"             
+[405] "add4_cobs_18"              "add4_cobs_19"             
+[407] "add4_cobs_20"              "add4_stones_10"           
+[409] "add4_stones_11"            "add4_stones_12"           
+[411] "add4_stones_13"            "add4_stones_14"           
+[413] "add4_stones_15"            "add4_stones_16"           
+[415] "add4_stones_17"            "add4_stones_18"           
+[417] "add4_stones_19"            "add4_stones_20"           
+[419] "add4_dust_10"              "add4_dust_11"             
+[421] "add4_dust_12"              "add4_dust_13"             
+[423] "add4_dust_14"              "add4_dust_15"             
+[425] "add4_dust_16"              "add4_dust_17"             
+[427] "add4_dust_18"              "add4_dust_19"             
+[429] "add4_dust_20"              "add4_broken_10"           
+[431] "add4_broken_11"            "add4_broken_12"           
+[433] "add4_broken_13"            "add4_broken_14"           
+[435] "add4_broken_15"            "add4_broken_16"           
+[437] "add4_broken_17"            "add4_broken_18"           
+[439] "add4_broken_19"            "add4_broken_20"           
+[441] "add4_immature_10"          "add4_immature_11"         
+[443] "add4_immature_12"          "add4_immature_13"         
+[445] "add4_immature_14"          "add4_immature_15"         
+[447] "add4_immature_16"          "add4_immature_17"         
+[449] "add4_immature_18"          "add4_immature_19"         
+[451] "add4_immature_20"          "add4_damage_10"           
+[453] "add4_damage_11"            "add4_damage_12"           
+[455] "add4_damage_13"            "add4_damage_14"           
+[457] "add4_damage_15"            "add4_damage_16"           
+[459] "add4_damage_17"            "add4_damage_18"           
+[461] "add4_damage_19"            "add4_damage_20"           
+[463] "add4_rot_10"               "add4_rot_11"              
+[465] "add4_rot_12"               "add4_rot_13"              
+[467] "add4_rot_14"               "add4_rot_15"              
+[469] "add4_rot_16"               "add4_rot_17"              
+[471] "add4_rot_18"               "add4_rot_19"              
+[473] "add4_rot_20"               "add4_mould_10"            
+[475] "add4_mould_11"             "add4_mould_12"            
+[477] "add4_mould_13"             "add4_mould_14"            
+[479] "add4_mould_15"             "add4_mould_16"            
+[481] "add4_mould_17"             "add4_mould_18"            
+[483] "add4_mould_19"             "add4_mould_20"            
+[485] "liveinsects"              
+tibble [99 × 9] (S3: tbl_df/tbl/data.frame)
+ $ add5_sold_when_e_1     : Date[1:99], format: "2019-03-29" "2019-03-30" ...
+ $ add5_sold_when_e_2     : Date[1:99], format: "2019-04-10" "2019-04-07" ...
+ $ treatment              : num [1:99] 0 0 0 1 0 1 0 0 0 0 ...
+  ..- attr(*, "format.stata")= chr "%9.0g"
+ $ ea_code                : chr [1:99] "EA10358" "EA10358" "EA10358" "EA10197" ...
+  ..- attr(*, "label")= chr "Enumeration area name"
+  ..- attr(*, "format.stata")= chr "%9s"
+ $ hhh_id                 : num [1:99] 10358063 10358064 10358074 10197063 10358067 ...
+  ..- attr(*, "label")= chr "household code"
+  ..- attr(*, "format.stata")= chr "%10.0g"
+ $ add4_random_bag        : num [1:99] 6 10 10 2 6 2 3 8 16 6 ...
+  ..- attr(*, "format.stata")= chr "%10.0g"
+ $ Total_weight_of_maize_g: num [1:99] 201 200 200 201 201 ...
+  ..- attr(*, "label")= chr "Total weight of maize g"
+  ..- attr(*, "format.stata")= chr "%14.2f"
+ $ add4_weight_1          : num [1:99] 163 147 137 151 144 128 161 148 153 154 ...
+  ..- attr(*, "label")= chr "WEIGH THE MAIZE Please input the TRUE weight of the maize in bag number ${bag_n"
+  ..- attr(*, "format.stata")= chr "%8.0g"
+ $ add5_ind_ded_weight1_1 : num [1:99] NA NA NA NA NA NA NA NA NA NA ...
+  ..- attr(*, "label")= chr "Bag # 1: ${ind_weight1} - ${ind_deduction1}"
+  ..- attr(*, "format.stata")= chr "%8.0g"
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max.     NAs 
+  200.0   200.4   200.5   200.5   200.7   200.9      17 
+tibble [193 × 5] (S3: tbl_df/tbl/data.frame)
+ $ ea_code      : chr [1:193] "EA10078" "EA10078" "EA10078" "EA10078" ...
+  ..- attr(*, "format.stata")= chr "%9s"
+ $ survey_season: dbl+lbl [1:193] 6, 7, 6, 7, 6, 7, 6, 7, 6, 7, 6, 7, 6, 6, 7, 6, 7, 6, ...
+   ..@ format.stata: chr "%9.0g"
+   ..@ labels      : Named num [1:8] 1 2 3 4 5 6 7 8
+   .. ..- attr(*, "names")= chr [1:8] "spri2017" "fall2017" "spri2018" "fall2018" ...
+ $ buy_treatment: num [1:193] 1 1 1 1 1 1 1 1 1 1 ...
+  ..- attr(*, "label")= chr "Access to a market for quality maize"
+  ..- attr(*, "format.stata")= chr "%8.0g"
+ $ hhh_id       : num [1:193] 10078013 10078013 10078018 10078018 10078024 ...
+  ..- attr(*, "format.stata")= chr "%10.0g"
+ $ status       : dbl+lbl [1:193] NA,  1,  1,  3,  4,  1,  3,  3,  4,  1,  4,  0,  3,  1...
+   ..@ label       : chr "(mean) status"
+   ..@ format.stata: chr "%28.0g"
+   ..@ labels      : Named num [1:6] 0 1 2 3 4 5
+   .. ..- attr(*, "names")= chr [1:6] "Did not sell" "Bought all immediately" "Bought some refused some" "Refused all then bought some" ...

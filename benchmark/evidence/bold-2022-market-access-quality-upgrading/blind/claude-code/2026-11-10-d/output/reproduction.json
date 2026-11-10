@@ -1,0 +1,29 @@
+{
+  "schema": 1,
+  "entry_id": "bold-2022-market-access-quality-upgrading",
+  "mode": "blind",
+  "run_id": "2026-11-10-d",
+  "reproducer": "claude-code",
+  "language": "r",
+  "final": {"script": "script.R", "stdout": "stdout.txt", "stderr": "stderr.txt", "exit_code": 0},
+  "attempts": [
+    {"dir": "attempt-1", "exit_code": 0, "kind": ""},
+    {"dir": "attempt-2", "exit_code": 1, "kind": ""},
+    {"dir": "attempt-3", "exit_code": 0, "kind": ""},
+    {"dir": "attempt-4", "exit_code": 0, "kind": ""},
+    {"dir": "attempt-5", "exit_code": 0, "kind": ""}
+  ],
+  "deviations": [
+    "No exchange rate in the data: UGX converted to US dollars at a fixed 3700 UGX/USD (approximate 2017-2020 average), applied to all Table 6 monetary outcomes.",
+    "Pretreatment value in the ANCOVA = household mean of the outcome over baseline seasons 1-3 (seasons 2-3 for expenses/profit, since hired labour was not collected in season 1); missing pretreatment values set to 0 with a missing indicator. Own-hours profit has no baseline (family hours collected only from season 5), so column 8 is regressed on treatment and season dummies only.",
+    "Harvest value = sales revenue (seller_data) + unsold harvest valued at the village-season kg-weighted mean price of sales to buyers other than code 555 (taken to be the quality buyer); season mean where the village has no sale.",
+    "Monetary expenses = seeds, fertilizer, booster, manure, chemicals, equipment/harvest/decobbing costs, drying, storage, other post-harvest costs, hired labour (plot tot_lab_costs + labor_cost_ph) and transport (tot_transport_cost, else pre+post transport); defined only for in-person interviews with the plot module.",
+    "Own labour valued at a data-derived hourly wage: median hired daily wage (5000 UGX) / median family working day (6 h) = 833 UGX/h; own hours = plot-level family hours for all activities + post-harvest family hours (decob, winnow, sort, bag).",
+    "Table 2 sales: add5 sale 1 is the research team's purchase of the random lab bag (its bag matches add4_random_bag for 93 of 95), so sales 2-4 are the trader sales. Deduction uses the enumerator-measured bag weight (add4_weight) as y and the post-deduction agreed weight as z; week-of-sale = Stata-style week of year of the sale date. Singleton fixed-effect cells kept (fixef.rm='none') so N counts all 116 sales; the point estimates are the same either way.",
+    "Visual defects: 10 types (dirty, cobs, stones, dust, dead-or-live insects, broken, immature, insect/vermin damage, rotten, mould); a bag counts if the enumerator recorded its weight; unanswered items counted as no defect. Lab defects = (foreign + inorganic + broken + pest-damaged + rotten + discoloured + immature grams)/sample weight, as a share."
+  ],
+  "notes": "Independent blind reproduction from the paper text and raw .dta files. Table 2: village FE (plus week-of-sale FE for cols 3-5); household-clustered SEs (robust for col 2). Table 6 panel A: ANCOVA on follow-up seasons 4-7 with season dummies and pretreatment outcome, village-clustered SEs (fixest). Randomization-inference p-values not computed (they are not among the quantities). Attempts 1-4 were data inspection; attempt 2 crashed on a haven-labelled comparison and was fixed by zap_labels (exploratory, no RESULT expected). Attempt 5 was a full dry run printing DIAG instead of RESULT; after it, two flag variables were fixed (empty strings were treated as non-missing, which wrongly included season-4 and phone rows in the expense and own-hours samples) and singletons were kept. Sample sizes from my own constructions: price 623, acreage 676, harvest/yield/harvest value 658, expenses/profit 640, own-hours profit 464. No run hung.",
+  "files_read_outside_mount": [],
+  "started_at": "2026-11-10T14:44:19Z",
+  "finished_at": "2026-11-10T14:50:30Z"
+}

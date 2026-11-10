@@ -1,0 +1,113 @@
+bags: 622  control mean defects: 2.464789 
+OLS estimation, Dep. Var.: defects
+Observations: 622
+Fixed-effects: ea_code: 9
+Standard-errors: Clustered (hhh_id) 
+          Estimate Std. Error  t value  Pr(>|t|)    
+treatment -2.15699   0.211632 -10.1922 < 2.2e-16 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+RMSE: 0.948845     Adj. R2: 0.668167
+                 Within R2: 0.529727
+lab n: 82  control mean: 0.3227308 
+OLS estimation, Dep. Var.: lab_def
+Observations: 82
+Fixed-effects: ea_code: 9
+Standard-errors: Heteroskedasticity-robust 
+           Estimate Std. Error  t value   Pr(>|t|)    
+treatment -0.197798   0.053666 -3.68573 0.00043873 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+RMSE: 0.248652     Adj. R2: 0.282936
+                 Within R2: 0.126349
+sales: 116  hh: 94  ctrl mean price 731.25  ded 3.730245  net 704.5267 
+                           m3              m4            m5
+Dependent Var.:         price       deduction     net_price
+                                                           
+treatment       2.949 (9.870) 0.1773 (0.6331) 1.332 (10.59)
+Fixed-Effects:  ------------- --------------- -------------
+ea_code                   Yes             Yes           Yes
+week                      Yes             Yes           Yes
+_______________ _____________ _______________ _____________
+S.E.: Clustered    by: hhh_id      by: hhh_id    by: hhh_id
+Observations              116             116           116
+R2                    0.90508         0.22201       0.89047
+Within R2             0.00065         0.00110       0.00012
+---
+Signif. codes: 0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+---- price pre = price mean  N = 617  ctrl mean = 0.149 
+                Estimate  Std. Error  t value    Pr(>|t|)
+buy_treatment 0.01574667 0.004431938 3.552998 0.002123720
+pre           0.19353984 0.064587646 2.996546 0.007418235
+attr(,"vcov_type")
+[1] "Clustered (ea_code)"
+---- harvest pre = harvest mean  N = 658  ctrl mean = 1887.522 
+                Estimate  Std. Error    t value     Pr(>|t|)
+buy_treatment 97.4743374 208.5710515  0.4673436 6.455694e-01
+pre            0.6112227   0.0526634 11.6062151 4.542275e-10
+attr(,"vcov_type")
+[1] "Clustered (ea_code)"
+---- yield pre = yield mean  N = 658  ctrl mean = 799.163 
+               Estimate  Std. Error  t value    Pr(>|t|)
+buy_treatment 89.536265 46.70788528 1.916941 0.070408889
+pre            0.283356  0.08711412 3.252699 0.004188234
+attr(,"vcov_type")
+[1] "Clustered (ea_code)"
+---- hvalue pre = hvalue mean  N = 658  ctrl mean = 286.576 
+                Estimate  Std. Error   t value     Pr(>|t|)
+buy_treatment 56.2316133 45.27060237  1.242122 2.293055e-01
+pre            0.4975011  0.04511386 11.027677 1.064660e-09
+attr(,"vcov_type")
+[1] "Clustered (ea_code)"
+---- expenses pre = expenses mean  N = 640  ctrl mean = 106.207 
+                Estimate  Std. Error   t value     Pr(>|t|)
+buy_treatment 17.8932781 18.49747029 0.9673365 3.455288e-01
+pre            0.6965914  0.07809434 8.9198710 3.208965e-08
+attr(,"vcov_type")
+[1] "Clustered (ea_code)"
+---- profit pre = profit mean  N = 640  ctrl mean = 177.601 
+                Estimate  Std. Error  t value    Pr(>|t|)
+buy_treatment 52.7424719 38.86489754 1.357072 0.190662339
+pre            0.3125469  0.08070129 3.872887 0.001024314
+attr(,"vcov_type")
+[1] "Clustered (ea_code)"
+---- profit_own pre = profit mean  N = 464  ctrl mean = 123.399 
+                Estimate Std. Error  t value    Pr(>|t|)
+buy_treatment 82.1321709 51.2969614 1.601112 0.125847965
+pre            0.4047363  0.1060315 3.817133 0.001163373
+attr(,"vcov_type")
+[1] "Clustered (ea_code)"
+
+Diagnostics: treatment coefficient under alternative pretreatment controls
+  mean   price     b=   0.0157 se=  0.0044 N=617
+  mean   harvest   b=  97.4743 se=208.5711 N=658
+  mean   yield     b=  89.5363 se= 46.7079 N=658
+  mean   hvalue    b=  56.2316 se= 45.2706 N=658
+  mean   expenses  b=  17.8933 se= 18.4975 N=640
+  mean   profit    b=  52.7425 se= 38.8649 N=640
+  last   price     b=   0.0169 se=  0.0044 N=617
+  last   harvest   b= 241.4991 se=230.3863 N=658
+  last   yield     b= 103.9551 se= 49.1125 N=658
+  last   hvalue    b=  95.3845 se= 43.1456 N=658
+  last   expenses  b=  27.1179 se= 17.9966 N=640
+  last   profit    b=  70.1797 se= 37.8271 N=640
+  none   price     b=   0.0162 se=  0.0046 N=623
+  none   harvest   b= 252.8177 se=371.1400 N=658
+  none   yield     b= 107.7914 se= 53.1935 N=658
+  none   hvalue    b=  93.0975 se= 68.1074 N=658
+  none   expenses  b=  34.2712 se= 30.5128 N=640
+  none   profit    b=  66.2330 se= 46.7372 N=640
+DEVIATION: Table 6 profit incl. own hours uses baseline monetary profit as the pretreatment control (own hours not measured at baseline); wage fixed at US$26/118 per hour; exchange rate 3700 UGX/USD.
+RESULT:treatment_defects_visual_table2_col1=-2.15699
+RESULT:n_obs_table2_col1_bags=622
+RESULT:treatment_defects_lab_table2_col2=-0.197798
+RESULT:treatment_price_table2_col3=2.94941
+RESULT:treatment_deductions_table2_col4=0.177321
+RESULT:treatment_net_price_table2_col5=1.3317
+RESULT:n_obs_table2_cols3_5_sales=116
+RESULT:market_access_price_table6_panelA_col1=0.0157467
+RESULT:market_access_yield_table6_panelA_col4=89.5363
+RESULT:market_access_harvest_value_table6_panelA_col5=56.2316
+RESULT:market_access_profit_monetary_table6_panelA_col7=52.7425
+RESULT:market_access_profit_incl_own_hours_table6_panelA_col8=82.1322
+RESULT:n_obs_table6_panelA_cols3_5=658

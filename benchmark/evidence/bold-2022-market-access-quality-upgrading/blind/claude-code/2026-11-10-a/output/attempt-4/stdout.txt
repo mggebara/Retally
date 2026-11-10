@@ -1,0 +1,420 @@
+46 | select_one yes_no_dk_ra | harvest_kg_tot_5000 | Did you harvest more than 5 Tonnes (5000 kgs) of maize in total in the last season? (please try to estimate as precisely as possib | NA 
+64 | decimal | kgs_measure_resp | How many kilograms is a measure approximately? | NA 
+72 | calculate | harvest_kg_tot_last | NA | pulldata('listing', 'harvest_kg_tot', 'hhh_code', ${hhh}) 
+160 | calculate | harvest_kg_tot_1sti | NA | ${harvest_meas_tot_1st}*${kgs_measure_resp} 
+162 | calculate | sold_kg_1sti | NA | ${sold_meas_1st}*${kgs_measure_resp} 
+165 | decimal | harvest_kg_tot_1st | *****************************
+ How many KGs of maize did you harvest from all your plots last season (planting ${last_season})? | ${harvest_kg_tot_1sti} 
+166 | select_one dk_ra | harvest_kg_tot_1st_dk | Why no answer: | NA 
+169 | decimal | sold_kg_1st | *****************************
+ How many KGs of maize did you sell? | ${sold_kg_1sti} 
+170 | select_one dk_ra | sold_kg_1st_dk | Why no answer: | NA 
+171 | decimal | tot_rev_tot_1st | *****************************
+ How much did you get IN TOTAL for the sale of all your maize? (UGX) | NA 
+172 | select_one dk_ra | tot_rev_tot_1st_dk | Why no answer: | NA 
+176 | note | harvest_kg_tot_1check | You said before you have harvested more than 5,000 Kg of maize but you listed only ${harvest_kg_tot_1st}. Please go back and corre | NA 
+254 | begin group | equipment_cost_g | Equipment cost | NA 
+255 | note | equipment_note | Equipment cost | NA 
+256 | decimal | equipment_cost_1 | ********************************
+ ${plot_name_1} | NA 
+257 | select_one dk_ra | equipment_cost_1dk | Why no answer: | NA 
+258 | decimal | equipment_cost_2 | ********************************
+ ${plot_name_2} | NA 
+259 | select_one dk_ra | equipment_cost_2dk | Why no answer: | NA 
+260 | decimal | equipment_cost_3 | ********************************
+ ${plot_name_3} | NA 
+261 | select_one dk_ra | equipment_cost_3dk | Why no answer: | NA 
+262 | decimal | equipment_cost_4 | ********************************
+ ${plot_name_4} | NA 
+263 | select_one dk_ra | equipment_cost_4dk | Why no answer: | NA 
+264 | decimal | equipment_cost_5 | ********************************
+ ${plot_name_5} | NA 
+265 | select_one dk_ra | equipment_cost_5dk | Why no answer: | NA 
+266 | decimal | equipment_cost_6 | ********************************
+ ${plot_name_6} | NA 
+267 | select_one dk_ra | equipment_cost_6dk | Why no answer: | NA 
+273 | decimal | seeds_cost_1 | Total cost (UGX) of seeds: | NA 
+277 | decimal | seeds_cost_2 | Total cost (UGX) of seeds: | NA 
+281 | decimal | seeds_cost_3 | Total cost (UGX) of seeds: | NA 
+285 | decimal | seeds_cost_4 | Total cost (UGX) of seeds: | NA 
+289 | decimal | seeds_cost_5 | Total cost (UGX) of seeds: | NA 
+293 | decimal | seeds_cost_6 | Total cost (UGX) of seeds: | NA 
+300 | calculate | seeds_cost_check | NA | if(${maize_tot_plotn}>5, ${seeds_cost_1}+${seeds_cost_2}+${seeds_cost_3}+${seeds_cost_4}+${seeds_cost_5}+${seeds_cost_6}, if(${maize_tot_plotn}>4, ${seeds_cost_1}+${seeds_cost_2}+${seeds_cost_3}+${seeds_cost_4}+${seeds_cost_5}, if(${maize_tot_plotn}>3, ${seeds_cost_1}+${seeds_cost_2}+${seeds_cost_3} 
+303 | select_one yes_no_only | seeds_cost_check_yn | TOTAL COST of SEEDS PLANTED: UGX ${seeds_cost_check}
+ Is this amount correct? | NA 
+312 | begin group | seeds_cost_q | question seeds_cost | NA 
+313 | integer | seeds_cost | How much money did you spend on seeds? In Shillings | NA 
+314 | select_one dk_ra | seeds_cost_dk | Why no answer: | NA 
+337 | decimal | fert_cost_1 | Total cost of fertilizer in UGX: | NA 
+342 | decimal | fert_cost_2 | Total cost of fertilizer in UGX: | NA 
+347 | decimal | fert_cost_3 | Total cost of fertilizer in UGX: | NA 
+352 | decimal | fert_cost_4 | Total cost of fertilizer in UGX: | NA 
+357 | decimal | fert_cost_5 | Total cost of fertilizer in UGX: | NA 
+362 | decimal | fert_cost_6 | Total cost of fertilizer in UGX: | NA 
+365 | calculate | fert_cost_check | NA | if( ${fert_cost_6}>0, ${fert_cost_6}, 0) + if( ${fert_cost_5}>0, ${fert_cost_5}, 0) + if( ${fert_cost_4}>0, ${fert_cost_4}, 0 ) + if( ${fert_cost_3}>0, ${fert_cost_3},0) + if(${fert_cost_2}>0, ${fert_cost_2}, 0) + if(${fert_cost_1}>0, ${fert_cost_1}, 0) 
+368 | select_one yes_no_only | fert_cost_check_yn | The total cost for fertilizer is: ${fert_cost_check}. Is it correct? | NA 
+376 | integer | fert_cost | How much money did you spend on fertilizer in total  (DO NOT include boosters!)? In Shillings | NA 
+377 | select_one dk_ra | fert_cost_dk | Why no answer: | NA 
+379 | begin group | boosters_gr | Booster | NA 
+380 | note | booster_note | Booster kgs/liters used | NA 
+381 | select_multiple booster | booster_spec_1 | ********************************
+ ${plot_name_1} Booster type | NA 
+382 | text | booster_spec_other_1 | Specify if other | NA 
+383 | decimal | booster_kg_1 | Total Kgs /liters | NA 
+384 | decimal | booster_cost_1 | Total cost of Booster in UGX: | NA 
+385 | select_one dk_ra | booster_types_1dk | Why no answer: | NA 
+386 | select_multiple booster | booster_spec_2 | ********************************
+ ${plot_name_2} Booster type | NA 
+387 | text | booster_spec_other_2 | Specify if other | NA 
+388 | decimal | booster_kg_2 | Total Kgs /liters | NA 
+389 | decimal | booster_cost_2 | Total cost of Booster in UGX: | NA 
+390 | select_one dk_ra | booster_types_2dk | Why no answer: | NA 
+391 | select_multiple booster | booster_spec_3 | ********************************
+ ${plot_name_3} Booster type | NA 
+392 | text | booster_spec_other_3 | Specify if other | NA 
+393 | decimal | booster_kg_3 | Total Kgs /liters | NA 
+394 | decimal | booster_cost_3 | Total cost of Booster in UGX: | NA 
+395 | select_one dk_ra | booster_types_3dk | Why no answer: | NA 
+396 | select_multiple booster | booster_spec_4 | ********************************
+ ${plot_name_4} Booster type | NA 
+397 | text | booster_spec_other_4 | Specify if other | NA 
+398 | decimal | booster_kg_4 | Total Kgs /liters | NA 
+399 | decimal | booster_cost_4 | Total cost of Booster in UGX: | NA 
+400 | select_one dk_ra | booster_types_4dk | Why no answer: | NA 
+401 | select_multiple booster | booster_spec_5 | ********************************
+ ${plot_name_5} Booster type | NA 
+402 | text | booster_spec_other_5 | Specify if other | NA 
+403 | decimal | booster_kg_5 | Total Kgs /liters | NA 
+404 | decimal | booster_cost_5 | Total cost of Booster in UGX: | NA 
+405 | select_one dk_ra | booster_types_5dk | Why no answer: | NA 
+406 | select_multiple booster | booster_spec_6 | ********************************
+ ${plot_name_6} Booster type | NA 
+407 | text | booster_spec_other_6 | Specify if other | NA 
+408 | decimal | booster_kg_6 | Total Kgs /liters | NA 
+409 | decimal | booster_cost_6 | Total cost of Booster in UGX: | NA 
+410 | select_one dk_ra | booster_types_6dk | Why no answer: | NA 
+412 | calculate | booster_cost_check | NA | if( ${booster_cost_6}>0, ${booster_cost_6}, 0) + if( ${booster_cost_5}>0, ${booster_cost_5}, 0) + if( ${booster_cost_4}>0, ${booster_cost_4}, 0 ) + if( ${booster_cost_3}>0, ${booster_cost_3},0) + if(${booster_cost_2}>0, ${booster_cost_2}, 0) + if(${booster_cost_1}>0, ${booster_cost_1}, 0) 
+413 | calculate | booster_kg_check | NA | if( ${booster_kg_6}>0, ${booster_kg_6}, 0) + if( ${booster_kg_5}>0, ${booster_kg_5}, 0) + if( ${booster_kg_4}>0, ${booster_kg_4}, 0 ) + if( ${booster_kg_3}>0, ${booster_kg_3},0) + if(${booster_kg_2}>0, ${booster_kg_2}, 0) + if(${booster_kg_1}>0, ${booster_kg_1}, 0) 
+415 | select_one yes_no_only | booster_cost_check_yn | The total cost for boosters is: ${booster_cost_check}. Is it correct? | NA 
+417 | begin group | booster_kg_tot_q | question booster_kg_tot | NA 
+418 | decimal | booster_kg_tot | how many LITERS of BOOSTERS (DO NOT include other fertilizer!) did you use for last season (Planted ${last_season}) in ALL YOUR MA | NA 
+419 | select_one dk_ra | booster_kg_tot_dk | Why no answer: | NA 
+420 | integer | booster_cost | How much money did you spend on booster in total  (DO NOT include fertilizer!)? In Shillings | NA 
+421 | select_one dk_ra | booster_cost_dk | Why no answer: | NA 
+700 | note | hour_labour_note | Please report total labour HOURS on each plot for last season (planting ${last_season}) : LABOUR for PLOUGHING, WEEDING, DIGGING o | NA 
+753 | calculate | lc_tot_costs_season1i | TOTAL LABOUR costs | ${lc_prep_costs_season1i} + ${lc_plant_costs_season1i} + ${lc_weed_costs_season1i} + ${lc_spray_costs_season1i} + ${lc_harv_costs_season1i} 
+754 | begin group | lc_tot1 | Total PAID LABOUR costs in plot ${plot_name_1} in the whole season | NA 
+760 | decimal | lc_tot_costs_season1 | TOTAL LABOUR costs | ${lc_tot_costs_season1i} 
+799 | calculate | lc_tot_costs_season2i | TOTAL LABOUR costs | ${lc_prep_costs_season2i} + ${lc_plant_costs_season2i} + ${lc_weed_costs_season2i} + ${lc_spray_costs_season2i} + ${lc_harv_costs_season2i} 
+800 | begin group | lc_tot2 | Total PAID LABOUR costs in plot ${plot_name_2} in the whole season | NA 
+806 | decimal | lc_tot_costs_season2 | TOTAL LABOUR costs | ${lc_tot_costs_season2i} 
+845 | calculate | lc_tot_costs_season3i | TOTAL LABOUR costs | ${lc_prep_costs_season3i} + ${lc_plant_costs_season3i} + ${lc_weed_costs_season3i} + ${lc_spray_costs_season3i} + ${lc_harv_costs_season3i} 
+846 | begin group | lc_tot3 | Total PAID LABOUR costs in plot ${plot_name_3} in the whole season | NA 
+852 | decimal | lc_tot_costs_season3 | TOTAL LABOUR costs | ${lc_tot_costs_season3i} 
+891 | calculate | lc_tot_costs_season4i | TOTAL LABOUR costs | ${lc_prep_costs_season4i} + ${lc_plant_costs_season4i} + ${lc_weed_costs_season4i} + ${lc_spray_costs_season4i} + ${lc_harv_costs_season4i} 
+892 | begin group | lc_tot4 | Total PAID LABOUR costs in plot ${plot_name_4} in the whole season | NA 
+898 | decimal | lc_tot_costs_season4 | TOTAL LABOUR costs | ${lc_tot_costs_season4i} 
+937 | calculate | lc_tot_costs_season5i | TOTAL LABOUR costs | ${lc_prep_costs_season5i} + ${lc_plant_costs_season5i} + ${lc_weed_costs_season5i} + ${lc_spray_costs_season5i} + ${lc_harv_costs_season5i} 
+938 | begin group | lc_tot5 | Total PAID LABOUR costs in plot ${plot_name_5} in the whole season | NA 
+944 | decimal | lc_tot_costs_season5 | TOTAL LABOUR costs | ${lc_tot_costs_season5i} 
+983 | calculate | lc_tot_costs_season6i | TOTAL LABOUR costs | ${lc_prep_costs_season6i} + ${lc_plant_costs_season6i} + ${lc_weed_costs_season6i} + ${lc_spray_costs_season6i} + ${lc_harv_costs_season6i} 
+984 | begin group | lc_tot6 | Total PAID LABOUR costs in plot ${plot_name_6} in the whole season | NA 
+990 | decimal | lc_tot_costs_season6 | TOTAL LABOUR costs | ${lc_tot_costs_season6i} 
+993 | note | cost_labour_note_check | Please report total labour costs on each plot for last season (planting ${last_season}) : LABOUR for PLOUGHING, WEEDING, DIGGING o | NA 
+994 | decimal | tot_lab_costs_check_1 | ********************************
+ ${plot_name_1} | ${lc_tot_costs_season1} 
+995 | select_one dk_ra | tot_lab_costs_check_1dk | Why no answer: | NA 
+996 | decimal | tot_lab_costs_check_2 | ********************************
+ ${plot_name_2} | ${lc_tot_costs_season2} 
+997 | select_one dk_ra | tot_lab_costs_check_2dk | Why no answer: | NA 
+998 | decimal | tot_lab_costs_check_3 | ********************************
+ ${plot_name_3} | ${lc_tot_costs_season3} 
+999 | select_one dk_ra | tot_lab_costs_check_3dk | Why no answer: | NA 
+1000 | decimal | tot_lab_costs_check_4 | ********************************
+ ${plot_name_4} | ${lc_tot_costs_season4} 
+1001 | select_one dk_ra | tot_lab_costs_check_4dk | Why no answer: | NA 
+1002 | decimal | tot_lab_costs_check_5 | ********************************
+ ${plot_name_5} | ${lc_tot_costs_season5} 
+1003 | select_one dk_ra | tot_lab_costs_check_5dk | Why no answer: | NA 
+1004 | decimal | tot_lab_costs_check_6 | ********************************
+ ${plot_name_6} | ${lc_tot_costs_season6} 
+1005 | select_one dk_ra | tot_lab_costs_check_6dk | Why no answer: | NA 
+1007 | calculate | tot_lab_costs_check | NA | if(${tot_lab_costs_check_1}>=0 , ${tot_lab_costs_check_1} , 0) + if(${tot_lab_costs_check_2}>=0 , ${tot_lab_costs_check_2} , 0) + if(${tot_lab_costs_check_3}>=0 , ${tot_lab_costs_check_3} , 0) + if(${tot_lab_costs_check_4}>=0 , ${tot_lab_costs_check_4} , 0) + if(${tot_lab_costs_check_5}>=0 , ${tot_l 
+1008 | note | tot_lab_costs_check_note | TOTAL LABOUR FOR HIRED LABOUR FOR MAIZE FARMING IN THE WHOLE SEASON: | ${tot_lab_costs_check} 
+1010 | note | cost_labour_note | Please report total labour costs on each plot for last season (planting ${last_season}) : LABOUR for PLOUGHING, WEEDING, DIGGING o | NA 
+1011 | decimal | tot_lab_costs_1 | ********************************
+ ${plot_name_1} | NA 
+1012 | select_one dk_ra | tot_lab_costs_1dk | Why no answer: | NA 
+1013 | decimal | tot_lab_costs_2 | ********************************
+ ${plot_name_2} | NA 
+1014 | select_one dk_ra | tot_lab_costs_2dk | Why no answer: | NA 
+1015 | decimal | tot_lab_costs_3 | ********************************
+ ${plot_name_3} | NA 
+1016 | select_one dk_ra | tot_lab_costs_3dk | Why no answer: | NA 
+1017 | decimal | tot_lab_costs_4 | ********************************
+ ${plot_name_4} | NA 
+1018 | select_one dk_ra | tot_lab_costs_4dk | Why no answer: | NA 
+1019 | decimal | tot_lab_costs_5 | ********************************
+ ${plot_name_5} | NA 
+1020 | select_one dk_ra | tot_lab_costs_5dk | Why no answer: | NA 
+1021 | decimal | tot_lab_costs_6 | ********************************
+ ${plot_name_6} | NA 
+1022 | select_one dk_ra | tot_lab_costs_6dk | Why no answer: | NA 
+1024 | calculate | tot_lab_costs_check2 | NA | if(${tot_lab_costs_1}>=0 , ${tot_lab_costs_1} , 0) + if(${tot_lab_costs_2}>=0 , ${tot_lab_costs_2} , 0) + if(${tot_lab_costs_3}>=0 , ${tot_lab_costs_3} , 0) + if(${tot_lab_costs_4}>=0 , ${tot_lab_costs_4} , 0) + if(${tot_lab_costs_5}>=0 , ${tot_lab_costs_5} , 0) + if(${tot_lab_costs_6}>=0 , ${tot_la 
+1025 | note | tot_lab_costs_check2_note | TOTAL LABOUR FOR HIRED LABOUR FOR MAIZE FARMING IN THE WHOLE SEASON: | ${tot_lab_costs_check2} 
+1026 | begin group | chem_costs | Chemical costs | NA 
+1027 | note | cost_chem_note | Please report total costs for chemicals (as on the financial sheet) for last season (planting ${last_season}): | NA 
+1028 | decimal | tot_chem_costs_1 | ********************************
+ ${plot_name_1} | NA 
+1029 | select_one dk_ra | tot_chem_costs_1dk | Why no answer: | NA 
+1030 | decimal | tot_chem_costs_2 | ********************************
+ ${plot_name_2} | NA 
+1031 | select_one dk_ra | tot_chem_costs_2dk | Why no answer: | NA 
+1032 | decimal | tot_chem_costs_3 | ********************************
+ ${plot_name_3} | NA 
+1033 | select_one dk_ra | tot_chem_costs_3dk | Why no answer: | NA 
+1034 | decimal | tot_chem_costs_4 | ********************************
+ ${plot_name_4} | NA 
+1035 | select_one dk_ra | tot_chem_costs_4dk | Why no answer: | NA 
+1036 | decimal | tot_chem_costs_5 | ********************************
+ ${plot_name_5} | NA 
+1037 | select_one dk_ra | tot_chem_costs_5dk | Why no answer: | NA 
+1038 | decimal | tot_chem_costs_6 | ********************************
+ ${plot_name_6} | NA 
+1039 | select_one dk_ra | tot_chem_costs_6dk | Why no answer: | NA 
+1058 | calculate | harvest_kg_1i | NA | ${harvest_meas_1}*${kgs_measure_resp} 
+1059 | calculate | harvest_kg_2i | NA | ${harvest_meas_2}*${kgs_measure_resp} 
+1060 | calculate | harvest_kg_3i | NA | ${harvest_meas_3}*${kgs_measure_resp} 
+1061 | calculate | harvest_kg_4i | NA | ${harvest_meas_4}*${kgs_measure_resp} 
+1062 | calculate | harvest_kg_5i | NA | ${harvest_meas_5}*${kgs_measure_resp} 
+1063 | calculate | harvest_kg_6i | NA | ${harvest_meas_6}*${kgs_measure_resp} 
+1064 | begin group | harvest_kg_g | Harvest in kgs | NA 
+1065 | note | harvest_kg_note | Harvest in kgs - please correct if the amounts are wrong. | NA 
+1066 | note | harvest_kg_note2 | How many kgs of maize you and your household harvested during the last season (planting ${last_season}) in this plot:
+ 
+ At first  | NA 
+1067 | decimal | harvest_kg_1 | ********************************
+ ${plot_name_1} | ${harvest_kg_1i} 
+1068 | select_one dk_ra | harvest_kg_1dk | Why no answer: | NA 
+1070 | decimal | harvest_kg_2 | ********************************
+ ${plot_name_2} | ${harvest_kg_2i} 
+1071 | select_one dk_ra | harvest_kg_2dk | Why no answer: | NA 
+1073 | decimal | harvest_kg_3 | ********************************
+ ${plot_name_3} | ${harvest_kg_3i} 
+1074 | select_one dk_ra | harvest_kg_3dk | Why no answer: | NA 
+1076 | decimal | harvest_kg_4 | ********************************
+ ${plot_name_4} | ${harvest_kg_4i} 
+1077 | select_one dk_ra | harvest_kg_4dk | Why no answer: | NA 
+1079 | decimal | harvest_kg_5 | ********************************
+ ${plot_name_5} | ${harvest_kg_5i} 
+1080 | select_one dk_ra | harvest_kg_5dk | Why no answer: | NA 
+1082 | decimal | harvest_kg_6 | ********************************
+ ${plot_name_6} | ${harvest_kg_6i} 
+1083 | select_one dk_ra | harvest_kg_6dk | Why no answer: | NA 
+1086 | calculate | harvest_kg_tot | NA | if(${maize_tot_plotn}>5, ${harvest_kg_1}+${harvest_kg_2}+${harvest_kg_3}+${harvest_kg_4}+${harvest_kg_5}+${harvest_kg_6}, if(${maize_tot_plotn}>4, ${harvest_kg_1}+${harvest_kg_2}+${harvest_kg_3}+${harvest_kg_4}+${harvest_kg_5}, if(${maize_tot_plotn}>3, ${harvest_kg_1}+${harvest_kg_2}+${harvest_kg_3} 
+1087 | note | harvest_kg_tot_note | At first you reported you harvested ${harvest_kg_tot_1st} kgs of maize, but the sum of what you just reported is ${harvest_kg_tot} | NA 
+1091 | decimal | cost_transportpre | total TRANSPORT costs before HARVESTING paid for by the household for maize growing
+ during: input buying, weeding and other prepa | NA 
+1092 | select_one dk_ra | cost_transportpredk | Why no answer: | NA 
+1093 | decimal | cost_transportpost | total TRANSPORT costs after HARVESTING - from the field to home. | NA 
+1094 | select_one dk_ra | cost_transportpostdk | Why no answer: | NA 
+1095 | integer | tot_transport_cost | total TRANSPORT costs BEFORE AND AFTER HARVESTING paid for by the household for maize growing
+ during: input buying, weeding and o | NA 
+1096 | select_one dk_ra | tot_transport_costdk | Why no answer: | NA 
+1098 | decimal | labor_cost_dry | costs (in Shillings) FOR HIRED LABOUR for DRYING | NA 
+1099 | decimal | drying_cost | DRYING costs (in Shillings) in the last season (planting ${last_season})
+ 
+ Include cost of buying or renting tarpaulin
+ DO NOT IN | NA 
+1100 | select_one dk_ra | drying_costdk | Why no answer: | NA 
+1103 | decimal | labor_cost_store | costs (in Shillings) FOR HIRED LABOUR for STORING | NA 
+1104 | decimal | storage_cost | TOTAL STORAGE costs (in Shillings) in the last season (planting ${last_season})
+ 
+ Includes renting / building a store.
+ DO NOT IN | NA 
+1105 | select_one dk_ra | storage_costdk | Why no answer: | NA 
+1107 | integer | labor_cost_ph | COSTS (in Shillings)  FOR HIRED LABOUR for OTHER POST HARVEST activities | NA 
+1109 | calculate | tot_transport_cost_check | NA | ${cost_transportpre}+${cost_transportpost} 
+1110 | begin group | decobbing_cost_g | Decobbing cost | NA 
+1111 | note | decobbing_note | Decobbing cost | NA 
+1112 | decimal | decobbing_cost_1 | ********************************
+ ${plot_name_1} | NA 
+1113 | select_one dk_ra | decobbing_cost_1dk | Why no answer: | NA 
+1114 | decimal | decobbing_cost_2 | ********************************
+ ${plot_name_2} | NA 
+1115 | select_one dk_ra | decobbing_cost_2dk | Why no answer: | NA 
+1116 | decimal | decobbing_cost_3 | ********************************
+ ${plot_name_3} | NA 
+1117 | select_one dk_ra | decobbing_cost_3dk | Why no answer: | NA 
+1118 | decimal | decobbing_cost_4 | ********************************
+ ${plot_name_4} | NA 
+1119 | select_one dk_ra | decobbing_cost_4dk | Why no answer: | NA 
+1120 | decimal | decobbing_cost_5 | ********************************
+ ${plot_name_5} | NA 
+1121 | select_one dk_ra | decobbing_cost_5dk | Why no answer: | NA 
+1122 | decimal | decobbing_cost_6 | ********************************
+ ${plot_name_6} | NA 
+1123 | select_one dk_ra | decobbing_cost_6dk | Why no answer: | NA 
+1125 | begin group | decob_g | DECOBBING costsFOR ALL PLOTS in the last season (planting ${last_season}) | NA 
+1126 | select_one yes_partly_no_dk_ra | decob | Did you decob? | NA 
+1127 | note | decob_note | <big> PLEASE SWIPE TO NEXT PAGE IF THE ABOVE ANSWER IS NO, Don't know or Refuses to Answer </big> | NA 
+1128 | decimal | lh_decob_hours | *******************************************
+ TOTAL hours of UNPAID LABOUR for decobbing. | NA 
+1129 | select_one dk_ra | lh_decob_hoursdk | Why no answer: | NA 
+1130 | decimal | lc_decob_labour_costs | *******************************************
+ TOTAL cost of PAID LABOUR for decobbing. In Shillings. | NA 
+1131 | select_one dk_ra | lc_decob_labour_costsdk | Why no answer: | NA 
+1132 | decimal | lc_decob_labmaize_costs | *******************************************
+ TOTAL cost of PAID LABOUR for decobbing. In ${crop_measure_resp} of maize. | NA 
+1133 | select_one dk_ra | lc_decob_labmaize_costsdk | Why no answer: | NA 
+1134 | decimal | lc_decob_price | What was the price per KG of maize when you paid such costs? | NA 
+1135 | select_one dk_ra | lc_decob_pricedk | Why no answer: | NA 
+1136 | decimal | lc_decob_other_costs | *******************************************
+ Other COSTS for decobbing (e.g. equipment…). In Shillings. | NA 
+1137 | select_one dk_ra | lc_decob_other_costsdk | Why no answer: | NA 
+1138 | select_multiple who_paid | decob_who_pay | ********************************************
+ Who paid for the decobbing costs? | NA 
+1139 | text | decob_who_pay_other | Specify if other | NA 
+1143 | calculate | lc_decob_labour_costs_tot | NA | if(${lc_decob_labour_costs}>0, ${lc_decob_labour_costs}, 0) + if(${lc_decob_price}>0 and ${lc_decob_labmaize_costs}>0 , ${lc_decob_price}*${lc_decob_labmaize_costs}, 0) 
+1144 | begin group | winnow_g | WINNOWING costs (in Shillings) FOR ALL PLOTS in the last season (planting ${last_season}) | NA 
+1145 | select_one yes_partly_no_dk_ra | winnow | Did you winnow? | NA 
+1146 | note | winnow_note | <big> PLEASE SWIPE TO NEXT PAGE IF THE ABOVE ANSWER IS NO, Don't know or Refuses to Answer </big> | NA 
+1147 | select_multiple clean_what | winnow_what | What did you remove during winnowing? | NA 
+1148 | decimal | lh_winnow_hours | *******************************************
+ TOTAL hours of UNPAID LABOUR for winnowing. | NA 
+1149 | select_one dk_ra | lh_winnow_hoursdk | Why no answer: | NA 
+1150 | decimal | lc_winnow_labour_costs | *******************************************
+ TOTAL cost of PAID LABOUR for winnowing. In Shillings. | NA 
+1151 | select_one dk_ra | lc_winnow_labour_costsdk | Why no answer: | NA 
+1152 | decimal | lc_winnow_labmaize_costs | *******************************************
+ TOTAL cost of PAID LABOUR for winnowing. In ${crop_measure_resp} of maize. | NA 
+1153 | select_one dk_ra | lc_winnow_labmaize_costsdk | Why no answer: | NA 
+1154 | decimal | lc_winnow_price | What was the price per KG of maize when you paid such costs? | NA 
+1155 | select_one dk_ra | lc_winnow_pricedk | Why no answer: | NA 
+1156 | decimal | lc_winnow_other_costs | *******************************************
+ Other COSTS for winnowing (e.g. equipment…). In Shillings. | NA 
+1157 | select_one dk_ra | lc_winnow_other_costsdk | Why no answer: | NA 
+1158 | select_multiple who_paid | winnow_who_pay | ********************************************
+ Who paid for the winnowing costs? | NA 
+1159 | text | winnow_who_pay_other | Specify if other | NA 
+1161 | calculate | lc_winnow_labour_costs_tot | NA | if(${lc_winnow_labour_costs}>0, ${lc_winnow_labour_costs}, 0) + if(${lc_winnow_price}>0 and ${lc_winnow_labmaize_costs}>0 , ${lc_winnow_price}*${lc_winnow_labmaize_costs}, 0) 
+1162 | begin group | sort_g | SORTING costs (in Shillings) FOR ALL PLOTS in the last season (planting ${last_season}) | NA 
+1163 | select_one yes_partly_no_dk_ra | sort | Did you sort? | NA 
+1164 | note | sort_note | <big> PLEASE SWIPE TO NEXT PAGE IF THE ABOVE ANSWER IS NO, Don't know or Refuses to Answer </big> | NA 
+1165 | select_multiple clean_what | sort_what | What did you remove during sorting? | NA 
+1166 | decimal | lh_sort_hours | *******************************************
+ TOTAL hours of UNPAID LABOUR for sorting. | NA 
+1167 | select_one dk_ra | lh_sort_hoursdk | Why no answer: | NA 
+1168 | decimal | lc_sort_labour_costs | *******************************************
+ TOTAL cost of PAID LABOUR for sorting. In Shillings. | NA 
+1169 | select_one dk_ra | lc_sort_labour_costsdk | Why no answer: | NA 
+1170 | decimal | lc_sort_labmaize_costs | *******************************************
+ TOTAL cost of PAID LABOUR for sorting. In ${crop_measure_resp} of maize. | NA 
+1171 | select_one dk_ra | lc_sort_labmaize_costsdk | Why no answer: | NA 
+1172 | decimal | lc_sort_price | What was the price per KG of maize when you paid such costs? | NA 
+1173 | select_one dk_ra | lc_sort_pricedk | Why no answer: | NA 
+1174 | decimal | lc_sort_other_costs | *******************************************
+ Other COSTS for sorting (e.g. equipment…). In Shillings. | NA 
+1175 | select_one dk_ra | lc_sort_other_costsdk | Why no answer: | NA 
+1176 | select_multiple who_paid | sort_who_pay | ********************************************
+ Who paid for the sorting costs? | NA 
+1177 | text | sort_who_pay_other | Specify if other | NA 
+1179 | calculate | lc_sort_labour_costs_tot | NA | if(${lc_sort_labour_costs}>0, ${lc_sort_labour_costs}, 0) + if(${lc_sort_price}>0 and ${lc_sort_labmaize_costs}>0 , ${lc_sort_price}*${lc_sort_labmaize_costs}, 0) 
+1180 | begin group | bag_g | bagginG costs (in Shillings) FOR ALL PLOTS in the last season (planting ${last_season}) | NA 
+1182 | note | bag_note | <big> PLEASE SWIPE TO NEXT PAGE IF THE ABOVE ANSWER IS NO, Don't know or Refuses to Answer </big> | NA 
+1183 | decimal | lh_bag_hours | *******************************************
+ TOTAL hours of UNPAID LABOUR for bagging. | NA 
+1184 | select_one dk_ra | lh_bag_hoursdk | Why no answer: | NA 
+1185 | decimal | lc_bag_labour_costs | *******************************************
+ TOTAL cost of PAID LABOUR for bagging. In Shillings. | NA 
+1186 | select_one dk_ra | lc_bag_labour_costsdk | Why no answer: | NA 
+1187 | decimal | lc_bag_labmaize_costs | *******************************************
+ TOTAL cost of PAID LABOUR for bagging. In ${crop_measure_resp} of maize. | NA 
+1188 | select_one dk_ra | lc_bag_labmaize_costsdk | Why no answer: | NA 
+1189 | decimal | lc_bag_price | What was the price per KG of maize when you paid such costs? | NA 
+1190 | select_one dk_ra | lc_bag_pricedk | Why no answer: | NA 
+1191 | decimal | lc_bag_other_costs | *******************************************
+ Other COSTS for bagging (e.g. equipment…). In Shillings. | NA 
+1192 | select_one dk_ra | lc_bag_other_costsdk | Why no answer: | NA 
+1193 | select_multiple who_paid | bag_who_pay | ********************************************
+ Who paid for the bagging costs? | NA 
+1194 | text | bag_who_pay_other | Specify if other | NA 
+1196 | calculate | lc_bag_labour_costs_tot | NA | if(${lc_bag_labour_costs}>0, ${lc_bag_labour_costs}, 0) + if(${lc_bag_price}>0 and ${lc_bag_labmaize_costs}>0 , ${lc_bag_price}*${lc_bag_labmaize_costs}, 0) 
+1197 | calculate | labor_cost_ph_check | NA | if(${lc_decob_labour_costs_tot}!='', ${lc_decob_labour_costs_tot}, 0)+if(${lc_winnow_labour_costs_tot}!='', ${lc_winnow_labour_costs_tot}, 0)+if(${lc_sort_labour_costs_tot}!='', ${lc_sort_labour_costs_tot}, 0)+if(${lc_bag_labour_costs_tot}!='', ${lc_bag_labour_costs_tot}, 0) 
+1199 | calculate | otherph_cost_check | NA | if(${lc_decob_other_costs}!='', ${lc_decob_other_costs}, 0)+if(${lc_winnow_other_costs}!='', ${lc_winnow_other_costs}, 0)+if(${lc_sort_other_costs}!='', ${lc_sort_other_costs}, 0)+if(${lc_bag_other_costs}!='', ${lc_bag_other_costs}, 0) 
+1207 | calculate | sold_kg | NA | if(not(selected(${crop_measure}, 'kgs')),${sold_crop_kg_corr}, ${sold_crop_kg}) 
+1208 | calculate | not_sold_kg_int | NA | ${harvest_kg_tot}-${sold_kg}-${home_kg_1st} 
+1209 | note | sold_kg_note | In the first questions you reported to us that you sold ${sold_kg_1st} but you said now you sold ${sold_kg}. Please go back and ch | NA 
+1226 | select_one yes_no_dk_ra | maize_decobbed | Was the maize decobbed when sold? (Select NO if maize was on the cob, select YES if maize grain was decobbed) | NA 
+1233 | calculate | sold_kg_p | NA | if(not(selected(${crop_measure}, 'kgs')),${sold_qty}*${kgs_measure_resp}, ${sold_qty}) 
+1234 | calculate | sold_kg_ded | NA | ${sold_kg_p}-${deduction_moist} 
+1235 | decimal | sold_kg_ded_rep | You sold ${sold_qty} ${crop_measure_resp} of maize to ${this_buyer_label_resp} during the last season (planting ${last_season}),
+  | ${sold_kg_ded} 
+1236 | calculate | sold_kg_part | NA | ${sold_kg_ded_rep}+${deduction_moist} 
+1244 | select_one yes_no_dk_ra | sale_transport_yn | Did you transport the maize to ${this_buyer_label_resp}? | NA 
+1245 | note | sale_transport_note | <big> PLEASE SLIDE TO NEXT PAGE IF ABOVE ANSWER IS NOT YES </big> | NA 
+1246 | decimal | sale_transport_cost | How much money did you spend to get the maize to ${this_buyer_label_resp} during the last season (planting ${last_season})? In shi | NA 
+1247 | decimal | sale_transport_min | How much time did it take to transport the maize to ${this_buyer_label_resp} during the last season (planting ${last_season})? In  | NA 
+1248 | select_multiple transport_mean | sale_transport_mean | How did you transport the maize from the storage point to ${this_buyer_label_resp}? | NA 
+1249 | text | sale_transport_mean_o | Specify if other | NA 
+1254 | select_one yes_ra | tot_rev_tell | RESPONDENT CAN ANSWER: 
+ How much money did you get IN TOTAL for this sale to ${this_buyer_label_resp} during the last season (pla | NA 
+1255 | decimal | tot_rev_told | How much money did you get in total for this sale in ${this_buyer_label_resp} during the last season (planting ${last_season})? In | NA 
+1257 | calculate | tot_rev_calc | NA | ${ppk_told} * ${sold_kg_ded_rep} 
+1261 | calculate | tot_rev_part | NA | if(${tot_rev_tell}='yes', ${tot_rev_told}, ${tot_rev_calc}) 
+1274 | calculate | sold_kg_tot | NA | sum(${sold_kg_p}) 
+1275 | calculate | sold_kg_ded_tot | NA | sum(${sold_kg_part}) 
+1276 | calculate | tot_rev_tot | NA | sum(${tot_rev_part}) 
+1295 | calculate | tot_chem_costs | NA | if(${maize_tot_plotn}>5, ${tot_chem_costs_1}+${tot_chem_costs_2}+${tot_chem_costs_3}+${tot_chem_costs_4}+${tot_chem_costs_5}+${tot_chem_costs_6}, if(${maize_tot_plotn}>4, ${tot_chem_costs_1}+${tot_chem_costs_2}+${tot_chem_costs_3}+${tot_chem_costs_4}+${tot_chem_costs_5}, if(${maize_tot_plotn}>3, ${t 
+prep hired cost per hour (unit hours):    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+      0       0       0       0       0       0 
+prep hired cost per day:    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+      0       0       0    5453    5000  110000 
+prep family hours per day:    Min. 1st Qu.  Median    Mean 3rd Qu.    Max.     NAs 
+  0.000   5.000   6.000   5.187   6.000  10.000       6 
+plant hired cost per hour (unit hours):    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+      0       0       0       0       0       0 
+plant hired cost per day:    Min. 1st Qu.  Median    Mean 3rd Qu.    Max.     NAs 
+      0       0    5000    4220    5000   80000       2 
+plant family hours per day:    Min. 1st Qu.  Median    Mean 3rd Qu.    Max.     NAs 
+  0.000   5.000   6.000   5.785   6.000  10.000       1 
+weed hired cost per hour (unit hours):    Min. 1st Qu.  Median    Mean 3rd Qu.    Max.     NAs 
+      0       0       0       0       0       0       1 
+weed hired cost per day:    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+      0       0    5000    8219    5000  250000 
+weed family hours per day:    Min. 1st Qu.  Median    Mean 3rd Qu.    Max.     NAs 
+  0.000   5.000   6.000   5.051   6.000  10.000       9 
+spray hired cost per hour (unit hours):    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+      0       0       0       0       0       0 
+spray hired cost per day:    Min. 1st Qu.  Median    Mean 3rd Qu.    Max.     NAs 
+      0       0       0    2066       0   22500       5 
+spray family hours per day:    Min. 1st Qu.  Median    Mean 3rd Qu.    Max.     NAs 
+  0.000   0.000   3.000   3.223   6.000  82.000      21 
+harv hired cost per hour (unit hours):    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+      0       0       0       0       0       0 
+harv hired cost per day:    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+      0    4000    5000    5103    5000   60000 
+harv family hours per day:    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+  0.000   5.000   6.000   5.974   6.000  12.000 
+harvest_kg vs sum plots
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max.     NAs 
+    0.0     0.0     0.0   552.1     0.0 10754.2     208 
+  1   2   3   4   5   6   7 
+135  10   0   0   0   0   0 
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+      0       0       0       0       0       0 
+
+  1   2   3   4   5   6   7 
+134 167 170 165 148 157 153 
+  1   2   3   4   5   6   7 
+134 167 170 165 148 157 153 
+ 1  2  3  4  5  6  7 
+ 0 11  1  1  1  0  0 
+         0        1
+1 900.0000 900.0000
+2 728.5714 760.0000
+3 562.4000 550.0000
+4 270.0000 295.3125
+5 520.0000 640.0000
+6 681.0963 800.0000
+7 690.0000 850.0000

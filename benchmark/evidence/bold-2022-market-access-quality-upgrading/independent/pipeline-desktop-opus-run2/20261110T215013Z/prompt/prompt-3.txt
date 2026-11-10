@@ -1,0 +1,556 @@
+You are refining R code that reproduces results from an econometrics paper.
+The code RAN SUCCESSFULLY but the reproduced values do not match the
+paper's claims within the allowed tolerance.  Identify what is causing
+the gap and adjust the code to close it.
+
+## Paper
+Title: American Economic Review 2022, 112(8): 2518–2552
+Methodology: - **Design / estimation method:** Four field experiments (RCTs) with smallholder maize farmers in Kakumiro and Kibaale districts, western Uganda, estimated by OLS treatment–control comparisons; no ML, no train/test split or cross-validation. Sample frames: (1) 20 randomly selected villages in Kakumiro, at least 5 km apart, used for the market access + extension trial (12 treatment "buying" clusters, 8 control; 7 seasons, 3 baseline + 4 post-treatment); (2) 20 villages in Kibaale for the extension-only trial (randomized into two equal groups; 2 villages dropped because of a land conflict, leaving 18 clusters over 6 seasons, 3 baseline + 3 treatment); (3) 20 villages adjacent to the frame-1 control villages, used for the quality-measurement and returns-to-quality experiments and as a quasi-control group for counterfactual quality. About 10 smallholder households per village, taken from a census (maize garden ≤ 5 acres, grew maize the previous season).
+- **Quality measurement (Section III, Table 1, Figure 1):** "Visually verifiable defects" is the number of 10 defect types (dirt, cobs, stones, dust, insects, broken, immature, damaged, rotten, moldy) that enumerators found in each bag. "Lab verified defects" is the % by weight of non-grain matter plus defective grain in a 200 g sample from one randomly bought bag per farmer. "Wet maize" = 1 if moisture is above 13% (mobile meter). Aflatoxin is a binary indicator for exceeding the 10 ppb UNBS limit (AflaCheck kit). Bags are graded under the East African Standard (EAS) as grade 1/2/3 or ungraded. Figure 1A is a local polynomial regression of lab defects (log scale) on visual defects. Figure 1B gives the predicted probability that aflatoxin exceeds 10 ppb as a function of log lab defects (Appendix G Table 2, spec 3). The unit of observation is a bag.
+- **Returns-to-quality experiment (Section IV, Table 2):** 99 consenting households, individually randomized: 49 treatment, offered a free harvest/post-harvest service package (drying, winnowing, sorting), and 50 control. Balance is checked on pre-harvest covariates, including a joint test (Appendix G Table 3). Each outcome is regressed on a treatment dummy:
+  - Col 1: visual defects, bag level, N=622, village FE.
+  - Col 2: lab defects as a share, N=82, village FE.
+  - Cols 3–5: price (UGX/kg), deductions = (y−z)/y in %, and net price = pz/y. Sale level, N=116 sales from 94 households, village FE plus week-of-sale FE.
+  
+  Outcomes are in levels and not standardized. Standard errors are clustered by household in cols 1 and 3–5 and heteroskedasticity-robust in col 2. Kolmogorov–Smirnov tests compare the treatment and control CDFs of price (D=0.114, p=0.844; price conditional on village and week FE, bottom 1% capped in the graph) and of deductions (D=0.168, p=0.388). Headline: price effect 2.95 (SE 9.87, p=0.766) against a control mean of 731.25 UGX/kg, with a 95% CI of −2.2% to +3.1%.
+- **Market-access intervention:** A vertically integrated agro-trading company bought maize in treatment villages that passed visual inspection with no visible defects and moisture below 13%. It paid a fixed price set at a premium of about 5% over trading-center prices, roughly 15% over village prices, with no bargaining or deductions. The premium came from a model (Appendix D): the 14 pp reduction in waste and defects relative to average quality, valued at the premium price, assuming local prices are 10% below trading-center prices. The intervention was combined with extension: a demo garden and 5 hands-on training meetings over the first two seasons, attended by about 70% of invitees in the market trial and 78% in the extension-only trial.
+- **Outcome data (market and extension trials):** Household surveys at the end of each selling season. Maize plot areas are measured by GPS, with preloaded GPS data and satellite photos used to confirm plot size. From season 2 onward, recall forms record inputs, labor, and sales. Outcomes are the components of maize profit: harvest, quantity sold, price and revenue (each sale recorded separately), expenses (chemicals, seeds, practices), and hired and family labor costs and hours. The paper also discusses yield, output per hour worked, and profit.
+- **Preprocessing and sample restrictions:** Outliers are kept in the core sample after being rechecked for coding errors. As a robustness check, the top 1% of observations is trimmed (for profit, both the top and bottom 1%). In the returns-to-quality experiment, 1 farmer did not sell and 4 could not be reached, leaving 94 selling households. The extension trial drops 2 conflict villages.
+- **Quality effect in the market trial:** Quality is measured only on sales to the company in treatment villages (random bags lab-tested) and in a random subset of quasi-control villages in sample frame 3. Missing quality data for treatment farmers who did not sell to the company are handled as non-random one-sided attrition, which gives a lower bound on the causal effect (validity check in Appendix G Table 9).
+- **Further evaluation:** Spillovers to local-trader prices within treatment villages are estimated with a difference-in-difference approach that adjusts for selection; local prices account for about 30% of the average price increase. The supplied text is truncated before the main ITT estimating equation for the market and extension trials, so the regression specification, fixed effects, controls and clustering for those trials are not available in this excerpt. The design is clustered at the village level, so clustering at the village level is the natural expectation, but the excerpt does not state it.
+
+
+## Current Code
+```r
+suppressPackageStartupMessages({
+  library(haven)
+  library(dplyr)
+  library(tidyr)
+  library(fixest)
+})
+set.seed(42)
+
+base <- "<repo>/.cache/datasets/bold_2022_market_access_quality_upgrading.script-free"
+rd <- function(f) {
+  d <- haven::read_dta(file.path(base, f))
+  d <- haven::zap_labels(d)
+  as.data.frame(d)
+}
+
+results <- list()
+emit <- function(name, val) {
+  if (is.null(val) || length(val) == 0 || is.na(val)) val <- NA
+  results[[name]] <<- as.numeric(val)
+}
+
+find_col <- function(df, exact = character(0), regex = NULL, exclude = NULL) {
+  nm <- names(df)
+  for (e in exact) if (e %in% nm) return(e)
+  if (!is.null(regex)) {
+    cand <- grep(regex, nm, value = TRUE, ignore.case = TRUE)
+    if (!is.null(exclude)) cand <- cand[!grepl(exclude, cand, ignore.case = TRUE)]
+    if (length(cand) > 0) return(cand[1])
+  }
+  NULL
+}
+
+to_num <- function(x) {
+  if (is.numeric(x)) return(as.numeric(x))
+  suppressWarnings(as.numeric(as.character(x)))
+}
+
+get_coef <- function(m, v = "treat") {
+  cf <- coef(m)
+  if (v %in% names(cf)) return(unname(cf[v]))
+  NA
+}
+
+rowsum_na <- function(df, cols) {
+  if (length(cols) == 0) return(rep(NA_real_, nrow(df)))
+  mat <- sapply(cols, function(cn) to_num(df[[cn]]))
+  if (is.null(dim(mat))) mat <- matrix(mat, ncol = length(cols))
+  s <- rowSums(mat, na.rm = TRUE)
+  s[rowSums(!is.na(mat)) == 0] <- NA
+  s
+}
+
+# ------------------------------------------------------------------
+# Returns-to-quality experiment (Table 2)
+# ------------------------------------------------------------------
+ret <- tryCatch(rd("data/raw/anonym_returns_data.dta"), error = function(e) NULL)
+
+if (!is.null(ret)) {
+  cat("Returns data columns (sample):\n")
+  print(head(names(ret), 60))
+  stems <- unique(sub("_[0-9]+$", "", grep("_[0-9]+$", names(ret), value = TRUE)))
+  cat("Indexed stems:\n"); print(stems)
+  cat("Non-indexed columns:\n"); print(names(ret)[!grepl("_[0-9]+$", names(ret))])
+
+  ret$treat <- to_num(ret[[find_col(ret, c("treatment", "treat"), "treat")]])
+  ret$hh_row <- seq_len(nrow(ret))
+  hhcol <- find_col(ret, c("hhh_id", "hh_id", "hhid", "household_id"), "hh.*id")
+  ret$hh <- if (!is.null(hhcol)) as.character(ret[[hhcol]]) else as.character(ret$hh_row)
+  vcol <- find_col(ret, c("village", "village_id", "ea_code", "vill", "village_code", "lc1", "ea"),
+                   "^(village|vill|ea_)", exclude = "_[0-9]+$")
+  ret$vill <- if (!is.null(vcol)) as.character(ret[[vcol]]) else "1"
+  cat("Village column:", ifelse(is.null(vcol), "NONE", vcol), "\n")
+
+  # ---- Col 1: visual defects per bag ----
+  tryCatch({
+    types <- c("dirt", "cob", "stone", "dust", "insect", "broken", "immature", "damage", "rotten", "mold|mould")
+    defcols <- grep(paste0("^add4_.*(", paste(types, collapse = "|"), ").*_[0-9]+$"),
+                    names(ret), value = TRUE, ignore.case = TRUE)
+    cat("Number of defect columns:", length(defcols), "\n")
+    long <- ret[, c("hh", "vill", "treat", defcols)] %>%
+      mutate(across(all_of(defcols), to_num)) %>%
+      pivot_longer(all_of(defcols), names_to = "var", values_to = "val") %>%
+      mutate(bag = as.integer(sub(".*_([0-9]+)$", "\\1", var)),
+             stem = sub("_[0-9]+$", "", var))
+    vals <- unique(na.omit(long$val))
+    cat("Defect values:\n"); print(sort(vals))
+    if (all(vals %in% c(1, 2))) {
+      long$pres <- as.numeric(long$val == 1)
+    } else {
+      long$pres <- as.numeric(long$val > 0)
+    }
+    bags <- long %>% group_by(hh, vill, treat, bag) %>%
+      summarise(nonmiss = sum(!is.na(val)),
+                defects = sum(pres, na.rm = TRUE), .groups = "drop") %>%
+      filter(nonmiss > 0)
+    m1 <- feols(defects ~ treat | vill, data = bags, cluster = ~hh)
+    print(summary(m1))
+    emit("treatment_defects_visual_table2_col1", get_coef(m1))
+    emit("n_obs_table2_col1_bags", nobs(m1))
+  }, error = function(e) cat("Col1 error:", conditionMessage(e), "\n"))
+
+  # ---- Col 2: lab defects ----
+  tryCatch({
+    nm <- names(ret)
+    nm_clean <- tolower(gsub("_", "", nm))
+    gcols <- nm[grepl("^(foreign|inorganic|broken|pest|rotten|discolou|immature)", nm_clean) &
+                  !grepl("_[0-9]+$", nm)]
+    wcol <- nm[grepl("^totalweight", nm_clean)][1]
+    cat("Lab gram columns:\n"); print(gcols)
+    cat("Lab total weight column:", wcol, "\n")
+    if (length(gcols) == 0) stop("no lab defect column")
+    gsum <- rowsum_na(ret, gcols)
+    tot <- if (!is.na(wcol)) to_num(ret[[wcol]]) else rep(200, nrow(ret))
+    tot[is.na(tot) | tot <= 0] <- 200
+    ret$labdef <- gsum / tot
+    print(summary(ret$labdef))
+    m2 <- feols(labdef ~ treat | vill, data = ret[!is.na(ret$labdef), ], vcov = "hetero")
+    print(summary(m2))
+    emit("treatment_defects_lab_table2_col2", get_coef(m2))
+  }, error = function(e) cat("Col2 error:", conditionMessage(e), "\n"))
+
+  # ---- Cols 3-5: sales ----
+  tryCatch({
+    idx <- grep("_[0-9]+$", names(ret), value = TRUE)
+    sale_idx <- idx[grepl("^add5", idx)]
+    sstems <- unique(sub("_[0-9]+$", "", sale_idx))
+    cat("Sale stems:\n"); print(sstems)
+    pstem <- if ("add5_ppk" %in% sstems) "add5_ppk" else grep("(ppk|price)", sstems, value = TRUE, ignore.case = TRUE)[1]
+    wstems <- grep("(week|date|day|wk)", sstems, value = TRUE, ignore.case = TRUE)
+    wstems <- wstems[!grepl("weight", wstems, ignore.case = TRUE)]
+    wstem <- if (length(wstems)) wstems[1] else NULL
+    cat("stems used: price=", pstem, " week=", ifelse(is.null(wstem), "NONE", wstem), "\n")
+    # fall back to a household-level week/date variable
+    hh_week <- NULL
+    if (is.null(wstem)) {
+      wc <- grep("(week|date|wk)", names(ret), value = TRUE, ignore.case = TRUE)
+      wc <- wc[!grepl("weight", wc, ignore.case = TRUE)]
+      cat("Household-level week/date candidates:\n"); print(wc)
+      if (length(wc)) hh_week <- ret[[wc[1]]]
+    }
+    ks <- sort(unique(as.integer(sub(".*_([0-9]+)$", "\\1",
+                                     grep(paste0("^", pstem, "_[0-9]+$"), names(ret), value = TRUE)))))
+    sales <- do.call(rbind, lapply(ks, function(k) {
+      wcols <- grep(paste0("^add5_ind_weight[0-9]+_", k, "$"), names(ret), value = TRUE)
+      dcols <- grep(paste0("^add5_ind_ded_weight[0-9]+_", k, "$"), names(ret), value = TRUE)
+      wk <- if (!is.null(wstem) && paste0(wstem, "_", k) %in% names(ret)) ret[[paste0(wstem, "_", k)]] else
+        if (!is.null(hh_week)) hh_week else rep(NA, nrow(ret))
+      data.frame(hh = ret$hh, vill = ret$vill, treat = ret$treat, k = k,
+                 price = to_num(ret[[paste0(pstem, "_", k)]]),
+                 ysum = rowsum_na(ret, wcols), dsum = rowsum_na(ret, dcols),
+                 week = wk, stringsAsFactors = FALSE)
+    }))
+    sales <- sales[!is.na(sales$price) & sales$price > 0, ]
+    cat("Number of sales with price:", nrow(sales), "\n")
+    r <- median(sales$dsum / sales$ysum, na.rm = TRUE)
+    cat("Median ded_weight / weight ratio:", r, "\n")
+    if (!is.na(r) && r > 0.5) {
+      sales$y <- sales$ysum
+      sales$z <- ifelse(is.na(sales$dsum), sales$ysum, sales$dsum)
+    } else {
+      sales$y <- sales$ysum
+      sales$z <- sales$ysum - ifelse(is.na(sales$dsum), 0, sales$dsum)
+    }
+    if (inherits(sales$week, "Date") || inherits(sales$week, "POSIXt")) {
+      sales$week <- format(as.Date(sales$week), "%Y-%U")
+    } else if (is.numeric(sales$week) && isTRUE(median(sales$week, na.rm = TRUE) > 1e9)) {
+      sales$week <- format(as.Date(as.POSIXct(sales$week / 1000, origin = "1960-01-01", tz = "UTC")), "%Y-%U")
+    } else if (is.numeric(sales$week) && isTRUE(median(sales$week, na.rm = TRUE) > 1000)) {
+      sales$week <- format(as.Date(sales$week, origin = "1960-01-01"), "%Y-%U")
+    }
+    sales$week <- as.character(sales$week)
+    sales$week[is.na(sales$week)] <- "none"
+    cat("Distinct weeks:", length(unique(sales$week)), "\n")
+    sales$deduct <- (sales$y - sales$z) / sales$y * 100
+    sales$netprice <- sales$price * sales$z / sales$y
+    print(summary(sales[, c("price", "y", "z", "deduct", "netprice")]))
+    m3 <- feols(price ~ treat | vill + week, data = sales, cluster = ~hh)
+    print(summary(m3))
+    emit("treatment_price_table2_col3", get_coef(m3))
+    emit("n_obs_table2_cols3_5_sales", nobs(m3))
+    m4 <- tryCatch(feols(deduct ~ treat | vill + week, data = sales, cluster = ~hh), error = function(e) NULL)
+    if (!is.null(m4)) { print(summary(m4)); emit("treatment_deductions_table2_col4", get_coef(m4)) }
+    m5 <- tryCatch(feols(netprice ~ treat | vill + week, data = sales, cluster = ~hh), error = function(e) NULL)
+    if (!is.null(m5)) { print(summary(m5)); emit("treatment_net_price_table2_col5", get_coef(m5)) }
+  }, error = function(e) cat("Cols3-5 error:", conditionMessage(e), "\n"))
+}
+
+# ------------------------------------------------------------------
+# Market access experiment (Table 6 Panel A)
+# ------------------------------------------------------------------
+usd <- 3700
+tryCatch({
+  p <- rd("data/raw/panel_g1.dta")
+  cat("panel_g1 columns:\n"); print(names(p))
+  tcol <- find_col(p, c("buy_treatment", "treatment", "treat", "treated"), "treat")
+  p$treat <- to_num(p[[tcol]])
+  if (all(is.na(p$treat))) stop("no treatment")
+  if (!all(na.omit(unique(p$treat)) %in% c(0, 1))) p$treat <- as.numeric(p$treat == max(p$treat, na.rm = TRUE))
+  vcol <- find_col(p, c("ea_code", "village", "village_id", "vill"), "^(ea|vill)")
+  hcol <- find_col(p, c("hhh_id", "hh_id", "hhid"), "hh.*id")
+  p$vill <- as.character(p[[vcol]]); p$hh <- as.character(p[[hcol]])
+  p$season <- to_num(p$survey_season)
+  if ("season_post" %in% names(p)) {
+    p$post <- to_num(p$season_post)
+  } else {
+    p$post <- as.numeric(p$season > 3)
+  }
+  if (!all(na.omit(unique(p$post)) %in% c(0, 1))) p$post <- as.numeric(p$post > 0)
+
+  # area
+  pscols <- grep("^plot_size_[0-9]+$", names(p), value = TRUE)
+  area <- rowSums(sapply(pscols, function(cn) to_num(p[[cn]])), na.rm = TRUE)
+  area[area <= 0] <- NA
+  acol <- find_col(p, c("maize_area", "area", "total_area", "plot_size_tot", "plot_size"), NULL)
+  if (!is.null(acol)) area <- to_num(p[[acol]])
+  p$area <- area
+
+  # harvest kg
+  hvcol <- find_col(p, c("harvest_kg", "harvest", "harvest_tot", "total_harvest", "harvest_total", "maize_harvest"),
+                    "harvest", exclude = "cost|value|_[0-9]+$|labo|hour|date")
+  p$harvest <- to_num(p[[hvcol]])
+  cat("harvest column:", hvcol, "\n")
+
+  # price (UGX/kg): evaluate several constructions, keep the one with best plausible coverage
+  pcands <- grep("price", names(p), value = TRUE, ignore.case = TRUE)
+  cat("price-like columns:\n"); print(pcands)
+  plaus <- function(x) { x[!is.na(x) & (x < 50 | x > 5000)] <- NA; x }
+  opts <- list()
+  for (cn in pcands[!grepl("_[0-9]+$", pcands)]) opts[[paste0("col:", cn)]] <- plaus(to_num(p[[cn]]))
+  pc <- grep("price.*_[0-9]+$", names(p), value = TRUE, ignore.case = TRUE)
+  if (length(pc) > 0) {
+    num <- 0; den <- 0
+    for (i in seq_along(pc)) {
+      pr <- plaus(to_num(p[[pc[i]]]))
+      kcands <- c(sub("price", "sold_kg", pc[i]), sub("price", "kg_sold", pc[i]), sub("price", "quantity", pc[i]),
+                  sub("price", "qty", pc[i]), sub("price", "kg", pc[i]), sub("price", "sold", pc[i]))
+      kcn <- kcands[kcands %in% names(p) & kcands != pc[i]][1]
+      kg <- if (!is.na(kcn)) to_num(p[[kcn]]) else rep(1, nrow(p))
+      kg[is.na(kg) | kg <= 0] <- if (is.na(kcn)) 1 else NA
+      ok <- !is.na(pr) & !is.na(kg)
+      num <- num + ifelse(ok, pr * kg, 0); den <- den + ifelse(ok, kg, 0)
+    }
+    opts[["indexed_price"]] <- ifelse(den > 0, num / den, NA)
+  }
+  revc <- grep("(tot_rev|revenue)", names(p), value = TRUE, ignore.case = TRUE)
+  revc <- revc[!grepl("_[0-9]+$", revc)]
+  soldc <- grep("(sold|quant_sold|qty_sold)", names(p), value = TRUE, ignore.case = TRUE)
+  soldc <- soldc[!grepl("_[0-9]+$|price|rev|value|date", soldc, ignore.case = TRUE)]
+  if (length(revc) && length(soldc)) {
+    rv <- to_num(p[[revc[1]]]); sk <- to_num(p[[soldc[1]]])
+    opts[["rev_over_sold"]] <- plaus(ifelse(!is.na(sk) & sk > 0, rv / sk, NA))
+  }
+  cov <- sapply(opts, function(x) sum(!is.na(x)))
+  cat("Price option coverage:\n"); print(cov)
+  if (length(opts) == 0 || max(cov) == 0) stop("no price")
+  best <- names(cov)[which.max(cov)]
+  cat("Price construction used:", best, "\n")
+  p$price_ugx <- opts[[best]]
+  p$price_usd <- p$price_ugx / usd
+
+  # community price for harvest value
+  p <- p %>% group_by(vill, season) %>% mutate(comm_price = median(price_ugx, na.rm = TRUE)) %>% ungroup() %>%
+    group_by(season) %>% mutate(comm_price = ifelse(is.na(comm_price), median(price_ugx, na.rm = TRUE), comm_price)) %>%
+    ungroup() %>% as.data.frame()
+  p$comm_price[is.na(p$comm_price)] <- median(p$price_ugx, na.rm = TRUE)
+  hvalcol <- find_col(p, c("harvest_value", "harvest_val", "value_harvest"), "harvest_val")
+  p$hvalue <- if (!is.null(hvalcol)) to_num(p[[hvalcol]]) / usd else p$harvest * p$comm_price / usd
+  p$yield <- p$harvest / p$area
+
+  # monetary costs
+  ccols <- grep("cost", names(p), value = TRUE)
+  ccols <- ccols[!grepl("^(seeds_cost)$", ccols) | !any(grepl("^seeds_cost_[0-9]+$", names(p)))]
+  ccols <- ccols[!grepl("own|family|fam", ccols)]
+  cmat <- sapply(ccols, function(cn) to_num(p[[cn]]))
+  if (is.null(dim(cmat))) cmat <- matrix(cmat, ncol = length(ccols))
+  p$cost <- rowSums(cmat, na.rm = TRUE) / usd
+  p$profit_m <- p$hvalue - p$cost
+
+  # own labor hours
+  hcols <- grep("hour", names(p), value = TRUE)
+  own <- hcols[grepl("own|fam|hh|household", hcols)]
+  if (length(own) == 0) own <- hcols[!grepl("hire", hcols)]
+  wcol <- find_col(p, c("wage", "market_wage", "wage_hour", "hourly_wage"), "wage")
+  if (length(own) > 0) {
+    omat <- sapply(own, function(cn) to_num(p[[cn]]))
+    if (is.null(dim(omat))) omat <- matrix(omat, ncol = length(own))
+    ownh <- rowSums(omat, na.rm = TRUE)
+    wage <- if (!is.null(wcol)) to_num(p[[wcol]]) else 1000
+    p$profit_h <- p$profit_m - ownh * wage / usd
+  } else p$profit_h <- NA
+
+  cat("DEVIATION: Missing household baseline means set to 0 with a missing-baseline indicator in the ANCOVA (estimating equation not in excerpt)\n")
+  ancova <- function(v) {
+    bl <- p %>% filter(post == 0) %>% group_by(hh) %>% summarise(base = mean(.data[[v]], na.rm = TRUE), .groups = "drop")
+    d <- p %>% filter(post == 1) %>% left_join(bl, by = "hh")
+    d$base[is.nan(d$base)] <- NA
+    d$base_miss <- as.numeric(is.na(d$base))
+    d$base[is.na(d$base)] <- 0
+    d$y <- d[[v]]
+    feols(y ~ treat + base + base_miss | season, data = d, cluster = ~vill)
+  }
+  for (spec in list(c("price_usd", "market_access_price_table6_panelA_col1"),
+                    c("yield", "market_access_yield_table6_panelA_col4"),
+                    c("hvalue", "market_access_harvest_value_table6_panelA_col5"),
+                    c("profit_m", "market_access_profit_monetary_table6_panelA_col7"),
+                    c("profit_h", "market_access_profit_incl_own_hours_table6_panelA_col8"))) {
+    m <- tryCatch(ancova(spec[1]), error = function(e) { cat(spec[1], "error:", conditionMessage(e), "\n"); NULL })
+    if (!is.null(m)) {
+      print(summary(m))
+      emit(spec[2], get_coef(m))
+      if (spec[1] == "hvalue") emit("n_obs_table6_panelA_cols3_5", nobs(m))
+    }
+  }
+}, error = function(e) cat("Table 6 error:", conditionMessage(e), "\n"))
+
+allnames <- c("treatment_defects_visual_table2_col1", "treatment_defects_lab_table2_col2",
+              "treatment_price_table2_col3", "treatment_deductions_table2_col4",
+              "treatment_net_price_table2_col5", "n_obs_table2_col1_bags", "n_obs_table2_cols3_5_sales",
+              "market_access_price_table6_panelA_col1", "market_access_yield_table6_panelA_col4",
+              "market_access_harvest_value_table6_panelA_col5", "market_access_profit_monetary_table6_panelA_col7",
+              "market_access_profit_incl_own_hours_table6_panelA_col8", "n_obs_table6_panelA_cols3_5")
+for (n in allnames) {
+  v <- if (!is.null(results[[n]])) results[[n]] else NA
+  cat(sprintf("RESULT:%s=%s\n", n, ifelse(is.na(v), "NA", format(v, digits = 8))))
+}
+```
+
+## What the code produced
+  treatment_defects_visual_table2_col1 = -2.0466811
+  treatment_defects_lab_table2_col2 = -0.19779831
+  treatment_price_table2_col3 = -34.006539
+  treatment_deductions_table2_col4 = -0.20896774
+  treatment_net_price_table2_col5 = -32.527597
+  n_obs_table2_col1_bags = 621.0
+  n_obs_table2_cols3_5_sales = 211.0
+  market_access_price_table6_panelA_col1 = 0.05034749
+  market_access_yield_table6_panelA_col4 = 113.03345
+  market_access_harvest_value_table6_panelA_col5 = 13.624245
+  market_access_profit_monetary_table6_panelA_col7 = -20.795582
+  market_access_profit_incl_own_hours_table6_panelA_col8 = 1.5415424
+  n_obs_table6_panelA_cols3_5 = 658.0
+
+## Last run's stdout (excerpt: first/last 3000 characters)
+```
+Returns data columns (sample):
+ [1] "hhh_id"                    "Total_weight_of_maize_g"  
+ [3] "Foreign_matter_tot_g"      "Inorganic_matter_tot_g"   
+ [5] "Broken_grains_tot_g"       "Pest_damaged_grains_tot_g"
+ [7] "Rotten_and_diseased_grain" "Discoloured_grains_tot_g" 
+ [9] "Immature_or_shrivelled_gr" "Total_aflatoxins"         
+[11] "add5_ind_weight1_1"        "add5_ind_weight2_1"       
+[13] "add5_ind_weight3_1"        "add5_ind_weight4_1"       
+[15] "add5_ind_weight5_1"        "add5_ind_weight6_1"       
+[17] "add5_ind_weight7_1"        "add5_ind_weight8_1"       
+[19] "add5_ind_weight9_1"        "add5_ind_weight10_1"      
+[21] "add5_ind_weight11_1"       "add5_ind_weight12_1"      
+[23] "add5_ind_weight13_1"       "add5_ind_weight14_1"      
+[25] "add5_ind_weight15_1"       "add5_ind_weight16_1"      
+[27] "add5_ind_weight17_1"       "add5_ind_weight18_1"      
+[29] "add5_ind_weight19_1"       "add5_ind_weight20_1"      
+[31] "add5_ind_ded_weight1_1"    "add5_ind_ded_weight2_1"   
+[33] "add5_ind_ded_weight3_1"    "add5_ind_ded_weight4_1"   
+[35] "add5_ind_ded_weight5_1"    "add5_ind_ded_weight6_1"   
+[37] "add5_ind_ded_weight7_1"    "add5_ind_ded_weight8_1"   
+[39] "add5_ind_ded_weight9_1"    "add5_ind_ded_weight10_1"  
+[41] "add5_ind_ded_weight11_1"   "add5_ind_ded_weight12_1"  
+[43] "add5_ind_ded_weight13_1"   "add5_ind_ded_weight14_1"  
+[45] "add5_ind_ded_weight15_1"   "add5_ind_ded_weight16_1"  
+[47] "add5_ind_ded_weight17_1"   "add5_ind_ded_weight18_1"  
+[49] "add5_ind_ded_weight19_1"   "add5_ind_ded_weight20_1"  
+[51] "add5_ppk_1"                "add5_ind_weight1_2"       
+[53] "add5_ind_weight2_2"        "add5_ind_weight3_2"       
+[55] "add5_ind_weight4_2"        "add5_ind_weight5_2"       
+[57] "add5_ind_weight6_2"        "add5_ind_weight7_2"       
+[59] "add5_ind_weight8_2"        "add5_ind_weight9_2"       
+Indexed stems:
+ [1] "add5_ind_weight1"        "add5_ind_weight2"       
+ [3] "add5_ind_weight3"        "add5_ind_weight4"       
+ [5] "add5_ind_weight5"        "add5_ind_weight6"       
+ [7] "add5_ind_weight7"        "add5_ind_weight8"       
+ [9] "add5_ind_weight9"        "add5_ind_weight10"      
+[11] "add5_ind_weight11"       "add5_ind_weight12"      
+[13] "add5_ind_weight13"       "add5_ind_weight14"      
+[15] "add5_ind_weight15"       "add5_ind_weight16"      
+[17] "add5_ind_weight17"       "add5_ind_weight18"      
+[19] "add5_ind_weight19"       "add5_ind_weight20"      
+[21] "add5_ind_ded_weight1"    "add5_ind_ded_weight2"   
+[23] "add5_ind_ded_weight3"    "add5_ind_ded_weight4"   
+[25] "add5_ind_ded_weight5"    "add5_ind_ded_weight6"   
+[27] "add5_ind_ded_weight7"    "add5_ind_ded_weight8"   
+[29] "add5_ind_ded_weight9"    "add5_ind_ded_weight10"  
+[31] "add5_ind_ded_weight11"   "add5_ind_ded_weight12"  
+[33] "add5_ind_ded_weight13"   "add5_ind_ded_weight14"  
+[35] "add5_ind_ded_weight15"   "add5_ind_ded_weight16"  
+[37] "add5_ind_ded_weight17"   "add5_ind_ded_weight18"  
+[39] "add5_ind_ded_weight19"   "add5_ind_
+[... 17516 characters omitted ...]
+ col:lc_winnow_price   col:lc_sort_price 
+                 11                  12                   1                   0 
+      rev_over_sold 
+                  0 
+Price construction used: col:lc_bag_price 
+DEVIATION: Missing household baseline means set to 0 with a missing-baseline indicator in the ANCOVA (estimating equation not in excerpt)
+OLS estimation, Dep. Var.: y
+Observations: 12
+Fixed-effects: season: 1
+Standard-errors: Clustered (vill) 
+      Estimate Std. Error t value Pr(>|t|)    
+treat 0.050347   0.025444 1.97872 0.095192 .  
+... 1 variable was removed because of collinearity (base_miss)
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+RMSE: 0.031965     Adj. R2: 0.313789
+                 Within R2: 0.376172
+OLS estimation, Dep. Var.: y
+Observations: 640
+Fixed-effects: season: 4
+Standard-errors: Clustered (vill) 
+        Estimate Std. Error t value Pr(>|t|)    
+treat 113.033455  50.117467 2.25537 0.036097 *  
+base    0.108704   0.036183 3.00430 0.007292 ** 
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+RMSE: 406.8     Adj. R2: 0.073023
+              Within R2: 0.054032
+OLS estimation, Dep. Var.: y
+Observations: 658
+Fixed-effects: season: 4
+Standard-errors: Clustered (vill) 
+       Estimate Std. Error  t value   Pr(>|t|)    
+treat 13.624245  35.821741 0.380335 7.0792e-01    
+base   0.316205   0.047223 6.696011 2.1143e-06 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+RMSE: 269.3     Adj. R2: 0.223139
+              Within R2: 0.217484
+OLS estimation, Dep. Var.: y
+Observations: 658
+Fixed-effects: season: 4
+Standard-errors: Clustered (vill) 
+        Estimate Std. Error   t value Pr(>|t|)    
+treat -20.795582  33.912151 -0.613219 0.547003    
+base    0.123163   0.048328  2.548492 0.019622 *  
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+RMSE: 338.8     Adj. R2: 0.082215
+              Within R2: 0.012039
+OLS estimation, Dep. Var.: y
+Observations: 658
+Fixed-effects: season: 4
+Standard-errors: Clustered (vill) 
+      Estimate Std. Error  t value  Pr(>|t|)    
+treat 1.541542  33.219563 0.046405 0.9634720    
+base  0.121898   0.039897 3.055309 0.0065117 ** 
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+RMSE: 353.4     Adj. R2: 0.155005
+              Within R2: 0.010795
+RESULT:treatment_defects_visual_table2_col1=-2.0466811
+RESULT:treatment_defects_lab_table2_col2=-0.19779831
+RESULT:treatment_price_table2_col3=-34.006539
+RESULT:treatment_deductions_table2_col4=-0.20896774
+RESULT:treatment_net_price_table2_col5=-32.527597
+RESULT:n_obs_table2_col1_bags=621
+RESULT:n_obs_table2_cols3_5_sales=211
+RESULT:market_access_price_table6_panelA_col1=0.05034749
+RESULT:market_access_yield_table6_panelA_col4=113.03345
+RESULT:market_access_harvest_value_table6_panelA_col5=13.624245
+RESULT:market_access_profit_monetary_table6_panelA_col7=-20.795582
+RESULT:market_access_profit_incl_own_hours_table6_panelA_col8=1.5415424
+RESULT:n_obs_table6_panelA_cols3_5=658
+```
+
+## Last run's stderr (excerpt: first/last 3000 characters)
+```
+NOTE: 665 observations removed because of NA values (LHS: 665).
+The variable 'base_miss' has been removed because of collinearity (see
+$collin.var).
+NOTE: 37 observations removed because of NA values (LHS: 37).
+NOTE: 19 observations removed because of NA values (LHS: 19).
+NOTE: 19 observations removed because of NA values (LHS: 19).
+NOTE: 19 observations removed because of NA values (LHS: 19).
+```
+
+## Claims still failing
+1. treatment_price_table2_col3: paper claims 2.95 Ugandan shillings per kilogram (coefficient), your code produced -34.0065, tolerance 3.346, gap 1252.76% relative
+2. treatment_net_price_table2_col5: paper claims 0.98 Ugandan shillings per kilogram (coefficient), your code produced -32.5276, tolerance 10.84, gap 3419.14% relative
+3. n_obs_table2_cols3_5_sales: paper claims 116.0 sales (count), your code produced 211, tolerance 0.05, gap 81.90% relative
+4. market_access_price_table6_panelA_col1: paper claims 0.017 US dollars per kilogram (coefficient), your code produced 0.0503475, tolerance 0.02941, gap 196.16% relative
+5. market_access_yield_table6_panelA_col4: paper claims 108.9 kilograms per acre (coefficient), your code produced 113.033, tolerance 0.02, gap 3.80% relative
+6. market_access_harvest_value_table6_panelA_col5: paper claims 78.9 US dollars per season (coefficient), your code produced 13.6242, tolerance 0.02, gap 82.73% relative
+7. market_access_profit_monetary_table6_panelA_col7: paper claims 63.1 US dollars per season (coefficient), your code produced -20.7956, tolerance 0.02, gap 132.96% relative
+8. market_access_profit_incl_own_hours_table6_panelA_col8: paper claims 97.6 US dollars per season (coefficient), your code produced 1.54154, tolerance 0.02, gap 98.42% relative
+
+## Previous attempts (oldest first)
+  Attempt 1: treatment_defects_visual_table2_col1=-2.0466811, n_obs_table2_col1_bags=621.0, market_access_yield_table6_panelA_col4=113.03345
+  Attempt 2: treatment_defects_visual_table2_col1=-2.0466811, treatment_defects_lab_table2_col2=-0.19779831, treatment_price_table2_col3=-34.006539, treatment_deductions_table2_col4=-0.20896774, treatment_net_price_table2_col5=-32.527597, n_obs_table2_col1_bags=621.0, n_obs_table2_cols3_5_sales=211.0, market_access_price_table6_panelA_col1=0.05034749, market_access_yield_table6_panelA_col4=113.03345, market_access_harvest_value_table6_panelA_col5=13.624245, market_access_profit_monetary_table6_panelA_col7=-20.795582, market_access_profit_incl_own_hours_table6_panelA_col8=1.5415424, n_obs_table6_panelA_cols3_5=658.0
+
+These attempts have already been tried.  Do not repeat a strategy
+that has already produced the same values.
+
+## Task
+Adjust the code minimally to close the gap on the failing claims.
+Prefer changes that align more closely with the paper's stated methodology:
+re-read the methodology summary above and check the model specification,
+covariate selection, fixed effects, clustering, and seed against what the
+paper actually specifies.  In econometrics papers, common gap-closers are:
+  - getting the cluster-robust SE right (vcovCL / cluster_var argument)
+  - matching the paper's exact fixed-effects structure
+  - using the same sample-restriction filters the paper applied
+  - matching the paper's weighting scheme (weights= argument)
+
+## Deviation reporting
+If you must change something the paper did NOT specify in order to close
+the gap, emit a ``DEVIATION:`` line via cat() describing the change:
+
+    cat('DEVIATION: Used HC1 robust SE because the paper does not specify but the default did not converge\n')
+
+## When to give up
+If after re-reading the methodology and the previous attempts you judge
+the gap cannot be closed without unreasonable deviation, return the SAME
+R CODE you were given, BYTE-FOR-BYTE unchanged.  The pipeline will record
+the claim as unreproducible.
+
+## Output convention (unchanged)
+Emit every metric as ``cat('RESULT:<name>=<value>\n')``.
+The dataset is a directory tree at '<repo>/.cache/datasets/bold_2022_market_access_quality_upgrading.script-free' — see the file listing under Dataset Information.  Load the actual data file(s) by the exact paths listed there (readr::read_csv() for .csv, haven::read_dta() for Stata .dta, load() for .RData/.rda, which creates the objects listed for the file under exactly those names: use them, do not guess others; readRDS() for .rds).
+Installed packages (no network; nothing else can be installed): jsonlite, fixest, lfe, AER, ivreg, plm, estimatr, lme4, quantreg, car, sandwich, lmtest, clubSandwich, multiwayvcov, marginaleffects, MatchIt, optmatch, CBPS, WeightIt, cobalt, did, rdrobust, rddensity, Synth, modelsummary, stargazer, texreg, broom, tidyverse, dplyr, tidyr, readr, stringr, lubridate, data.table, haven, readxl, janitor, zoo, ggplot2, ggridges, ggrepel, gridExtra, cowplot, gtable, extrafont, sf, MASS, nnet, survival, splines, Matrix, boot, stats, utils.
+Prefer fixest for fixed effects, IV and clustered SEs; use the other installed packages where the paper's method calls for them.
+No network, no system().  set.seed(42).
+
+Output ONLY the R code — no explanation, no markdown fences.

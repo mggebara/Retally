@@ -1,0 +1,163 @@
+component: mean (UGX) among control by season 2..7 [n nonNA]
+^seeds_cost_[0-9]+$                                              19748[ 77]     17782[ 75]     20576[ 75]      7907[ 64]     15051[ 65]      5877[ 68] 
+^fert_cost_[0-9]+$                                                1545[ 77]      2368[ 75]      1827[ 75]      1884[ 64]         0[ 65]       740[ 68] 
+^booster_cost_[0-9]+$                                             8513[ 77]     12263[ 75]      8227[ 75]      6225[ 63]      3101[ 65]      3678[ 68] 
+^manure_cost_[0-9]+$                                               260[ 77]         0[ 75]         0[  0]         0[  0]         0[  0]         0[  0] 
+^tot_chem_costs_[0-9]+$                                          38734[ 77]     45263[ 75]     31133[ 75]     28899[ 63]     26232[ 64]     25651[ 68] 
+^tot_lab_costs_[0-9]+$                                          303269[ 73]    401375[ 75]    312920[ 75]    250587[ 63]    230036[ 65]    211651[ 68] 
+^lc_(prep|plant|weed|spray|harv)_costs_season[0-9]+$            316766[ 77]    401375[ 75]     11267[  4]    250587[ 63]    231486[ 65]    211651[ 68] 
+^equipment_cost_[0-9]+$                                              0[  0]      3263[ 75]         0[  0]         0[  0]         0[  0]         0[  0] 
+^harvest_cost_[0-9]+$                                             4741[ 77]     11168[ 75]         0[  0]         0[  0]         0[  0]         0[  0] 
+^decobbing_cost_[0-9]+$                                          42372[ 77]         0[  0]         0[  0]         0[  0]         0[  0]         0[  0] 
+^labor_cost_ph$                                                   4455[ 77]      5059[ 75]     11387[ 75]      7491[ 64]     11043[ 65]      3199[ 68] 
+^otherph_cost$                                                    2360[ 77]     56750[ 75]     56288[ 75]     39367[ 69]     60657[ 69]     46596[ 68] 
+^drying_cost$                                                      390[ 77]       789[ 75]       213[ 75]      1246[ 64]      4029[ 65]        96[ 68] 
+^storage_cost$                                                    1935[ 77]       395[ 75]         0[ 75]         0[ 64]         0[ 65]         0[ 68] 
+^tot_transport_cost$                                                 0[  0]         0[  0]      3627[ 74]     10565[ 63]     28304[ 64]     11506[ 68] 
+^cost_transportpre$                                               4327[ 77]      3780[ 75]         0[  0]      1710[ 63]      3022[ 65]      1767[ 68] 
+^cost_transportpost$                                             11078[ 77]     19952[ 75]         0[  0]      8855[ 64]     25283[ 64]      8505[ 68] 
+^sale_transport_cost_[0-9]+$                                         0[  0]         0[ 15]      1600[  1]       449[  2]      1377[  4]         0[  0] 
+^labor_cost_store$                                                   0[  0]         0[ 75]      3333[ 75]       138[ 47]       797[ 50]         0[ 56] 
+^labor_cost_dry$                                                     0[  0]       526[ 75]         0[  0]         0[  0]         0[  0]         0[  0] 
+^lc_(decob|winnow|sort|bag)_labour_costs$                            0[  0]         0[  0]         0[  0]      7419[ 63]     11043[ 65]      3199[ 66] 
+^lc_(decob|winnow|sort|bag)_other_costs$                             0[  0]         0[  0]         0[  0]     39367[ 63]     60657[ 65]     46596[ 66] 
+^lc_(decob|bag)_labmaize_costs$                                      0[  0]         0[  0]         0[  0]         0[ 45]         0[ 65]       205[ 66] 
+^lh_(prep|plant|weed|spray|harv)_hours_season[0-9]+$                 0[  0]         0[  0]        14[  4]       545[ 64]       420[ 65]       382[ 68] 
+^lh_(decob|winnow|sort|bag)_hours$                                   0[  0]         0[  0]         0[  0]         8[ 63]         5[ 65]         4[ 66] 
+^seeds_cost$                                                         0[  0]         0[  0]         0[  0]         0[  0]         0[  0]         0[  4] 
+^fert_cost$                                                          0[  0]         0[  0]         0[  0]         0[  0]         0[  0]        68[  5] 
+^booster_cost$                                                       0[  0]         0[  0]         0[  0]         0[  0]         0[  0]       822[  5] 
+
+vars list:
+ [1] "lc_prep_costs_season1"  "lc_plant_costs_season1" "lc_weed_costs_season1"  "lc_spray_costs_season1" "lc_harv_costs_season1"  "lc_prep_costs_season2"  "lc_plant_costs_season2" "lc_weed_costs_season2" 
+ [9] "lc_spray_costs_season2" "lc_harv_costs_season2"  "lc_prep_costs_season3"  "lc_plant_costs_season3" "lc_weed_costs_season3"  "lc_spray_costs_season3" "lc_harv_costs_season3"  "lc_prep_costs_season4" 
+[17] "lc_plant_costs_season4" "lc_weed_costs_season4"  "lc_spray_costs_season4" "lc_harv_costs_season4"  "lc_prep_costs_season5"  "lc_plant_costs_season5" "lc_weed_costs_season5"  "lc_spray_costs_season5"
+[25] "lc_harv_costs_season5"  "lc_prep_costs_season6"  "lc_plant_costs_season6" "lc_weed_costs_season6"  "lc_spray_costs_season6" "lc_harv_costs_season6" 
+plot 1 tot_lab vs sum lc: summary diff -507000 0 0 42133.3 0 2020000 230 
+plot 2 tot_lab vs sum lc: summary diff -80000 0 0 23982.05 0 980000 870 
+plot 3 tot_lab vs sum lc: summary diff -12000 0 0 33843.21 0 1620000 1140 
+labor_cost_ph - sum ph labour comps:
+    Min.  1st Qu.   Median     Mean  3rd Qu.     Max.      NAs 
+ -190000        0        0    15710        0 12000000      218 
+prep lc unit:        
+           1   2   3   4   5   6   7
+         178 186 180 167  58  59  65
+  days     0   0   0   0  21  29  14
+  hours    0   0   0   1   9   0   1
+  season   0   0   0   8  78  79  88
+plant lc unit:        
+           1   2   3   4   5   6   7
+         178 186 180 168  71  59  81
+  days     0   0   0   2  25  39  29
+  hours    0   0   0   1  11   1   2
+  season   0   0   0   5  59  68  56
+weed lc unit:        
+           1   2   3   4   5   6   7
+         178 186 180 167  59  45  55
+  days     0   0   0   5  22  23  19
+  hours    0   0   0   0   8   0   0
+  season   0   0   0   4  77  99  94
+spray lc unit:        
+           1   2   3   4   5   6   7
+         178 186 180 170  99 108  99
+  days     0   0   0   1  14  19  25
+  hours    0   0   0   1  13   0   1
+  other    0   0   0   0   1   0   0
+  season   0   0   0   4  39  40  43
+harv lc unit:        
+           1   2   3   4   5   6   7
+         178 186 180 169  67  67  68
+  days     0   0   0   6  27  30  32
+  hours    0   0   0   0  10   0   0
+  season   0   0   0   1  62  70  68
+prep lh unit:        
+           1   2   3   4   5   6   7
+         178 186 180 165  11  11  24
+  days     0   0   0   6 129 137 125
+  hours    0   0   0   5  17  11  17
+  season   0   0   0   0   9   8   2
+harv lh unit:        
+           1   2   3   4   5   6   7
+         178 186 180 165  10   7  21
+  days     0   0   0   9 141 144 126
+  hours    0   0   0   2  13  12  16
+  season   0   0   0   0   2   4   5
+hired cost per day: n 312 
+  10%   25%   50%   75%   90% 
+ 5000  5000  5000  5000 10000 
+family hours per day: n 2436 
+10% 25% 50% 75% 90% 
+  5   5   6   6   7 
+family hours mean control s5-7: 453.5231  treat: 348.0885 
+family hours (preharvest only) mean control s5-7: 448.0047 
+     hhh_id survey_season maize_tot_plotn harvest_kg acres_tot plot_size_1 harvest_kg_1 sold_kg_p_1
+1  10078013             6               0         NA      0.00          NA           NA          NA
+2  10078054             5               0         NA      0.00          NA           NA          NA
+3  10078054             7              NA        650      0.97          NA           NA         577
+4  10136120             5               0         NA      0.00          NA           NA          NA
+5  10165139             7              NA        805      1.40          NA           NA         725
+6  10181011             6               0         NA      0.00          NA           NA          NA
+7  10181011             5               0         NA        NA          NA           NA          NA
+8  10219009             5               0         NA      0.00          NA           NA          NA
+9  10219013             7              NA        724      1.30          NA           NA         444
+10 10231018             7              NA        650      1.00          NA           NA         650
+11 10235035             6               0         NA      0.00          NA           NA          NA
+12 10235035             7              NA         NA      0.00          NA           NA          NA
+13 10247029             5               0         NA      0.00          NA           NA          NA
+14 10247037             6               0         NA      0.00          NA           NA          NA
+15 10247061             6               0         NA      0.00          NA           NA          NA
+16 10252041             5               0         NA      0.00          NA           NA          NA
+17 10252086             5               0         NA      0.00          NA           NA          NA
+18 10252086             7               0         NA      0.00          NA           NA          NA
+19 10263058             7              NA        158      0.50          NA           NA         143
+20 10294048             7              NA        450      2.00          NA           NA         450
+21 10294063             5               0         NA      0.00          NA           NA          NA
+22 10326064             6               0         NA      0.00          NA           NA          NA
+23 10328006             7              NA         60      0.50          NA           NA          NA
+24 10328009             7              NA        975      1.50          NA           NA         780
+25 10328034             7              NA        870      1.50          NA           NA         360
+26 10328040             7              NA        570      1.50          NA           NA         360
+27 10350005             7              NA       2250      2.00          NA           NA        2100
+28 10350019             7              NA       2700      6.00          NA           NA          NA
+29 10354016             7              NA       4050      4.70          NA           NA        3450
+30 10354033             6               0         NA      0.00          NA           NA          NA
+31 10354043             7              NA       3424      7.00          NA           NA        3336
+32 10354062             7              NA        480      0.75          NA           NA         480
+33 10356002             7              NA       4760      8.00          NA           NA        4620
+34 10356010             7              NA        650      1.00          NA           NA         585
+35 10356010             5               0         NA      0.00          NA           NA          NA
+36 10356014             7              NA       2600      2.50          NA           NA        2500
+37 10356026             5               0         NA      0.00          NA           NA          NA
+     hhh_id                      form_used harvest_kg acres_tot maize_tot_plotn
+1  10078054 Phone_Market_Survey_spring2020        650      0.97              NA
+2  10165139 Phone_Market_Survey_spring2020        805      1.40              NA
+3  10219013 Phone_Market_Survey_spring2020        724      1.30              NA
+4  10231018 Phone_Market_Survey_spring2020        650      1.00              NA
+5  10263058 Phone_Market_Survey_spring2020        158      0.50              NA
+6  10294048 Phone_Market_Survey_spring2020        450      2.00              NA
+7  10328006 Phone_Market_Survey_spring2020         60      0.50              NA
+8  10328009 Phone_Market_Survey_spring2020        975      1.50              NA
+9  10328034 Phone_Market_Survey_spring2020        870      1.50              NA
+10 10328040 Phone_Market_Survey_spring2020        570      1.50              NA
+11 10350005 Phone_Market_Survey_spring2020       2250      2.00              NA
+12 10350019 Phone_Market_Survey_spring2020       2700      6.00              NA
+13 10354016 Phone_Market_Survey_spring2020       4050      4.70              NA
+14 10354043 Phone_Market_Survey_spring2020       3424      7.00              NA
+15 10354062 Phone_Market_Survey_spring2020        480      0.75              NA
+16 10356002 Phone_Market_Survey_spring2020       4760      8.00              NA
+17 10356010 Phone_Market_Survey_spring2020        650      1.00              NA
+18 10356014 Phone_Market_Survey_spring2020       2600      2.50              NA
+post rows with price: 623 
+post rows with price & pre price: 617 
+post rows in g1 hh: 677  distinct hh post: 180 
+mean price UGX control by season:
+# A tibble: 7 × 2
+  survey_season    mp
+          <dbl> <dbl>
+1             1  905.
+2             2  743.
+3             3  570.
+4             4  277.
+5             5  564.
+6             6  688.
+7             7  700.

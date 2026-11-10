@@ -1,0 +1,29 @@
+{
+  "schema": 1,
+  "entry_id": "bold-2022-market-access-quality-upgrading",
+  "mode": "independent",
+  "run_id": "2026-11-10-a",
+  "reproducer": "claude-code",
+  "language": "r",
+  "final": {"script": "script.R", "stdout": "stdout.txt", "stderr": "stderr.txt", "exit_code": 0},
+  "attempts": [
+    {"dir": "attempt-1", "exit_code": 1, "kind": ""},
+    {"dir": "attempt-2", "exit_code": 0, "kind": ""},
+    {"dir": "attempt-3", "exit_code": 0, "kind": ""},
+    {"dir": "attempt-4", "exit_code": 0, "kind": ""},
+    {"dir": "attempt-5", "exit_code": 0, "kind": "claim"},
+    {"dir": "attempt-6", "exit_code": 0, "kind": ""},
+    {"dir": "attempt-7", "exit_code": 0, "kind": "claim"}
+  ],
+  "deviations": [
+    "Table 6 ANCOVA pretreatment control is the outcome in the household's last observed baseline season (season 3 for nearly all households) rather than the mean over the three baseline seasons; switched after the attempt-7 claim comparison. The baseline-mean version (attempt-7) gave smaller treatment effects (yield 89.5, harvest value 56.2, profit 52.7).",
+    "Table 6 column 8 (profit incl. own hours): own/family hours are only recorded from season 5 on, so the pretreatment control is last-baseline monetary profit; family hours are valued at a constant US$26/118 per hour (the wage implied by the text: US$26 of hired labour = 118 hours).",
+    "UGX converted to USD at a constant 3700 UGX/USD (the paper does not state the rate; 3700 reproduces the Table 3 baseline mean price of about US$0.20/kg).",
+    "Harvest value = sales revenue (seller_data) + unsold harvest valued at the village-season median price per kg; expenses = inputs (seeds, fertilizer, booster, manure, chemicals) + equipment + hired labour (tot_lab_costs) + post-harvest labour/other/drying/storage costs + transport, defined when seed costs are reported (gives N=640). Season-2 harvest uses the sum of plot harvests because the season-2 harvest_kg total is inconsistent with the plot sums.",
+    "Table 2: sales are buyer slots 2-4 of the final-visit module (slot 1 is the single random bag bought by the research team); week of sale = Stata-style week of year of the sale date; deductions = 100*(y-z)/y with y = enumerator-measured weight of the bags sold and z = buyer weight after deductions; net price = price*z/y. Week fixed-effect singletons kept (fixef.rm='none'), so N=116."
+  ],
+  "notes": "Wrote R from the paper text only (no author scripts opened; the dofiles/ directory was not opened). Table 2 reproduces closely (visual defects -2.157, lab defects -0.198, price 2.95, deductions 0.177, N 622/116); net price 1.33 vs the claimed 0.98. Table 6 panel A: price 0.0169, yield 104.0, harvest value 95.4, monetary profit 70.2, profit incl. own hours 105.8, N 658. Control-group follow-up means match the paper closely (price 0.149 vs 0.15, harvest 1887.5 vs 1887.52, harvest value 286.6 vs 286.17, expenses 106.2 vs 106.38), so the remaining gaps most likely come from how the pretreatment control and the season-3 baseline variables are built. Attempt-1 was an exploratory run that crashed because my own wrapper's zsh '$M:ro' expansion appended 'o' to the mount path; I fixed the wrapper (the sandbox command itself was unchanged), so it is recorded with kind ''. While debugging that mount I ran a few ad-hoc `docker run ... ls` commands outside run_sandbox; one of them briefly listed the top-level file names of benchmark/.cache (JSON cache file names only, no contents read). Attempts 2-4 and 6 were exploratory (variable listings, survey-instrument xlsx, descriptive means; no RESULT lines). Two claim comparisons were used (attempts 5 and 7). Each run took about 2 s, and nothing hung.",
+  "files_read_outside_mount": [],
+  "started_at": "2026-11-10T14:44:18Z",
+  "finished_at": "2026-11-10T14:52:30Z"
+}

@@ -1,0 +1,118 @@
+# treat: treatment  vil: ea_code  hh: hhh_id 
+# visual defect types found: dirt,cobs,stones,dust,insects,broken,immature,damaged,rotten,moldy 
+# defect value table:
+allvals
+   0    1 
+4766  879 
+# bags with defect info: 621 
+OLS estimation, Dep. Var.: defects
+Observations: 621
+Fixed-effects: vil: 9
+Standard-errors: Clustered (hh) 
+      Estimate Std. Error  t value  Pr(>|t|)    
+treat -2.19536   0.205125 -10.7026 < 2.2e-16 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+RMSE: 0.936467     Adj. R2: 0.678487
+                 Within R2: 0.544986
+OLS estimation, Dep. Var.: y
+Observations: 82
+Fixed-effects: vil: 9
+Standard-errors: Heteroskedasticity-robust 
+       Estimate Std. Error  t value   Pr(>|t|)    
+treat -0.197798   0.053666 -3.68573 0.00043873 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+RMSE: 0.248652     Adj. R2: 0.282936
+                 Within R2: 0.126349
+# week stem: add5_sold_when_e 
+# example sale dates:
+[1] "2019-03-29" "2019-03-30" "2019-04-06" "2019-03-07" "2019-03-30"
+[6] "2019-02-06"
+# class: Date 
+# sale records with price only: 211  with price and weight: 211 
+# median ded_weight / weight: 1 
+# sales: 211  households: 95  weeks: 16 
+OLS estimation, Dep. Var.: price
+Observations: 208
+Fixed-effects: vil: 9,  week: 13
+Standard-errors: Clustered (hh) 
+      Estimate Std. Error  t value Pr(>|t|) 
+treat  -7.9041    7.66439 -1.03128  0.30509 
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+RMSE: 52.3     Adj. R2: 0.815014
+             Within R2: 0.004882
+OLS estimation, Dep. Var.: ded
+Observations: 208
+Fixed-effects: vil: 9,  week: 13
+Standard-errors: Clustered (hh) 
+       Estimate Std. Error  t value Pr(>|t|) 
+treat -0.149354   0.124137 -1.20314  0.23197 
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+RMSE: 0.848042     Adj. R2: 0.046866
+                 Within R2: 0.00662 
+OLS estimation, Dep. Var.: net
+Observations: 208
+Fixed-effects: vil: 9,  week: 13
+Standard-errors: Clustered (hh) 
+      Estimate Std. Error   t value Pr(>|t|) 
+treat  -7.0248    7.83195 -0.896942  0.37207 
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+RMSE: 54.0     Adj. R2: 0.802554
+             Within R2: 0.003625
+# panel_g1 all columns:
+# ea_code survey_season group buy_treatment main_road_min hhr_n seeds_1 seeds_2 seeds_3 seeds_4 seeds_5 seeds_6 seeds_7 form_used survey_round maize_tot_plotn plot_size_1 plot_size_2 seeds_types_1 seeds_kg_1 seeds_cost_1 seeds_types_2 seeds_kg_2 seeds_cost_2 manure_kg_1 manure_cost_1 manure_kg_2 manure_cost_2 fert_kg_1 fert_spec_1 fert_cost_1 fert_kg_2 fert_spec_2 fert_cost_2 booster_kg_1 booster_cost_1 booster_kg_2 booster_cost_2 equipment_cost_1 tot_lab_costs_1 equipment_cost_2 tot_lab_costs_2 tot_chem_costs_1 tot_chem_costs_2 harvest_cost_1 harvest_kg_1 harvest_cost_2 harvest_kg_2 harvest_kg acres_tot dry_how labor_cost_dry drying_cost storage labor_cost_store storage_cost labor_cost_ph otherph_cost sold_crop sold_kg sold_kg_p_1 sale_transport_yn_1 sale_transport_cost_1 sold_kg_p_2 sale_transport_yn_2 sale_transport_cost_2 seeds_kg seeds_type seeds_cost fert_spec fert_kg fert_cost tot_rev_told_tot tot_transport_cost sold_kg_p_3 plot_size_3 plot_size_4 seeds_types_3 seeds_kg_3 seeds_cost_3 seeds_types_4 seeds_kg_4 seeds_cost_4 manure_kg_3 manure_kg_4 fert_spec_3 fert_kg_3 fert_cost_3 fert_spec_4 fert_kg_4 fert_cost_4 lh_prep_unit1 lh_prep_hours_unit1 lh_plant_unit1 lh_plant_hours_unit1 lh_weed_unit1 lh_weed_hours_unit1 lh_spray_unit1 lh_spray_hours_unit1 lh_harv_unit1 lh_harv_hours_unit1 lh_prep_hours_season1 lh_plant_hours_season1 lh_weed_hours_season1 lh_spray_hours_season1 lh_harv_hours_season1 lh_prep_unit2 lh_prep_hours_unit2 lh_plant_unit2 lh_plant_hours_unit2 lh_weed_unit2 lh_weed_hours_unit2 lh_spray_unit2 lh_spray_hours_unit2 lh_harv_unit2 lh_harv_hours_unit2 lh_prep_hours_season2 lh_plant_hours_season2 lh_weed_hours_season2 lh_spray_hours_season2 lh_harv_hours_season2 lh_prep_unit3 lh_prep_hours_unit3 lh_plant_unit3 lh_plant_hours_unit3 lh_weed_unit3 lh_weed_hours_unit3 lh_spray_unit3 lh_spray_hours_unit3 lh_harv_unit3 lh_harv_hours_unit3 lh_prep_hours_season3 lh_plant_hours_season3 lh_weed_hours_season3 lh_spray_hours_season3 lh_harv_hours_season3 lh_prep_unit4 lh_prep_hours_unit4 lh_plant_unit4 lh_plant_hours_unit4 lh_weed_unit4 lh_weed_hours_unit4 lh_spray_unit4 lh_spray_hours_unit4 lh_harv_unit4 lh_harv_hours_unit4 lh_prep_hours_season4 lh_plant_hours_season4 lh_weed_hours_season4 lh_spray_hours_season4 lh_harv_hours_season4 lc_prep_unit1 lc_prep_costs_unit1 lc_plant_unit1 lc_plant_costs_unit1 lc_weed_unit1 lc_weed_costs_unit1 lc_spray_unit1 lc_spray_costs_unit1 lc_harv_unit1 lc_harv_costs_unit1 lc_prep_costs_season1 lc_plant_costs_season1 lc_weed_costs_season1 lc_spray_costs_season1 lc_harv_costs_season1 lc_prep_unit2 lc_prep_costs_unit2 lc_plant_unit2 lc_plant_costs_unit2 lc_weed_unit2 lc_weed_costs_unit2 lc_spray_unit2 lc_spray_costs_unit2 lc_harv_unit2 lc_harv_costs_unit2 lc_prep_costs_season2 lc_plant_costs_season2 lc_weed_costs_season2 lc_spray_costs_season2 lc_harv_costs_season2 lc_prep_unit3 lc_prep_costs_unit3 lc_plant_unit3 lc_plant_costs_unit3 lc_weed_unit3 lc_weed_costs_unit3 lc_spray_unit3 lc_spray_costs_unit3 lc_harv_unit3 lc_harv_costs_unit3 lc_prep_costs_season3 lc_plant_costs_season3 lc_weed_costs_season3 lc_spray_costs_season3 lc_harv_costs_season3 lc_prep_unit4 lc_prep_costs_unit4 lc_plant_unit4 lc_plant_costs_unit4 lc_weed_unit4 lc_weed_costs_unit4 lc_spray_unit4 lc_spray_costs_unit4 lc_harv_unit4 lc_harv_costs_unit4 lc_prep_costs_season4 lc_plant_costs_season4 lc_weed_costs_season4 lc_spray_costs_season4 lc_harv_costs_season4 tot_lab_costs_3 tot_lab_costs_4 tot_chem_costs_3 tot_chem_costs_4 harvest_kg_3 harvest_kg_4 decob lh_decob_hours lc_decob_labour_costs lc_decob_labmaize_costs lc_decob_price lc_decob_other_costs winnow lh_winnow_hours lc_winnow_labour_costs lc_winnow_labmaize_costs lc_winnow_other_costs sort lh_sort_hours lc_sort_labour_costs lc_sort_labmaize_costs lc_sort_other_costs bag lh_bag_hours lc_bag_labour_costs lc_bag_labmaize_costs lc_bag_price lc_bag_other_costs sale_transport_yn_3 sold_kg_p_4 sale_transport_yn_4 sold_kg_p_5 sale_transport_yn_5 sale_transport_cost_5 sale_transport_cost_3 sold_kg_p_6 sale_transport_yn_6 sold_kg_p_7 sale_transport_yn_7 plot_size_5 plot_size_6 seeds_types_5 seeds_kg_5 seeds_cost_5 seeds_types_6 seeds_kg_6 seeds_cost_6 manure_kg_5 manure_kg_6 fert_spec_5 fert_spec_6 lh_prep_unit5 lh_prep_hours_unit5 lh_plant_unit5 lh_plant_hours_unit5 lh_weed_unit5 lh_weed_hours_unit5 lh_spray_unit5 lh_spray_hours_unit5 lh_harv_unit5 lh_harv_hours_unit5 lh_prep_hours_season5 lh_plant_hours_season5 lh_weed_hours_season5 lh_spray_hours_season5 lh_harv_hours_season5 lh_prep_unit6 lh_prep_hours_unit6 lh_plant_unit6 lh_plant_hours_unit6 lh_weed_unit6 lh_weed_hours_unit6 lh_spray_unit6 lh_spray_hours_unit6 lh_harv_unit6 lh_harv_hours_unit6 lh_prep_hours_season6 lh_plant_hours_season6 lh_weed_hours_season6 lh_spray_hours_season6 lh_harv_hours_season6 lc_prep_unit5 lc_prep_costs_unit5 lc_plant_unit5 lc_plant_costs_unit5 lc_weed_unit5 lc_weed_costs_unit5 lc_spray_unit5 lc_spray_costs_unit5 lc_harv_unit5 lc_harv_costs_unit5 lc_prep_costs_season5 lc_plant_costs_season5 lc_weed_costs_season5 lc_spray_costs_season5 lc_harv_costs_season5 lc_prep_costs_unit6 lc_plant_unit6 lc_plant_costs_unit6 lc_weed_unit6 lc_weed_costs_unit6 lc_spray_unit6 lc_spray_costs_unit6 lc_harv_unit6 lc_harv_costs_unit6 lc_prep_costs_season6 lc_plant_costs_season6 lc_weed_costs_season6 lc_spray_costs_season6 lc_harv_costs_season6 tot_lab_costs_5 tot_lab_costs_6 tot_chem_costs_5 tot_chem_costs_6 harvest_kg_5 harvest_kg_6 lc_winnow_price lc_sort_price fert_kg_5 fert_cost_5 booster_kg_3 booster_cost_3 booster_kg_4 booster_cost_4 booster_kg_5 booster_cost_5 equipment_cost_3 equipment_cost_4 equipment_cost_5 harvest_cost_3 harvest_cost_4 harvest_cost_5 decobbing_cost_1 decobbing_cost_2 manure_cost_3 decobbing_cost_3 hhh_id season_spring2017 season_fall2017 season_spring2018 season_fall2018 season_spring2019 season_fall2019 season_spring2020 season_post season_ante plot_size_7 plot_size_8 plot_size_9 plot_size_10 plot_size_11 plot_size_12 seeds_types_7 booster_cost decobbing_cost_4 decobbing_cost_5 distance_kakumiro mdm_female mdm_primary cost_transportpre cost_transportpost fert_spec_7 fert_spec_8 fert_spec_9 fert_kg_6 harvest_kg_7 harvest_kg_8 harvest_kg_9 tot_rev_combined_1 tot_rev_combined2_1 tot_rev_combined_2 tot_rev_combined2_2 tot_rev_combined_3 tot_rev_combined2_3 tot_rev_combined_4 tot_rev_combined2_4 tot_rev_combined_5 tot_rev_combined2_5 tot_rev_combined_6 tot_rev_combined2_6 tot_rev_combined_7 tot_rev_combined2_7 tot_rev_combined_1_1 tot_rev_combined_1_2 tot_rev_combined_1_3 tot_rev_combined_2_1 tot_rev_combined_3_1 tot_rev_combined_3_2 tot_rev_combined_4_1 tot_rev_combined_5_1 tot_rev_combined_6_1 tot_rev_combined_7_1 tot_rev_combined_8_1 tot_rev_combined_2_2 
+# using acres_tot as maize area
+DEVIATION: Price per kg constructed as total maize revenue / kg sold (no price variable in panel)
+# using harvest_kg 
+DEVIATION: Harvest value constructed as harvest_kg times household price (village-season mean if unsold), USD
+OLS estimation, Dep. Var.: y
+Observations: 16
+Fixed-effects: season: 1
+Standard-errors: Clustered (vil) 
+       Estimate Std. Error   t value Pr(>|t|) 
+treat -0.008143   0.012047 -0.675912  0.51609 
+... 2 variables were removed because of collinearity (base and
+base_miss)
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+RMSE: 0.024812     Adj. R2: -0.047199
+                 Within R2:  0.022614
+OLS estimation, Dep. Var.: y
+Observations: 658
+Fixed-effects: season: 4
+Standard-errors: Clustered (vil) 
+            Estimate Std. Error  t value Pr(>|t|)    
+treat     101.315272  48.920748 2.071008 0.052221 .  
+base        0.169233   0.075937 2.228590 0.038114 *  
+base_miss  86.654310 119.963217 0.722341 0.478882    
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+RMSE: 400.8     Adj. R2: 0.075239
+              Within R2: 0.050702
+OLS estimation, Dep. Var.: y
+Observations: 82
+Fixed-effects: season: 1
+Standard-errors: Clustered (vil) 
+      Estimate Std. Error   t value Pr(>|t|) 
+treat -82.4979    135.876 -0.607156  0.55875 
+... 2 variables were removed because of collinearity (base and
+base_miss)
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+RMSE: 412.1     Adj. R2: -0.003309
+              Within R2:  0.009078
+RESULT:treatment_defects_visual_table2_col1=-2.19536
+RESULT:n_obs_table2_col1_bags=621
+RESULT:treatment_defects_lab_table2_col2=-0.197798
+RESULT:treatment_price_table2_col3=-7.9041
+RESULT:n_obs_table2_cols3_5_sales=208
+RESULT:treatment_deductions_table2_col4=-0.149354
+RESULT:treatment_net_price_table2_col5=-7.0248
+RESULT:market_access_price_table6_panelA_col1=-0.0081426
+RESULT:market_access_yield_table6_panelA_col4=101.315
+RESULT:market_access_harvest_value_table6_panelA_col5=-82.4979
+RESULT:n_obs_table6_panelA_cols3_5=658

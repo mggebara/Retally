@@ -1,0 +1,95 @@
+# returns data columns (non add4/add5):
+# hhh_id Total_weight_of_maize_g Foreign_matter_tot_g Inorganic_matter_tot_g Broken_grains_tot_g Pest_damaged_grains_tot_g Rotten_and_diseased_grain Discoloured_grains_tot_g Immature_or_shrivelled_gr Total_aflatoxins ea_code add1_acres_tot_1st add1_ap_maize_kg_1 add1_harvest_new_when_e_1 treatment liveinsects 
+# add5 stems: add5_ind_weight# add5_ind_ded_weight# add5_ppk add5_sold_when_e 
+# add4 stems: add4_seeds add4_chemical add4_moisture add4_weight add4_random_bag add4_insect add4_insect_live add4_dirty add4_cobs add4_stones add4_dust add4_broken add4_immature add4_damage add4_rot add4_mould 
+# treat: treatment  vil: ea_code  hh: hhh_id 
+# NA treat: 0  NA vil: 0  nrow: 99 
+# visual defect types found: cobs,stones,dust,broken,immature 
+# defect value table:
+allvals
+   0    1 
+1951  735 
+# per-bag add4 stems: add4_broken add4_chemical add4_cobs add4_damage add4_dirty add4_dust add4_immature add4_insect add4_insect_live add4_moisture add4_mould add4_rot add4_seeds add4_stones add4_weight 
+# bags with defect info: 611  bags with any bag record: 644 
+OLS estimation, Dep. Var.: defects
+Observations: 644
+Fixed-effects: vil: 9
+Standard-errors: Clustered (hh) 
+      Estimate Std. Error  t value  Pr(>|t|)    
+treat -1.80258   0.152597 -11.8127 < 2.2e-16 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+RMSE: 0.74329     Adj. R2: 0.675538
+                Within R2: 0.557793
+# lab total: Total_weight_of_maize_g  components: Foreign_matter_tot_g Inorganic_matter_tot_g Broken_grains_tot_g Pest_damaged_grains_tot_g Rotten_and_diseased_grain Discoloured_grains_tot_g Immature_or_shrivelled_gr 
+# lab defect share summary:
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max.     NAs 
+0.03453 0.06019 0.07826 0.20033 0.11435 1.02339      17 
+OLS estimation, Dep. Var.: y
+Observations: 82
+Fixed-effects: vil: 9
+Standard-errors: Heteroskedasticity-robust 
+       Estimate Std. Error  t value   Pr(>|t|)    
+treat -0.197798   0.053666 -3.68573 0.00043873 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+RMSE: 0.248652     Adj. R2: 0.282936
+                 Within R2: 0.126349
+# week stem: NONE 
+# median ded_weight / weight: 1 
+# sales: 211  households: 95 
+DEVIATION: No week-of-sale variable identified; columns 3-5 use village FE only
+OLS estimation, Dep. Var.: price
+Observations: 211
+Fixed-effects: vil: 9
+Standard-errors: Clustered (hh) 
+      Estimate Std. Error  t value Pr(>|t|)    
+treat -34.0065    17.9735 -1.89203 0.061565 .  
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+RMSE: 106.9     Adj. R2: 0.335571
+              Within R2: 0.022676
+OLS estimation, Dep. Var.: ded
+Observations: 211
+Fixed-effects: vil: 9
+Standard-errors: Clustered (hh) 
+       Estimate Std. Error  t value Pr(>|t|)    
+treat -0.208968   0.113561 -1.84014 0.068904 .  
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+RMSE: 0.881838     Adj. R2: 0.025559
+                 Within R2: 0.012702
+OLS estimation, Dep. Var.: net
+Observations: 211
+Fixed-effects: vil: 9
+Standard-errors: Clustered (hh) 
+      Estimate Std. Error  t value Pr(>|t|)    
+treat -32.5276    17.8394 -1.82336 0.071427 .  
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+RMSE: 106.4     Adj. R2: 0.337752
+              Within R2: 0.020954
+# panel_g1 key columns:
+# acres_tot sold_crop sold_kg sold_kg_p_1 sold_kg_p_2 tot_rev_told_tot sold_kg_p_3 sold_kg_p_4 sold_kg_p_5 sold_kg_p_6 sold_kg_p_7 
+# using harvest_kg 
+OLS estimation, Dep. Var.: y
+Observations: 640
+Fixed-effects: season: 4
+Standard-errors: Clustered (vil) 
+        Estimate Std. Error t value Pr(>|t|)    
+treat 113.033455  50.117467 2.25537 0.036097 *  
+base    0.108704   0.036183 3.00430 0.007292 ** 
+... 1 variable was removed because of collinearity (base_miss)
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+RMSE: 406.8     Adj. R2: 0.073023
+              Within R2: 0.054032
+RESULT:treatment_defects_visual_table2_col1=-1.80258
+RESULT:n_obs_table2_col1_bags=644
+RESULT:treatment_defects_lab_table2_col2=-0.197798
+RESULT:treatment_price_table2_col3=-34.0065
+RESULT:n_obs_table2_cols3_5_sales=211
+RESULT:treatment_deductions_table2_col4=-0.208968
+RESULT:treatment_net_price_table2_col5=-32.5276
+RESULT:market_access_yield_table6_panelA_col4=113.033
+RESULT:n_obs_table6_panelA_cols3_5=658

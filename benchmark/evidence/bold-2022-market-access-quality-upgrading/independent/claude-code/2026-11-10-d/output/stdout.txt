@@ -1,0 +1,60 @@
+Bags inspected: 622  control mean defects: 2.465 
+Lab bags: 82  control mean: 0.323 
+Sales: 116  households: 94 
+# A tibble: 2 × 5
+  treatment     n price deduction netprice
+      <dbl> <int> <dbl>     <dbl>    <dbl>
+1         0    56  731.      3.73     705.
+2         1    60  660.      3.89     635.
+                              m1                m2          m3            m4
+Dependent Var.:             ndef            labdef       price     deduction
+                                                                            
+treatment       -2.16*** (0.212) -0.198*** (0.054) 2.95 (9.87) 0.177 (0.633)
+Fixed-Effects:  ---------------- ----------------- ----------- -------------
+ea                           Yes                No         Yes           Yes
+ea_code                       No               Yes          No            No
+week                          No                No         Yes           Yes
+_______________ ________________ _________________ ___________ _____________
+S.E. type                 by: hh Heteroskeda.-rob.      by: hh        by: hh
+Observations                 622                82         116           116
+R2                       0.67298           0.36261     0.90508       0.22201
+Within R2                0.52973           0.12635     0.00065       0.00110
+
+                         m5
+Dependent Var.:    netprice
+                           
+treatment       1.33 (10.6)
+Fixed-Effects:  -----------
+ea                      Yes
+ea_code                  No
+week                    Yes
+_______________ ___________
+S.E. type            by: hh
+Observations            116
+R2                  0.89047
+Within R2           0.00012
+---
+Signif. codes: 0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+Daily hired wage (median UGX): 5000  hours/day (median): 6  hourly wage UGX: 833.3  USD: 0.225 
+Baseline means (USD): harvest value 419.3 n 501 | price 0.197 n 470 | expenses 141.4 n 363 | profit 258.3 | harvest 2094 | acres 2.16 
+price       coef=    0.016 se=   0.004 n=617 ctl_mean=     0.15
+acres       coef=   -0.067 se=   0.209 n=677 ctl_mean=     2.29
+harvest     coef=   97.474 se= 208.571 n=658 ctl_mean=  1887.52
+yield       coef=   98.293 se=  47.014 n=658 ctl_mean=   793.12
+hvalue      coef=   55.004 se=  45.319 n=658 ctl_mean=   287.00
+expenses    coef=   18.171 se=  18.474 n=640 ctl_mean=   105.51
+profit      coef=   51.469 se=  38.796 n=640 ctl_mean=   178.72
+profit_own  coef=   81.222 se=  51.402 n=464 ctl_mean=   122.16
+RESULT:treatment_defects_visual_table2_col1=-2.15699
+RESULT:treatment_defects_lab_table2_col2=-0.197798
+RESULT:treatment_price_table2_col3=2.94941
+RESULT:treatment_deductions_table2_col4=0.177321
+RESULT:treatment_net_price_table2_col5=1.3317
+RESULT:n_obs_table2_col1_bags=622
+RESULT:n_obs_table2_cols3_5_sales=116
+RESULT:market_access_price_table6_panelA_col1=0.0157467
+RESULT:market_access_yield_table6_panelA_col4=98.2931
+RESULT:market_access_harvest_value_table6_panelA_col5=55.0042
+RESULT:market_access_profit_monetary_table6_panelA_col7=51.4695
+RESULT:market_access_profit_incl_own_hours_table6_panelA_col8=81.2225
+RESULT:n_obs_table6_panelA_cols3_5=658

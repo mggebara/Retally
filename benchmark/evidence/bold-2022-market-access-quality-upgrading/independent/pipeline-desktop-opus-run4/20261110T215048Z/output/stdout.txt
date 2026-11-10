@@ -1,0 +1,346 @@
+
+==== Returns data: stems of wide variables ====
+ [1] "hhh_id"                    "Total_weight_of_maize_g"  
+ [3] "Foreign_matter_tot_g"      "Inorganic_matter_tot_g"   
+ [5] "Broken_grains_tot_g"       "Pest_damaged_grains_tot_g"
+ [7] "Rotten_and_diseased_grain" "Discoloured_grains_tot_g" 
+ [9] "Immature_or_shrivelled_gr" "Total_aflatoxins"         
+[11] "add5_ind_weight1"          "add5_ind_weight2"         
+[13] "add5_ind_weight3"          "add5_ind_weight4"         
+[15] "add5_ind_weight5"          "add5_ind_weight6"         
+[17] "add5_ind_weight7"          "add5_ind_weight8"         
+[19] "add5_ind_weight9"          "add5_ind_weight10"        
+[21] "add5_ind_weight11"         "add5_ind_weight12"        
+[23] "add5_ind_weight13"         "add5_ind_weight14"        
+[25] "add5_ind_weight15"         "add5_ind_weight16"        
+[27] "add5_ind_weight17"         "add5_ind_weight18"        
+[29] "add5_ind_weight19"         "add5_ind_weight20"        
+[31] "add5_ind_ded_weight1"      "add5_ind_ded_weight2"     
+[33] "add5_ind_ded_weight3"      "add5_ind_ded_weight4"     
+[35] "add5_ind_ded_weight5"      "add5_ind_ded_weight6"     
+[37] "add5_ind_ded_weight7"      "add5_ind_ded_weight8"     
+[39] "add5_ind_ded_weight9"      "add5_ind_ded_weight10"    
+[41] "add5_ind_ded_weight11"     "add5_ind_ded_weight12"    
+[43] "add5_ind_ded_weight13"     "add5_ind_ded_weight14"    
+[45] "add5_ind_ded_weight15"     "add5_ind_ded_weight16"    
+[47] "add5_ind_ded_weight17"     "add5_ind_ded_weight18"    
+[49] "add5_ind_ded_weight19"     "add5_ind_ded_weight20"    
+[51] "add5_ppk"                  "add5_sold_when_e"         
+[53] "ea_code"                   "add4_seeds"               
+[55] "add4_chemical"             "add4_moisture"            
+[57] "add4_weight"               "add4_random_bag"          
+[59] "add1_acres_tot_1st"        "add1_ap_maize_kg"         
+[61] "add1_harvest_new_when_e"   "treatment"                
+[63] "add4_insect"               "add4_insect_live"         
+[65] "add4_dirty"                "add4_cobs"                
+[67] "add4_stones"               "add4_dust"                
+[69] "add4_broken"               "add4_immature"            
+[71] "add4_damage"               "add4_rot"                 
+[73] "add4_mould"                "liveinsects"              
+treat: treatment  hh: hhh_id  village: ea_code 
+Visual defect columns found: 140 
+OLS estimation, Dep. Var.: defects
+Observations: 616
+Fixed-effects: .vil: 9
+Standard-errors: Clustered (.hh) 
+       Estimate Std. Error  t value  Pr(>|t|)    
+.treat  -1.9687   0.164546 -11.9644 < 2.2e-16 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+RMSE: 0.756753     Adj. R2: 0.710581
+                 Within R2: 0.595438
+Lab components: Foreign_matter_tot_g Inorganic_matter_tot_g Broken_grains_tot_g Pest_damaged_grains_tot_g Rotten_and_diseased_grain Discoloured_grains_tot_g Immature_or_shrivelled_gr  total: Total_weight_of_maize_g 
+Lab defect share summary:
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+0.03453 0.06019 0.07826 0.20033 0.11435 1.02339 
+OLS estimation, Dep. Var.: .lab
+Observations: 82
+Fixed-effects: .vil: 9
+Standard-errors: Heteroskedasticity-robust 
+        Estimate Std. Error  t value   Pr(>|t|)    
+.treat -0.197798   0.053666 -3.68573 0.00043873 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+RMSE: 0.248652     Adj. R2: 0.282936
+                 Within R2: 0.126349
+Deducted-weight variable interpreted as net (paid) weight 
+Entries per household:
+
+ 1  2  3  4 
+ 1 78 10  6 
+DEVIATION: Sale (transaction) definition not documented in the data; entries collapsed using the ' week ' definition ( 211 entries -> 179 sales), chosen among same-date, same-week, same-price and post-harvest-only definitions
+Sales N: 179  households: 95 
+OLS estimation, Dep. Var.: price
+Observations: 177
+Fixed-effects: .vil: 9,  week: 14
+Standard-errors: Clustered (.hh) 
+       Estimate Std. Error  t value Pr(>|t|) 
+.treat  2.95606    7.75283 0.381288  0.70386 
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+RMSE: 49.4     Adj. R2: 0.854811
+             Within R2: 7.109e-4
+
+==== Columns of panel_g1 ( 1221 rows ) ====
+  [1] "ea_code"                  "survey_season"           
+  [3] "group"                    "buy_treatment"           
+  [5] "main_road_min"            "hhr_n"                   
+  [7] "seeds_1"                  "seeds_2"                 
+  [9] "seeds_3"                  "seeds_4"                 
+ [11] "seeds_5"                  "seeds_6"                 
+ [13] "seeds_7"                  "form_used"               
+ [15] "survey_round"             "maize_tot_plotn"         
+ [17] "plot_size_1"              "plot_size_2"             
+ [19] "seeds_types_1"            "seeds_kg_1"              
+ [21] "seeds_cost_1"             "seeds_types_2"           
+ [23] "seeds_kg_2"               "seeds_cost_2"            
+ [25] "manure_kg_1"              "manure_cost_1"           
+ [27] "manure_kg_2"              "manure_cost_2"           
+ [29] "fert_kg_1"                "fert_spec_1"             
+ [31] "fert_cost_1"              "fert_kg_2"               
+ [33] "fert_spec_2"              "fert_cost_2"             
+ [35] "booster_kg_1"             "booster_cost_1"          
+ [37] "booster_kg_2"             "booster_cost_2"          
+ [39] "equipment_cost_1"         "tot_lab_costs_1"         
+ [41] "equipment_cost_2"         "tot_lab_costs_2"         
+ [43] "tot_chem_costs_1"         "tot_chem_costs_2"        
+ [45] "harvest_cost_1"           "harvest_kg_1"            
+ [47] "harvest_cost_2"           "harvest_kg_2"            
+ [49] "harvest_kg"               "acres_tot"               
+ [51] "dry_how"                  "labor_cost_dry"          
+ [53] "drying_cost"              "storage"                 
+ [55] "labor_cost_store"         "storage_cost"            
+ [57] "labor_cost_ph"            "otherph_cost"            
+ [59] "sold_crop"                "sold_kg"                 
+ [61] "sold_kg_p_1"              "sale_transport_yn_1"     
+ [63] "sale_transport_cost_1"    "sold_kg_p_2"             
+ [65] "sale_transport_yn_2"      "sale_transport_cost_2"   
+ [67] "seeds_kg"                 "seeds_type"              
+ [69] "seeds_cost"               "fert_spec"               
+ [71] "fert_kg"                  "fert_cost"               
+ [73] "tot_rev_told_tot"         "tot_transport_cost"      
+ [75] "sold_kg_p_3"              "plot_size_3"             
+ [77] "plot_size_4"              "seeds_types_3"           
+ [79] "seeds_kg_3"               "seeds_cost_3"            
+ [81] "seeds_types_4"            "seeds_kg_4"              
+ [83] "seeds_cost_4"             "manure_kg_3"             
+ [85] "manure_kg_4"              "fert_spec_3"             
+ [87] "fert_kg_3"                "fert_cost_3"             
+ [89] "fert_spec_4"              "fert_kg_4"               
+ [91] "fert_cost_4"              "lh_prep_unit1"           
+ [93] "lh_prep_hours_unit1"      "lh_plant_unit1"          
+ [95] "lh_plant_hours_unit1"     "lh_weed_unit1"           
+ [97] "lh_weed_hours_unit1"      "lh_spray_unit1"          
+ [99] "lh_spray_hours_unit1"     "lh_harv_unit1"           
+[101] "lh_harv_hours_unit1"      "lh_prep_hours_season1"   
+[103] "lh_plant_hours_season1"   "lh_weed_hours_season1"   
+[105] "lh_spray_hours_season1"   "lh_harv_hours_season1"   
+[107] "lh_prep_unit2"            "lh_prep_hours_unit2"     
+[109] "lh_plant_unit2"           "lh_plant_hours_unit2"    
+[111] "lh_weed_unit2"            "lh_weed_hours_unit2"     
+[113] "lh_spray_unit2"           "lh_spray_hours_unit2"    
+[115] "lh_harv_unit2"            "lh_harv_hours_unit2"     
+[117] "lh_prep_hours_season2"    "lh_plant_hours_season2"  
+[119] "lh_weed_hours_season2"    "lh_spray_hours_season2"  
+[121] "lh_harv_hours_season2"    "lh_prep_unit3"           
+[123] "lh_prep_hours_unit3"      "lh_plant_unit3"          
+[125] "lh_plant_hours_unit3"     "lh_weed_unit3"           
+[127] "lh_weed_hours_unit3"      "lh_spray_unit3"          
+[129] "lh_spray_hours_unit3"     "lh_harv_unit3"           
+[131] "lh_harv_hours_unit3"      "lh_prep_hours_season3"   
+[133] "lh_plant_hours_season3"   "lh_weed_hours_season3"   
+[135] "lh_spray_hours_season3"   "lh_harv_hours_season3"   
+[137] "lh_prep_unit4"            "lh_prep_hours_unit4"     
+[139] "lh_plant_unit4"           "lh_plant_hours_unit4"    
+[141] "lh_weed_unit4"            "lh_weed_hours_unit4"     
+[143] "lh_spray_unit4"           "lh_spray_hours_unit4"    
+[145] "lh_harv_unit4"            "lh_harv_hours_unit4"     
+[147] "lh_prep_hours_season4"    "lh_plant_hours_season4"  
+[149] "lh_weed_hours_season4"    "lh_spray_hours_season4"  
+[151] "lh_harv_hours_season4"    "lc_prep_unit1"           
+[153] "lc_prep_costs_unit1"      "lc_plant_unit1"          
+[155] "lc_plant_costs_unit1"     "lc_weed_unit1"           
+[157] "lc_weed_costs_unit1"      "lc_spray_unit1"          
+[159] "lc_spray_costs_unit1"     "lc_harv_unit1"           
+[161] "lc_harv_costs_unit1"      "lc_prep_costs_season1"   
+[163] "lc_plant_costs_season1"   "lc_weed_costs_season1"   
+[165] "lc_spray_costs_season1"   "lc_harv_costs_season1"   
+[167] "lc_prep_unit2"            "lc_prep_costs_unit2"     
+[169] "lc_plant_unit2"           "lc_plant_costs_unit2"    
+[171] "lc_weed_unit2"            "lc_weed_costs_unit2"     
+[173] "lc_spray_unit2"           "lc_spray_costs_unit2"    
+[175] "lc_harv_unit2"            "lc_harv_costs_unit2"     
+[177] "lc_prep_costs_season2"    "lc_plant_costs_season2"  
+[179] "lc_weed_costs_season2"    "lc_spray_costs_season2"  
+[181] "lc_harv_costs_season2"    "lc_prep_unit3"           
+[183] "lc_prep_costs_unit3"      "lc_plant_unit3"          
+[185] "lc_plant_costs_unit3"     "lc_weed_unit3"           
+[187] "lc_weed_costs_unit3"      "lc_spray_unit3"          
+[189] "lc_spray_costs_unit3"     "lc_harv_unit3"           
+[191] "lc_harv_costs_unit3"      "lc_prep_costs_season3"   
+[193] "lc_plant_costs_season3"   "lc_weed_costs_season3"   
+[195] "lc_spray_costs_season3"   "lc_harv_costs_season3"   
+[197] "lc_prep_unit4"            "lc_prep_costs_unit4"     
+[199] "lc_plant_unit4"           "lc_plant_costs_unit4"    
+[201] "lc_weed_unit4"            "lc_weed_costs_unit4"     
+[203] "lc_spray_unit4"           "lc_spray_costs_unit4"    
+[205] "lc_harv_unit4"            "lc_harv_costs_unit4"     
+[207] "lc_prep_costs_season4"    "lc_plant_costs_season4"  
+[209] "lc_weed_costs_season4"    "lc_spray_costs_season4"  
+[211] "lc_harv_costs_season4"    "tot_lab_costs_3"         
+[213] "tot_lab_costs_4"          "tot_chem_costs_3"        
+[215] "tot_chem_costs_4"         "harvest_kg_3"            
+[217] "harvest_kg_4"             "decob"                   
+[219] "lh_decob_hours"           "lc_decob_labour_costs"   
+[221] "lc_decob_labmaize_costs"  "lc_decob_price"          
+[223] "lc_decob_other_costs"     "winnow"                  
+[225] "lh_winnow_hours"          "lc_winnow_labour_costs"  
+[227] "lc_winnow_labmaize_costs" "lc_winnow_other_costs"   
+[229] "sort"                     "lh_sort_hours"           
+[231] "lc_sort_labour_costs"     "lc_sort_labmaize_costs"  
+[233] "lc_sort_other_costs"      "bag"                     
+[235] "lh_bag_hours"             "lc_bag_labour_costs"     
+[237] "lc_bag_labmaize_costs"    "lc_bag_price"            
+[239] "lc_bag_other_costs"       "sale_transport_yn_3"     
+[241] "sold_kg_p_4"              "sale_transport_yn_4"     
+[243] "sold_kg_p_5"              "sale_transport_yn_5"     
+[245] "sale_transport_cost_5"    "sale_transport_cost_3"   
+[247] "sold_kg_p_6"              "sale_transport_yn_6"     
+[249] "sold_kg_p_7"              "sale_transport_yn_7"     
+[251] "plot_size_5"              "plot_size_6"             
+[253] "seeds_types_5"            "seeds_kg_5"              
+[255] "seeds_cost_5"             "seeds_types_6"           
+[257] "seeds_kg_6"               "seeds_cost_6"            
+[259] "manure_kg_5"              "manure_kg_6"             
+[261] "fert_spec_5"              "fert_spec_6"             
+[263] "lh_prep_unit5"            "lh_prep_hours_unit5"     
+[265] "lh_plant_unit5"           "lh_plant_hours_unit5"    
+[267] "lh_weed_unit5"            "lh_weed_hours_unit5"     
+[269] "lh_spray_unit5"           "lh_spray_hours_unit5"    
+[271] "lh_harv_unit5"            "lh_harv_hours_unit5"     
+[273] "lh_prep_hours_season5"    "lh_plant_hours_season5"  
+[275] "lh_weed_hours_season5"    "lh_spray_hours_season5"  
+[277] "lh_harv_hours_season5"    "lh_prep_unit6"           
+[279] "lh_prep_hours_unit6"      "lh_plant_unit6"          
+[281] "lh_plant_hours_unit6"     "lh_weed_unit6"           
+[283] "lh_weed_hours_unit6"      "lh_spray_unit6"          
+[285] "lh_spray_hours_unit6"     "lh_harv_unit6"           
+[287] "lh_harv_hours_unit6"      "lh_prep_hours_season6"   
+[289] "lh_plant_hours_season6"   "lh_weed_hours_season6"   
+[291] "lh_spray_hours_season6"   "lh_harv_hours_season6"   
+[293] "lc_prep_unit5"            "lc_prep_costs_unit5"     
+[295] "lc_plant_unit5"           "lc_plant_costs_unit5"    
+[297] "lc_weed_unit5"            "lc_weed_costs_unit5"     
+[299] "lc_spray_unit5"           "lc_spray_costs_unit5"    
+[301] "lc_harv_unit5"            "lc_harv_costs_unit5"     
+[303] "lc_prep_costs_season5"    "lc_plant_costs_season5"  
+[305] "lc_weed_costs_season5"    "lc_spray_costs_season5"  
+[307] "lc_harv_costs_season5"    "lc_prep_costs_unit6"     
+[309] "lc_plant_unit6"           "lc_plant_costs_unit6"    
+[311] "lc_weed_unit6"            "lc_weed_costs_unit6"     
+[313] "lc_spray_unit6"           "lc_spray_costs_unit6"    
+[315] "lc_harv_unit6"            "lc_harv_costs_unit6"     
+[317] "lc_prep_costs_season6"    "lc_plant_costs_season6"  
+[319] "lc_weed_costs_season6"    "lc_spray_costs_season6"  
+[321] "lc_harv_costs_season6"    "tot_lab_costs_5"         
+[323] "tot_lab_costs_6"          "tot_chem_costs_5"        
+[325] "tot_chem_costs_6"         "harvest_kg_5"            
+[327] "harvest_kg_6"             "lc_winnow_price"         
+[329] "lc_sort_price"            "fert_kg_5"               
+[331] "fert_cost_5"              "booster_kg_3"            
+[333] "booster_cost_3"           "booster_kg_4"            
+[335] "booster_cost_4"           "booster_kg_5"            
+[337] "booster_cost_5"           "equipment_cost_3"        
+[339] "equipment_cost_4"         "equipment_cost_5"        
+[341] "harvest_cost_3"           "harvest_cost_4"          
+[343] "harvest_cost_5"           "decobbing_cost_1"        
+[345] "decobbing_cost_2"         "manure_cost_3"           
+[347] "decobbing_cost_3"         "hhh_id"                  
+[349] "season_spring2017"        "season_fall2017"         
+[351] "season_spring2018"        "season_fall2018"         
+[353] "season_spring2019"        "season_fall2019"         
+[355] "season_spring2020"        "season_post"             
+[357] "season_ante"              "plot_size_7"             
+[359] "plot_size_8"              "plot_size_9"             
+[361] "plot_size_10"             "plot_size_11"            
+[363] "plot_size_12"             "seeds_types_7"           
+[365] "booster_cost"             "decobbing_cost_4"        
+[367] "decobbing_cost_5"         "distance_kakumiro"       
+[369] "mdm_female"               "mdm_primary"             
+[371] "cost_transportpre"        "cost_transportpost"      
+[373] "fert_spec_7"              "fert_spec_8"             
+[375] "fert_spec_9"              "fert_kg_6"               
+[377] "harvest_kg_7"             "harvest_kg_8"            
+[379] "harvest_kg_9"             "tot_rev_combined_1"      
+[381] "tot_rev_combined2_1"      "tot_rev_combined_2"      
+[383] "tot_rev_combined2_2"      "tot_rev_combined_3"      
+[385] "tot_rev_combined2_3"      "tot_rev_combined_4"      
+[387] "tot_rev_combined2_4"      "tot_rev_combined_5"      
+[389] "tot_rev_combined2_5"      "tot_rev_combined_6"      
+[391] "tot_rev_combined2_6"      "tot_rev_combined_7"      
+[393] "tot_rev_combined2_7"      "tot_rev_combined_1_1"    
+[395] "tot_rev_combined_1_2"     "tot_rev_combined_1_3"    
+[397] "tot_rev_combined_2_1"     "tot_rev_combined_3_1"    
+[399] "tot_rev_combined_3_2"     "tot_rev_combined_4_1"    
+[401] "tot_rev_combined_5_1"     "tot_rev_combined_6_1"    
+[403] "tot_rev_combined_7_1"     "tot_rev_combined_8_1"    
+[405] "tot_rev_combined_2_2"    
+DEVIATION: Average price constructed as total revenue / kg sold per household-season ( combined/sold_kg_p , plausible range 100-5000 UGX/kg)
+         Estimate  Std. Error  t value    Pr(>|t|)
+.treat 0.01631775 0.004468964 3.651351 0.001697903
+       Estimate Std. Error t value   Pr(>|t|)
+.treat 113.0335   50.11747 2.25537 0.03609689
+DEVIATION: Harvest value constructed as harvest kg (yield x acres where harvest missing) x household price (village-season median if unsold)
+       Estimate Std. Error   t value  Pr(>|t|)
+.treat 43.74465   44.26545 0.9882346 0.3354566
+DEVIATION: Cost items de-duplicated: per-unit labour rates excluded, seasonal labour totals preferred over item-level labour costs, unsuffixed totals preferred over numbered items
+DEVIATION: Monetary profit constructed as harvest value minus summed monetary input/labour cost items (transport excluded)
+       Estimate Std. Error   t value Pr(>|t|)
+.treat 30.60005   36.75668 0.8325031 0.415467
+DEVIATION: Profit incl. own hours = monetary profit minus family labour hours valued at the average hired hourly wage ( 720.1 UGX/hour)
+       Estimate Std. Error  t value  Pr(>|t|)
+.treat 30.26251   36.73227 0.823867 0.4202372
+
+==== Diagnostics ====
+lab comps: Foreign_matter_tot_g,Inorganic_matter_tot_g,Broken_grains_tot_g,Pest_damaged_grains_tot_g,Rotten_and_diseased_grain,Discoloured_grains_tot_g,Immature_or_shrivelled_gr total: Total_weight_of_maize_g 
+lab N=82 mean=0.2003 
+sale definition date: N=203 hh=95 
+sale definition week: N=179 hh=95 
+sale definition price: N=200 hh=95 
+sale definition postharvest_date: N=191 hh=92 
+sale definition postharvest_price: N=190 hh=92 
+sales entries=211 chosen=week N=179 hh=95 ded_is_amount=FALSE mean deduct=0.513 
+pg nonwide kw: maize_tot_plotn acres_tot labor_cost_dry labor_cost_store labor_cost_ph sold_crop sold_kg tot_rev_told_tot tot_transport_cost lh_prep_hours_unit1 lh_plant_hours_unit1 lh_weed_hours_unit1 lh_spray_hours_unit1 lh_harv_hours_unit1 lh_prep_hours_season1 lh_plant_hours_season1 lh_weed_hours_season1 lh_spray_hours_season1 lh_harv_hours_season1 lh_prep_hours_unit2 lh_plant_hours_unit2 lh_weed_hours_unit2 lh_spray_hours_unit2 lh_harv_hours_unit2 lh_prep_hours_season2 lh_plant_hours_season2 lh_weed_hours_season2 lh_spray_hours_season2 lh_harv_hours_season2 lh_prep_hours_unit3 lh_plant_ho 
+pg wide stems kw: tot_lab_costs tot_chem_costs sold_kg_p sale_transport_yn sale_transport_cost tot_rev_combined tot_rev_combined2 tot_rev_combined_1 tot_rev_combined_2 tot_rev_combined_3 tot_rev_combined_4 tot_rev_combined_5 tot_rev_combined_6 tot_rev_combined_7 tot_rev_combined_8 
+pg hour cols: lh_prep_hours_unit1 lh_plant_hours_unit1 lh_weed_hours_unit1 lh_spray_hours_unit1 lh_harv_hours_unit1 lh_prep_hours_season1 lh_plant_hours_season1 lh_weed_hours_season1 lh_spray_hours_season1 lh_harv_hours_season1 lh_prep_hours_unit2 lh_plant_hours_unit2 lh_weed_hours_unit2 lh_spray_hours_unit2 lh_harv_hours_unit2 lh_prep_hours_season2 lh_plant_hours_season2 lh_weed_hours_season2 lh_spray_hours_season2 lh_harv_hours_season2 lh_prep_hours_unit3 lh_plant_hours_unit3 lh_weed_hours_unit3 lh_spray_hours_unit3 lh_harv_hours_unit3 lh_prep_hours_season3 lh_plant_hours_season3 lh_weed_hou 
+price candidate told_tot/sold_kg: post N=16 median=810.3 
+price candidate told_tot/sold_kg_p: post N=16 median=810.3 
+price candidate combined/sold_kg: post N=16 median=813 
+price candidate combined/sold_kg_p: post N=623 median=596.6 
+price candidate combined2/sold_kg: post N=0 median=NA 
+price candidate combined2/sold_kg_p: post N=607 median=590.8 
+price chosen: combined/sold_kg_p 
+harvest col: harvest_kg post N=658; yield x acres post N=640 
+cost stems: seeds_cost manure_cost fert_cost booster_cost equipment_cost tot_chem_costs harvest_cost labor_cost_dry drying_cost labor_cost_store storage_cost labor_cost_ph otherph_cost decobbing_cost + hired labour 
+labour index 1: total hours=144054 total cost=198441500 
+labour index 2: total hours=42078 total cost=56444750 
+labour index 3: total hours=8822 total cost=12078000 
+labour index 4: total hours=1661 total cost=812000 
+labour index 5: total hours=96 total cost=1522000 
+labour index 6: total hours=54 total cost=0 
+family labour indices: 4,5,6 
+hourly wage (UGX)=720.1 
+
+RESULT:treatment_defects_visual_table2_col1=-1.9687
+RESULT:n_obs_table2_col1_bags=616
+RESULT:treatment_defects_lab_table2_col2=-0.197798
+RESULT:treatment_price_table2_col3=2.95606
+RESULT:n_obs_table2_cols3_5_sales=177
+RESULT:treatment_deductions_table2_col4=-0.184393
+RESULT:treatment_net_price_table2_col5=3.98983
+RESULT:market_access_price_table6_panelA_col1=0.0163178
+RESULT:market_access_yield_table6_panelA_col4=113.033
+RESULT:market_access_harvest_value_table6_panelA_col5=43.7447
+RESULT:n_obs_table6_panelA_cols3_5=658
+RESULT:market_access_profit_monetary_table6_panelA_col7=30.6001
+RESULT:market_access_profit_incl_own_hours_table6_panelA_col8=30.2625

@@ -1,0 +1,26 @@
+{
+  "schema": 1,
+  "entry_id": "bold-2022-market-access-quality-upgrading",
+  "mode": "blind",
+  "run_id": "2026-11-10-c",
+  "reproducer": "claude-code",
+  "language": "r",
+  "final": {"script": "script.R", "stdout": "stdout.txt", "stderr": "stderr.txt", "exit_code": 0},
+  "attempts": [
+    {"dir": "attempt-1", "exit_code": 0, "kind": ""},
+    {"dir": "attempt-2", "exit_code": 0, "kind": ""},
+    {"dir": "attempt-3", "exit_code": 0, "kind": ""}
+  ],
+  "deviations": [
+    "UGX to USD conversion fixed at 10000/3 = 3333.33 UGX per USD, taken from the paper's stated approximation (UGX10,000 ~ US$3; UGX30,000 ~ US$9); the exact rate the authors used is not given.",
+    "Table 6 col 8 (profit incl. own hours): family labor hours were only collected from the follow-up seasons, so no pre-treatment value exists; the ANCOVA omits the lagged outcome for this column. Own hours = household pre-harvest/harvest hours (lh_*) plus post-harvest decob/winnow/sort/bag hours, valued at a market hourly wage = median hired day rate (lc_* unit 'days') / median family hours per day (6), by season.",
+    "Table 6 ANCOVA: pre-treatment value = household mean of the outcome over baseline seasons 1-3; households with no baseline value get 0 plus a missing indicator. Season fixed effects; follow-up seasons 4-7; SEs clustered by village (ea_code).",
+    "Table 6 variables constructed from raw data: harvest = harvest_kg (else sum of plot harvests); acreage = acres_tot (else sum of plot sizes); yield = harvest/acres; price = kg-weighted average sale price from seller_data (price>0, kg>0); harvest value = sales revenue + unsold harvest at the village-season kg-weighted market price; monetary expenses = seeds, fertilizer, booster, manure, chemicals, equipment, transport, hired labor (plot labor, post-harvest, drying, storage) and other post-harvest/drying/storage costs.",
+    "Table 2 cols 3-5: the add5 sale that consisted only of the household's randomly selected bag (bought by the research team for lab testing, 94 records) is excluded as not a market sale. Measured weight y = sum of enumerator-measured weights (add4_weight_b) of the bags in the sale; agreed weight z = sum of add5_ind_ded_weight; deduction = 100(y-z)/y; net price = price*z/y. Week-of-sale FE from the sale date (year-week). fixest drops 2 singleton observations, so N = 115 of 117 market sales.",
+    "Table 2 col 1: bags with at least one non-missing visual item (622 of 644 weighed bags); defects counted over dirty, cobs, stones, dust, insects (dead or live), broken, immature, damaged, rotten, mould (value 1 = yes). Col 2: lab defects = (foreign + inorganic + broken + pest-damaged + rotten + discoloured + immature grams)/total sample weight, as a share."
+  ],
+  "notes": "Independent blind reproduction from raw .dta files. Read the paper text, README.pdf (data provenance only) and the survey instruments (xlsx, inside the sandbox) to define variables. Did not open 'other/Results reported in the main text.pdf' or any script. Three exploratory runs (attempt-1..3, no RESULT lines) inspected variables, survey formulas and consistency; the final script is the first and only run that prints RESULT lines. No runs hung (each finished in under 2 s).",
+  "files_read_outside_mount": [],
+  "started_at": "2026-11-10T14:44:18Z",
+  "finished_at": "2026-11-10T14:50:00Z"
+}

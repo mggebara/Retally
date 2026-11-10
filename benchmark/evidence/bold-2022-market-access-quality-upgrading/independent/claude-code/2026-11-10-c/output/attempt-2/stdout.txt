@@ -1,0 +1,430 @@
+add5 sheets: survey choices settings 
+cols: type name label::english hint::english constraint constraint_message::english required appearance default relevant read_only calculation repeat_count choice_filter media::image::english read-only ...17 ...18 ...19 
+calculate | compensation | 10000 |  
+calculate | random | once(random()) |  
+start | start |  |  
+end | end |  |  
+today | today |  |  
+deviceid | deviceid |  |  
+text audit | text_audit |  |  
+subscriberid | subscriberid |  |  
+imei | imei |  |  
+phonenumber | phonenumber |  |  
+begin group | start_group |  |  
+select_one enumerator_name | enumerator_name |  |  
+select_one ea | ea_code |  |  
+end group |  |  |  
+calculate | ea_name | pulldata('listing_addint_followup', 'ea_name', 'ea_code', ${ea_code}) |  
+calculate | district_name | pulldata('listing_addint_followup', 'district_name', 'ea_code', ${ea_code}) |  
+calculate | this_season | 'August 2018' |  
+calculate | last_season | 'January 2018' |  
+select_one hhh | hhh1 |  |  
+calculate | hhh | if(${hhh1}=99, ${hhh2}, ${hhh1}) |  
+calculate | phone_number_old | pulldata('listing_addint_jan2019', 'phone_number', 'hhh', ${hhh}) |  
+calculate | N | pulldata('listing_addint_jan2019', 'N', 'hhh', ${hhh}) |  
+calculate | sl_hhh | pulldata('listing_addint_jan2019', 'serial_number', 'hhh', ${hhh}) |  
+calculate | treatment | pulldata('listing_addint_jan2019', 'treatment ', 'hhh', ${hhh}) |  
+calculate | treatment_quality | pulldata('listing_addint_jan2019', 'treatment_quality', 'hhh', ${hhh}) |  
+calculate | maize_tot_plotn_newR | pulldata('listing_addint_jan2019', 'maize_tot_plotn_new', 'hhh', ${hhh}) |  
+calculate | tot_kg_newR | pulldata('listing_addint_jan2019', 'tot_kg_new', 'hhh', ${hhh}) |  
+calculate | tot_acres_new_traceR | pulldata('listing_addint_jan2019', 'tot_acres_new_trace', 'hhh', ${hhh}) |  
+calculate | tot_acres_newR | pulldata('listing_addint_jan2019', 'tot_acres_new', 'hhh', ${hhh}) |  
+calculate | decob_new_when_eR | pulldata('listing_addint_jan2019', 'decob_new_when_e', 'hhh', ${hhh}) |  
+calculate | harvest_new_when_eR | pulldata('listing_addint_jan2019', 'harvest_new_when_e', 'hhh', ${hhh}) |  
+calculate | dry_new_when_eR | pulldata('listing_addint_jan2019', 'dry_new_when_e', 'hhh', ${hhh}) |  
+calculate | bag_new_when_eR | pulldata('listing_addint_jan2019', 'bag_new_when_e', 'hhh', ${hhh}) |  
+calculate | sell_new_when_eR | pulldata('listing_addint_jan2019', 'sell_new_when_e', 'hhh', ${hhh}) |  
+select_one yes_no_locate | adult |  |  
+text | household_head | if(${hhh1}=99, ${hhh2}, pulldata('listing_addint_jan2019', 'hhh_name', 'hhh', ${hhh1})) |  
+calculate | household_head_hhh | concat(${household_head}, ', ', ${hhh}) |  
+select_one yes_no_only | moved |  |  
+select_one yes_no_only | come_back |  |  
+note | come_back_note |  |  
+select_one yes_no_only | check_hhh |  |  
+note | wrong_hh |  |  
+select_one yes_no_only | sold_maize |  |  
+note | introduction |  |  
+select_one yes_no_only | adress |  | .='yes' 
+select_one yes_no_only | consent |  |  
+note | interview_end |  |  
+integer | bag_number |  | .<=20 
+begin group | info |  |  
+select_one yes_no_only | info_has |  |  
+image | info_photo |  |  
+end group |  |  |  
+note | buyer_note |  |  
+begin repeat | buyer |  |  
+select_one  where_sold | this_buyer_resp |  | if(selected(., 'dk') or selected(., 'ra'), count-selected(.)=1, count-selected(.)>=1) 
+text | this_buyer_name |  |  
+calculate | this_buyer_label_resp | if(${this_buyer_resp}='trader' or ${this_buyer_resp}='other', ${this_buyer_name} , jr:choice-name(${this_buyer |  
+select_one date_frame_ra | sold_when_tell |  |  
+begin group | w |  |  
+date | sold_when_e |  |  
+date | sold_when_l |  | .>${sold_when_e} 
+end group |  |  |  
+select_multiple bags | bags_sold | bag_number<=${bag_number} |  
+integer | tot_weight |  |  
+select_one yes_no_only | ind_weight_yn |  |  
+begin group | ind_weight |  |  
+note | ind_weight_ent |  |  
+integer | ind_weight1 |  | .<200 
+integer | ind_weight2 |  | .<200 
+integer | ind_weight3 |  | .<200 
+integer | ind_weight4 |  | .<200 
+integer | ind_weight5 |  | .<200 
+integer | ind_weight6 |  | .<200 
+integer | ind_weight7 |  | .<200 
+integer | ind_weight8 |  | .<200 
+integer | ind_weight9 |  | .<200 
+integer | ind_weight10 |  | .<200 
+integer | ind_weight11 |  | .<200 
+integer | ind_weight12 |  | .<200 
+integer | ind_weight13 |  | .<200 
+integer | ind_weight14 |  | .<200 
+integer | ind_weight15 |  | .<200 
+integer | ind_weight16 |  | .<200 
+integer | ind_weight17 |  | .<200 
+integer | ind_weight18 |  | .<200 
+integer | ind_weight19 |  | .<200 
+integer | ind_weight20 |  | .<200 
+end group |  |  |  
+calculate | ind_weight_tot | if(${ind_weight1}!='', ${ind_weight1}, 0)+if(${ind_weight2}!='', ${ind_weight2}, 0)+if(${ind_weight3}!='', ${i |  
+select_one yes_no_only | tot_weight_check |  | .='yes' 
+select_one yes_no_only | tot_weight_diff |  |  
+text | tot_weight_other |  |  
+integer | tot_deduction |  |  
+select_one yes_no_only | ind_deduction_yn |  |  
+begin group | ind_deduction |  |  
+note | ind_deduction_ent0 |  |  
+note | ind_deduction_ent |  |  
+integer | ind_deduction1 | if(${ind_deduction_yn}='yes', '', ${tot_deduction} div count-selected(${bags_sold})) | .<50 
+integer | ind_deduction2 | if(${ind_deduction_yn}='yes', '', ${tot_deduction} div count-selected(${bags_sold})) | .<50 
+integer | ind_deduction3 | if(${ind_deduction_yn}='yes', '', ${tot_deduction} div count-selected(${bags_sold})) | .<50 
+integer | ind_deduction4 | if(${ind_deduction_yn}='yes', '', ${tot_deduction} div count-selected(${bags_sold})) | .<50 
+integer | ind_deduction5 | if(${ind_deduction_yn}='yes', '', ${tot_deduction} div count-selected(${bags_sold})) | .<50 
+integer | ind_deduction6 | if(${ind_deduction_yn}='yes', '', ${tot_deduction} div count-selected(${bags_sold})) | .<50 
+integer | ind_deduction7 | if(${ind_deduction_yn}='yes', '', ${tot_deduction} div count-selected(${bags_sold})) | .<50 
+integer | ind_deduction8 | if(${ind_deduction_yn}='yes', '', ${tot_deduction} div count-selected(${bags_sold})) | .<50 
+integer | ind_deduction9 | if(${ind_deduction_yn}='yes', '', ${tot_deduction} div count-selected(${bags_sold})) | .<50 
+integer | ind_deduction10 | if(${ind_deduction_yn}='yes', '', ${tot_deduction} div count-selected(${bags_sold})) | .<50 
+integer | ind_deduction11 | if(${ind_deduction_yn}='yes', '', ${tot_deduction} div count-selected(${bags_sold})) | .<50 
+integer | ind_deduction12 | if(${ind_deduction_yn}='yes', '', ${tot_deduction} div count-selected(${bags_sold})) | .<50 
+integer | ind_deduction13 | if(${ind_deduction_yn}='yes', '', ${tot_deduction} div count-selected(${bags_sold})) | .<50 
+integer | ind_deduction14 | if(${ind_deduction_yn}='yes', '', ${tot_deduction} div count-selected(${bags_sold})) | .<50 
+integer | ind_deduction15 | if(${ind_deduction_yn}='yes', '', ${tot_deduction} div count-selected(${bags_sold})) | .<50 
+integer | ind_deduction16 | if(${ind_deduction_yn}='yes', '', ${tot_deduction} div count-selected(${bags_sold})) | .<50 
+integer | ind_deduction17 | if(${ind_deduction_yn}='yes', '', ${tot_deduction} div count-selected(${bags_sold})) | .<50 
+integer | ind_deduction18 | if(${ind_deduction_yn}='yes', '', ${tot_deduction} div count-selected(${bags_sold})) | .<50 
+integer | ind_deduction19 | if(${ind_deduction_yn}='yes', '', ${tot_deduction} div count-selected(${bags_sold})) | .<50 
+integer | ind_deduction20 | if(${ind_deduction_yn}='yes', '', ${tot_deduction} div count-selected(${bags_sold})) | .<50 
+end group |  |  |  
+calculate | ind_deduction_tot | if(${ind_deduction1}!='', ${ind_deduction1}, 0)+if(${ind_deduction2}!='', ${ind_deduction2}, 0)+if(${ind_deduc |  
+select_one yes_no_only | tot_deduction_check |  | .='yes' 
+select_one yes_no_only | tot_deduction_diff |  |  
+text | tot_deduction_other |  |  
+calculate | tot_ded_weight | ${tot_weight}-${tot_deduction} |  
+select_one yes_no_only | tot_ded_weight_check |  | .='yes' 
+begin group | ind_ded_weight |  |  
+note | ind_ded_weight_note |  |  
+integer | ind_ded_weight1 | ${ind_weight1} - ${ind_deduction1} | .= ${ind_weight1} - ${ind_deduction1} 
+integer | ind_ded_weight2 | ${ind_weight2} - ${ind_deduction2} | .= ${ind_weight2} - ${ind_deduction2} 
+integer | ind_ded_weight3 | ${ind_weight3} - ${ind_deduction3} | .= ${ind_weight3} - ${ind_deduction3} 
+integer | ind_ded_weight4 | ${ind_weight4} - ${ind_deduction4} | .= ${ind_weight4} - ${ind_deduction4} 
+integer | ind_ded_weight5 | ${ind_weight5} - ${ind_deduction5} | .= ${ind_weight5} - ${ind_deduction5} 
+integer | ind_ded_weight6 | ${ind_weight6} - ${ind_deduction6} | .= ${ind_weight6} - ${ind_deduction6} 
+integer | ind_ded_weight7 | ${ind_weight7} - ${ind_deduction7} | .= ${ind_weight7} - ${ind_deduction7} 
+integer | ind_ded_weight8 | if( ${ind_deduction8}!='',  ${ind_weight8} - ${ind_deduction8},  ${ind_weight8}) | .= ${ind_weight8} - ${ind_deduction8} 
+integer | ind_ded_weight9 | if( ${ind_deduction9}!='',  ${ind_weight9} - ${ind_deduction9},  ${ind_weight9}) | .= ${ind_weight9} - ${ind_deduction9} 
+integer | ind_ded_weight10 | if( ${ind_deduction10}!='',  ${ind_weight10} - ${ind_deduction10},  ${ind_weight10}) | .= ${ind_weight10} - ${ind_deduction10} 
+integer | ind_ded_weight11 | if( ${ind_deduction11}!='',  ${ind_weight11} - ${ind_deduction11},  ${ind_weight11}) | .= ${ind_weight11} - ${ind_deduction11} 
+integer | ind_ded_weight12 | if( ${ind_deduction12}!='',  ${ind_weight12} - ${ind_deduction12},  ${ind_weight12}) | .= ${ind_weight12} - ${ind_deduction12} 
+integer | ind_ded_weight13 | if( ${ind_deduction13}!='',  ${ind_weight13} - ${ind_deduction13},  ${ind_weight13}) | .= ${ind_weight13} - ${ind_deduction13} 
+integer | ind_ded_weight14 | if( ${ind_deduction14}!='',  ${ind_weight14} - ${ind_deduction14},  ${ind_weight14}) | .= ${ind_weight14} - ${ind_deduction14} 
+integer | ind_ded_weight15 | if( ${ind_deduction15}!='',  ${ind_weight15} - ${ind_deduction15},  ${ind_weight15}) | .= ${ind_weight15} - ${ind_deduction15} 
+integer | ind_ded_weight16 | if( ${ind_deduction16}!='',  ${ind_weight16} - ${ind_deduction16},  ${ind_weight16}) | .= ${ind_weight16} - ${ind_deduction16} 
+integer | ind_ded_weight17 | if( ${ind_deduction17}!='',  ${ind_weight17} - ${ind_deduction17},  ${ind_weight17}) | .= ${ind_weight17} - ${ind_deduction17} 
+integer | ind_ded_weight18 | if( ${ind_deduction18}!='',  ${ind_weight18} - ${ind_deduction18},  ${ind_weight18}) | .= ${ind_weight18} - ${ind_deduction18} 
+integer | ind_ded_weight19 | if( ${ind_deduction19}!='',  ${ind_weight19} - ${ind_deduction19},  ${ind_weight19}) | .= ${ind_weight19} - ${ind_deduction19} 
+integer | ind_ded_weight20 | if( ${ind_deduction20}!='',  ${ind_weight20} - ${ind_deduction20},  ${ind_weight20}) | .= ${ind_weight20} - ${ind_deduction20} 
+end group |  |  |  
+select_multiple deduction | deduction_why |  |  
+text | deduction_why_other |  |  
+select_one yes_dk_ra | ppk_tell |  |  
+integer | ppk |  |  
+calculate | tot_rev_buyer_calc | ${ppk}*${tot_ded_weight} |  
+integer | tot_rev_buyer_told | ${tot_rev_buyer_calc} |  
+text | tot_rev_why |  |  
+begin group | rev_pb |  |  
+note | ind_rev_ent |  |  
+integer | ind_rev1 | ${ppk}*${ind_ded_weight1} |  
+integer | ind_rev2 | ${ppk}*${ind_ded_weight2} |  
+integer | ind_rev3 | ${ppk}*${ind_ded_weight3} |  
+integer | ind_rev4 | ${ppk}*${ind_ded_weight4} |  
+integer | ind_rev5 | ${ppk}*${ind_ded_weight5} |  
+integer | ind_rev6 | ${ppk}*${ind_ded_weight6} |  
+integer | ind_rev7 | ${ppk}*${ind_ded_weight7} |  
+integer | ind_rev8 | ${ppk}*${ind_ded_weight8} |  
+integer | ind_rev9 | ${ppk}*${ind_ded_weight9} |  
+integer | ind_rev10 | ${ppk}*${ind_ded_weight10} |  
+integer | ind_rev11 | ${ppk}*${ind_ded_weight11} |  
+integer | ind_rev12 | ${ppk}*${ind_ded_weight12} |  
+integer | ind_rev13 | ${ppk}*${ind_ded_weight13} |  
+integer | ind_rev14 | ${ppk}*${ind_ded_weight14} |  
+integer | ind_rev15 | ${ppk}*${ind_ded_weight15} |  
+integer | ind_rev16 | ${ppk}*${ind_ded_weight16} |  
+integer | ind_rev17 | ${ppk}*${ind_ded_weight17} |  
+integer | ind_rev18 | ${ppk}*${ind_ded_weight18} |  
+integer | ind_rev19 | ${ppk}*${ind_ded_weight19} |  
+integer | ind_rev20 | ${ppk}*${ind_ded_weight20} |  
+end group |  |  |  
+calculate | ind_rev_buyer_tot | if( ${ind_weight_yn}='yes', if(${ind_rev1}!='', ${ind_rev1}, 0)+if(${ind_rev2}!='', ${ind_rev2}, 0)+if(${ind_r |  
+note | end_note |  |  
+
+==== add4
+start | start |  
+end | end |  
+today | today |  
+deviceid | deviceid |  
+text audit | text_audit |  
+subscriberid | subscriberid |  
+imei | imei |  
+phonenumber | phonenumber |  
+calculate | random | once(random()) 
+integer | price |  
+begin group | start_group |  
+select_one enumerator_name | enumerator_name |  
+select_one ea | ea_code |  
+end group |  |  
+calculate | ea_name | pulldata('listing_addint_jan2019', 'ea_name', 'ea_code', ${ea_code}) 
+calculate | district_name | pulldata('listing_addint_jan2019', 'district_name', 'ea_code', ${ea_code}) 
+calculate | buy_time | 'January 2019' 
+calculate | this_season | 'January 2019' 
+calculate | last_season | 'August 2018' 
+calculate | beforelast_season | 'January 2018' 
+select_one hhh | hhh1 |  
+calculate | hhh | if(${hhh1}=99, ${hhh2}, ${hhh1}) 
+calculate | phone_number_old | pulldata('listing_addint_jan2019', 'phone_number', 'hhh', ${hhh}) 
+calculate | N | pulldata('listing_addint_jan2019', 'N', 'hhh', ${hhh}) 
+calculate | sl_hhh | pulldata('listing_addint_jan2019', 'serial_number', 'hhh', ${hhh}) 
+calculate | treatment | pulldata('listing_addint_jan2019', 'treatment ', 'hhh', ${hhh}) 
+calculate | treatment_info | pulldata('listing_addint_jan2019', 'treatment_info', 'hhh', ${hhh}) 
+calculate | treatment_quality | pulldata('listing_addint_jan2019', 'treatment_quality', 'hhh', ${hhh}) 
+calculate | maize_tot_plotn_newR | pulldata('listing_addint_jan2019', 'maize_tot_plotn_new', 'hhh', ${hhh}) 
+calculate | tot_kg_newR | pulldata('listing_addint_jan2019', 'tot_kg_new', 'hhh', ${hhh}) 
+calculate | tot_acres_new_traceR | pulldata('listing_addint_jan2019', 'tot_acres_new_trace', 'hhh', ${hhh}) 
+calculate | tot_acres_newR | pulldata('listing_addint_jan2019', 'tot_acres_new', 'hhh', ${hhh}) 
+calculate | decob_new_when_eR | pulldata('listing_addint_jan2019', 'decob_new_when_e', 'hhh', ${hhh}) 
+calculate | harvest_new_when_eR | pulldata('listing_addint_jan2019', 'harvest_new_when_e', 'hhh', ${hhh}) 
+calculate | dry_new_when_eR | pulldata('listing_addint_jan2019', 'dry_new_when_e', 'hhh', ${hhh}) 
+calculate | bag_new_when_eR | pulldata('listing_addint_jan2019', 'bag_new_when_e', 'hhh', ${hhh}) 
+calculate | sell_new_when_eR | pulldata('listing_addint_jan2019', 'sell_new_when_e', 'hhh', ${hhh}) 
+select_one yes_no_locate | adult |  
+text | household_head | if(${hhh1}=99, ${hhh2}, pulldata('listing_addint_jan2019', 'hhh_name', 'hhh', ${hhh1})) 
+calculate | household_head_hhh | concat(${household_head}, ', ', ${hhh}) 
+select_one yes_no_only | moved |  
+select_one yes_no_only | come_back |  
+note | come_back_note |  
+select_one yes_no_only | check_hhh |  
+note | wrong_hh |  
+begin group | int |  
+note | introduction |  
+select_one stage | stage |  
+note | intro_T |  
+note | intro_end |  
+select_one yes_no_only | adress |  
+select_one yes_no_only | consent |  
+end group |  |  
+select_one yes_no_only | exclude_tot |  
+note | interview_end |  
+begin group | con |  
+select_one yes_no_only | phone_number_old_yn |  
+select_one yes_no_only | phone_number_yn |  
+begin group | phone |  
+string | phone_number |  
+string | phone_number_check |  
+calculate | phone_number_E164 | concat('+256',${phone_number}) 
+select_multiple language | lang_sms |  
+text | lang_sms_other |  
+end group |  |  
+geopoint | household_location |  
+begin group | gps_m |  
+text | manual_gps_lat_hh |  
+text | manual_gps_lon_hh |  
+end group |  |  
+begin group | conf |  
+decimal | maize_tot_plotn_new | ${maize_tot_plotn_newR} 
+decimal | tot_acres_new_trace | ${tot_acres_new_traceR} 
+decimal | tot_acres_new | ${tot_acres_newR} 
+decimal | tot_kg_new | ${tot_kg_newR} 
+end group |  |  
+select_one yes_no_only | leaflet |  
+select_one yes_no_only | tarpaulin |  
+text | tarpaulin_whynot |  
+select_one date_frame_ra | harvested_when_tell |  
+begin group | wrn |  
+date | harvested_when_e |  
+date | harvested_when_l |  
+end group |  |  
+integer | bag_number |  
+begin repeat | measure |  
+calculate | TN | if(${treatment_info}=1, 1, 2) 
+begin group | info |  
+note | info_number |  
+note | info_checkT |  
+note | weight_note_t2 |  
+note | weight_note_c2 |  
+end group |  |  
+calculate | bag_no | position(..) 
+note | bag_no_note |  
+begin group | pract |  
+select_multiple seeds | seeds |  
+select_multiple chemical | chemical |  
+end group |  |  
+begin group | quality |  
+select_one yes_no_examine | smell |  
+select_one color | color |  
+select_one yes_no_examine | dirty |  
+select_one yes_no_examine | cobs |  
+select_one yes_no_examine | stones |  
+select_one yes_no_examine | dust |  
+select_one yes_no_examine | broken |  
+select_one yes_no_examine | immature |  
+select_one yes_no_examine | damage |  
+select_one yes_no_examine | rot |  
+select_one yes_no_examine | insect |  
+select_one yes_no_examine | insect_live |  
+select_one yes_no_examine | mould |  
+decimal | moisture |  
+end group |  |  
+calculate | ok_buy | if(${smell}='yes' and ${dirty}='no' and ${cobs}='no' and ${dust}='no' and ${broken}='no' and ${immature}='no'  
+begin group | quality2 |  
+note | sumup_quality |  
+note | advice_yes |  
+note | advice_no |  
+end group |  |  
+begin group | W |  
+integer | weight_est |  
+note | weight_note_t1 |  
+note | weight_note_c1 |  
+integer | weight |  
+note | weight_note_t |  
+end group |  |  
+end repeat |  |  
+calculate | num_bags | count(${measure}) 
+note | check_num_bags |  
+calculate | tot_weight | sum(${weight}) 
+calculate | tot_weight_est | sum(${weight_est}) 
+begin group | sumup_gr |  
+note | sumup_tot_note |  
+integer | sumup_tot | ${tot_weight} 
+note | sumup_each0 |  
+note | sumup_each1 | indexed-repeat(${weight}, ${measure}, 1) 
+note | sumup_each2 | indexed-repeat(${weight}, ${measure}, 2) 
+note | sumup_each3 | indexed-repeat(${weight}, ${measure}, 3) 
+note | sumup_each4 | indexed-repeat(${weight}, ${measure}, 4) 
+note | sumup_each5 | indexed-repeat(${weight}, ${measure}, 5) 
+note | sumup_each6 | indexed-repeat(${weight}, ${measure}, 6) 
+note | sumup_each7 | indexed-repeat(${weight}, ${measure}, 7) 
+note | sumup_each8 | indexed-repeat(${weight}, ${measure}, 8) 
+note | sumup_each9 | indexed-repeat(${weight}, ${measure}, 9) 
+note | sumup_each10 | indexed-repeat(${weight}, ${measure}, 10) 
+note | sumup_each11 | indexed-repeat(${weight}, ${measure}, 11) 
+note | sumup_each12 | indexed-repeat(${weight}, ${measure}, 12) 
+note | sumup_each13 | indexed-repeat(${weight}, ${measure}, 13) 
+note | sumup_each14 | indexed-repeat(${weight}, ${measure}, 14) 
+note | sumup_each15 | indexed-repeat(${weight}, ${measure}, 15) 
+note | sumup_each16 | indexed-repeat(${weight}, ${measure}, 16) 
+note | sumup_each17 | indexed-repeat(${weight}, ${measure}, 17) 
+note | sumup_each18 | indexed-repeat(${weight}, ${measure}, 18) 
+note | sumup_each19 | indexed-repeat(${weight}, ${measure}, 19) 
+note | sumup_each20 | indexed-repeat(${weight}, ${measure}, 20) 
+select_one yes_no_only | sumup_check |  
+end group |  |  
+image | info_photo |  
+calculate | image_name | if(${treatment_info}=1, 'info_card_example.jpg', 'info0_card_example.jpg') 
+select_one yes_no_only | info_explain | ${image_name} 
+select_one yes_no_only | info_explainT |  
+date | sale_timing |  
+calculate | random_bag | int(${random}*${bag_number})+1 
+calculate | random_bag_weight | indexed-repeat(${weight}, ${measure}, ${random_bag}) 
+begin group | buy_bag |  
+note | note_buying |  
+select_one yes_no_only | reweight_yn |  
+integer | reweight_buybag |  
+calculate | weight_buybag | if(${reweight_buybag}!='', ${reweight_buybag}, ${random_bag_weight}) 
+calculate | totprice_buybag | ${price}*${weight_buybag} 
+select_one yes_no_only | want_to_sell |  
+select_one yes_no_only | write_name |  
+select_one yes_no_only | receipt |  
+image | receipt_photo |  
+end group |  |  
+select_one yes_no_only | compensation_C |  
+select_one yes_no_only | compensation_all |  
+end group |  |  
+note | thank_you |  
+calculate | endquestionnaire | once(now()) 
+select_one enumerator_name | quality_check |  
+bags any defect nonNA: 622  bags with weight: 644 
+sale 1 : hh with bag weights 95  ppk nonNA 95  date nonNA NA  ppk&date NA 
+sale 2 : hh with bag weights 94  ppk nonNA 94  date nonNA NA  ppk&date NA 
+sale 3 : hh with bag weights 16  ppk nonNA 16  date nonNA NA  ppk&date NA 
+sale 4 : hh with bag weights 6  ppk nonNA 6  date nonNA NA  ppk&date NA 
+     hhh_id treatment ea_code add4_random_bag add5_ppk_1 add5_ppk_2 add5_ppk_3 add5_sold_when_e_1 add5_sold_when_e_2 add5_sold_when_e_3 add5_ind_weight1_1 add5_ind_ded_weight1_1 add5_ind_weight1_2
+1  10358063         0 EA10358               6        830       1030         NA         2019-03-29         2019-04-10               <NA>                 NA                     NA                158
+2  10358064         0 EA10358              10        820        800         NA         2019-03-30         2019-04-07               <NA>                 NA                     NA                146
+3  10358074         0 EA10358              10        930       1000         NA         2019-04-06         2019-04-18               <NA>                 NA                     NA                136
+4  10197063         1 EA10197               2        680        640         NA         2019-03-07         2019-03-23               <NA>                 NA                     NA                148
+5  10358067         0 EA10358               6        800        800        980         2019-03-30         2019-04-01         2019-04-15                 NA                     NA                144
+6  10179037         1 EA10179               2        600        550         NA         2019-02-06         2019-02-07               <NA>                 NA                     NA                128
+7  10179038         0 EA10179               3        600        550         NA         2019-02-02         2019-02-10               <NA>                 NA                     NA                158
+8  10358075         0 EA10358               8        930       1060         NA         2019-04-06         2019-04-18               <NA>                 NA                     NA                146
+9  10095056         0 EA10095              16        680        850         NA         2019-03-07         2019-04-05               <NA>                 NA                     NA                151
+10 10358065         0 EA10358               6        830       1000         NA         2019-03-29         2019-05-25               <NA>                 NA                     NA                151
+11 10095003         0 EA10095               3        670        670         NA         2019-02-14         2019-02-17               <NA>                 NA                     NA                151
+12 10095009         1 EA10095               5        670        970         NA         2019-02-14         2019-04-10               <NA>                 NA                     NA                158
+13 10095010         1 EA10095               9        680        600         NA         2019-03-05         2019-03-16               <NA>                 NA                     NA                157
+14 10095019         1 EA10095               2        670        620        630         2019-02-13         2019-02-15         2019-02-20                 NA                     NA                 NA
+15 10095026         0 EA10095               1        650        600         NA         2019-03-09         2019-03-24               <NA>                147                    147                 NA
+16 10095041         1 EA10095               2        670        600         NA         2019-02-14         2019-02-22               <NA>                 NA                     NA                 62
+17 10095054         1 EA10095               3        720        620         NA         2019-02-19         2019-03-01               <NA>                 NA                     NA                140
+18 10149001         1 EA10149               1        600        500         NA         2019-02-04         2019-02-10               <NA>                148                    148                 NA
+19 10149026         0 EA10149               1        720        650         NA         2019-02-16         2019-02-17               <NA>                158                    158                 NA
+20 10149028         1 EA10149               2        600        500         NA         2019-02-04         2019-02-20               <NA>                 NA                     NA                 70
+21 10149030         0 EA10149               2        720        700         NA         2019-02-16         2019-03-11               <NA>                 NA                     NA                146
+22 10178002         0 EA10178               3        600        550         NA         2019-02-03         2019-02-10               <NA>                 NA                     NA                135
+23 10178006         0 EA10178               2        600        550         NA         2019-01-27         2019-01-28               <NA>                 NA                     NA                130
+24 10178008         1 EA10178               1        600        600        500         2019-02-10         2019-02-11         2019-02-19                156                    156                 NA
+25 10178009         0 EA10178               8        600        600         NA         2019-01-30         2019-01-31               <NA>                 NA                     NA                171
+   add5_ind_ded_weight1_2 add4_weight_1 add4_weight_2
+1                     158           163           156
+2                     146           147           148
+3                     134           137           153
+4                     148           151           145
+5                     144           144           163
+6                     128           128           131
+7                     154           161           158
+8                     146           148           142
+9                     151           153           155
+10                    151           154           148
+11                    150           153           153
+12                    158           164           160
+13                    157           157           158
+14                     NA           149           155
+15                     NA           147           147
+16                     60            63           104
+17                    137           141           141
+18                     NA           148           148
+19                     NA           158           155
+20                     70            75           110
+21                    144           152           156
+22                    133           137           137
+23                    128           132           133
+24                     NA           156           148
+25                    169           177           192
+   
+    EA10095 EA10149 EA10178 EA10179 EA10197 EA10248 EA10318 EA10342 EA10358
+  0       3       2       4       4       5       3       6       5      18
+  1       6       2       3       6       7       7       6       5       7
+
+                                equal to or greater than 20 ppb                less than 10 ppb 
+                             18                               2                              79 

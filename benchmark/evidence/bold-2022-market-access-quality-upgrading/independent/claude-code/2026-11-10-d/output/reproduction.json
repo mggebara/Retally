@@ -1,0 +1,69 @@
+{
+  "schema": 1,
+  "entry_id": "bold-2022-market-access-quality-upgrading",
+  "mode": "independent",
+  "run_id": "2026-11-10-d",
+  "reproducer": "claude-code",
+  "language": "r",
+  "final": {
+    "script": "script.R",
+    "stdout": "stdout.txt",
+    "stderr": "stderr.txt",
+    "exit_code": 0
+  },
+  "attempts": [
+    {
+      "dir": "attempt-1",
+      "exit_code": 1,
+      "kind": "error"
+    },
+    {
+      "dir": "attempt-2",
+      "exit_code": 0,
+      "kind": ""
+    },
+    {
+      "dir": "attempt-3",
+      "exit_code": 0,
+      "kind": ""
+    },
+    {
+      "dir": "attempt-4",
+      "exit_code": 0,
+      "kind": ""
+    },
+    {
+      "dir": "attempt-5",
+      "exit_code": 0,
+      "kind": ""
+    },
+    {
+      "dir": "attempt-6",
+      "exit_code": 0,
+      "kind": "claim"
+    },
+    {
+      "dir": "attempt-7",
+      "exit_code": 0,
+      "kind": ""
+    },
+    {
+      "dir": "attempt-8",
+      "exit_code": 0,
+      "kind": ""
+    }
+  ],
+  "deviations": [
+    "Monetary values converted at a constant 3,700 UGX per US dollar (rate not stated in the paper; chosen because it matches the paper's control/baseline means for price, harvest value and expenses).",
+    "Harvest value = sales revenue (seller data) + unsold harvest valued at the village-season mean sale price.",
+    "Monetary expenses = seeds, fertilizer, booster, chemicals, manure, equipment, hired labour (tot_lab_costs), post-harvest labour and other post-harvest costs, harvest and decobbing costs, drying labour, transport.",
+    "Family labour hours (seasons 5-7 only) valued at a single hourly wage = median hired daily wage (5,000 UGX) / median family hours per day (6) = 833 UGX/h.",
+    "ANCOVA pre-treatment control = household mean of the outcome over baseline seasons 1-3; for profit incl. own hours (no baseline family-hours data) the baseline monetary profit is used.",
+    "Season-2 harvest_kg is in a different unit (2-4x the plot sum), so harvest is the sum of plot-level harvests.",
+    "Table 6 inference by village clusters (fixest CR1); no randomization inference."
+  ],
+  "notes": "Table 2 rebuilt from anonym_returns_data.dta: 622 inspected bags (10 defect types, dead/live insects as one type), 82 lab samples (share of defective grain and waste), 116 sales = sales-module repeats 2-4 (repeat 1 is the single bag bought for lab testing); deductions = (enumerator weight - agreed weight)/enumerator weight; Stata-style week-of-year FE; singletons kept. Control means match the paper (2.46, 0.32, 731, 3.73, 705). Table 6 panel A rebuilt from panel_g1.dta and seller_data.dta; follow-up N (617/677/658/640/464) and control means match, but treatment effects on harvest value and profits are well below the paper's values (55 vs 78.9, 51 vs 63.1, 81 vs 97.6). The variable construction is a guess because the authors' code was withheld. attempt-1 was an exploratory run that crashed in the variable describer. attempt-6 was meant to be another exploration, but a failed edit sent the unmodified full script to the top level; it printed RESULT lines, was compared with the claims (feedback.txt) and then revised with the pre-planned construction fixes. attempt-7 was also compared with the claims (price, yield, harvest value and the two profits off target), but the script was not changed afterwards. attempt-8 was a descriptive check of harvest units and prices. The final run reruns attempt-7's script unchanged. No hung runs.",
+  "files_read_outside_mount": [],
+  "started_at": "2026-11-10T14:44:19Z",
+  "finished_at": "2026-11-10T16:24:00Z"
+}
