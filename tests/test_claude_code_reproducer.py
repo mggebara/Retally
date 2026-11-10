@@ -629,6 +629,15 @@ def test_catalog_has_pinned_claims_to_check():
 
 @pytest.mark.parametrize("entry", CATALOG, ids=lambda e: e.id)
 def test_blind_task_for_every_catalog_entry_leaks_no_value(tmp_path, entry):
+    dataset = entry.dataset
+    if dataset is not None and dataset.data_access == bschema.DATA_ACCESS_MANUAL:
+        placed = Path(dataset.source)
+        if not placed.is_absolute():
+            placed = REPO_ROOT / placed
+        if not placed.exists():
+            # The package is git-ignored (a human downloaded it under their own
+            # account), so CI and fresh clones cannot render this entry's task.
+            pytest.skip(f"manually placed package not on disk: {dataset.source}")
     numbers = [oc.value for oc in entry.original_claims]
     numbers += [oc.standard_error for oc in entry.original_claims if oc.standard_error is not None]
     # A paper text that prints every value and SE, plain and with a glued minus-as-"2".
