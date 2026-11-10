@@ -1,0 +1,464 @@
+# Original paper: Greenstone, M., He, G., Jia, R., & Liu, T. (2022). "Can
+#   Technology Solve the Principal-Agent Problem? Evidence from China's
+#   War on Air Pollution." American Economic Review: Insights, 4(1),
+#   54-70.  doi:10.1257/aeri.20200373 (March 2022 issue; Crossref issued
+#   2022-03-01, DOI created 2022-02-25).  The I4R First Meta Database
+#   files it under "American Economic Review"; the journal is AER:
+#   Insights.
+#
+# Reproduction report: Garnache, C., Ghosh, A., & Gibney, G. (2024).
+#   "Replication: Can Technology Solve the Principal-Agent Problem?
+#   Evidence from China's War on Air Pollution." I4R Discussion Paper
+#   No. 113 (April 2024; EconStor hdl:10419/289782; I4R First Meta
+#   Database, 271 rows under the paper title).  Not listed in
+#   corpus/openicpsr-wanted.md; found by web search 2026-11-09 (IDEAS
+#   RePEc:zbw:i4rdps:113).  Verdict: reproducible — "we were able to
+#   computationally replicate the results" (abstract) and, Section 2,
+#   "We run the codes and reproduce the results in Tables 1 and 2 ... We
+#   find that the point estimates are identical, with the sign, magnitude
+#   and statistical significance all being reproduced.  No coding errors
+#   were encountered."  The DB's best_describe_compreprod agrees
+#   ("Analysis and cleaning code produce the same output as presented in
+#   the paper"); result_same is blank on every row.  The DP does not print
+#   its recomputation as a separate column: each DP table opens with a
+#   "Panel a. Original" block (the paper's Table 1 / Table 2 numbers) and
+#   then robustness panels.  Every one of the 270 DB rows with a
+#   replicator coefficient is a ROBUSTNESS or REPLICATION variant, not a
+#   plain recomputation: weather re-built from NOAA with the nearest
+#   station (DP Tables 2, 4, 7 Panel b), distance-weighted-average weather
+#   (Panel c), quadratic / cubic weather polynomials (DP Tables 3, 5, 8,
+#   9), city trends and city-by-year FE (DP Tables 6, 10), alternative
+#   manipulating-city definitions (DP Table 8 Panel d).  So the DB's
+#   replicator values that differ from the paper (e.g. 64.1 vs 60.3, 47.1
+#   vs 27.5) are different specifications, not failed reproductions.
+#
+# Why this paper:
+#   1. Regression discontinuity in time (rdrobust-style local linear RD,
+#      triangle kernel, MSE-optimal bandwidth, city-clustered SEs) on a
+#      large station-by-day panel, with covariates entered by
+#      residualizing the outcome first — a different estimator from every
+#      other catalog entry.
+#   2. An event-study / DiD table on the same panel with station and
+#      (year-)month FE, and a nearest-neighbour matched sample.
+#   3. A manually placed openICPSR package (data_access: manual) of 126
+#      MB with the full data chain (Stata .dta plus a 78 MB raw CSV).
+#
+# What original_claims pins: Table 1 Panel A (RD in reported daily PM10)
+#   in all five columns with SEs and the RD in AOD with controls (the
+#   placebo), Table 1 Panel B's "1-2 months after" coefficient in the
+#   deadline sample (month FE and year-month FE), the matched sample and
+#   the log specification, the Panel B deadline-sample N, and Table 2
+#   Panel A column 2 (RD in face mask and air filter searches with
+#   controls).  13 claims, values exactly as printed.
+#
+# Paper text: the published article is paywalled (AEA PDF returns HTML to
+#   scripts; LSE Research Online 124670 has no full text; HKU Scholars Hub
+#   10722/311210 answers 403).  The source is the open NBER Working Paper
+#   27502 (July 2020), whose Table 1 and Table 3 (published Table 2) print
+#   the published numbers for every pinned claim: verified against DP113's
+#   "Panel a. Original" blocks (DP Tables 2, 4 and 7) and the meta
+#   database's o_coeff_dbl / o_std_err_dbl.  See notes.
+
+id: greenstone-2022-china-pollution-monitoring-automation
+i4r_report_url: https://www.econstor.eu/bitstream/10419/289782/1/I4R-DP113.pdf
+# Target language for regeneration (the original is Stata 15 MP with
+# rdrobust, reghdfe, geonear and the brain neural-net .ado; Retally
+# generates R and reads the .dta files with haven).
+language: r
+outcome_label: reproducible
+# Pipeline tuning is frozen; this is an evaluation paper.
+split: holdout
+# Contamination bookkeeping.  publication_date is the FIRST public
+# version: Becker Friedman Institute Working Paper 2020-87 (BFI page
+# datePublished 2020-06-29T19:39:22Z; PDF CreationDate 2020-06-29; the
+# PDF's cover reads "No. 2019-87, June 2019" but its title page, the
+# file name BFI_WP_202087 and the page date all say June 2020), then SSRN
+# 3638591 (Crossref created 2020-07-03) and NBER w27502 (July 2020).
+# The journal version: Crossref issued 2022-03-01 (created 2022-02-25).
+# package_release_date is the DataCite registration of
+# doi:10.3886/E125321V1 (registered 2022-02-22T19:06:02Z, DataCite API
+# 2026-11-09); openICPSR itself answers 403 to scripts.
+publication_date: "2020-06"
+package_release_date: "2022-02-22"
+
+paper:
+  # NBER Working Paper 27502 (July 2020), open PDF; checked 2026-11-09:
+  # 200 application/pdf, 47 pp., 4,587,900 bytes (PDF CreationDate
+  # 2020-06-30).  A working-paper version, not the published article: its
+  # Table 1 (published Table 1) matches the published values everywhere
+  # (see notes); its Table 3 is the published Table 2 with different
+  # columns 3-4; its Table 2 (city characteristics) is not a published
+  # main table.  The BFI WP 2020-87 PDF prints the same Table 1.
+  source: https://www.nber.org/system/files/working_papers/w27502/w27502.pdf
+  title: "Can Technology Solve the Principal-Agent Problem? Evidence from China's War on Air Pollution"
+  authors:
+    - Michael Greenstone
+    - Guojun He
+    - Ruixue Jia
+    - Tong Liu
+
+dataset:
+  source: benchmark/manual-packages/T9/125321-V1.zip
+  data_access: manual
+  access_notes: >
+    AEA Data and Code Repository on openICPSR, project 125321, version V1
+    (doi:10.3886/E125321V1); login and terms-of-use click-through required,
+    so the zip was downloaded by hand (2026-11-09) and placed unchanged at
+    benchmark/manual-packages/T9/125321-V1.zip (125,741,529 bytes, md5
+    3e86d0601fdb93d205278e59d1224dda; SOURCE.txt beside it).  V1 is the
+    only version.  71 entries, 241 MB uncompressed, no nested archives,
+    all under China_Pollution_Monitoring/ plus a top-level README.pdf (3
+    pp.; data sources, file-to-table map, software and packages, run time,
+    no estimates).  Data/ (Stata .dta): pollution_1116.dta (40 MB,
+    station-day PM10 / SO2 / NO2), weather_1116.dta (29 MB, station-day
+    temperature, rain, humidity, wind speed), station_list.dta (stations
+    with city, wave and automation date), aod_month.dta (station-month
+    AOD), mask_filter_search.dta (city-day Baidu search indices),
+    city_info.dta, search_sale.dta, pm10_corrected_reference.dta (the
+    authors' neural-net corrected PM10, appendix), and pollution.csv (78
+    MB, the raw scraped CSV); Data/temp/ is empty.  Code/ has six Stata
+    do-files (MASTER.do, Prepare_Data.do, Tables.do, Figures.do, FS.do,
+    TS.do) and Ado/brain.ado.  Results/figures/ holds only ArcGIS map
+    inputs for Figures A1 and B5 (.mxd documents and shapefiles with
+    city / station attributes and no estimates; the two 27 MB .shp are
+    city polygons); no tables, logs or figure outputs ship.  The
+    script-free copy (independent / blind) withholds the 7 scripts by
+    suffix (6 .do, 1 .ado; benchmark.strip_rule.classify_tree on the
+    extracted package, 2026-11-09); everything else stays, none of it
+    printing a pinned value.  Project page:
+    https://www.openicpsr.org/openicpsr/project/125321/version/V1/view
+
+original_claims:
+  # ---- Table 1, Panel A: RD estimates, reported daily PM₁₀ ----
+  - description: rd_pm_daily_no_controls_table1_panelA_col1
+    value: 34.7
+    claim_type: coefficient
+    standard_error: 10.7
+    unit: micrograms per cubic meter of PM₁₀
+    location: "Table 1, Panel A (RD Estimates), RD in PM₁₀ (Daily), column (1)"
+    context: >
+      Table 1 ("Automating Air Quality Monitoring System and PM₁₀
+      Concentrations"), Panel A, column (1).  Non-parametric local linear
+      regression discontinuity estimate of the jump in reported daily PM₁₀
+      concentrations at the date a city's air quality monitoring was
+      automated; the running variable is days from the automation date,
+      with separate slopes before and after.  Triangle kernel, bandwidth
+      chosen by the Calonico, Cattaneo and Titiunik (2014) optimal
+      bandwidth method.  No fixed effects or covariates.  Sample: all
+      monitoring stations in the Wave 1 and Wave 2 cities with pollution
+      data before and after automation, station-day observations
+      2011-2016.  Standard errors clustered at the city level.
+  - description: rd_pm_daily_controls_table1_panelA_col2
+    value: 34.9
+    claim_type: coefficient
+    standard_error: 5.8
+    unit: micrograms per cubic meter of PM₁₀
+    location: "Table 1, Panel A (RD Estimates), RD in PM₁₀ (Daily), column (2)"
+    context: >
+      Table 1, Panel A, column (2), the paper's headline estimate: the
+      column (1) local linear RD in reported daily PM₁₀ at the automation
+      date with station fixed effects, month fixed effects and weather
+      controls (temperature, relative humidity, precipitation, wind
+      speed), entered by first residualizing PM₁₀ on them and running the
+      RD on the residuals.  Triangle kernel, optimal bandwidth (Calonico
+      et al. 2014), all Wave 1 and Wave 2 stations; standard errors
+      clustered by city.
+  - description: rd_pm_daily_wave1_table1_panelA_col3
+    value: 27.5
+    claim_type: coefficient
+    standard_error: 9.8
+    unit: micrograms per cubic meter of PM₁₀
+    location: "Table 1, Panel A (RD Estimates), RD in PM₁₀ (Daily), column (3) Wave 1"
+    context: >
+      Table 1, Panel A, column (3): the column (2) residualized RD (station
+      FE, month FE, weather controls; triangle kernel, optimal bandwidth)
+      restricted to stations in Wave 1 cities (required to automate by
+      January 1, 2013).  Standard errors clustered by city.
+  - description: rd_pm_daily_wave2_table1_panelA_col4
+    value: 64.7
+    claim_type: coefficient
+    standard_error: 9.9
+    unit: micrograms per cubic meter of PM₁₀
+    location: "Table 1, Panel A (RD Estimates), RD in PM₁₀ (Daily), column (4) Wave 2"
+    context: >
+      Table 1, Panel A, column (4): the column (2) residualized RD
+      restricted to stations in Wave 2 cities (required to automate by
+      January 1, 2014).  Standard errors clustered by city.
+  - description: rd_pm_daily_deadline_table1_panelA_col5
+    value: 57.1
+    claim_type: coefficient
+    standard_error: 8.6
+    unit: micrograms per cubic meter of PM₁₀
+    location: "Table 1, Panel A (RD Estimates), RD in PM₁₀ (Daily), column (5) Deadline"
+    context: >
+      Table 1, Panel A, column (5): the column (2) residualized RD
+      restricted to stations in cities that automated exactly on their
+      wave's deadline (from both waves), where the automation date was not
+      chosen strategically.  Standard errors clustered by city.
+  - description: rd_aod_monthly_controls_table1_panelA_col2
+    value: -0.005
+    claim_type: coefficient
+    standard_error: 0.021
+    unit: aerosol optical depth (unitless)
+    location: "Table 1, Panel A (RD Estimates), RD in AOD, column (2)"
+    context: >
+      Table 1, Panel A, column (2), second row: the same residualized RD
+      (station FE, month FE, weather controls) fitted to satellite aerosol
+      optical depth (MODIS, Terra and Aqua) at the station by month, with
+      months from automation as the running variable, as a check that
+      true air quality did not change at automation; the paper calls it
+      precisely zero.  Triangle kernel, optimal bandwidth, all stations;
+      standard errors clustered by city.
+
+  # ---- Table 1, Panel B: event-study estimates ----
+  - description: event_study_pm_1_2_months_after_deadline_month_fe_table1_panelB_col1
+    value: 60.3
+    claim_type: coefficient
+    standard_error: 11.0
+    unit: micrograms per cubic meter of PM₁₀
+    location: "Table 1, Panel B (Event-Study Estimates), 1-2 Months after, column (1)"
+    context: >
+      Table 1, Panel B, column (1).  Event-study regression of reported
+      daily PM₁₀ on treated-city indicators for 7-12, 5-6 and 3-4 months
+      before and 1-2, 3-4, 5-6 and 7-12 months after automation (1-2
+      months before is the reference period), with station fixed effects,
+      month fixed effects and weather controls (temperature, relative
+      humidity, precipitation, wind speed).  Sample: stations in cities
+      that automated at their deadline, January 2012 to December 2013;
+      treated stations are in Wave 1 cities (automated January 1, 2013),
+      controls in Wave 2 cities (not automated during the period).  The
+      entry is the 1-2 months after coefficient.  Standard errors
+      clustered at the city level.
+  - description: event_study_pm_1_2_months_after_deadline_year_month_fe_table1_panelB_col2
+    value: 31.4
+    claim_type: coefficient
+    standard_error: 11.1
+    unit: micrograms per cubic meter of PM₁₀
+    location: "Table 1, Panel B (Event-Study Estimates), 1-2 Months after, column (2)"
+    context: >
+      Table 1, Panel B, column (2): the column (1) deadline-sample event
+      study with year-by-month fixed effects in place of month fixed
+      effects (station FE and weather controls kept).  The entry is the
+      1-2 months after coefficient; standard errors clustered by city.
+  - description: event_study_pm_1_2_months_after_matched_month_fe_table1_panelB_col3
+    value: 66.5
+    claim_type: coefficient
+    standard_error: 14.3
+    unit: micrograms per cubic meter of PM₁₀
+    location: "Table 1, Panel B (Event-Study Estimates), 1-2 Months after, column (3) +Matching"
+    context: >
+      Table 1, Panel B, column (3): the column (1) event study (station FE,
+      month FE, weather controls) on a matched sample in which each Wave 1
+      deadline station is paired with its geographically nearest Wave 2
+      deadline station, with replacement.  The entry is the 1-2 months
+      after coefficient; standard errors clustered by city.
+  - description: event_study_log_pm_1_2_months_after_matched_table1_panelB_col5
+    value: 0.24
+    claim_type: coefficient
+    standard_error: 0.09
+    unit: log points of PM₁₀
+    location: "Table 1, Panel B (Event-Study Estimates), 1-2 Months after, column (5) Log(PM₁₀)"
+    context: >
+      Table 1, Panel B, column (5): the matched-sample event study with the
+      natural logarithm of reported daily PM₁₀ as the outcome, station
+      fixed effects, year-by-month fixed effects and weather controls (the
+      paper reads the coefficients as approximate percentage changes).
+      The entry is the 1-2 months after coefficient; standard errors
+      clustered by city.
+  - description: n_obs_table1_panelB_deadline_cols1_2
+    value: 176426
+    claim_type: count
+    unit: station-day observations
+    location: "Table 1, Panel B, Obs., columns (1)-(2)"
+    context: >
+      Number of observations in Table 1, Panel B, columns (1) and (2): the
+      station-day observations of Wave 1 and Wave 2 deadline-city stations
+      in 2012-2013 used in the unmatched event-study regressions.
+
+  # ---- Table 2, Panel A: RD estimates, online searches ----
+  - description: rd_face_mask_searches_controls_table2_panelA_col2
+    value: 11.03
+    claim_type: coefficient
+    standard_error: 1.66
+    unit: Baidu search index points (monthly average)
+    location: "Table 2 (NBER WP Table 3), Panel A (RD Estimates), RD in Face Mask Searches, column (2)"
+    context: >
+      Table 2 ("Automating Air Quality Monitoring System and Avoidance
+      Behaviors"), Panel A, column (2).  Local linear RD estimate of the
+      jump at automation in a city's monthly Baidu search index for
+      "anti-haze face masks" (PC searches), with months from automation as
+      the running variable, after residualizing the outcome on city fixed
+      effects, month fixed effects and weather controls.  Triangle kernel,
+      optimal bandwidth; all sample cities; standard errors clustered by
+      city.
+  - description: rd_air_filter_searches_controls_table2_panelA_col2
+    value: 8.73
+    claim_type: coefficient
+    standard_error: 1.86
+    unit: Baidu search index points (monthly average)
+    location: "Table 2 (NBER WP Table 3), Panel A (RD Estimates), RD in Air Filter Searches, column (2)"
+    context: >
+      Table 2, Panel A, column (2): the same residualized RD (city FE,
+      month FE, weather controls; triangle kernel, optimal bandwidth, all
+      cities) for the city's monthly Baidu search index for "air filters".
+      Standard errors clustered by city.
+
+# DP113 Section 2 states that running the authors' code reproduces Tables 1
+# and 2 with identical point estimates, and each DP table's "Panel a.
+# Original" block prints the paper's values (DP Table 2 = paper Table 1
+# Panel A; DP Table 4 = Table 1 Panel B with Observations; DP Table 7 =
+# Table 2 Panel A).  As in goni-2022 and molina-garzon-2022, the findings
+# record the paper's value under that blanket verdict and quote one of the
+# meta-database's robustness rows in the note; no DB row is a plain
+# recomputation.
+i4r_replicator_findings:
+  - claim_id: 0
+    reproduced_value: 34.7
+    outcome: matches
+    notes: DP113 Sec. 2 blanket (estimates identical); DB rows are variants, e.g. nearest-station weather 34.8 (10.7) DP Table 2 Panel b.
+  - claim_id: 1
+    reproduced_value: 34.9
+    outcome: matches
+    notes: DP113 Sec. 2 blanket; DB rows are variants, e.g. nearest-station weather 34.7 (5.8), DWA weather 30.9 (6.1) DP Table 2.
+  - claim_id: 2
+    reproduced_value: 27.5
+    outcome: matches
+    notes: DP113 Sec. 2 blanket; DB rows are variants, e.g. quadratic weather 26.2 (9.7) DP Table 3 Panel b.
+  - claim_id: 3
+    reproduced_value: 64.7
+    outcome: matches
+    notes: DP113 Sec. 2 blanket; DB rows are variants, e.g. nearest-station weather 67.4 (10.8) DP Table 2 Panel b.
+  - claim_id: 4
+    reproduced_value: 57.1
+    outcome: matches
+    notes: DP113 Sec. 2 blanket; DB rows are variants, e.g. nearest-station weather 60.9 (7.9) DP Table 2 Panel b.
+  - claim_id: 5
+    reproduced_value: -0.005
+    outcome: matches
+    notes: DP113 Sec. 2 blanket; DB rows are variants, e.g. nearest-station weather 0.003 (0.023) DP Table 2 Panel b.
+  - claim_id: 6
+    reproduced_value: 60.3
+    outcome: matches
+    notes: DP113 Sec. 2 blanket; DB rows are variants, e.g. nearest-station weather 64.1 (10.8), DWA 56.3 (10.4) DP Table 4.
+  - claim_id: 7
+    reproduced_value: 31.4
+    outcome: matches
+    notes: DP113 Sec. 2 blanket; DB rows are variants, e.g. quadratic weather 32.8 (11.1) DP Table 5 Panel b.
+
+  - claim_id: 8
+    reproduced_value: 66.5
+    outcome: matches
+    notes: DP113 Sec. 2 blanket; DB rows are variants, e.g. nearest-station weather 69.4 (14.6) DP Table 4 Panel b.
+  - claim_id: 9
+    reproduced_value: 0.24
+    outcome: matches
+    notes: DP113 Sec. 2 blanket; DB rows are variants, e.g. nearest-station weather 0.25 (0.09) DP Table 4 Panel b.
+  - claim_id: 10
+    reproduced_value: 176426
+    outcome: matches
+    notes: DP113 Table 4 Panel a (Original) and Table 5 print Observations 176,426 for cols 1-2.
+  - claim_id: 11
+    reproduced_value: 11.03
+    outcome: matches
+    notes: DP113 Sec. 2 blanket; DB rows are variants, e.g. nearest-station weather 11.21 (1.64) DP Table 7 Panel b.
+  - claim_id: 12
+    reproduced_value: 8.73
+    outcome: matches
+    notes: DP113 Sec. 2 blanket; DB rows are variants, e.g. nearest-station weather 8.83 (1.85) DP Table 7 Panel b.
+notes: >
+  Headline findings: reported PM10 jumped at automation by 34.9 (5.8)
+  ug/m3 with station FE, month FE and weather controls (Table 1 Panel A
+  col 2; 34.7 (10.7) without; the text's "35 percent" relative to the
+  post-automation mean of 99.5), 27.5 (9.8) in Wave 1, 64.7 (9.9) in Wave
+  2 and 57.1 (8.6) in deadline cities, with no jump in satellite AOD
+  (-0.005 (0.021), col 2).  Event study (Panel B) 1-2 months after
+  automation: 60.3 (11.0) deadline sample with month FE, 31.4 (11.1) with
+  year-month FE, 66.5 (14.3) matched, 0.24 (0.09) log PM10 matched; N
+  176,426 in cols 1-2.  Searches (Table 2 Panel A col 2): face masks 11.03
+  (1.66), air filters 8.73 (1.86).
+
+  Paper text and how it was verified.  The published AER: Insights
+  article could not be read (paywalled; no open repository copy reachable
+  from scripts, see the header).  The catalog source is NBER WP 27502
+  (July 2020).  Its Table 1 equals the published Table 1 in every printed
+  number checked: all 10 Panel A coefficients and SEs, the Obs. and
+  Bandwidth rows, all 35 Panel B coefficients with SEs and the Panel B
+  Obs. row are identical to DP113's "Panel a. Original" blocks (DP Table 2
+  and Table 4; token-by-token comparison of the extracted text, 2026-11-09),
+  which the DP labels as the original paper's Table 1 (the DP block also
+  prints a Constant row the WP omits), and
+  every pinned value / SE equals a meta-database o_coeff_dbl /
+  o_std_err_dbl row (34.7/10.7, 34.9/5.8, 27.5/9.8, 64.7/9.9, 57.1/8.6,
+  -0.005/0.021, 60.3/11.0, 31.4/11.1, 66.5/14.3, 0.24/0.09, 11.03/1.66,
+  8.73/1.86).  The WP's Table 3 is the published Table 2: columns 1-2 of
+  Panel A are identical to DP Table 7 Panel a (10.10, 11.03, 7.36, 8.73,
+  1.06, 1.15, 0.18, 0.16 with SEs), but columns 3-4 (normal vs
+  manipulating cities) differ from the published values (WP 7.18 / 15.43
+  for face masks vs published 6.46 / 18.77), so the published version
+  changed the manipulating-city split; those columns are not pinned.  The
+  R-squared row differs only in rounding (WP 0.34, DP 0.3).  The WP's
+  Table 2 (city characteristics) is not a main table of the published
+  article.  The contexts use the WP's wording; the published table titles
+  are taken from DP113 ("Automating Air Quality Monitoring System and
+  Avoidance Behaviors" for Table 2).  The claim text writes the
+  pollutant as "PM₁₀" (Unicode subscript digits) and the descriptions as
+  "pm": the leak checks read "PM10" as a stated "10", which is the
+  one-figure rounding of several pinned values and SEs (9.8, 9.9, 10.7,
+  11.03).
+
+  Curation pass (2026-11-09).  13 claims.  Left out: Panel A columns 1,
+  3-5 of the AOD row (placebo nulls; column 2 kept), the Obs. / Bandwidth
+  rows (data-driven bandwidths), the pre-period event-study coefficients,
+  the 3-4 / 5-6 / 7-12 months after coefficients, Table 2 columns 1, 3, 4
+  and the log-search rows, Table 2 Panel B (search event study; the
+  meta-database's SE column for it holds p-value-like numbers such as
+  1.56e-05), and all appendix tables.
+
+  Package-only facts (never in contexts).  Code/Tables.do, "Table 1A":
+  station_day_1116 = pollution_1116.dta merged 1:1 with weather_1116.dta
+  on station_n date, then station_list.dta on pm10_n (Prepare_Data.do
+  step 1); T = date - auto_date; reghdfe pm10 wind_speed rain temp rh,
+  absorb(pm10_n month) res(); rdrobust <y> T, c(0) p(1) q(2) kernel(tri)
+  vce(cluster code_city) masspoints(off) — col 1 on raw pm10 restricted to
+  non-missing weather, cols 2-5 on the residual, col 3 phase==1, col 4
+  phase==2, col 5 auto_date==19359 | 19724 (2013-01-01 / 2014-01-01).
+  AOD row on station_month.dta (station-month means of the daily file
+  merged with aod_month.dta, running variable n_month).  Obs. is
+  e(N_h_l)+e(N_h_r), bandwidth floor(e(h_l)).  "Table 1B": years
+  2012-2013, deadline stations, treat = auto_date==19359, period dummies
+  m712/m56/m34 before (Jan-Jun, Jul-Aug, Sep-Oct 2012), m12/m34/m56/m712
+  after (2013), reference Nov-Dec 2012; reghdfe pm10 treat_m*
+  wind_speed rain temp rh, absorb(pm10_n month) or absorb(pm10_n
+  year_month), vce(cluster code_city).  Matching (did_ddl_match.dta):
+  geonear each Wave 1 deadline station to its nearest Wave 2 deadline
+  station (ellipsoid), keep pairs within 400 km, joinby so control
+  stations repeat (the 400 km cap is not in the paper).  "Table 2A":
+  search_city_month.dta = city-day means of station_day_1116 merged with
+  mask_filter_search.dta, averaged by code_city x n_month (months from
+  automation); reghdfe pmmask / filter on weather, absorb(code_city
+  month), rdrobust on the residual over n_month with the same options.
+  Columns 3-4 use a city RD flag built in Prepare_Data.do from
+  city-by-city RDs.  The neural-net PM10 correction (brain.ado) is
+  appendix-only.  README states Stata/MP 15, 10-40 minutes.
+
+  Blind-mode exposure (step 6, 2026-11-09).  The blind generation prompt
+  states no pinned value or SE at printed precision.  It does carry the
+  abstract's first 500 characters, which say reported PM10 "increased by
+  35%" — a percentage of the post-automation mean, not the pinned
+  coefficient, but numerically the two-figure rounding of the headline
+  34.9 (and of 34.7); the README's blind-mode caveat covers this.  The
+  paper parser takes the WP cover line "NBER WORKING PAPER SERIES" as the
+  title.
+
+  What was read.  NBER WP 27502 in full through the main tables (pp.
+  1-22), the BFI WP title pages; DP113 in full; the 271 meta-database
+  rows; README.pdf; Tables.do and the relevant parts of Prepare_Data.do;
+  the strip-rule classification of the extracted package; the attribute
+  tables of the shipped shapefiles.
+
+  What could not be verified.  The published article itself (pages,
+  notes wording) was not read.  The authors' Stata code was not run (no
+  Stata here) and no independent R cross-check was made in this pass.
+
+  Original analysis in Stata 15 MP (ArcGIS 10.3 for maps); language: r is
+  the reproduction target.
