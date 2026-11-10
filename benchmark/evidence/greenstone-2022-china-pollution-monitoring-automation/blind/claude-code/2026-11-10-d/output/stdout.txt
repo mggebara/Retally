@@ -1,0 +1,70 @@
+Daily PM10 obs before bandwidth selection: 1049325 
+PM10 col1 (raw)                          coef=  42.4760 se= 10.0192 h=  179.45 N_h=153404
+PM10 col2 (resid, all)                   coef=  27.5032 se=  4.0165 h=  494.08 N_h=457437
+PM10 col3 (Wave 1)                       coef=  31.2426 se=  8.7866 h=  237.91 N_h=138929
+PM10 col4 (Wave 2)                       coef=  60.0978 se=  9.3482 h=  266.60 N_h=79564
+PM10 col5 (Deadline)                     coef=  55.6691 se=  7.8752 h=  245.72 N_h=118435
+Deadline sample: stations 365 cities 73 
+AOD station-months: 26983 
+AOD col2 (resid, all)                    coef=  -0.0027 se=  0.0200 h=    8.24 N_h=6626
+ES stations: treated 242 control 123 
+Matched controls: unique 27 of 123 
+Matched-sample obs: 231990 
+                            fes1             fes2             fes3
+Dependent Var.:             pm10             pm10             pm10
+                                                                  
+b712             -8.550. (4.723)  -17.23* (6.729)  -14.07* (6.503)
+b56                6.827 (5.976)  -19.22* (9.279)    3.850 (7.942)
+b34               -6.376 (5.645)  -12.01. (6.923)   -5.469 (6.674)
+a12             60.31*** (11.00)  31.44** (11.10) 51.83*** (12.53)
+a34             45.01*** (7.844) 33.56*** (8.757) 38.74*** (8.871)
+a56             28.12*** (6.717)  22.20** (8.024)  24.96** (8.489)
+a712            39.98*** (6.090)    9.776 (8.840) 39.41*** (6.503)
+Fixed-Effects:  ---------------- ---------------- ----------------
+station_n                    Yes              Yes              Yes
+moy                          Yes               No              Yes
+ym                            No              Yes               No
+_______________ ________________ ________________ ________________
+S.E.: Clustered    by: code_city    by: code_city    by: code_city
+Observations             176,426          176,426          231,990
+R2                       0.34153          0.35004          0.32754
+Within R2                0.11872          0.05117          0.10434
+
+                             fes5
+Dependent Var.:               lpm
+                                 
+b712            -0.1577* (0.0677)
+b56              -0.0660 (0.1128)
+b34              -0.0502 (0.0896)
+a12              0.1805* (0.0783)
+a34              0.2473* (0.1089)
+a56               0.1686 (0.1202)
+a712              0.1753 (0.1312)
+Fixed-Effects:  -----------------
+station_n                     Yes
+moy                            No
+ym                            Yes
+_______________ _________________
+S.E.: Clustered     by: code_city
+Observations              231,908
+R2                        0.39439
+Within R2                 0.08659
+---
+Signif. codes: 0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+Cities with >1 station automation date: 14 
+Search city-months: mask 8661 filter 8590 
+Mask search col2                         coef=   9.9947 se=  1.6964 h=    7.01 N_h=1845
+Filter search col2                       coef=   7.9992 se=  1.7723 h=    8.10 N_h=2074
+RESULT:rd_pm_daily_no_controls_table1_panelA_col1=42.476013
+RESULT:rd_pm_daily_controls_table1_panelA_col2=27.503176
+RESULT:rd_pm_daily_wave1_table1_panelA_col3=31.242610
+RESULT:rd_pm_daily_wave2_table1_panelA_col4=60.097829
+RESULT:rd_pm_daily_deadline_table1_panelA_col5=55.669081
+RESULT:rd_aod_monthly_controls_table1_panelA_col2=-0.002691
+RESULT:event_study_pm_1_2_months_after_deadline_month_fe_table1_panelB_col1=60.313121
+RESULT:event_study_pm_1_2_months_after_deadline_year_month_fe_table1_panelB_col2=31.443703
+RESULT:event_study_pm_1_2_months_after_matched_month_fe_table1_panelB_col3=51.827927
+RESULT:event_study_log_pm_1_2_months_after_matched_table1_panelB_col5=0.180512
+RESULT:n_obs_table1_panelB_deadline_cols1_2=176426.000000
+RESULT:rd_face_mask_searches_controls_table2_panelA_col2=9.994681
+RESULT:rd_air_filter_searches_controls_table2_panelA_col2=7.999175

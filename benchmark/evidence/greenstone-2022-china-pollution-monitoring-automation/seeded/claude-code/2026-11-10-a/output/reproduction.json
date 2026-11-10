@@ -1,0 +1,23 @@
+{
+  "schema": 1,
+  "entry_id": "greenstone-2022-china-pollution-monitoring-automation",
+  "mode": "seeded",
+  "run_id": "2026-11-10-a",
+  "reproducer": "claude-code",
+  "language": "r",
+  "final": {"script": "script.R", "stdout": "stdout.txt", "stderr": "stderr.txt", "exit_code": 0},
+  "attempts": [
+    {"dir": "attempt-1", "exit_code": 0, "kind": ""},
+    {"dir": "attempt-2", "exit_code": 0, "kind": ""}
+  ],
+  "deviations": [
+    "Stata rdrobust vce(cluster code_city) is implemented as R rdrobust 4.1.1 cluster=code_city with vce='cr1' (plug-in residuals, CR1 weights), the R equivalent; masspoints off, triangular kernel, p=1, q=2, MSE-optimal common bandwidth.",
+    "reghdfe residualization and event studies use fixest::feols with fixef.rm='singleton' (reghdfe drops singletons).",
+    "geonear nearest-neighbour matching (ellipsoid) is implemented with a Vincenty WGS84 distance in R; matches kept within 400 km, with replacement.",
+    "Only the parts of Prepare_Data.do needed for the claims are rebuilt (station_day, station_month+AOD, did_ddl_match, city-day and city-month search data); the rd underreporting dummy and the neural-net PM10 correction are not needed for the claimed columns and were skipped."
+  ],
+  "notes": "Seeded mode; followed Prepare_Data.do and Tables.do. attempt-1 and attempt-2 were exploratory (column order of the .dta files, rdrobust 4.1.1 vce/cluster handling and runtime on noise outcome; no RESULT lines). The first estimating run reproduced all 13 claims to the printed precision (also matching the paper's SEs, bandwidths and effective Ns, e.g. col1 h=109, N=91,470; col2 h=263, N=232,326; matched-sample N=186,499 / 186,469), so it is the final run and no claim-feedback attempts were used. Runtime ~14 s.",
+  "files_read_outside_mount": [],
+  "started_at": "2026-11-10T05:46:19Z",
+  "finished_at": "2026-11-10T05:50:30Z"
+}

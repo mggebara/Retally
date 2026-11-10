@@ -1,0 +1,2 @@
+Exploratory run (RESULT printing disabled) crashed in the search-data section: data.table merge error 'Join results in 9727 rows; more than 8870 = nrow(x)+nrow(i)' because unique(code_city, auto_ym) was not unique by city (some cities list stations with different automation dates).
+Fix: city-level automation month = earliest station automation month in the city; RESULT printing enabled for the final run. No other specification change.

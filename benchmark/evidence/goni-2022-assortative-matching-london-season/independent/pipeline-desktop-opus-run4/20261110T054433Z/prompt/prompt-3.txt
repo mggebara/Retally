@@ -1,0 +1,339 @@
+You are refining R code that reproduces results from an econometrics paper.
+The code RAN SUCCESSFULLY but the reproduced values do not match the
+paper's claims within the allowed tolerance.  Identify what is causing
+the gap and adjust the code to close it.
+
+## Paper
+Title: American Economic Journal: Applied Economics 2022, 14(3): 445–487
+Methodology: - **Design / identification:** Quasi-experiment based on the interruption of the London Season (1861–1863; royal balls and court presentations cancelled during Queen Victoria's mourning). Because the decision to marry in 1861–1863 is endogenous, treatment is assigned by age: cohorts with different age-based risks of marrying during the interruption are compared. Data: Hollingsworth (2001) peerage genealogy, linked to Bateman (1883) family landholdings (acres) and Burke (1826) geo-referenced family seats.
+- **Treatment variable:** Synthetic probability (in percent) of marrying during the interruption, eq. (1): T_t = p(t) + p(t+1) + p(t+2), where t is the woman's age in 1861 and p(t) is the percentage of women marrying at age t in "normal times". p(t) comes from a benchmark cohort of peers' daughters born 1815–1830, excluding those who married after 1861 or died before age 30. T peaks above 20% for women aged 19–22 in 1861. Its standard deviation is 7.3 pp. Robustness checks use alternative benchmark cohorts (Section IIIE).
+- **Estimating equations:** Binary outcomes use a probit, eq. (2): Pr(y_it = 1 | X) = Φ(α + βT_t + X'δ). Outcomes are married a commoner (Table 2 col. 1), married an heir (col. 2), married down (col. 5) and never married (col. 6). Continuous outcomes use OLS, eq. (3): Y_it = A + BT_t + X'Δ + ε. Y is the difference between spouses' family-landholding rank percentiles in acres, either in absolute value (col. 3) or as husband − wife (col. 4). Coefficients are in levels: probit coefficients per 1 pp of T, and OLS coefficients in percentile ranks per 1 pp of T. Nothing is standardised. Headline Panel A estimates: 0.005 (0.002) for married a commoner; −0.004 (0.002) for married an heir; 0.524 (0.196) for the absolute difference; −0.516 (0.225) for husband − wife; 0.009 (0.003) for married down; 0.002 (0.002) for never married.
+- **Controls:** Indicator for duke's/marquess's/earl's daughter (family title), indicator for English peerage (peerage of origin), and the woman's birth order excluding heirs. Panel B also adds the distance from the family seat to London, which restricts the sample to women with a recorded seat. There are no fixed effects.
+- **Samples:** The baseline is peers' daughters aged 15–35 in 1861 who ever married (N = 644). It excludes second marriages, women married to foreigners and members of the royal family. The landholdings sample (cols. 3–5) keeps couples where Bateman lists both spouses' families (N = 324). Most of the lost observations are women who married landless commoners; the rest are families with fewer than 2,000 acres. The celibacy sample (col. 6) is N = 765 and includes never-married women but drops those who died before age 35. With the Panel B family-seat restriction the samples are N = 484 (baseline), 260 (landholdings) and 565 (celibacy).
+- **Inference:** Standard errors are clustered by birth year (G = 21 clusters). The paper also reports p-values from the Cameron, Gelbach and Miller (2008) bootstrap-t procedure, to allow for few clusters: a wild cluster bootstrap for the OLS models and a pairs cluster bootstrap for the probits. Probit fit is reported as "percent correct", alongside the mean of the dependent variable.
+- **Additional analyses:**
+  - An IV model instruments marrying during 1861–1863 with T. It gives effects of +40% on marrying a commoner, −30% on marrying an heir, and husbands 44 percentile ranks poorer.
+  - Placebo tests re-run the analysis on 40 pseudo-interruptions x ∈ {10,…,50} years earlier, with the outcome married a commoner (Fig. 6).
+  - Nonparametric tests: chi-squared tests of association for sorting by title, and Kolmogorov–Smirnov tests for sorting by landholdings.
+  - Political-economy extensions use IV, instrumenting marrying a commoner with T. Outcomes are brothers'/family heads' election as MP, covering 27 general elections and 97 by-elections from 1776–1910, and school-board wealth tax rates. The tax rates average over 943 boards within 10 miles of 387 English family seats, for 1872–1878.
+- **Not applicable:** There is no train/test split, cross-validation or ML hyperparameter tuning. This is an econometric causal-inference study.
+
+
+## Current Code
+```r
+suppressPackageStartupMessages({
+  library(haven)
+  library(dplyr)
+  library(sandwich)
+  library(lmtest)
+})
+set.seed(42)
+
+base_dir <- "<repo>/.cache/datasets/goni_2022_assortative_matching_london_season.script-free"
+df <- haven::read_dta(file.path(base_dir, "data/final-data.dta"))
+df <- haven::zap_labels(df)
+df <- as.data.frame(df)
+nms <- names(df)
+cat("Loaded final-data.dta:", nrow(df), "rows,", ncol(df), "cols\n")
+
+find_col <- function(cands, required = FALSE) {
+  for (c in cands) if (c %in% nms) return(c)
+  low <- tolower(nms)
+  for (c in cands) {
+    hit <- which(low == tolower(c))
+    if (length(hit) > 0) return(nms[hit[1]])
+  }
+  if (required) stop(paste("None of the columns found:", paste(cands, collapse = ", ")))
+  NA_character_
+}
+num <- function(x) suppressWarnings(as.numeric(x))
+
+# ---- Key variables ----
+v_T      <- find_col(c("syntheticT", "synthetic", "synthT"), TRUE)
+v_com    <- find_col(c("cOut", "commoner", "mcommoner"), TRUE)
+v_heir   <- find_col(c("mheir", "marriedheir"), TRUE)
+v_down   <- find_col(c("fdown", "mdown", "down"))
+v_cel    <- find_col(c("celibacy", "nevermarried", "never_married"))
+v_dist   <- find_col(c("distlondon", "dist_london"))
+v_base   <- find_col(c("base_sample", "sample0"))
+v_byear  <- find_col(c("byear", "birthyear", "yob"), TRUE)
+v_pr4    <- find_col(c("pr4", "hpr4", "dme"))
+v_eng    <- find_col(c("hengpee", "engpee", "english"))
+v_bio    <- find_col(c("biorder", "birthorder"))
+v_crank  <- find_col(c("crank", "rank_acres", "prank_acres"))
+v_cranks <- find_col(c("crankspo", "crank_spo", "rankspo_acres"))
+v_age61  <- find_col(c("age1861", "age_1861"))
+v_fa     <- find_col(c("fatotal"))
+v_fas    <- find_col(c("fatotalspo", "fatotal_spo", "spofatotal"))
+
+cat("Variables:", v_T, v_com, v_heir, v_down, v_cel, v_dist, v_base, v_byear,
+    v_pr4, v_eng, v_bio, v_crank, v_cranks, v_age61, v_fa, v_fas, "\n")
+
+df$T  <- num(df[[v_T]])
+df$by <- num(df[[v_byear]])
+if (!is.na(v_age61)) df$age61 <- num(df[[v_age61]]) else df$age61 <- 1861 - df$by
+
+# Controls
+if (is.na(v_pr4)) {
+  v_rank <- find_col(c("prank", "rank"))
+  if (!is.na(v_rank)) {
+    r <- df[[v_rank]]
+    if (is.numeric(r)) df$pr4 <- as.numeric(r <= 3) else
+      df$pr4 <- as.numeric(grepl("duke|marquess|earl", tolower(as.character(r))))
+  } else df$pr4 <- 0
+} else df$pr4 <- num(df[[v_pr4]])
+if (is.na(v_eng)) {
+  v_pe <- find_col(c("peerage"))
+  df$eng <- if (!is.na(v_pe)) as.numeric(grepl("^e|engl", tolower(as.character(df[[v_pe]])))) else 0
+} else df$eng <- num(df[[v_eng]])
+df$bio <- if (!is.na(v_bio)) num(df[[v_bio]]) else 0
+df$dist <- if (!is.na(v_dist)) num(df[[v_dist]]) else NA_real_
+
+df$com  <- num(df[[v_com]])
+df$heir <- num(df[[v_heir]])
+df$cel  <- if (!is.na(v_cel)) num(df[[v_cel]]) else NA_real_
+df$down_raw <- if (!is.na(v_down)) num(df[[v_down]]) else NA_real_
+
+ctrl_ok <- !is.na(df$T) & !is.na(df$pr4) & !is.na(df$eng) & !is.na(df$bio) & !is.na(df$by)
+
+# ---- Samples ----
+base_flag <- if (!is.na(v_base)) num(df[[v_base]]) == 1 else (df$age61 >= 15 & df$age61 <= 35)
+base_flag[is.na(base_flag)] <- FALSE
+s_base <- base_flag & ctrl_ok & !is.na(df$com) & !is.na(df$heir)
+
+# Landholdings ranks (percentile)
+wr <- if (!is.na(v_crank)) num(df[[v_crank]]) else rep(NA_real_, nrow(df))
+hr <- if (!is.na(v_cranks)) num(df[[v_cranks]]) else rep(NA_real_, nrow(df))
+fa  <- if (!is.na(v_fa))  num(df[[v_fa]])  else rep(NA_real_, nrow(df))
+fas <- if (!is.na(v_fas)) num(df[[v_fas]]) else rep(NA_real_, nrow(df))
+cat("Summary crank (base):\n"); print(summary(wr[s_base]))
+cat("Summary crankspo (base):\n"); print(summary(hr[s_base]))
+cat("Summary fatotal (base):\n"); print(summary(fa[s_base]))
+cat("Summary fatotalspo (base):\n"); print(summary(fas[s_base]))
+
+# Landholdings sample: couples where Bateman lists both spouses' families.
+# Married-down indicator is defined exactly on this sample (N = 324).
+land_both <- rep(FALSE, nrow(df))
+if (!is.na(v_down)) land_both <- !is.na(df$down_raw)
+if (!is.na(v_fa) && !is.na(v_fas) && sum(s_base & land_both) == 0) land_both <- !is.na(fa) & !is.na(fas) & fa > 0 & fas > 0
+land_both[is.na(land_both)] <- FALSE
+s_land <- s_base & land_both & !is.na(wr) & !is.na(hr)
+cat("Landholdings sample N =", sum(s_land), "\n")
+
+# Put ranks on a 0-100 percentile scale
+allr <- c(wr[s_land], hr[s_land])
+q <- quantile(allr, 0.95, na.rm = TRUE)
+mx <- max(allr, na.rm = TRUE)
+if (is.finite(mx) && mx <= 1.0001) {
+  wr <- 100 * wr; hr <- 100 * hr
+  cat("Ranks on [0,1] scale: multiplied by 100\n")
+} else if (is.finite(mx) && mx > 100.0001) {
+  Fn <- ecdf(allr[!is.na(allr)])
+  wr <- ifelse(is.na(wr), NA, 100 * Fn(wr)); hr <- ifelse(is.na(hr), NA, 100 * Fn(hr))
+  cat("DEVIATION: Rank variables exceed 100; converted to percentile ranks within landholdings sample\n")
+}
+df$wrank <- wr; df$hrank <- hr
+df$diff_hw  <- df$hrank - df$wrank
+df$diff_abs <- abs(df$diff_hw)
+df$down <- if (!is.na(v_down)) df$down_raw else as.numeric(df$hrank < df$wrank)
+cat("Summary diff_hw (land):\n"); print(summary(df$diff_hw[s_land]))
+
+# Celibacy sample: choose among candidate sample definitions
+cel_cands <- list()
+samp_vars <- grep("sample", nms, value = TRUE, ignore.case = TRUE)
+for (sv in samp_vars) {
+  x <- num(df[[sv]])
+  if (all(is.na(x))) next
+  if (all(x[!is.na(x)] %in% c(0, 1))) {
+    f <- x == 1; f[is.na(f)] <- FALSE
+    cel_cands[[sv]] <- f & ctrl_ok & !is.na(df$cel)
+  }
+}
+cel_cands[["base_cel"]] <- base_flag & ctrl_ok & !is.na(df$cel)
+age_ok <- !is.na(df$age61) & df$age61 >= 15 & df$age61 <= 35
+cel_cands[["age_cel"]] <- age_ok & ctrl_ok & !is.na(df$cel) & !is.na(df$T)
+cand_n <- sapply(cel_cands, sum)
+print(cand_n)
+cand_n_valid <- cand_n[cand_n > 0]
+best <- names(cand_n_valid)[which.min(abs(cand_n_valid - 765))]
+s_cel <- cel_cands[[best]]
+cat("Celibacy sample definition:", best, "N =", sum(s_cel), "\n")
+
+# ---- Estimation helpers ----
+ame_probit <- function(y, d, ctrls) {
+  f <- as.formula(paste(y, "~ T +", paste(ctrls, collapse = " + ")))
+  m <- glm(f, data = d, family = binomial(link = "probit"))
+  b <- coef(m)
+  X <- model.matrix(m)
+  xb <- as.vector(X %*% b)
+  ame <- mean(dnorm(xb)) * b["T"]
+  V <- sandwich::vcovCL(m, cluster = d$by)
+  g <- sapply(seq_along(b), function(k) {
+    mean(-xb * dnorm(xb) * X[, k]) * b["T"] + ifelse(names(b)[k] == "T", mean(dnorm(xb)), 0)
+  })
+  se <- sqrt(as.numeric(t(g) %*% V %*% g))
+  cat(sprintf("Probit %s: AME=%.5f (SE %.5f), raw coef=%.5f, N=%d\n", y, ame, se, b["T"], nobs(m)))
+  list(ame = as.numeric(ame), se = se, n = nobs(m))
+}
+ols <- function(y, d, ctrls) {
+  f <- as.formula(paste(y, "~ T +", paste(ctrls, collapse = " + ")))
+  m <- lm(f, data = d)
+  V <- sandwich::vcovCL(m, cluster = d$by)
+  cat(sprintf("OLS %s: b=%.4f (SE %.4f), N=%d\n", y, coef(m)["T"], sqrt(V["T", "T"]), nobs(m)))
+  list(b = as.numeric(coef(m)["T"]), n = nobs(m))
+}
+
+ctrlA <- c("pr4", "eng", "bio")
+ctrlB <- c(ctrlA, "dist")
+
+dA  <- df[s_base, ]
+dAL <- df[s_land, ]
+dAC <- df[s_cel, ]
+dB  <- dA[!is.na(dA$dist), ]
+dBL <- dAL[!is.na(dAL$dist), ]
+
+cat("N base =", nrow(dA), "; N land =", nrow(dAL), "; N cel =", nrow(dAC), "\n")
+cat("N base B =", nrow(dB), "; N land B =", nrow(dBL), "\n")
+
+safe <- function(expr) tryCatch(expr, error = function(e) { cat("ERROR:", conditionMessage(e), "\n"); NULL })
+
+a1 <- safe(ame_probit("com", dA, ctrlA))
+a2 <- safe(ame_probit("heir", dA, ctrlA))
+a3 <- safe(ols("diff_abs", dAL, ctrlA))
+a4 <- safe(ols("diff_hw", dAL, ctrlA))
+a5 <- safe(ame_probit("down", dAL[!is.na(dAL$down), ], ctrlA))
+a6 <- safe(ame_probit("cel", dAC, ctrlA))
+b1 <- safe(ame_probit("com", dB, ctrlB))
+b2 <- safe(ame_probit("heir", dB, ctrlB))
+b3 <- safe(ols("diff_abs", dBL, ctrlB))
+b4 <- safe(ols("diff_hw", dBL, ctrlB))
+
+out <- function(name, val) {
+  if (!is.null(val) && length(val) == 1 && is.finite(val)) cat(sprintf("RESULT:%s=%.6f\n", name, val))
+}
+out("treatment_married_commoner_table2_panelA_col1", a1$ame)
+out("treatment_married_heir_table2_panelA_col2", a2$ame)
+out("treatment_landholdings_diff_abs_table2_panelA_col3", a3$b)
+out("treatment_landholdings_diff_husband_minus_wife_table2_panelA_col4", a4$b)
+out("treatment_married_down_table2_panelA_col5", a5$ame)
+out("treatment_never_married_table2_panelA_col6", a6$ame)
+out("treatment_married_commoner_table2_panelB_col1", b1$ame)
+out("treatment_married_heir_table2_panelB_col2", b2$ame)
+out("treatment_landholdings_diff_abs_table2_panelB_col3", b3$b)
+out("treatment_landholdings_diff_husband_minus_wife_table2_panelB_col4", b4$b)
+out("n_obs_table2_panelA_baseline", nrow(dA))
+out("n_obs_table2_panelA_landholdings", nrow(dAL))
+out("n_obs_table2_panelA_never_married", nrow(dAC))
+```
+
+## What the code produced
+  treatment_married_commoner_table2_panelA_col1 = 0.004534
+  treatment_married_heir_table2_panelA_col2 = -0.003631
+  treatment_landholdings_diff_abs_table2_panelA_col3 = 0.024883
+  treatment_landholdings_diff_husband_minus_wife_table2_panelA_col4 = -0.030032
+  treatment_married_down_table2_panelA_col5 = 0.008983
+  treatment_never_married_table2_panelA_col6 = 0.002085
+  treatment_married_commoner_table2_panelB_col1 = 0.006195
+  treatment_married_heir_table2_panelB_col2 = -0.004689
+  treatment_landholdings_diff_abs_table2_panelB_col3 = 0.02783
+  treatment_landholdings_diff_husband_minus_wife_table2_panelB_col4 = -0.034258
+  n_obs_table2_panelA_baseline = 644.0
+  n_obs_table2_panelA_landholdings = 324.0
+  n_obs_table2_panelA_never_married = 765.0
+
+## Last run's stdout (excerpt: first/last 3000 characters)
+```
+Loaded final-data.dta: 30414 rows, 360 cols
+Variables: syntheticT cOut mheir fdown celibacy distlondon base_sample byear pr4 hengpee biorder crank crankspo age1861 fatotal NA 
+Summary crank (base):
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+  1.000   6.000   6.000   6.444   7.000   7.000 
+Summary crankspo (base):
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max.     NAs 
+  0.000   1.000   1.000   3.068   6.000   7.000       1 
+Summary fatotal (base):
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max.     NAs 
+   2012    8294   15554   29672   33449 1358545     106 
+Summary fatotalspo (base):
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max.     NAs 
+     NA      NA      NA     NaN      NA      NA     644 
+Landholdings sample N = 324 
+Summary diff_hw (land):
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+ -6.000  -5.000  -2.000  -2.627   0.000   1.000 
+         base_sample marital_rates_sample             base_cel 
+                 644                  765                  644 
+             age_cel 
+                2512 
+Celibacy sample definition: marital_rates_sample N = 765 
+N base = 644 ; N land = 324 ; N cel = 765 
+N base B = 484 ; N land B = 260 
+Probit com: AME=0.00453 (SE 0.00208), raw coef=0.01280, N=644
+Probit heir: AME=-0.00363 (SE 0.00168), raw coef=-0.01172, N=644
+OLS diff_abs: b=0.0249 (SE 0.0121), N=324
+OLS diff_hw: b=-0.0300 (SE 0.0129), N=324
+Probit down: AME=0.00898 (SE 0.00264), raw coef=0.02425, N=324
+Probit cel: AME=0.00209 (SE 0.00165), raw coef=0.00713, N=765
+Probit com: AME=0.00620 (SE 0.00248), raw coef=0.01707, N=484
+Probit heir: AME=-0.00469 (SE 0.00184), raw coef=-0.01470, N=484
+OLS diff_abs: b=0.0278 (SE 0.0128), N=260
+OLS diff_hw: b=-0.0343 (SE 0.0136), N=260
+RESULT:treatment_married_commoner_table2_panelA_col1=0.004534
+RESULT:treatment_married_heir_table2_panelA_col2=-0.003631
+RESULT:treatment_landholdings_diff_abs_table2_panelA_col3=0.024883
+RESULT:treatment_landholdings_diff_husband_minus_wife_table2_panelA_col4=-0.030032
+RESULT:treatment_married_down_table2_panelA_col5=0.008983
+RESULT:treatment_never_married_table2_panelA_col6=0.002085
+RESULT:treatment_married_commoner_table2_panelB_col1=0.006195
+RESULT:treatment_married_heir_table2_panelB_col2=-0.004689
+RESULT:treatment_landholdings_diff_abs_table2_panelB_col3=0.027830
+RESULT:treatment_landholdings_diff_husband_minus_wife_table2_panelB_col4=-0.034258
+RESULT:n_obs_table2_panelA_baseline=644.000000
+RESULT:n_obs_table2_panelA_landholdings=324.000000
+RESULT:n_obs_table2_panelA_never_married=765.000000
+```
+
+## Claims still failing
+1. treatment_landholdings_diff_abs_table2_panelA_col3: paper claims 0.524 percentile ranks of family landholdings per percentage point of synthetic probability (coefficient), your code produced 0.024883, tolerance 0.374, gap 95.25% relative
+2. treatment_landholdings_diff_husband_minus_wife_table2_panelA_col4: paper claims -0.516 percentile ranks of family landholdings per percentage point of synthetic probability (coefficient), your code produced -0.030032, tolerance 0.436, gap 94.18% relative
+3. treatment_landholdings_diff_abs_table2_panelB_col3: paper claims 0.512 percentile ranks of family landholdings per percentage point of synthetic probability (coefficient), your code produced 0.02783, tolerance 0.416, gap 94.56% relative
+4. treatment_landholdings_diff_husband_minus_wife_table2_panelB_col4: paper claims -0.537 percentile ranks of family landholdings per percentage point of synthetic probability (coefficient), your code produced -0.034258, tolerance 0.4115, gap 93.62% relative
+
+## Previous attempts (oldest first)
+  Attempt 1: treatment_married_commoner_table2_panelA_col1=0.004534, treatment_married_heir_table2_panelA_col2=-0.003631, treatment_landholdings_diff_abs_table2_panelA_col3=0.006541, treatment_landholdings_diff_husband_minus_wife_table2_panelA_col4=-0.011089, treatment_married_down_table2_panelA_col5=0.008983, treatment_never_married_table2_panelA_col6=0.002085, treatment_married_commoner_table2_panelB_col1=0.006195, treatment_married_heir_table2_panelB_col2=-0.004689, treatment_landholdings_diff_abs_table2_panelB_col3=0.01004, treatment_landholdings_diff_husband_minus_wife_table2_panelB_col4=-0.013936, n_obs_table2_panelA_baseline=644.0, n_obs_table2_panelA_landholdings=643.0, n_obs_table2_panelA_never_married=765.0
+  Attempt 2: treatment_married_commoner_table2_panelA_col1=0.004534, treatment_married_heir_table2_panelA_col2=-0.003631, treatment_landholdings_diff_abs_table2_panelA_col3=0.024883, treatment_landholdings_diff_husband_minus_wife_table2_panelA_col4=-0.030032, treatment_married_down_table2_panelA_col5=0.008983, treatment_never_married_table2_panelA_col6=0.002085, treatment_married_commoner_table2_panelB_col1=0.006195, treatment_married_heir_table2_panelB_col2=-0.004689, treatment_landholdings_diff_abs_table2_panelB_col3=0.02783, treatment_landholdings_diff_husband_minus_wife_table2_panelB_col4=-0.034258, n_obs_table2_panelA_baseline=644.0, n_obs_table2_panelA_landholdings=324.0, n_obs_table2_panelA_never_married=765.0
+
+These attempts have already been tried.  Do not repeat a strategy
+that has already produced the same values.
+
+## Task
+Adjust the code minimally to close the gap on the failing claims.
+Prefer changes that align more closely with the paper's stated methodology:
+re-read the methodology summary above and check the model specification,
+covariate selection, fixed effects, clustering, and seed against what the
+paper actually specifies.  In econometrics papers, common gap-closers are:
+  - getting the cluster-robust SE right (vcovCL / cluster_var argument)
+  - matching the paper's exact fixed-effects structure
+  - using the same sample-restriction filters the paper applied
+  - matching the paper's weighting scheme (weights= argument)
+
+## Deviation reporting
+If you must change something the paper did NOT specify in order to close
+the gap, emit a ``DEVIATION:`` line via cat() describing the change:
+
+    cat('DEVIATION: Used HC1 robust SE because the paper does not specify but the default did not converge\n')
+
+## When to give up
+If after re-reading the methodology and the previous attempts you judge
+the gap cannot be closed without unreasonable deviation, return the SAME
+R CODE you were given, BYTE-FOR-BYTE unchanged.  The pipeline will record
+the claim as unreproducible.
+
+## Output convention (unchanged)
+Emit every metric as ``cat('RESULT:<name>=<value>\n')``.
+The dataset is a directory tree at '<repo>/.cache/datasets/goni_2022_assortative_matching_london_season.script-free' — see the file listing under Dataset Information.  Load the actual data file(s) by the exact paths listed there (readr::read_csv() for .csv, haven::read_dta() for Stata .dta, load() for .RData/.rda, which creates the objects listed for the file under exactly those names: use them, do not guess others; readRDS() for .rds).
+Installed packages (no network; nothing else can be installed): jsonlite, fixest, lfe, AER, ivreg, plm, estimatr, lme4, quantreg, car, sandwich, lmtest, clubSandwich, multiwayvcov, marginaleffects, MatchIt, optmatch, CBPS, WeightIt, cobalt, did, rdrobust, rddensity, Synth, modelsummary, stargazer, texreg, broom, tidyverse, dplyr, tidyr, readr, stringr, lubridate, data.table, haven, readxl, janitor, zoo, ggplot2, ggridges, ggrepel, gridExtra, cowplot, gtable, extrafont, sf, MASS, nnet, survival, splines, Matrix, boot, stats, utils.
+Prefer fixest for fixed effects, IV and clustered SEs; use the other installed packages where the paper's method calls for them.
+No network, no system().  set.seed(42).
+
+Output ONLY the R code — no explanation, no markdown fences.

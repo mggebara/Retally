@@ -1,0 +1,19 @@
+{
+  "schema": 1,
+  "entry_id": "goni-2022-assortative-matching-london-season",
+  "mode": "independent",
+  "run_id": "2026-11-10-c",
+  "reproducer": "claude-code",
+  "language": "r",
+  "final": {"script": "script.R", "stdout": "stdout.txt", "stderr": "stderr.txt", "exit_code": 0},
+  "attempts": [
+    {"dir": "attempt-1", "exit_code": 0, "kind": ""}
+  ],
+  "deviations": [
+    "Probit marginal effects are computed as average marginal effects (mean of phi(xb) times beta); the paper does not say whether its marginal effects are averaged or taken at the means."
+  ],
+  "notes": "attempt-1 was exploratory: it listed the variables and labels in data/final-data.dta and printed no RESULT lines. The final script uses data/final-data.dta only. Samples come from the built-in flags: base_sample==1 (N=644) for columns 1-5, and marital_rates_sample==1 (N=765) for column 6. The landholdings columns use the observations where fmissmatch, fmissmatch2 or fdown are not missing (N=324). Panel B adds distlondon, which drops women without a recorded seat (N=484 and 260). Treatment is syntheticT. Controls are pr4 (duke/marquess/earl daughter), hengpee (English peerage) and biorder (birth order excluding heirs). Outcomes: cOut, mheir, fmissmatch (absolute difference), fmissmatch2 (husband minus wife), fdown, and celibacy (never married). Columns 1, 2, 5 and 6 are probits with average marginal effects; columns 3 and 4 are OLS. Standard errors are clustered by birth year (byear). The bootstrap-t p-values were not reproduced because they are not claimed. No claim-comparison iterations were needed. All 13 values match the paper at its reported precision, and the printed standard errors and dependent-variable means also match Table 2.",
+  "files_read_outside_mount": [],
+  "started_at": "2026-11-10T05:29:44Z",
+  "finished_at": "2026-11-10T05:33:30Z"
+}

@@ -1,0 +1,25 @@
+{
+  "schema": 1,
+  "entry_id": "greenstone-2022-china-pollution-monitoring-automation",
+  "mode": "blind",
+  "run_id": "2026-11-10-c",
+  "reproducer": "claude-code",
+  "language": "r",
+  "final": {"script": "script.R", "stdout": "stdout.txt", "stderr": "stderr.txt", "exit_code": 0},
+  "attempts": [
+    {"dir": "attempt-1", "exit_code": 0, "kind": ""},
+    {"dir": "attempt-2", "exit_code": 1, "kind": "error"}
+  ],
+  "deviations": [
+    "RD estimates use R rdrobust 4.1.1 (local linear, triangular kernel, MSE-optimal common bandwidth 'mserd', cluster-robust by city via vce='hc0'+cluster which rdrobust maps to 'cr1', masspoints='off' to mimic the pre-2020 CCT (2014) implementation). Reported coefficient is the conventional estimate.",
+    "Covariate-adjusted RDs: outcome residualized once on the full sample (station FE + calendar-month FE + temperature, RH, precipitation, wind speed via fixest), then RD on residuals; wave/deadline subsamples reuse the full-sample residuals.",
+    "Monthly running variable (AOD, search) = calendar-month index minus the automation month (automation month coded 0, treated). Station-month weather = mean of daily station weather; city-month weather = mean over the city's stations. 13 cities list stations with different automation dates; for the city-level search RD the city's earliest automation month is used.",
+    "Search outcomes: monthly averages of the daily Baidu PC indices (pmmask, filter) from mask_filter_search.dta for the 123 sample cities.",
+    "RD Deadline sample (Panel A col 5) = phase-1 stations automated 2013-01-01 plus phase-2 stations automated 2014-01-01 (68 cities in the data vs 84 stated in the paper).",
+    "Event study: treated = all stations automated 2013-01-01 (242, incl. 24 phase-2 stations), control = stations automated 2014-01-01 (123), 2012-01-01..2013-12-31; bins by calendar month relative to Jan 2013; ref = Nov-Dec 2012. Matched sample: each treated station paired with its nearest (haversine) control station with replacement; control data duplicated once per pair. log(PM10) drops PM10 = 0 days."
+  ],
+  "notes": "Independent blind reproduction from the redacted paper text and the .dta files only (no author scripts, no result files opened). attempt-1: exploratory data inspection (no RESULT lines). attempt-2: exploratory full pipeline with RESULT printing disabled; crashed on a non-unique city automation-date merge in the search section (fixed). Final run computes all 13 quantities in ~15 s. Dates in the .dta files are Stata daily dates (origin 1960-01-01). No runs hung.",
+  "files_read_outside_mount": [],
+  "started_at": "2026-11-10T05:55:56Z",
+  "finished_at": "2026-11-10T06:01:30Z"
+}
