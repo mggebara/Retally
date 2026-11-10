@@ -215,6 +215,21 @@ ORIGINAL_SOFTWARE = {
     "douenne-2022-yellow-vests-carbon-tax": "R (+ Python)",
     # candidates-2026-11-06.json: "Stata (Table 2) + R (Tables 1, 3)".
     "molina-garzon-2022-decentralization-cooperation": "Stata + R",
+    # The twelve manual-package entries (ROADMAP 3.11): each entry's "Target language for
+    # regeneration" comment names a Stata original (Altindag adds R for appendix figures, Goñi
+    # ArcMap files for its maps; neither enters a pinned claim).
+    "altindag-2022-mental-health-costs-lockdowns": "Stata",
+    "ambuehl-2022-deliberative-competence-financial-choice": "Stata",
+    "balan-2022-local-elites-state-capacity": "Stata",
+    "bold-2022-market-access-quality-upgrading": "Stata",
+    "butera-2022-welfare-effects-shame-pride": "Stata",
+    "corno-2022-interaction-stereotypes-performance": "Stata",
+    "goni-2022-assortative-matching-london-season": "Stata",
+    "greenstone-2022-china-pollution-monitoring-automation": "Stata",
+    "lopez-2022-patient-demand-prescription-overuse": "Stata",
+    "saccardo-2023-demand-moral-commitment": "Stata",
+    "samek-2023-thank-you-calls-charitable-giving": "Stata",
+    "settele-2022-gender-wage-gap-beliefs-policy": "Stata",
 }
 
 JOURNALS = {
@@ -228,6 +243,11 @@ JOURNALS = {
     "The Economic Journal": "EJ",
     "Economic Journal": "EJ",
     "American Economic Journal: Economic Policy": "AEJ: Policy",
+    # The manual-package entries (ROADMAP 3.11).  Longest name wins, so "American Economic
+    # Journal: Applied Economics" is not read as "Economic Journal".
+    "American Economic Journal: Applied Economics": "AEJ: Applied",
+    "American Economic Review: Insights": "AER: Insights",
+    "American Economic Review": "AER",
 }
 
 
@@ -309,7 +329,21 @@ for _r in ROWS:
     assert _key not in CELL, f"duplicate cell {_key}"
     CELL[_key] = _r
 
-HOLDOUT = sorted(e.id for e in CATALOG.values() if e.split == "holdout" and not e.out_of_scope_reason)
+# The 24 evaluation papers of ROADMAP 3.2-3.10: every in-scope holdout entry whose package the
+# harness downloads.  The holdout entries with a manually placed package (``data_access: manual``;
+# ROADMAP 3.11) are a separate group, ``MANUAL_PACKAGE`` below, so that every 24-paper number is
+# unchanged by them.
+HOLDOUT = sorted(
+    e.id
+    for e in CATALOG.values()
+    if e.split == "holdout" and not e.out_of_scope_reason and e.dataset.data_access != "manual"
+)
+# The holdout entries with a manually placed package (ROADMAP 3.11).
+MANUAL_PACKAGE = sorted(
+    e.id
+    for e in CATALOG.values()
+    if e.split == "holdout" and not e.out_of_scope_reason and e.dataset.data_access == "manual"
+)
 DEV = sorted(e.id for e in CATALOG.values() if e.split == "dev" and not e.out_of_scope_reason)
 SEVEN = sorted({e for (rep, e, _m) in CELL if rep == P47 and e in HOLDOUT})
 API_FOUR = sorted({e for (rep, e, _m) in CELL if rep == P55})
@@ -419,6 +453,75 @@ for _r in load_rows(AGENT_RUN4_FILE):
     AGENT4[_key] = _r
 assert {e for e, _m in AGENT4} == set(HOLDOUT) and len(AGENT4) == len(HOLDOUT) * len(AGENT_RUN4_MODES)
 
+
+# ---------------------------------------------------------------------------
+# Manual-package papers (ROADMAP 3.11)
+# ---------------------------------------------------------------------------
+# Holdout entries whose openICPSR package a human placed by hand (``data_access: manual``).  They are
+# a separate group: never pooled with the 24 evaluation papers above, never in ``RAW``, ``CELL``, the
+# variance tables, the probe or the ROADMAP 3.5-3.7.3 checks.  Each measured paper has eight results
+# files: the frozen pipeline through the oracle in samples 1-3 (labels ``desktop-opus``, ``-run2``,
+# ``-run3``; all three modes) and 4 (``-run4``; independent and blind), and the agent in samples 1-2
+# (``claude-code``, ``-run2``; all three modes) and 3-4 (``-run3``, ``-run4``; independent and blind).
+# The Goñi files (I4R T3, the first paper run) carry no slug in their names.
+MANUAL_SLUGS = {
+    "goni-2022-assortative-matching-london-season": ("", "2026-11-09"),
+    "greenstone-2022-china-pollution-monitoring-automation": ("greenstone-", "2026-11-09"),
+    "settele-2022-gender-wage-gap-beliefs-policy": ("settele-", "2026-11-10"),
+    "lopez-2022-patient-demand-prescription-overuse": ("lopez-", "2026-11-10"),
+    "ambuehl-2022-deliberative-competence-financial-choice": ("ambuehl-", "2026-11-10"),
+    "saccardo-2023-demand-moral-commitment": ("saccardo-", "2026-11-10"),
+    "altindag-2022-mental-health-costs-lockdowns": ("altindag-", "2026-11-10"),
+    "bold-2022-market-access-quality-upgrading": ("bold-", "2026-11-10"),
+    "corno-2022-interaction-stereotypes-performance": ("corno-", "2026-11-10"),
+    "butera-2022-welfare-effects-shame-pride": ("butera-", "2026-11-10"),
+    "balan-2022-local-elites-state-capacity": ("balan-", "2026-11-10"),
+}
+# (system, sample) -> (file-name prefix, modes)
+MANUAL_SAMPLES = {
+    ("pipeline", 1): ("pipeline-oracle-desktop-opus-1paper-", MODES),
+    ("pipeline", 2): ("pipeline-oracle-desktop-opus-run2-1paper-", MODES),
+    ("pipeline", 3): ("pipeline-oracle-desktop-opus-run3-1paper-", MODES),
+    ("pipeline", 4): ("pipeline-oracle-desktop-opus-run4-1paper-", RUN4_MODES),
+    (AGENT, 1): ("claude-code-1paper-", MODES),
+    (AGENT, 2): ("claude-code-run2-1paper-", MODES),
+    (AGENT, 3): ("claude-code-run3-1paper-", AGENT_RUN3_MODES),
+    (AGENT, 4): ("claude-code-run4-1paper-", AGENT_RUN4_MODES),
+}
+MANUAL_LABELS = {1: "desktop-opus", 2: RUN2_LABEL, 3: RUN3_LABEL, 4: RUN4_LABEL}
+
+
+def manual_file(entry: str, system: str, sample: int) -> str:
+    slug, date = MANUAL_SLUGS[entry]
+    prefix, modes = MANUAL_SAMPLES[(system, sample)]
+    kind = "all-modes" if modes == MODES else "indep-blind"
+    return f"{prefix}{slug}{kind}-{date}.json"
+
+
+# (system, sample, entry, mode) -> row
+MANUAL: dict[tuple[str, int, str, str], dict[str, Any]] = {}
+for _e in MANUAL_SLUGS:
+    for (_sys, _smp), (_prefix, _modes) in MANUAL_SAMPLES.items():
+        _rows = load_rows(manual_file(_e, _sys, _smp))
+        assert sorted(metrics.mode_of(r) for r in _rows) == sorted(_modes), (_e, _sys, _smp)
+        for _r in _rows:
+            assert _r["entry_id"] == _e and _r.get("data_access") == "manual", _e
+            assert not _r.get("skipped") and not _r.get("error"), _e
+            if _sys == "pipeline":
+                assert metrics.reproducer_of(_r) == "pipeline" and metrics.model_of(_r) == MANUAL_LABELS[_smp]
+            else:
+                assert metrics.reproducer_of(_r) == AGENT
+            MANUAL[(_sys, _smp, _e, metrics.mode_of(_r))] = _r
+# The eleven measured manual-package papers, 21 cells each.
+MANUAL_ELEVEN = sorted(MANUAL_SLUGS)
+assert len(MANUAL_ELEVEN) == 11 and len(MANUAL) == 11 * 21
+assert set(MANUAL_ELEVEN) <= set(MANUAL_PACKAGE) and not set(MANUAL_PACKAGE) & set(HOLDOUT)
+# Curated but not measured on main (ROADMAP 3.11: samek-2023, pending).
+MANUAL_PENDING = sorted(set(MANUAL_PACKAGE) - set(MANUAL_ELEVEN))
+# Every results file of the eleven papers, so the count the prose quotes comes from the table.
+MANUAL_FILES = sorted({manual_file(e, s, n) for e in MANUAL_ELEVEN for (s, n) in MANUAL_SAMPLES})
+assert len(MANUAL_FILES) == 88 and all((RESULTS / f).exists() for f in MANUAL_FILES)
+
 PROBE_ROWS = sorted(load_rows(PROBE_FILE), key=lambda r: r["entry_id"])
 assert {r["entry_id"] for r in PROBE_ROWS} == set(TWENTY_THREE) and len(PROBE_ROWS) == len(TWENTY_THREE)
 PROBE_ROWS_13 = [r for r in PROBE_ROWS if r["entry_id"] in THIRTEEN]
@@ -490,7 +593,12 @@ def t_catalog() -> str:
         software = software.split(" (")[0].replace(" + R calibration", " (+ R)")
         n_se = sum(1 for c in e.original_claims if c.standard_error is not None)
         n_i4r = sum(1 for f in e.i4r_replicator_findings if f.reproduced_value is not None)
-        split = "out of scope" if e.out_of_scope_reason else ("evaluation" if e.split == "holdout" else "dev")
+        if e.out_of_scope_reason:
+            split = "out of scope"
+        elif eid in MANUAL_PACKAGE:
+            split = "manual package" + (" (pending)" if eid in MANUAL_PENDING else "")
+        else:
+            split = "evaluation" if e.split == "holdout" else "dev"
         out.append(
             [
                 f"`{short(eid)}`",
@@ -507,20 +615,38 @@ def t_catalog() -> str:
             ]
         )
     in_scope = [e for e in CATALOG.values() if not e.out_of_scope_reason]
-    ev = [e for e in in_scope if e.split == "holdout"]
+    ev = [CATALOG[e] for e in HOLDOUT]
     dv = [e for e in in_scope if e.split == "dev"]
-    n_i4r_total = sum(
-        1 for e in in_scope for f in e.i4r_replicator_findings if f.reproduced_value is not None
-    )
+    mp = [CATALOG[e] for e in MANUAL_PACKAGE]
+    m11 = [CATALOG[e] for e in MANUAL_ELEVEN]
+    assert len(ev) + len(dv) + len(mp) == len(in_scope)
+
+    def n_se(es: list[Any]) -> int:
+        return sum(1 for e in es for c in e.original_claims if c.standard_error is not None)
+
+    def n_claims(es: list[Any]) -> int:
+        return sum(len(e.original_claims) for e in es)
+
+    def n_i4r(es: list[Any]) -> int:
+        return sum(1 for e in es for f in e.i4r_replicator_findings if f.reproduced_value is not None)
+
+    core = ev + dv
     summary = (
         f"Catalog entries: {len(CATALOG)}; in scope: {len(in_scope)} "
-        f"({len(dv)} dev, {len(ev)} evaluation).  Pinned claims: "
-        f"{sum(len(e.original_claims) for e in ev)} on the evaluation papers, "
-        f"{sum(len(e.original_claims) for e in dv)} on the dev papers.  "
-        f"Claims with a pinned standard error: "
-        f"{sum(1 for e in in_scope for c in e.original_claims if c.standard_error is not None)} of "
-        f"{sum(len(e.original_claims) for e in in_scope)}.  "
-        f"Claims with an I4R replicator value: {n_i4r_total}.\n\n"
+        f"({len(dv)} dev, {len(ev)} evaluation, {len(mp)} manual-package).  Pinned claims: "
+        f"{n_claims(ev)} on the evaluation papers, "
+        f"{n_claims(dv)} on the dev papers.  "
+        f"Claims with a pinned standard error: {n_se(core)} of {n_claims(core)}.  "
+        f"Claims with an I4R replicator value: {n_i4r(core)}.\n\n"
+        f"The {len(mp)} *manual-package* entries are holdout papers whose openICPSR package a human "
+        "placed by hand (`data_access: manual`; ROADMAP 3.11).  They are reported as a separate group "
+        "and are not counted in the evaluation, dev or totals figures above.  They carry "
+        f"{n_claims(mp)} pinned claims ({n_se(mp)} with a standard error, {n_i4r(mp)} with an I4R "
+        f"replicator value); the {len(m11)} measured so far carry {n_claims(m11)}."
+        + "".join(
+            f"  `{short(e)}` is curated but not yet measured on main (ROADMAP 3.11)." for e in MANUAL_PENDING
+        )
+        + "\n\n"
     )
     oos = "".join(
         f"- `{short(e.id)}` is out of scope: {e.out_of_scope_reason}.\n"
@@ -557,12 +683,114 @@ def t_headline() -> str:
     ]
     for rep, entries, label in groups:
         out.append([DISPLAY[rep], label] + [frac(rep, entries, m) for m in MODES])
+    label = f"{len(MANUAL_ELEVEN)} manual-package (3.11), separate"
+    out.append([DISPLAY[ORC], label] + [manual_frac("pipeline", 1, m) for m in MODES])
+    out.append([DISPLAY[AGENT], label] + [manual_frac(AGENT, 1, m) for m in MODES])
     return (
         "Claims within tolerance of the paper's printed value, summed over papers; first-scored "
         "count in parentheses.  One run per cell (the first sample of each system).  Rows marked 13 "
         "cover the evaluation papers of ROADMAP 3.2–3.5; rows marked 17 add the four papers of "
         "ROADMAP 3.6; rows marked 23 add the six papers of ROADMAP 3.7; rows marked 24 add the paper "
-        "curated under rule R7 (ROADMAP 3.9).\n\n" + table(hdr, out, ["l", "l", "r", "r", "r"])
+        "curated under rule R7 (ROADMAP 3.9).  The two rows marked *manual-package* are the eleven "
+        "papers of ROADMAP 3.11, whose packages were placed by hand; they are a separate group, not "
+        "part of any evaluation total (Section 4.10).\n\n" + table(hdr, out, ["l", "l", "r", "r", "r"])
+    )
+
+
+# ---------------------------------------------------------------------------
+# Manual-package tables (ROADMAP 3.11)
+# ---------------------------------------------------------------------------
+
+
+def manual_samples(system: str, mode: str) -> list[int]:
+    return [n for (s, n), (_p, modes) in MANUAL_SAMPLES.items() if s == system and mode in modes]
+
+
+def manual_sum(
+    system: str, sample: int, mode: str, entries: list[str] | None = None
+) -> tuple[int, int, int, int]:
+    """(paper matches, claims, first-scored matches, I4R matches) summed over the manual papers."""
+    rs = [MANUAL[(system, sample, e, mode)] for e in (entries or MANUAL_ELEVEN)]
+    fss = [fs(r) for r in rs]
+    assert all(v is not None for v in fss)
+    return (
+        sum(passed(r) for r in rs),
+        sum(total(r) for r in rs),
+        sum(v for v in fss if v is not None),
+        sum(int(r.get("n_claims_with_i4r_match") or 0) for r in rs),
+    )
+
+
+def manual_frac(system: str, sample: int, mode: str) -> str:
+    p, n, f, _i = manual_sum(system, sample, mode)
+    return f"{p} / {n} ({f})"
+
+
+def t_manual_package() -> str:
+    hdr = ["Mode", "System", "Sample 1", "Sample 2", "Sample 3", "Sample 4", "Cells matching every claim"]
+    out = []
+    for m in MODES:
+        for system, name in (("pipeline", "Pipeline (oracle)"), (AGENT, "Agent")):
+            row: list[Any] = [m, name]
+            full = []
+            for n in (1, 2, 3, 4):
+                if n not in manual_samples(system, m):
+                    row.append("—")
+                    continue
+                p, c, f, i = manual_sum(system, n, m)
+                row.append(f"{p} / {c} ({f}; I4R {i})")
+                full.append(
+                    str(
+                        sum(
+                            1
+                            for e in MANUAL_ELEVEN
+                            if passed(MANUAL[(system, n, e, m)]) == total(MANUAL[(system, n, e, m)])
+                        )
+                    )
+                )
+            row.append(", ".join(full))
+            out.append(row)
+    gaps = []
+    for m in MODES:
+        diffs = [
+            manual_sum(AGENT, a, m)[0] - manual_sum("pipeline", p, m)[0]
+            for a in manual_samples(AGENT, m)
+            for p in manual_samples("pipeline", m)
+        ]
+        gaps.append([m, f"{min(diffs)} to {max(diffs)}", len(diffs)])
+    n_claims = manual_sum("pipeline", 1, "seeded")[1]
+    return (
+        f"The {len(MANUAL_ELEVEN)} manual-package papers of ROADMAP 3.11 ({n_claims} pinned claims), "
+        f"from {len(MANUAL_FILES)} results files, {len(MANUAL)} cells.  A separate group: none of these "
+        "numbers enters a 24-paper total.  Each cell is claims within tolerance of the paper's printed "
+        "value, summed over the eleven papers (first scored; claims within tolerance of the I4R "
+        "replicator's value).  Pipeline samples 1–4 are the frozen pipeline through the oracle (labels "
+        "`desktop-opus`, `-run2`, `-run3`, `-run4`); agent samples 1–4 are Claude Code runs a–d.  "
+        "Seeded mode has three pipeline samples and two agent samples.  The last column counts the papers "
+        "whose cell matched every claim, sample by sample.\n\n"
+        + table(hdr, out, ["l", "l", "r", "r", "r", "r", "r"])
+        + "\nAgent minus pipeline, paper matches, over every pairing of an agent sample with a pipeline "
+        "sample (number of pairings in the last column):\n\n"
+        + table(["Mode", "Range", "Pairings"], gaps, ["l", "r", "r"])
+    )
+
+
+def t_manual_package_cells() -> str:
+    hdr = ["Paper", "Claims", "Mode", "Pipeline (samples 1–4)", "Agent (samples 1–4)"]
+    out = []
+    for e in MANUAL_ELEVEN:
+        for m in MODES:
+            cells = {
+                s: ", ".join(str(passed(MANUAL[(s, n, e, m)])) for n in manual_samples(s, m))
+                for s in ("pipeline", AGENT)
+            }
+            out.append(
+                [f"`{short(e)}`", total(MANUAL[("pipeline", 1, e, m)]), m, cells["pipeline"], cells[AGENT]]
+            )
+    return (
+        "Claims within tolerance of the paper's printed value per paper, mode and sample, for the "
+        "manual-package papers of ROADMAP 3.11.  Seeded mode has three pipeline samples and two agent "
+        "samples.\n\n" + table(hdr, out, ["l", "r", "l", "l", "l"])
     )
 
 
@@ -3300,6 +3528,65 @@ def t_consistency_claims() -> str:
     )
 
 
+def _roadmap_311_checks() -> list[tuple[str, str, str, str, str]]:
+    """ROADMAP 3.11: every cell of the per-paper table and every total of the totals table."""
+    text = (REPO / "ROADMAP.md").read_text()
+    sec = text.split("\n### 3.11")[1].split("\n---\n")[0]
+    by_name = {short(e).split("-")[0]: e for e in MANUAL_ELEVEN}
+    out: list[tuple[str, str, str, str, str]] = []
+    cell_pat = re.compile(
+        r"^\| ([A-Za-z]+) \| (\d+) \| (seeded|independent|blind) \| ([\d, ]+) \| ([\d, ]+) \|$"
+    )
+    n_cells = 0
+    for line in sec.splitlines():
+        m = cell_pat.match(line.strip())
+        if not m:
+            continue
+        name, n, mode, pq, aq = m.groups()
+        e = by_name[name.lower()]
+        out.append(("3.11", f"{name} claims", mode, n, str(total(MANUAL[("pipeline", 1, e, mode)]))))
+        for system, quoted in (("pipeline", pq), (AGENT, aq)):
+            got = ", ".join(str(passed(MANUAL[(system, s, e, mode)])) for s in manual_samples(system, mode))
+            out.append(("3.11", f"{name}, {system}", mode, quoted, got))
+        n_cells += 1
+    assert n_cells == len(MANUAL_ELEVEN) * len(MODES), n_cells
+    tot_pat = re.compile(r"^\| (seeded|independent|blind) \| (.+) \| ([\d−-]+ to [\d−-]+) \((\d+)\) \|$")
+    n_tot = 0
+    for line in sec.splitlines():
+        m = tot_pat.match(line.strip())
+        if not m:
+            continue
+        mode, body, rng, npair = m.groups()
+        quoted = [c.strip() for c in body.split("|")]
+        got = []
+        for system in ("pipeline", AGENT):
+            for s in (1, 2, 3, 4):
+                if s in manual_samples(system, mode):
+                    p, _n, f, _i = manual_sum(system, s, mode)
+                    got.append(f"{p} ({f})")
+                else:
+                    got.append("—")
+        for i, (q, g) in enumerate(zip(quoted, got, strict=True)):
+            out.append(("3.11", "11-paper total", f"{mode}, column {i + 1}", q, g))
+        diffs = [
+            manual_sum(AGENT, a, mode)[0] - manual_sum("pipeline", p, mode)[0]
+            for a in manual_samples(AGENT, mode)
+            for p in manual_samples("pipeline", mode)
+        ]
+        out.append(
+            (
+                "3.11",
+                "11-paper gap range",
+                mode,
+                f"{rng} ({npair})",
+                f"{min(diffs)} to {max(diffs)} ({len(diffs)})",
+            )
+        )
+        n_tot += 1
+    assert n_tot == len(MODES), n_tot
+    return out
+
+
 def t_discrepancies() -> str:
     checks = (
         _roadmap_35_cells()
@@ -3309,15 +3596,17 @@ def t_discrepancies() -> str:
         + _roadmap_371_checks()
         + _roadmap_372_checks()
         + _roadmap_373_checks()
+        + _roadmap_311_checks()
     )
     bad = [c for c in checks if c[3] != c[4]]
     rows = [[f"ROADMAP {sec}", what, item, quoted, recomputed] for sec, what, item, quoted, recomputed in bad]
     return (
-        f"{len(checks)} numbers quoted in ROADMAP 3.2–3.7.3 (including the 3.5 variance pass, the "
+        f"{len(checks)} numbers quoted in ROADMAP 3.2–3.7.3 and 3.11 (including the 3.5 variance pass, the "
         "agent's second sample, the memorization probe, the four papers of 3.6, the six papers "
         "and two-sample ranges of 3.7, the pipeline's second sample and 23-paper ranges of "
-        "3.7.1, the agent's seeded second sample and four-pairing ranges of 3.7.2, and the "
-        "agent's third independent and blind sample and six-pairing ranges of 3.7.3) were "
+        "3.7.1, the agent's seeded second sample and four-pairing ranges of 3.7.2, the "
+        "agent's third independent and blind sample and six-pairing ranges of 3.7.3, and the "
+        "per-paper counts, totals and pairing ranges of the eleven manual-package papers of 3.11) were "
         "recomputed from the results files; "
         f"{len(bad)} differ.\n\n"
         + (
@@ -3349,6 +3638,8 @@ TABLES = {
     "probe": t_probe,
     "probe_hits": t_probe_hits,
     "cost": t_cost,
+    "manual_package": t_manual_package,
+    "manual_package_cells": t_manual_package_cells,
     "dates": t_dates,
     "taxonomy": t_taxonomy,
     "consistency_claims": t_consistency_claims,

@@ -713,7 +713,12 @@ benchmark/evidence/
   label `desktop-opus-run4`, and
   `claude-code-run4-24papers-indep-blind-2026-11-08.json`, run
   `2026-11-07-a`; ROADMAP 3.10, 96 cells), rebuilt from all 31 results
-  files; `INDEX.md` now lists 625 cells on the 24 evaluation papers.
+  files, 625 cells on the 24 evaluation papers.  The eleven
+  manual-package papers of ROADMAP 3.11 (Goñi, Greenstone, Settele,
+  López, Ambuehl, Saccardo, Altindag, Bold, Corno, Butera, Balán; 21
+  cells each from eight results files per paper) were added paper by
+  paper as their results merged (PRs #150 and #158 to #162), so
+  `INDEX.md` now lists 856 cells on 35 papers.
 
 ## Plugging in another agent
 
