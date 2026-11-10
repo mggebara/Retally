@@ -1,0 +1,483 @@
+# Original paper: Settele, S. (2022). "How Do Beliefs about the Gender
+#   Wage Gap Affect the Demand for Public Policy?" American Economic
+#   Journal: Economic Policy, 14(2), 475-508.  doi:10.1257/pol.20200559
+#   (May 2022 issue; Crossref created 2022-04-29, issued 2022-05-01).
+#
+# Reproduction report: Engel, J. F., Huber, C., & Nüß, P. (2022).
+#   "Replication Report: How Do Beliefs About the Gender Wage Gap Affect
+#   the Demand for Public Policy?" I4R Discussion Paper No. 12 (December
+#   2022, report dated November 16, 2022; EconStor hdl:10419/267007; I4R
+#   First Meta Database, 117 rows under the paper title, one of them
+#   empty).  Verdict: reproducible — Section 2: "Following an adjustment
+#   of the working directory in the master do file the code runs and
+#   delivers the reported point estimates", and the abstract: "Our
+#   re-coded replication shows that the reported results are robust."
+#   The DB's best_describe_compreprod agrees ("Analysis and cleaning code
+#   produce the same output as presented in the paper"); result_same is
+#   blank and coding_correction is "Not done by replicators" on every
+#   row.  The DP's printed comparison is NOT the authors' code: the team
+#   re-coded the cleaning and analysis from the raw survey files (DP
+#   Sec. 2-3) and prints the paper's value (column "(1)") beside its own
+#   ("(1R)") for Tables 3, 4, 5 (Panel A col 2 and Panel C) and 6.  Two
+#   deliberate departures make some of its columns different
+#   specifications: every summary index is a simple average of the items
+#   (Kling et al. 2007) instead of Anderson's (2008) inverse-covariance
+#   weighting, and household income is used as reported rather than via
+#   the income brackets.  The meta database's r_coeff_dbl is that
+#   "(1R)" column.  Its large gaps (Democrat in Table 6 0.678 vs 0.118,
+#   0.554 vs 6.467) are the team's own Democrat coding in the follow-up
+#   data; the index gaps (0.669 vs 0.904) are the different index.
+#   Found from the candidates file (corpus/candidates-2026-11-07.md, row
+#   T37) and the DB's replication_link.
+#
+# Why this paper:
+#   1. A survey experiment with an information treatment and a 2SLS
+#      scaling (posterior beliefs instrumented by the randomly assigned
+#      treatment), plus OLS correlations in the pure control group.
+#   2. The package ships RAW LimeSurvey exports (answer codes as strings),
+#      so every number needs the full cleaning chain: coding answers,
+#      z-scoring on the pure control group, Anderson (2008) summary
+#      indices, probability weights, percentile trimming of priors.
+#   3. A manually placed openICPSR package (data_access: manual) of 1.3 GB
+#      zipped / 6.1 GB unpacked, almost all of it an IPUMS ACS extract the
+#      pinned tables never use.
+#
+# What original_claims pins: Table 3 (correlates of perceptions, pure
+#   control group) Perception Index column: Democrat and Female (Panel A)
+#   and the prior (Panel B), plus the column N; Table 4 Policy demand
+#   index column: Democrat (Panel A) and prior (Panel B); Table 5 Panel A
+#   first stage (posterior belief raw and z-scored, perception index),
+#   Panel C 2SLS for statutory affirmative action, equal pay legislation
+#   and the policy demand index; Table 6 Panel A perception index in the
+#   follow-up survey.  13 claims, values exactly as printed (3 decimals).
+#
+# Paper text: the published article is paywalled.  The source is the
+#   author's ECONtribute Discussion Paper 179 (July 22, 2022, after the
+#   journal issue), whose Tables 3-6 equal the published values cell for
+#   cell: checked against the 116 non-empty meta-database rows (each
+#   o_coeff_dbl / o_std_err_dbl matched to the same table, panel, row and
+#   column) and against DP12's "(1)" columns.  See notes.
+
+id: settele-2022-gender-wage-gap-beliefs-policy
+i4r_report_url: https://www.econstor.eu/bitstream/10419/267007/1/I4R-DP012.pdf
+# Target language for regeneration (the original is Stata 14+ with
+# ivreg2, esttab, zscore and minq ado files; Retally generates R and
+# reads the .dta files with haven).
+language: r
+outcome_label: reproducible
+# Pipeline tuning is frozen; this is an evaluation paper.
+split: holdout
+# Contamination bookkeeping.  publication_date is the FIRST public
+# version: SSRN 3382325 (Crossref posted-content record created
+# 2019-06-03; the SSRN page answers 403 to scripts), then SSRN 3490663
+# (created 2019-12-07) and CEBI Working Paper 13/19 (November 2019, found
+# by web search 2026-11-09).  The journal version: Crossref issued
+# 2022-05-01 (created 2022-04-29).  package_release_date is the DataCite
+# registration of doi:10.3886/E134041V1 (registered 2022-04-22T15:38:41Z,
+# DataCite API 2026-11-09); the openICPSR page itself needs a login.  The
+# package's README is dated March 2021 and All.log was opened 2 Jul 2021.
+publication_date: "2019-06"
+package_release_date: "2022-04-22"
+
+paper:
+  # ECONtribute Discussion Paper No. 179 (July 2022), open PDF; checked
+  # 2026-11-09: 200 application/pdf, 7,774,809 bytes, 192 pp. (paper,
+  # main tables pp. 43-52, online appendix).  Title page "July 22, 2022";
+  # PDF CreationDate 2022-07-22.
+  source: https://www.econtribute.de/RePEc/ajk/ajkdps/ECONtribute_179_2022.pdf
+  title: "How Do Beliefs About the Gender Wage Gap Affect the Demand for Public Policy?"
+  authors:
+    - Sonja Settele
+
+dataset:
+  source: benchmark/manual-packages/T37/134041-V1.zip
+  data_access: manual
+  access_notes: >
+    AEA Data and Code Repository on openICPSR, project 134041, version V1
+    (doi:10.3886/E134041V1); login and terms-of-use click-through required,
+    so the zip was downloaded by hand (2026-11-09) and placed unchanged at
+    benchmark/manual-packages/T37/134041-V1.zip (1,320,832,549 bytes, md5
+    00976b1cd8efa1e3d979370f5027daf3; SOURCE.txt beside it).  V1 is the
+    only version.  55 zip entries (50 files), 6.13 GB uncompressed, all
+    deflate, no nested archives.  Contents: "Read Me.pdf" (3 pp.; file
+    list, data sources, run order, no estimates); All.log (2.3 MB, the
+    full Stata log of the master run, every table); data/ with the four
+    raw LimeSurvey exports as Stata .dta (SurveyStageI_WaveA_raw.dta 7.2
+    MB, SurveyStageI_WaveB_raw.dta 4.1 MB, SurveyStageII_WaveA_raw.dta
+    and SurveyStageII_WaveB_raw.dta, 0.1-0.2 MB; answers stored as codes
+    such as "A1"), four Stata codebook logs for them
+    (Codebook_*_raw.log), usa_00025.dta (5.94 GB, IPUMS ACS extract) and
+    cps_00004.dta (170 MB, IPUMS CPS extract) with acs_codebook.txt and
+    cps_codebook.txt; dofiles/ with 11 Stata do-files (master, treatment
+    values, four cleaning files, main / appendix figures and tables,
+    in-text results); ado/ with 17 .ado files, wyoung.sthlp and
+    scheme-lean2.scheme; output/Display_Output.pdf (35 pp., every main
+    and appendix table and figure as compiled) and Display_Output.tex
+    (the LaTeX wrapper that \input's the table files, which are not
+    shipped; no estimates); surveys/ with the four LimeSurvey .lss survey
+    definitions.  The ACS and CPS extracts serve only
+    02_Generate_Treatment_Values.do (the two information-treatment wage
+    statistics); no pinned claim needs them.  The script-free copy
+    (independent / blind) withholds 34 files (benchmark.strip_rule
+    .classify_tree on the extracted package, 2026-11-09): 11 .do, 17 .ado,
+    All.log and the four codebook .log files by suffix, and
+    Display_Output.pdf by content (regression-table pages).  Kept: Read
+    Me.pdf, the six .dta files, the two codebook .txt, the .lss surveys,
+    Display_Output.tex, wyoung.sthlp and the .scheme file, none of which
+    prints a pinned value.  Project page:
+    https://www.openicpsr.org/openicpsr/project/134041/version/V1/view
+
+original_claims:
+  # ---- Table 3: correlates of perceptions (pure control group) ----
+  - description: perception_index_democrat_table3_panelA_col4
+    value: 0.691
+    claim_type: coefficient
+    standard_error: 0.066
+    unit: standard deviations of the perception index
+    location: "Table 3, Panel A, Democrat, column (4) Perception Index"
+    context: >
+      Table 3 ("Correlates of perceptions"), Panel A, column (4).  OLS of
+      the perception summary index on a Democrat indicator (Democrats
+      include Independents leaning Democrat), a Female indicator,
+      indicators for Independent and "other" political orientation
+      (Republicans, incl. Independents leaning Republican, are the
+      reference) and a dummy for survey wave B.  The index combines the
+      three perception items of columns (1)-(3) (gender differences in
+      wages are large, are a problem, government should mitigate the gap),
+      each z-scored on the pure control group, following Anderson (2008).
+      Sample: the pure control group of the main survey (no information),
+      both waves, restricted to respondents whose prior belief about
+      females' relative wages lies strictly between the 5th and 95th
+      percentiles.  Probability weights; robust standard errors.  The
+      entry is the Democrat coefficient.
+  - description: perception_index_female_table3_panelA_col4
+    value: 0.181
+    claim_type: coefficient
+    standard_error: 0.057
+    unit: standard deviations of the perception index
+    location: "Table 3, Panel A, Female, column (4) Perception Index"
+    context: >
+      Table 3, Panel A, column (4): the same regression of the perception
+      index on Democrat, Female, Independent, "other" political
+      orientation and a wave B dummy in the trimmed pure control group;
+      the entry is the Female coefficient.  Probability weights; robust
+      standard errors.
+  - description: perception_index_prior_table3_panelB_col4
+    value: -0.729
+    claim_type: coefficient
+    standard_error: 0.065
+    unit: standard deviations of the perception index per standard deviation of the prior
+    location: "Table 3, Panel B, Prior (z-scored), column (4) Perception Index"
+    context: >
+      Table 3, Panel B, column (4): OLS of the perception index on the
+      respondent's prior belief about females' relative wages (a woman's
+      average wage for every $100 made by a man when both are 45-year-old
+      employees with a Bachelor's degree working 40 hours per week),
+      z-scored within the pure control group, and a wave B dummy.  Same
+      trimmed pure control group sample, probability weights and robust
+      standard errors.
+  - description: n_obs_table3
+    value: 921
+    claim_type: count
+    unit: respondents
+    location: "Table 3, Observations (all columns)"
+    context: >
+      Number of observations in Table 3 (every column): pure control
+      group respondents of both main-survey waves whose prior belief lies
+      strictly between the 5th and 95th percentiles of the control
+      group's prior distribution.
+
+  # ---- Table 4: correlates of demand for specific policies ----
+  - description: policy_demand_index_democrat_table4_panelA_col7
+    value: 0.669
+    claim_type: coefficient
+    standard_error: 0.051
+    unit: standard deviations of the policy demand index
+    location: "Table 4, Panel A, Democrat, column (7) Policy demand index"
+    context: >
+      Table 4 ("Correlates of demand for specific policies"), Panel A,
+      column (7).  OLS of the policy demand summary index (Anderson 2008)
+      over the six specific policies of columns (1)-(6) (gender quotas for
+      leading positions, statutory affirmative action, stricter equal pay
+      legislation, wage transparency within companies (wave A) or a
+      reporting website for company wage statistics (wave B), subsidies
+      to child care), each z-scored on the pure control group, on
+      Democrat, Female, Independent and "other" political orientation and
+      a wave B dummy.  Trimmed pure control group as in Table 3;
+      probability weights; robust standard errors.  The entry is the
+      Democrat coefficient.
+  - description: policy_demand_index_prior_table4_panelB_col7
+    value: -0.302
+    claim_type: coefficient
+    standard_error: 0.054
+    unit: standard deviations of the policy demand index per standard deviation of the prior
+    location: "Table 4, Panel B, Prior (z-scored), column (7) Policy demand index"
+    context: >
+      Table 4, Panel B, column (7): OLS of the policy demand index on the
+      z-scored prior belief about females' relative wages and a wave B
+      dummy in the trimmed pure control group.  Probability weights;
+      robust standard errors.
+
+  # ---- Table 5: treatment effects (treatment groups, both waves) ----
+  - description: first_stage_posterior_raw_t74_table5_panelA_col1
+    value: -12.955
+    claim_type: coefficient
+    standard_error: 0.594
+    unit: dollars per $100 earned by a man (posterior belief, 0-200 scale)
+    location: "Table 5, Panel A: First Stage, T74, column (1)"
+    context: >
+      Table 5 ("Treatment effect on perceptions and demand for specific
+      policies"), Panel A, column (1).  OLS of the respondent's posterior
+      belief about females' relative wages (dollars per $100 a man earns,
+      pooled across the five randomized versions of the posterior wage
+      statistic) on T74, a dummy for the high-wage-gap information arm
+      (told the ACS-based statistic) versus the low-wage-gap arm (told the
+      CPS-based statistic).  Sample: the two treatment arms of the main
+      survey, both waves (pure control group excluded).  Controls: survey
+      wave, gender, prior belief, census region, age categories, having a
+      child, log household income, at least a 2-year college degree,
+      full-time, part-time, self-employed, unemployed, student, Democrat,
+      Independent and "other" political orientation.  Probability weights;
+      robust standard errors.
+  - description: first_stage_posterior_z_t74_table5_panelA_col2
+    value: -0.658
+    claim_type: coefficient
+    standard_error: 0.030
+    unit: standard deviations of the posterior belief
+    location: "Table 5, Panel A: First Stage, T74, column (2)"
+    context: >
+      Table 5, Panel A, column (2): the column (1) regression with the
+      posterior belief about females' relative wages z-scored as the
+      outcome; the first stage of the Panel C 2SLS.  Same treatment-arm
+      sample, controls, probability weights and robust standard errors.
+  - description: perception_index_t74_table5_panelA_col6
+    value: 0.417
+    claim_type: coefficient
+    standard_error: 0.032
+    unit: standard deviations of the perception index
+    location: "Table 5, Panel A: First Stage, T74, column (6) Perception Index"
+    context: >
+      Table 5, Panel A, column (6): effect of T74 on the perception summary
+      index over columns (3)-(5) (gender differences in wages are large,
+      are a problem, government should mitigate the gap; each z-scored
+      using the pure control group's mean and standard deviation),
+      following Anderson (2008).  Treatment-arm sample, the Table 5
+      controls, probability weights, robust standard errors.
+  - description: iv_affirmative_action_posterior_table5_panelC_col2
+    value: -0.171
+    claim_type: coefficient
+    standard_error: 0.053
+    unit: standard deviations of policy demand per standard deviation of the posterior belief
+    location: "Table 5, Panel C: 2SLS, Posterior belief about fem. rel. wage (z-scored), column (2) Statutory affirmative action"
+    context: >
+      Table 5, Panel C, column (2).  2SLS of demand for statutory
+      affirmative action programs (agreement with the policy statement,
+      z-scored on the pure control group) on the z-scored posterior belief
+      about females' relative wages, instrumented by T74 (first stage:
+      Panel A, column 2), with the Table 5 controls.  Treatment-arm
+      sample; probability weights; robust standard errors.
+  - description: iv_equal_pay_legislation_posterior_table5_panelC_col3
+    value: -0.177
+    claim_type: coefficient
+    standard_error: 0.053
+    unit: standard deviations of policy demand per standard deviation of the posterior belief
+    location: "Table 5, Panel C: 2SLS, Posterior belief about fem. rel. wage (z-scored), column (3) Stricter equal pay legislation"
+    context: >
+      Table 5, Panel C, column (3): the same 2SLS (z-scored posterior belief
+      instrumented by T74, Table 5 controls) for demand for stricter equal
+      pay legislation.  Treatment-arm sample; probability weights; robust
+      standard errors.
+  - description: iv_policy_demand_index_posterior_table5_panelC_col7
+    value: -0.087
+    claim_type: coefficient
+    standard_error: 0.038
+    unit: standard deviations of the policy demand index per standard deviation of the posterior belief
+    location: "Table 5, Panel C: 2SLS, Posterior belief about fem. rel. wage (z-scored), column (7) Policy demand index"
+    context: >
+      Table 5, Panel C, column (7): the same 2SLS for the policy demand
+      summary index over the six specific policies (Anderson 2008).
+      Treatment-arm sample; probability weights; robust standard errors.
+
+  # ---- Table 6: follow-up survey ----
+  - description: followup_perception_index_t74_table6_panelA_col7
+    value: 0.156
+    claim_type: coefficient
+    standard_error: 0.045
+    unit: standard deviations of the follow-up perception index
+    location: "Table 6, Panel A: Perceptions, T74, column (7) Perception Index"
+    context: >
+      Table 6 ("Persistence of the treatment effect in obfuscated
+      follow-up survey"), Panel A, column (7).  OLS of the follow-up
+      perception summary index over columns (3)-(6) (gender differences in
+      wages are a problem; government should increase efforts to support
+      women in the labor market; gender wage differences are a problem
+      among high-skilled and among low-skilled workers; each z-scored on
+      the full follow-up sample), following Anderson (2008), on T74 and
+      the Table 5 controls.  Sample: treated respondents (both arms) who
+      completed the follow-up survey, both waves.  Probability weights;
+      robust standard errors.
+
+# DP12 Section 2 states that the authors' code "runs and delivers the
+# reported point estimates", and DP Sec. 3 prints the team's own re-coded
+# reproduction beside each paper value.  Where that re-coded column is the
+# same specification (single items, the first stage, the trimmed sample
+# size) it is recorded; where it is a different construction (simple-
+# average indices instead of Anderson 2008), the paper's value is recorded
+# under the Section 2 verdict, as in goni-2022 and greenstone-2022, with
+# the re-coded value quoted in the note.
+i4r_replicator_findings:
+  - claim_id: 0
+    reproduced_value: 0.691
+    outcome: matches
+    notes: DP12 Sec. 2 (code delivers reported estimates); re-coded simple-average index 0.742 (0.071) DP Table 2 col 4R is a different index.
+  - claim_id: 1
+    reproduced_value: 0.181
+    outcome: matches
+    notes: DP12 Sec. 2 blanket; re-coded simple-average index 0.219 (0.062) DP Table 2 col 4R.
+  - claim_id: 2
+    reproduced_value: -0.729
+    outcome: matches
+    notes: DP12 Sec. 2 blanket; re-coded simple-average index -0.815 (0.071) DP Table 3 col 4R.
+  - claim_id: 3
+    reproduced_value: 921
+    outcome: matches
+    notes: DP12 Tables 2-7 print 921 in every re-coded (R) column.
+  - claim_id: 4
+    reproduced_value: 0.669
+    outcome: matches
+    notes: DP12 Sec. 2 blanket; re-coded simple-average index 0.904 (0.068) DP Table 5 col 7R.
+  - claim_id: 5
+    reproduced_value: -0.302
+    outcome: matches
+    notes: DP12 Sec. 2 blanket; re-coded simple-average index -0.422 (0.072) DP Table 6 col 7R.
+  - claim_id: 6
+    reproduced_value: -12.955
+    outcome: matches
+    notes: DP12 Sec. 2 blanket; the DP does not reprint this column.
+  - claim_id: 7
+    reproduced_value: -0.638
+    outcome: matches
+    notes: DP12 Table 8 col 1R re-coded first stage -0.638 (0.029) vs -0.658 (0.030); income coded from reported amounts.
+  - claim_id: 8
+    reproduced_value: 0.417
+    outcome: matches
+    notes: DP12 Sec. 2 blanket; the DP does not reprint this column.
+  - claim_id: 9
+    reproduced_value: -0.177
+    outcome: matches
+    notes: DP12 Table 9 col 2R re-coded 2SLS -0.177 (0.054) vs -0.171 (0.053).
+  - claim_id: 10
+    reproduced_value: -0.182
+    outcome: matches
+    notes: DP12 Table 9 col 3R re-coded 2SLS -0.182 (0.055) vs -0.177 (0.053).
+  - claim_id: 11
+    reproduced_value: -0.087
+    outcome: matches
+    notes: DP12 Sec. 2 blanket; re-coded simple-average index -0.133 (0.053) DP Table 9 is a different index.
+  - claim_id: 12
+    reproduced_value: 0.156
+    outcome: matches
+    notes: DP12 Sec. 2 blanket; re-coded simple-average index 0.196 (0.056) DP Table 10 col 7R.
+notes: >
+  Headline findings: in the pure control group (trimmed priors, N 921)
+  Democrats score 0.691 (0.066) SD and women 0.181 (0.057) SD higher on
+  the perception index (Table 3 Panel A col 4), and a one-SD higher prior
+  belief about females' relative wages goes with a -0.729 (0.065) SD lower
+  index (Panel B); for the policy demand index Democrat 0.669 (0.051)
+  (Table 4 Panel A col 7) and prior -0.302 (0.054) (Panel B).  The ACS
+  ("74") versus CPS ("94") information moves posterior beliefs by -12.955
+  (0.594) dollars, -0.658 (0.030) SD (Table 5 Panel A cols 1-2), and the
+  perception index by 0.417 (0.032) (col 6).  2SLS per SD of posterior
+  belief: affirmative action -0.171 (0.053), equal pay legislation -0.177
+  (0.053), policy demand index -0.087 (0.038) (Panel C cols 2, 3, 7; N
+  3022).  Follow-up perception index 0.156 (0.045) (Table 6 Panel A col
+  7, N 1105).
+
+  Paper text and how it was verified.  The published article was not
+  read (paywalled).  The source is ECONtribute DP 179 (July 22, 2022).
+  Its Tables 3-6 were parsed cell by cell (panel, row, column, coefficient,
+  SE) and every one of the 116 non-empty meta-database rows was matched
+  to a cell of the same table: 111 rows equal a cell exactly
+  (coefficient and SE; Table 5 Panel C's seven 2SLS cells checked by hand
+  because the label splits across lines).  The remaining five are
+  meta-database transcription slips, each next to a paper cell that
+  DP12's "(1)" (original) column prints exactly as the ECONtribute copy
+  does: Table 5 Panel A col 2 coded -0.685 (paper and DP -0.658, SE 0.030
+  agrees); Table 3 Panel C col 4 Female SE coded 53.000 (paper and DP
+  0.053); Table 6 Panel B col 6 T74 coded 0.122 (paper and DP 0.123,
+  SE 0.052); Table 6 Panel A col 4 T74 SE coded 0.058 (paper and DP
+  0.057); Table 3 Panel C col 3 Democrat SE coded 0.073 (paper and DP
+  0.071).  The first three are the candidates file's "3 of 116" unmatched
+  tokens; the last two match as tokens elsewhere in the tables.  DP12's
+  own "(1)" columns match the ECONtribute copy everywhere except one DP
+  typo (Table 4 Panel A col 6 Democrat printed 0.625 in DP Table 5; the
+  paper copy and the meta database both read 0.635).  Every pinned value
+  and SE equals its meta-database row.
+
+  Curation pass (2026-11-09).  13 claims.  Left out: the single-item
+  columns of Tables 3-4 (kept the summary indices), Table 3/4 Panel C,
+  Table 5 Panels A cols 3-5 and Panel B (reduced form) and the other 2SLS
+  columns, the sharpened q-values, Table 6 other columns and Panel B,
+  Table 2 (correlates of incentivized priors, reported at one decimal),
+  Tables 7-10 and the appendix.  Left out for feasibility: the two
+  information-treatment values themselves (the ACS-based $74 and the
+  CPS-based $94 relative wage of 45-year-old full-time employees with a
+  Bachelor's degree, and the in-text numbers built on them), which come
+  from the 5.94 GB ACS extract (usa_00025.dta) and the 170 MB CPS extract;
+  the R sandbox's 300 s limit and the host's bind-mount read speed (about
+  8 MB/s) rule out reading the ACS file in a run.  No pinned claim reads
+  either extract.
+
+  Package-only facts (never in contexts).  Cleaning: 03/04 code the raw
+  wave A / wave B main-survey answers ("A1" ...), 05 appends them, sets
+  pweight (1 in wave A; in wave B 1.4615 / 0.6298 for men / women in age
+  group 1 and 1.0184 / 0.8691 in age group 5), z-scores large, problem,
+  govmore and the six policy items (quotaanchor, AAanchor,
+  legislationanchor, transparencyanchor, UKtool, childcare) on the
+  rand==0 mean and SD, and builds z_mani_index (large, problem, govmore)
+  and z_lmpolicy_index (quota, AA, legislation, transparency or UKtool,
+  childcare) as inverse-correlation-matrix weighted averages over the
+  full sample; 06 does the same for the follow-up (z_maniII_index2).
+  Table 3/4 (08_MainTables.do): keep if rand==0, z-score prior within
+  that group, keep if prior strictly between r(p5) and r(p95); reg y
+  i.wave democrat indep otherpol gender [pweight=pweight], r (Panel A),
+  reg y i.wave prior (Panel B).  Table 5: drop if rand==0; zscore
+  posterior [aweight=pweight] in the treatment sample (the paper's
+  notes say z-scored on the pure control group for the perception items,
+  and call the column 2 outcome the "z-scored" posterior); reg y T1
+  $controls [pweight=pweight], vce(r); ivregress 2sls y $controls
+  (zposterior = T1) [pweight=pweight], vce(r).  $controls = wave gender
+  prior democrat indep otherpol midwest south west age1-age4 anychildren
+  loghhinc associatemore fulltime parttime selfemp unemp student; loghhinc
+  is the log of the midpoint of the income bracket (DP12 Fig. 1).  Table
+  6: SurveyStageIIAB_final.dta, drop if rand==0, same controls.  T1 is
+  the ACS ("74") arm.
+
+  Blind-mode exposure (step 6, 2026-11-09).  The blind generation prompt
+  states no pinned value or SE at printed precision or rounded to 1-3
+  significant figures (the only hit, "13", is the list number of the
+  thirteenth claim), and carries no do-file text; the dataset listing
+  names the raw files' columns (the follow-up raw files already carry
+  merged covariates such as pweight and loghhinc).  The abstract's first
+  500 characters print no numbers.  The paper parser takes the
+  ECONtribute cover line ("Funding by the Deutsche
+  Forschungsgemeinschaft ...") as the title.
+
+  Mount cost (2026-11-09).  The runner extracts the zip once into
+  .cache/datasets/<slug>/ (6.13 GB; a fresh blind run including
+  extraction, strip and listing took about 12 s on this host, a cached
+  run about 3 s); the script-free copy hard-links its files (link count
+  2, no extra bytes) and the sandbox bind-mounts it read-only, so a run
+  copies nothing.  The dataset listing reads only the .dta headers.
+
+  What was read.  ECONtribute DP 179 pp. 1-25 and Tables 1-6; DP12 in
+  full; the 117 meta-database rows; Read Me.pdf; 01, 02, 05 and the
+  Tables 3-6 part of 08_MainTables.do; the head of All.log; the
+  Display_Output.tex wrapper and page texts of Display_Output.pdf; the
+  strip-rule classification of the extracted package.
+
+  What could not be verified.  The published article itself was not
+  read.  The authors' Stata code was not run (no Stata here) and no
+  independent R cross-check was made in this pass.
+
+  Original analysis in Stata 14+; language: r is the reproduction target.
