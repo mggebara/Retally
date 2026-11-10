@@ -4006,6 +4006,248 @@ the user's call.
 
 **Next:** nothing on the pipeline (frozen).
 
+### 3.11 Eleven manual-package papers, four samples of both systems (2026-11-09 to 2026-11-10) — ✅ measured, no API spend
+
+**What this is.**  The user placed openICPSR packages by hand
+(`data_access: manual`, the escape hatch of Phase 4), and eleven of
+them became catalog entries and were run.  They are a separate group:
+holdout papers like the 24, but their packages came by a different
+route and they were curated after the 24-paper results were known.
+Nothing below is pooled with the 24-paper totals of 3.2–3.10, and those
+totals do not change.
+
+| Paper | I4R tag | Journal | Claims | I4R values |
+|---|---|---|---|---|
+| Goñi 2022 | T3 | AEJ: Applied | 13 | 13 |
+| Greenstone et al. 2022 | T9 | AER: Insights | 13 | 13 |
+| López, Sautmann & Schaner 2022 | T23 | AEJ: Applied | 12 | 10 |
+| Saccardo & Serra-Garcia 2023 | T26 | AER | 13 | 7 |
+| Ambuehl et al. 2022 | T28 | AER | 13 | 13 |
+| Settele 2022 | T37 | AEJ: Policy | 13 | 13 |
+| Corno et al. 2022 | T44 | AER | 13 | 2 |
+| Balán et al. 2022 | T48 | AER | 13 | 11 |
+| Bold et al. 2022 | T50 | AER | 13 | 13 |
+| Butera et al. 2022 | T53 | AER | 13 | 13 |
+| Altindag et al. 2022 | T54 | AEJ: Applied | 10 | 7 |
+
+139 pinned claims.  Every original is Stata; every reproduction is R.
+
+**What ran.**  Per paper, 21 cells.  The pipeline ran frozen
+(`RETALLY_PIPELINE_FROZEN=1`, 38faba7) through the desktop oracle:
+labels `desktop-opus`, `-run2` and `-run3` in all three modes, and
+`-run4` in independent and blind mode.  Extraction answers were reused
+by prompt hash across labels; every generation and refinement answer is
+a fresh draw.  The agent ran as Claude Code cells: runs a and b
+(`2026-11-10-a`, `-b`) in all three modes, c and d in independent and
+blind mode.  So seeded mode has three pipeline samples and two agent
+samples; independent and blind have four of each.  No API spend.
+88 results files (8 per paper), 231 rows, every row `cached=False`,
+`data_access: manual`, 0 errors:
+
+- `benchmark/results/{pipeline-oracle-desktop-opus[-run2|-run3|-run4],claude-code[-run2|-run3|-run4]}-1paper-<slug>-{all-modes|indep-blind}-<date>.json`
+  with slugs `greenstone` (2026-11-09) and `settele`, `lopez`,
+  `ambuehl`, `saccardo`, `altindag`, `bold`, `corno`, `butera`, `balan`
+  (2026-11-10).
+- Goñi, the first paper run, has no slug in its file names:
+  `…-1paper-all-modes-2026-11-09.json` and
+  `…-1paper-indep-blind-2026-11-09.json`.
+
+Every file was rescored with `benchmark.rescore` under `count-5pct` and
+under `--policy i4r-missing`: 0 flips.  Merged in PRs #146 (Goñi), #150
+(Greenstone), #158 (Settele, López, Ambuehl), #159 (Saccardo,
+Altindag), #160 (Bold), #161 (Corno, Butera) and #162 (Balán).
+
+**Counts per paper** (paper matches per sample; pipeline samples 1–4
+are `desktop-opus`, `-run2`, `-run3`, `-run4`; agent samples 1–4 are
+runs a–d):
+
+| Paper | Claims | Mode | Pipeline (1, 2, 3, 4) | Agent (1, 2, 3, 4) |
+|---|---:|---|---|---|
+| Altindag | 10 | seeded | 8, 7, 6 | 8, 10 |
+| Altindag | 10 | independent | 10, 10, 10, 10 | 10, 10, 10, 10 |
+| Altindag | 10 | blind | 10, 9, 9, 10 | 9, 9, 9, 9 |
+| Ambuehl | 13 | seeded | 13, 13, 13 | 13, 13 |
+| Ambuehl | 13 | independent | 0, 2, 0, 0 | 12, 12, 13, 13 |
+| Ambuehl | 13 | blind | 0, 0, 0, 0 | 12, 13, 12, 12 |
+| Balan | 13 | seeded | 4, 3, 6 | 12, 13 |
+| Balan | 13 | independent | 13, 7, 11, 6 | 11, 12, 12, 12 |
+| Balan | 13 | blind | 2, 4, 5, 5 | 8, 7, 9, 12 |
+| Bold | 13 | seeded | 10, 9, 9 | 13, 13 |
+| Bold | 13 | independent | 8, 7, 6, 7 | 9, 11, 8, 8 |
+| Bold | 13 | blind | 3, 4, 3, 3 | 8, 7, 9, 8 |
+| Butera | 13 | seeded | 13, 13, 13 | 13, 13 |
+| Butera | 13 | independent | 8, 10, 9, 9 | 13, 12, 13, 13 |
+| Butera | 13 | blind | 8, 7, 8, 8 | 11, 13, 13, 13 |
+| Corno | 13 | seeded | 13, 7, 13 | 13, 13 |
+| Corno | 13 | independent | 12, 13, 13, 13 | 13, 13, 13, 13 |
+| Corno | 13 | blind | 8, 10, 10, 13 | 13, 13, 13, 13 |
+| Goni | 13 | seeded | 13, 13, 13 | 13, 13 |
+| Goni | 13 | independent | 13, 13, 12, 13 | 13, 13, 13, 13 |
+| Goni | 13 | blind | 13, 12, 12, 12 | 13, 13, 13, 13 |
+| Greenstone | 13 | seeded | 13, 13, 13 | 13, 13 |
+| Greenstone | 13 | independent | 13, 13, 13, 12 | 12, 12, 13, 12 |
+| Greenstone | 13 | blind | 10, 10, 10, 11 | 12, 12, 12, 11 |
+| Lopez | 12 | seeded | 12, 12, 12 | 12, 11 |
+| Lopez | 12 | independent | 12, 12, 12, 4 | 12, 12, 12, 12 |
+| Lopez | 12 | blind | 0, 3, 3, 2 | 8, 8, 8, 12 |
+| Saccardo | 13 | seeded | 13, 13, 13 | 13, 13 |
+| Saccardo | 13 | independent | 12, 13, 8, 12 | 13, 13, 13, 13 |
+| Saccardo | 13 | blind | 4, 4, 4, 5 | 12, 12, 12, 12 |
+| Settele | 13 | seeded | 13, 13, 9 | 13, 13 |
+| Settele | 13 | independent | 2, 12, 1, 1 | 13, 13, 13, 13 |
+| Settele | 13 | blind | 0, 1, 0, 1 | 7, 7, 6, 7 |
+
+**Totals, 11 papers, 139 claims** (paper matches; first scored in
+brackets; recomputed the way `docs/report/tables.py` does):
+
+| Mode | Pipeline 1 | Pipeline 2 | Pipeline 3 | Pipeline 4 | Agent 1 | Agent 2 | Agent 3 | Agent 4 | Gap range (pairings) |
+|---|---|---|---|---|---|---|---|---|---|
+| seeded | 125 (102) | 116 (103) | 120 (99) | — | 136 (135) | 138 (134) | — | — | 11 to 22 (6) |
+| independent | 103 (66) | 112 (66) | 95 (62) | 87 (62) | 131 (119) | 133 (128) | 133 (126) | 132 (121) | 19 to 46 (16) |
+| blind | 58 (58) | 64 (64) | 64 (64) | 70 (70) | 113 (114) | 114 (114) | 116 (116) | 122 (122) | 43 to 64 (16) |
+
+I4R matches: pipeline 98, 95, 96 seeded, 80, 88, 71, 65 independent,
+45, 50, 50, 52 blind; agent 109, 111 seeded, 107, 108, 109, 108
+independent, 91, 92, 94, 97 blind.  Papers whose cell matched every
+claim, by sample: pipeline 8, 7, 7 seeded, 5, 6, 4, 3 independent,
+2, 0, 0, 2 blind; agent 9, 10 seeded, 7, 6, 9, 8 independent, 2, 4,
+3, 4 blind.  Two cells end below their own first-scored count: agent
+Settele blind sample 1 (7 against 8) and pipeline Altindag seeded
+sample 3 (6 against 7).
+
+Two papers carry most of the gap.  On Settele and Ambuehl (26 claims)
+the pipeline matched 2, 14, 1 and 1 independent and 0, 1, 0 and 1
+blind; the agent 25, 25, 26 and 26 independent and 19, 20, 18 and 19
+blind.  On the other nine papers (113 claims) the pipeline matched
+101, 98, 94 and 86 independent and 58, 63, 64 and 69 blind; the agent
+106, 108, 107 and 106 independent and 94, 94, 98 and 103 blind.
+
+**Notes per paper.**
+
+1. *Settele and Ambuehl: the pipeline fails without the authors'
+   scripts.*  Both ship raw survey exports with hundreds of columns
+   (Settele: four LimeSurvey exports as Stata files; Ambuehl: raw
+   Qualtrics CSVs).  The pipeline's dataset listing truncates the
+   column list, and its single-shot script guesses the column names.
+   Independent and blind are at 0 to 2 of 13 in 15 of the 16 cells; the
+   exception is Settele independent sample 2 (12 of 13).
+   Seeded, with the do-files, the pipeline matched 13 in every Ambuehl
+   sample and 13, 13 and 9 on Settele.  The agent inspects the data and
+   matched 12 or 13 on Ambuehl in both modes and 13 on Settele
+   independent; Settele blind is its weakest cell (7, 7, 6, 7).  These
+   are recorded as real pipeline failures; the pipeline is frozen.
+2. *Balán: package V3 ships raw data only.*  The table do-files load a
+   clean dataset that is not in the package.  The seeded agent rebuilt
+   it by translating the construction do-file (12 and 13 of 13).  The
+   seeded pipeline's prompt does not carry that do-file, so it guesses
+   variable names and scores 4, 3 and 6, below its own independent runs
+   (13, 7, 11, 6).  The campaign-period time fixed effects are defined
+   in an online appendix that is not in the paper text (PR #162).
+3. *Altindag: a student re-deposit.*  The package placed is openICPSR
+   183165 V1.1, not the authors' deposit that I4R used.  The authors'
+   index routine `_gweightave2.ado` is not shipped, so seeded runs
+   rebuild the index, and seeded mode's strict band (no SE band) fails
+   the rebuilt index coefficients where the SE band of independent and
+   blind passes them.  Hence seeded (pipeline 8, 7, 6; agent 8, 10) is
+   below independent (10 in all eight samples).
+4. *López.*  The sandbox has no lasso package (no `glmnet` or `hdm`),
+   so answers either omit the post-double-selection lasso or hand-code
+   it (entry notes).
+5. *Bold.*  The paper states no UGX to USD exchange rate; runs without
+   the scripts assume one (agent cells used 3700, or annual averages of
+   3611 to 3727; the package uses season-specific rates of 3575 to
+   3685).  Most misses are in Table 6 Panel A.
+6. *Corno.*  I4R findings exist for only 2 of the 13 claims; the other
+   values are pinned from the authors' June 2022 manuscript, the
+   catalog's paper source.
+7. *Saccardo.*  No I4R discussion paper; the I4R values come from the
+   meta-database rows only.
+8. *Goñi.*  The paper prints its coefficients to one significant
+   figure, and they are scored with SE bands of 0.33 to 1.0 of the
+   value, so the paper-match bar is loose.  Every pipeline miss is the
+   never-married sample size (printed 765, reproduced 910, 911 or 1740)
+   (PR #146).
+
+**Scoring tolerance (limitation).**  Several cells score as matches
+although the reproduced value is visibly off the printed one.  Examples:
+Butera blind, the Table 5 column 3 public-recognition BU coefficient,
+115.1–115.8 against 103.61 (agent, all four samples) and 114.2–115.0
+(pipeline, all four); Balán blind, the Table 4 coefficients with time
+fixed effects (agent sample 4: 0.039 against 0.032, 0.0396 against
+0.033, 0.0476 against 0.040, each about 20 % off); Altindag Table 4
+column 3 index coefficients (for example 0.157 against 0.205, 0.112
+against 0.175).  The rule that produces this is the comparator's
+(`src/retally/validation/comparator.py`, used by the harness and by
+`benchmark.rescore`): in independent and blind mode a claim with a
+pinned standard error passes within ±1 SE of the printed value whenever
+that band is wider than the per-type relative band (2 % for
+coefficients), and every band is floored at half a unit in the printed
+value's last digit.  The rows record this as `tolerance_source:
+se_band`.  For imprecise estimates the SE band is wide: 0.44 of the
+value for the Butera BU coefficient (SE about 45 on 103.61), 0.46 to
+0.60 for the Altindag index coefficients.  Over the independent and
+blind cells of these eleven papers, 148 of the agent's 994 matches and
+188 of the pipeline's 653 are more than 10 % from the printed value.
+The same rule applies to the 24-paper results (draft Section 6,
+"Tolerance choices").  Scoring is not changed here.
+
+**Harness notes (from the run log, as reported by the coordinating
+session).**
+
+1. The host hit the account usage limit three times mid-run.
+   Interrupted agents were resumed from their transcripts.
+2. A handful of oracle answering agents ran one read-only shell command
+   against instructions (recorded in the run log; no effect on the
+   answers).  One answerer could not read its prompt and was
+   re-dispatched.
+3. Saccardo independent, agent run a, attempt 5: `script.R` was an empty
+   directory created by Docker.  It was replaced by an empty file so the
+   cell could be scored; no script ran in that attempt (PR #159).
+
+**Pending: Samek 2023 (T20).**  Curated in PR #157
+(`benchmark/papers/samek-2023-thank-you-calls-charitable-giving.yaml`),
+but its results are not on main.  Its 10 agent cells exist on disk; of
+its 11 pipeline cells, three independent cells (labels `desktop-opus`,
+`-run2`, `-run4`) are blocked by oracle replay nondeterminism.  A
+pipeline script that prints `str()` of a data.table emits a memory
+address, so the first refinement prompt hashes differently on every
+replay and the cell never advances.  This is an artefact of the oracle
+replay, not of the pipeline: a real API run asks once.  The clean fix is
+to normalise addresses before hashing in `src/retally/llm_oracle.py`,
+which is frozen, so the owner has to decide.  Recorded as a harness
+limitation.  From the run log, the agent's blind cells on Samek are low
+(2, 3, 5 and 2 of 13): the paper text does not describe the sample
+exclusions the authors' code applies.  None of these Samek numbers is on
+main.
+
+**Report.**  `docs/report/tables.py` now defines the 24 evaluation
+papers as the in-scope holdout entries without `data_access: manual`
+(the same 24 as before; on main the script's 24-paper assertion failed
+once the manual entries were cataloged) and reads the manual-package
+papers into a separate `MANUAL` group (11 papers × 21 cells asserted).
+New tables `manual_package` and `manual_package_cells`; two separate
+rows in `headline`; the catalog table labels the twelve manual entries
+and keeps the 24-paper summary figures.  Every other table is
+unchanged.  `docs/report/draft.md` gets a ninth pass (new Section 4.10,
+and Sections 1, 3.1, 3.1.1, 6 and 8).  `benchmark/results/REPORT.md` is
+rendered from the first-sample files of the 24 papers and is left as
+it is.
+
+**Evidence.**  `benchmark/evidence/INDEX.md` lists 856 cells on 35
+papers (625 on the 24, 231 on these eleven).
+
+**Limitations.**  The eleven papers were curated after the 24-paper
+results were known and only from openICPSR packages a human chose to
+place, so they are not a random draw and are not pooled.  Seeded mode
+has three pipeline and two agent samples, independent and blind four
+each; min–max over pairings is not an interval.  The SE band (above)
+inflates independent and blind matches on imprecise estimates.  Two
+papers (Settele, Ambuehl) drive most of the independent gap through one
+pipeline weakness, the truncated column listing.
+
+**Next:** Samek's results need the owner's decision on the oracle hash
+fix (or a real API run for the three blocked cells).
+
 ---
 
 ## Phase 4 — Corpus growth (4 → 20–30 papers)
@@ -4040,6 +4282,9 @@ runnable. Growth is therefore a curation grind — budget it as such.
     to place. No package has been placed yet; the 33 wanted are listed in
     `benchmark/corpus/openicpsr-wanted.md`. See `benchmark/README.md`,
     "Manually placed packages".
+    **Since then (2026-11-09 to 2026-11-10):** twelve packages placed and
+    cataloged; eleven measured as a separate group (ROADMAP 3.11), Samek
+    pending.
   - *Report-URL recovery:* the I4R discussion-paper index can be searched
     by paper title by a human; `replicator_team` IDs can't be mapped
     mechanically, so treat this as part of promotion research, not
