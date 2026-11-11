@@ -1,0 +1,417 @@
+# Original paper: Cohen, F., & Dechezleprêtre, A. (2022). "Mortality,
+#   Temperature, and Public Health Provision: Evidence from Mexico."
+#   American Economic Journal: Economic Policy, 14(2), 161-192.
+#   doi:10.1257/pol.20180594 (May 2022 issue; Crossref issued 2022-05-01,
+#   DOI created 2022-04-29).
+#
+# Reproduction report: I4R First Meta Database replication team 55 (42
+#   rows under the paper title, entered 2023-11-21).  No I4R discussion
+#   paper was found for this report (EconStor / web search for the title
+#   with "I4R", 2026-11-10).  Verdict: reproducible — the team's survey
+#   answer is "Analysis and cleaning code produce the same output as
+#   presented in the paper" (best_describe_compreprod), perfect_reproduction
+#   is "Yes" with the note "The code ran perfectly. There was a minor
+#   coding error from the paper, however, where the original authors
+#   dropped February 29th during leap years", the run took 36-48 hours in
+#   Stata and the team rated it 10 of 10.  Every row is about Table 2 or
+#   Figure 2 (the daily distributed-lag model), and every row with a
+#   replicator value is a ROBUSTNESS variant, not a plain recomputation:
+#   no weights, no precipitation control, state-level clustering, the
+#   leap-day fix, and the leap-day fix combined with each of the other
+#   three (result_same blank on all of them).  None covers Table 5,
+#   which is all this entry pins, so i4r_replicator_findings is empty
+#   (see the comment above it).
+#
+# Why this paper:
+#   1. A manually placed openICPSR package (data_access: manual) that is
+#      far larger than anything else in the catalog: 39.7 GB uncompressed,
+#      dominated by two daily panels (13.7 GB weather bins with 30 lags,
+#      9.8 GB daily death rates) that the paper's Tables 2-4 are estimated
+#      from (the README says those steps need more than 250 GB of RAM).
+#      Those tables cannot run in the 300 s sandbox; the Seguro Popular
+#      tables (5 and 6) use the monthly aggregates (a 0.94 GB mortality
+#      panel and a 0.26 GB weather-bin panel).
+#   2. A difference-in-differences-style interaction design: a policy
+#      dummy interacted with temperature-bin day counts, three overlapping
+#      sets of fixed effects, temperature bins and precipitation
+#      interacted with month-by-year (and state) fixed effects, frequency
+#      weights and municipality-clustered SEs, on a panel near the
+#      sandbox's I/O limit.
+#   3. The package ships its estimates three ways the strip rule used to
+#      keep (125 Stata .ster files, esttab .rtf tables and unnumbered
+#      plain-text esttab tables); this PR extends the strip rule for them.
+#
+# What original_claims pins: Table 5 (effect of the Seguro Popular on the
+#   eligible population), columns (2) and (3): the Seguro Popular
+#   interaction with each of the six non-reference temperature bins, with
+#   SEs as printed.  12 claims, values exactly as printed (3 decimals),
+#   none a count.  Feasibility decided the columns: an R/fixest run of
+#   these two columns on the package files (curation check, 2026-11-10,
+#   the sandbox image, 6 cores) read the two input panels in about 90 s
+#   and estimated column (2) in 16 s and column (3) in 46 s, reproducing
+#   all twelve printed cells.  Every other Table 5 / Table 6 column (the
+#   baseline column (1), the abstract's "1,600 lives" derived from it,
+#   column (4), and all of Table 6) also interacts the bins with the
+#   municipality-by-month fixed effects (about 29,000 groups x 7 slopes):
+#   the same fixest run of column (1) had not converged after 13 minutes,
+#   so those cells cannot be reproduced inside the 300 s sandbox limit and
+#   are not pinned.  Table 5 columns (5)-(6) also need census-derived
+#   population shares the package does not ship (see notes).
+#
+# Paper text: the published article is paywalled.  The source is the
+#   accepted manuscript (AEJPol-2018-0594 REV3, LSE Research Online
+#   eprint 115766, cover page "Version: Accepted Version").  Its Table 2
+#   prints every value the I4R meta-database records for the published
+#   Table 2, cell for cell: 5,705 (591), 11,142 (1,494), 7,536 (1,449),
+#   -367 (718), 1,769 (403), 539 (75), total 26,324 (3,609) equal the
+#   rows' o_coeff_dbl / o_std_err_dbl (the candidates file's "0 of 7
+#   exact" was a token-format artefact: the manuscript prints thousands
+#   separators).  So Table 5, which no I4R row covers, is pinned from
+#   this accepted manuscript on the strength of its I4R-covered cells all
+#   matching.  The package's own esttab output (Table 5.rtf; per-person
+#   rates, 8 decimals) and the curation's R run agree with every pinned
+#   cell after scaling by 100,000.
+
+id: cohen-2022-mortality-temperature-mexico
+i4r_report_url: https://github.com/I4Replication/I4R-First-Meta-Paper
+# Target language for regeneration (the original is Stata with reghdfe,
+# estout and did_multiplegt; Retally generates R and reads the .dta files
+# with haven).
+language: r
+outcome_label: reproducible
+# Pipeline tuning is frozen; this is an evaluation paper.
+split: holdout
+# Contamination bookkeeping.  publication_date is the FIRST public
+# version: Grantham Research Institute / CCCEP Working Paper 268,
+# "Mortality inequality, temperature and public health provision:
+# evidence from Mexico" (May 2017; LSE eprint 88020; data 1998-2010 and
+# different headline numbers, "45,000 deaths a year").  Later revisions
+# of WP 268 are dated October 2019 and October 2020 (file names on
+# cccep.ac.uk / lse.ac.uk; found by web search 2026-11-10, not opened).
+# The journal version: Crossref issued 2022-05-01 (DOI created
+# 2022-04-29).  package_release_date is the DataCite registration of
+# doi:10.3886/E125201V1 (registered 2022-04-21T18:23:15Z, DataCite API
+# 2026-11-10); the openICPSR page itself needs a login.  The package's
+# Stata logs are in a folder named "March 2021", and the .rtf tables are
+# stamped 2021-03-06.
+publication_date: "2017-05"
+package_release_date: "2022-04-21"
+
+paper:
+  # Accepted manuscript on LSE Research Online (eprint 115766); checked
+  # 2026-11-10: 200 application/pdf, 2,553,091 bytes, md5
+  # fab2f9a358b5f0f0cfdb47f7fc91caaf, 81 pp. (cover page, 33 pp. of
+  # text, main Tables 1-6 on pp. 34-39, then figures and the online
+  # appendices).  Its footnote 36 quotes the column (1) 12-16°C
+  # coefficient once as "-0.035" and once, in the formula, as "0.031"
+  # (Table 5 prints -0.031); the formula's value is the one that gives
+  # "≈ 1,600".
+  source: https://researchonline.lse.ac.uk/id/eprint/115766/1/AEJPol_2018_0594_REV3_manuscript_POSTPRINT.pdf
+  title: "Mortality, Temperature, and Public Health Provision: Evidence from Mexico"
+  authors:
+    - François Cohen
+    - Antoine Dechezleprêtre
+
+dataset:
+  source: benchmark/manual-packages/T55/125201-V1-no-daily-panels.zip
+  data_access: manual
+  access_notes: >
+    AEA Data and Code Repository on openICPSR, project 125201, version V1
+    (doi:10.3886/E125201V1); login and terms-of-use click-through required,
+    so the zip was downloaded by hand (2026-11-09) and placed unchanged at
+    benchmark/manual-packages/T55/125201-V1.zip (6,300,749,153 bytes, md5
+    5236ca017e660e3caf5a0f8c5e495fd6; SOURCE.txt beside it).  V1 is the
+    only version.  555 entries, 39,692,074,204 bytes uncompressed: more
+    than the downloader's 20 GiB extraction cap, which refuses the whole
+    archive.  The catalog source is therefore a copy of that zip with the
+    two daily analysis panels deleted, made with
+    `cp 125201-V1.zip 125201-V1-no-daily-panels.zip && zip -d
+    125201-V1-no-daily-panels.zip "1. Create weather data/data
+    sources/Weather data from CONAGUA/Processed/30L_BINS_4C_AEJ.dta" "2.
+    Create death rates/Daily/data created/DEATH_1998_2017_AEJ.dta"` in
+    benchmark/manual-packages/T55/ (2,528,016,270 bytes, md5
+    a6c5bd9dcf5efe74b11212f5c6b55720 with Info-ZIP 3.0 on macOS; 553
+    entries, 16,208,981,448 bytes uncompressed).  The two deleted files
+    (13.7 GB weather bins with 30 daily lags, 9.8 GB daily death rates)
+    feed only Tables 2-4, Figures 2-3 and the daily appendix models, none
+    of which is pinned, and could not be read in the 300 s sandbox anyway.
+    Contents: Readme.pdf (23 pp.; data sources, run order, file-to-table
+    map, variable naming, no estimates); Master.do; folders "1. Create
+    weather data" (three do-files, raw CONAGUA daily station data as .CSV
+    and .DTA for 32 states, processed MIN/MAX_TEMPERATURE, PRECIPITATION,
+    EVAPORATION .dta and BINS_MONTHLY.dta, 262 MB, the monthly weather
+    bins), "2. Create death rates" (raw INEGI death records DEFUN90-17.DTA,
+    population files, the 0.94 GB monthly panel DEATH_OCUR_MONTHLY.dta,
+    SIMBAD_PoblacionDerechohabiente.dta/.xlsx with the insured share by
+    municipality and year, the 2016 Seguro Popular nomenclature as PDF,
+    .xlsx and .dta), "3. Produce Figure 1" to "7. Produce Table 5 and
+    Table 6" (do-files, figure PNGs, Table 1.xlsx summary statistics,
+    Table 5.rtf and Table 6.rtf), "5. Produce Figure 3, Table 4 and
+    Appendix C" (2000 census person files PER_F*.DTA, about 2.2 GB),
+    Appendix A (climate-model .txt grids, about 4.0 GB, life-table and
+    climate-change .xlsx, appendix .rtf tables), Appendix B (pollution
+    .xlsx, climate-zone and INEGI shapefiles, four nested INEGI map zips),
+    Appendix D (appendix .txt/.rtf tables, figure data .dta),
+    "Required Stata Package" (did_multiplegt.ado/.sthlp), log/March 2021
+    (18 .smcl logs), and 125 Stata .ster saved-estimate files in the
+    output/ folders.  The script-free copy (independent / blind)
+    withholds 202 files (the runner's manifest, 2026-11-10): 67 by
+    script suffix (48 .do, 1 .ado, 18 .smcl), 125 .ster saved estimates
+    (by name, rule added with this entry) and 10 esttab tables by content
+    (Table 5.rtf, Table 6.rtf, Appendix A Table Monthly Main/FEs.rtf,
+    Appendix D Table D3-D6 .rtf, and the unnumbered plain-text Table
+    D1.txt / D2.txt; rule extended with this entry).  Kept: Readme.pdf,
+    the data, Table 1.xlsx (summary statistics), the other .xlsx
+    workbooks, the figure PNGs, did_multiplegt.sthlp and a 162-byte Word
+    lock file (~$ble Monthly FEs.rtf, no numbers).  Table 5 columns (5)-(6) and the Table 5/6 do-file's merges also
+    read three files the package does not ship (Death_quartile_ingreso_90_
+    small.dta, Ingreso_medio.dta, pop_A_Derecho0_censo.dta, written by the
+    section-5 census scripts); none enters the pinned regressions.
+    Project page:
+    https://www.openicpsr.org/openicpsr/project/125201/version/V1/view
+
+original_claims:
+  # ---- Table 5, column (2): bins x month-by-year fixed effects ----
+  - description: sp_x_days_below_12_table5_col2
+    value: 0.010
+    claim_type: coefficient
+    standard_error: 0.019
+    unit: deaths per 100,000 eligible inhabitants per month, per additional day below 12°C in the month
+    location: "Table 5, column (2), Seguro Popular x days below 12°C"
+    context: >
+      Table 5 ("Impact of the Seguro Popular on the eligible population"),
+      column (2).  Monthly municipality panel, 1998-2017.  Outcome: the
+      monthly mortality rate per 100,000 inhabitants among people without
+      any other (standard) health insurance (no insurance, the Seguro
+      Popular or IMSS Oportunidades), dying from weather-sensitive causes
+      (all causes except infectious and parasitic diseases, neoplasms and
+      violent and accidental deaths) covered by the Seguro Popular.
+      Regressors: a Seguro Popular availability dummy (1 in a municipality
+      from the first month in which a death of someone covered by the
+      Seguro Popular is recorded there) interacted with the number of days
+      in the month in each average-daily-temperature bin (below 12°C,
+      12-16, 16-20, 20-24, 28-32, above 32°C; 24-28°C is the reference)
+      and with precipitation, plus the dummy itself.  Fixed effects:
+      municipality by month, municipality by year and month by year; the
+      temperature-bin day counts and precipitation are each interacted
+      with the month-by-year fixed effects (column (2) drops the
+      municipality-by-month interactions of the baseline column (1)).
+      Weighted by the municipality population with no access to any other
+      health insurance; standard errors clustered by municipality.  The
+      entry is the interaction with the number of days below 12°C.
+  - description: sp_x_days_12_16_table5_col2
+    value: -0.032
+    claim_type: coefficient
+    standard_error: 0.011
+    unit: deaths per 100,000 eligible inhabitants per month, per additional day at 12-16°C in the month
+    location: "Table 5, column (2), Seguro Popular x days at 12-16°C"
+    context: >
+      Table 5, column (2), the specification described for the column (2)
+      days-below-12°C entry (eligible population, weather-sensitive
+      covered causes, bins and precipitation interacted with month-by-year
+      fixed effects, weights for the uninsured population, municipality-
+      clustered SEs).  The entry is the interaction of the Seguro Popular
+      dummy with the number of days at 12-16°C.
+  - description: sp_x_days_16_20_table5_col2
+    value: -0.017
+    claim_type: coefficient
+    standard_error: 0.009
+    unit: deaths per 100,000 eligible inhabitants per month, per additional day at 16-20°C in the month
+    location: "Table 5, column (2), Seguro Popular x days at 16-20°C"
+    context: >
+      Table 5, column (2), same specification: the interaction with the
+      number of days at 16-20°C, which the text says becomes
+      statistically significant at the 10 percent level when fewer
+      interaction parameters are used (columns 2 and 3).
+  - description: sp_x_days_20_24_table5_col2
+    value: -0.005
+    claim_type: coefficient
+    standard_error: 0.010
+    unit: deaths per 100,000 eligible inhabitants per month, per additional day at 20-24°C in the month
+    location: "Table 5, column (2), Seguro Popular x days at 20-24°C"
+    context: >
+      Table 5, column (2), same specification: the interaction with the
+      number of days at 20-24°C.
+  - description: sp_x_days_28_32_table5_col2
+    value: -0.001
+    claim_type: coefficient
+    standard_error: 0.012
+    unit: deaths per 100,000 eligible inhabitants per month, per additional day at 28-32°C in the month
+    location: "Table 5, column (2), Seguro Popular x days at 28-32°C"
+    context: >
+      Table 5, column (2), same specification: the interaction with the
+      number of days at 28-32°C.
+  - description: sp_x_days_above_32_table5_col2
+    value: -0.011
+    claim_type: coefficient
+    standard_error: 0.052
+    unit: deaths per 100,000 eligible inhabitants per month, per additional day above 32°C in the month
+    location: "Table 5, column (2), Seguro Popular x days above 32°C"
+    context: >
+      Table 5, column (2), same specification: the interaction with the
+      number of days above 32°C.
+
+  # ---- Table 5, column (3): bins x month-by-year and x state fixed effects ----
+  - description: sp_x_days_below_12_table5_col3
+    value: 0.010
+    claim_type: coefficient
+    standard_error: 0.019
+    unit: deaths per 100,000 eligible inhabitants per month, per additional day below 12°C in the month
+    location: "Table 5, column (3), Seguro Popular x days below 12°C"
+    context: >
+      Table 5, column (3): as column (2) (eligible population, weather-
+      sensitive causes covered by the Seguro Popular, monthly rate per
+      100,000, Seguro Popular dummy interacted with the temperature-bin
+      day counts and precipitation, municipality by month, municipality by
+      year and month by year fixed effects, weights for the uninsured
+      population, municipality-clustered SEs), with the temperature-bin
+      day counts and precipitation interacted with both the month-by-year
+      fixed effects and state fixed effects.  The entry is the
+      interaction with the number of days below 12°C.
+  - description: sp_x_days_12_16_table5_col3
+    value: -0.034
+    claim_type: coefficient
+    standard_error: 0.011
+    unit: deaths per 100,000 eligible inhabitants per month, per additional day at 12-16°C in the month
+    location: "Table 5, column (3), Seguro Popular x days at 12-16°C"
+    context: >
+      Table 5, column (3), the specification described for the column (3)
+      days-below-12°C entry (bins and precipitation interacted with
+      month-by-year and state fixed effects).  The entry is the
+      interaction with the number of days at 12-16°C.
+  - description: sp_x_days_16_20_table5_col3
+    value: -0.016
+    claim_type: coefficient
+    standard_error: 0.009
+    unit: deaths per 100,000 eligible inhabitants per month, per additional day at 16-20°C in the month
+    location: "Table 5, column (3), Seguro Popular x days at 16-20°C"
+    context: >
+      Table 5, column (3), same specification: the interaction with the
+      number of days at 16-20°C.
+  - description: sp_x_days_20_24_table5_col3
+    value: -0.005
+    claim_type: coefficient
+    standard_error: 0.010
+    unit: deaths per 100,000 eligible inhabitants per month, per additional day at 20-24°C in the month
+    location: "Table 5, column (3), Seguro Popular x days at 20-24°C"
+    context: >
+      Table 5, column (3), same specification: the interaction with the
+      number of days at 20-24°C.
+  - description: sp_x_days_28_32_table5_col3
+    value: -0.001
+    claim_type: coefficient
+    standard_error: 0.012
+    unit: deaths per 100,000 eligible inhabitants per month, per additional day at 28-32°C in the month
+    location: "Table 5, column (3), Seguro Popular x days at 28-32°C"
+    context: >
+      Table 5, column (3), same specification: the interaction with the
+      number of days at 28-32°C.
+  - description: sp_x_days_above_32_table5_col3
+    value: -0.017
+    claim_type: coefficient
+    standard_error: 0.054
+    unit: deaths per 100,000 eligible inhabitants per month, per additional day above 32°C in the month
+    location: "Table 5, column (3), Seguro Popular x days above 32°C"
+    context: >
+      Table 5, column (3), same specification: the interaction with the
+      number of days above 32°C.
+
+# No I4R row covers Table 5: all 42 meta-database rows are Table 2 /
+# Figure 2 robustness variants (see the header), and no discussion paper
+# prints a reproduction of the Seguro Popular tables.  As in lopez-2022, a
+# robustness variant is not recorded as a reproduction; unlike lopez-2022
+# there is no row for any pinned cell at all, so no finding is recorded.
+i4r_replicator_findings: []
+
+notes: >
+  Headline findings: the Seguro Popular reduced the extra mortality of
+  mildly cold days among the eligible (uninsured) population.  Table 5,
+  Seguro Popular x days per bin (deaths per 100,000 per month per day):
+  col 1 (baseline, bins also x municipality-by-month FE) below 12°C
+  0.013 (0.022), 12-16°C -0.031 (0.012), 16-20°C -0.017 (0.011); col 2
+  (bins x month-by-year FE only) 0.010 (0.019), -0.032 (0.011), -0.017
+  (0.009), 20-24°C -0.005 (0.010), 28-32°C -0.001 (0.012), above 32°C
+  -0.011 (0.052); col 3 (bins x month-by-year and x state FE) 0.010
+  (0.019), -0.034 (0.011), -0.016 (0.009), -0.005 (0.010), -0.001
+  (0.012), -0.017 (0.054); col 4 (all causes) 12-16°C -0.043 (0.016).
+  Abstract: at least 1,600 lives per year since 2004, from col 1.  Only
+  cols 2 and 3 are pinned (feasibility, see the header).
+
+  Curation pass (2026-11-10).  Pinned 12 claims, values exactly as
+  printed in the accepted manuscript, every one equal to the package's
+  Table 5.rtf (esttab b(8), per-person rates; x 100,000, e.g. col 2
+  12-16°C -0.00000032 (0.00000011)) and to a curation run in the sandbox
+  image (R 4 / fixest feols with weights, varying slopes MA[...] and
+  CVE_ENT[...], cluster = municipality): col 2 0.0102 (0.0193), -0.0320
+  (0.0109), -0.0173 (0.0093), -0.0053 (0.0098), -0.0006 (0.0122),
+  -0.0109 (0.0518); col 3 0.0101 (0.0195), -0.0336 (0.0109), -0.0163
+  (0.0093), -0.0052 (0.0099), -0.0014 (0.0125), -0.0168 (0.0538).  Note
+  col 2 28-32°C: -0.00064 prints as -0.001, inside the printed-precision
+  half unit.  No meta-database row covers these cells (all 42 rows are
+  Table 2 / Figure 2), so there is nothing to cross-check and no
+  meta-database typo to record; the Table 2 cells the rows do cover all
+  match the manuscript.  Left out: Table 5 cols 1 and 4, all of Table 6
+  and the abstract's 1,600 (municipality-by-month x bin interactions:
+  the fixest run of col 1 had not finished after 13 minutes, over the
+  300 s sandbox limit); Table 5 cols 5-6 (also weights from
+  pop_A_Derecho0_censo.dta, written by the section-5 census scripts and
+  not shipped); Table 2 (the I4R-covered table), Tables 3-4 and Figures
+  2-3 (daily distributed-lag model on the two multi-GB panels removed
+  from the catalog copy; the README says they need more than 250 GB of
+  RAM); Table 1 (summary statistics); every appendix table.
+
+  Package-only facts (never in contexts).  "7. Produce Table 5 and Table
+  6/1. Estimations for Table 5 and Table 6.do": use DEATH_OCUR_MONTHLY.dta
+  (828,711 municipality-months, 240 variables); TREATMENT = (time -
+  TIMING >= 0), where Stata treats a missing TIMING (365 rows) as +inf,
+  so those rows are coded 1 (the curation run kept that coding; whether
+  it matters was not tested); merge 1:1 on CVE_ENT CVE_MUN anio mes with
+  BINS_MONTHLY.dta (scale_*_m day counts per 2°C bin, PREC_m, a_m days
+  observed; incomplete months already dropped); 4°C bins scale_12_x =
+  scale_10_m + scale_12_m (below 12), scale_16_x = 14+16, scale_20_x =
+  18+20, scale_24_x = 22+24, scale_32_x = 30+32 (28-32), scale_32p_x =
+  scale_32_p_m; PREC_x = PREC_m / a_m; TREATMENT_* = TREATMENT x bin;
+  merge m:1 on CVE_ENT CVE_MUN anio with
+  SIMBAD_PoblacionDerechohabiente.dta (Share_derecho); Pop_Derecho0 =
+  int(pop_total x (1 - Share_derecho)); outcome DR_Derecho0_Popular_c =
+  sum_Derecho0_Popular_c / Pop_Derecho0 (per person; the paper reports x
+  100,000).  reghdfe DR TREATMENT_scale_12 _16 _20 _24 _32 _32p
+  TREATMENT_PREC TREATMENT [fweight=Pop_Derecho0], absorb(FE1 FE2
+  TREATMENT mes_anio##c.(PREC_x scale_*_x)) cluster(ID_Large), FE1 =
+  group(CVE* mes), FE2 = group(CVE* anio); col 3 adds
+  CVE_ENT##c.(PREC_x scale_*_x); col 1 adds FE1##c.(...) instead.  esttab
+  reports Observations = sum of fweights (18,156,447,450); the estimation
+  sample is about 672,000 municipality-months after missing weather
+  months and zero weights.  The do-file also merges
+  Death_quartile_ingreso_90_small.dta, Ingreso_medio.dta and
+  pop_A_Derecho0_censo.dta, which the package does not ship; none enters
+  the pinned regressions (a Stata run of the file as shipped would stop
+  at the first missing merge).
+
+  Catalog copy of the package.  The full zip (39.7 GB uncompressed)
+  exceeds the downloader's 20 GiB extraction cap, so dataset.source is a
+  copy with the two daily panels deleted (command in access_notes); it
+  must be recreated next to the placed zip on any machine that runs this
+  entry.  Sandbox I/O: reading the needed columns of the 0.94 GB
+  mortality panel and the weather panel took about 90 s in the curation
+  run; a reproduction should read them once and keep a compact copy for
+  the regressions.  The generation prompt's file listing (curation run,
+  2026-11-10) shows 14 files ("... and 281 more files"), mostly
+  2000-census person files, and the data inventory is capped before the
+  two monthly panels; neither DEATH_OCUR_MONTHLY.dta nor
+  SIMBAD_PoblacionDerechohabiente.dta is named in the prompt, so a
+  reproduction has to find them by listing the directory.
+
+  What was read.  The accepted manuscript (abstract, Sections V.A-V.B,
+  Tables 2, 5 and 6 in detail); the 42 meta-database rows; Readme.pdf;
+  the Table 5/6 do-file; Table 5.rtf and Table 6.rtf; the variable lists
+  of the three input files; the strip-rule classification of the
+  package's text files.
+
+  What could not be verified.  The published typeset article (paywalled)
+  was not compared with the manuscript beyond the I4R-recorded Table 2
+  cells.  The authors' Stata code was not run (no Stata here); the R run
+  above is the curation's own.
+
+  Original analysis in Stata (reghdfe, estout); language: r is the
+  reproduction target.

@@ -880,3 +880,69 @@ def test_r_data_workspaces_and_rds_files_are_kept(tmp_path):
     # Not an R serialization at all.
     _write(tmp_path, "odd.rda", b"\x00\x01" + "\n".join(STARGAZER_ROWS).encode())
     assert classify_tree(tmp_path) == []
+
+
+# Cohen & Dechezleprêtre (2022) ship every regression three ways the rule used to keep:
+# Stata ``estimates save`` files (``.ster``, binary), ``esttab ... using "Table 5.rtf"``
+# and plain-text ``esttab ... nonumbers`` (no ``(1) (2)`` header).  Shapes from the package,
+# numbers shortened.
+ESTTAB_RTF = (
+    r"{\rtf1\ansi\deff0 {\fonttbl{\f0\fnil Times New Roman;}}" + "\n"
+    r"{\info {\author .}{\company .}{\title .}{\creatim\yr2021\mo3\dy6\hr14\min00}}" + "\n"
+    r"\deflang1033\plain\fs24" + "\n"
+    r"{\trowd\trgaph108\cellx1908\cellx3924\cellx5940\pard\intbl\ql {}\cell \pard\intbl\qc {y_a}\cell"
+    r" \pard\intbl\qc {y_b}\cell\row}" + "\n"
+    r"{\trowd\trgaph108\cellx1908\cellx3924\cellx5940\pard\intbl\ql {treat_cold}\cell"
+    r" \pard\intbl\qc {-0.00000031**}\cell \pard\intbl\qc {-0.00000032***}\cell\row}" + "\n"
+    r"{\trowd\trgaph108\cellx1908\cellx3924\cellx5940\pard\intbl\ql {}\cell"
+    r" \pard\intbl\qc {(0.00000012)}\cell \pard\intbl\qc {(0.00000011)}\cell\row}" + "\n"
+    r"{\trowd\trgaph108\cellx1908\cellx3924\cellx5940\pard\intbl\ql {treat_mild}\cell"
+    r" \pard\intbl\qc {-0.00000017}\cell \pard\intbl\qc {-0.00000017*}\cell\row}" + "\n"
+    r"{\trowd\trgaph108\cellx1908\cellx3924\cellx5940\pard\intbl\ql {}\cell"
+    r" \pard\intbl\qc {(0.00000011)}\cell \pard\intbl\qc {(0.00000009)}\cell\row}" + "\n"
+    r"{\trowd\trgaph108\cellx1908\cellx3924\cellx5940\pard\intbl\ql {Observations}\cell"
+    r" \pard\intbl\qc {18156447450}\cell \pard\intbl\qc {18156447450}\cell\row}" + "\n"
+    r"{\pard\ql Standard errors in parentheses\par}" + "\n"
+    r"{\pard\ql * p < 0.1, ** p < 0.05, *** p < 0.01\par}" + "\n"
+    "}\n"
+)
+ESTTAB_TXT_NONUMBERS = """\
+------------------------------------------------------------
+                  DR_A1_D0_P      DR_A2_D0_P      DR_A3_D0_P
+------------------------------------------------------------
+TREATMENT_scale_12  -0.00000002      0.00000007      0.00000003
+                (0.00000004)    (0.00000008)    (0.00000003)
+TREATMENT_scale_16  -0.00000004*    -0.00000008      0.00000002
+                (0.00000002)    (0.00000005)    (0.00000002)
+------------------------------------------------------------
+Observations     18156447450     18156447450     18156447450
+------------------------------------------------------------
+Standard errors in parentheses
+* p<0.1, ** p<0.05, *** p<0.01
+"""
+SUMMARY_RTF = (
+    r"{\rtf1\ansi {\trowd\cellx1908\cellx3924\pard\intbl {Variable}\cell {Mean}\cell\row}"
+    r"{\trowd\cellx1908\cellx3924\pard\intbl {Deaths}\cell {12.4}\cell\row}"
+    r"{\trowd\cellx1908\cellx3924\pard\intbl {}\cell {(3.1)}\cell\row}"
+    r"{\trowd\cellx1908\cellx3924\pard\intbl {Observations}\cell {828711}\cell\row}}" + "\n"
+)
+
+
+def test_stata_saved_estimates_are_stripped_by_name(tmp_path):
+    ster = _write(tmp_path, "output/Table_5_col_1_A345.ster", b"\x00\x01stata estimates\x00")
+    assert strip_reason(ster) == "saved-estimates"
+    assert strip_reason(_write(tmp_path, "output/MODEL.STER", b"\x00")) == "saved-estimates"
+
+
+def test_esttab_rtf_and_unnumbered_text_tables_are_stripped(tmp_path):
+    assert content_reason(_write(tmp_path, "output/Table 5.rtf", ESTTAB_RTF)) == "regression-table"
+    assert content_reason(_write(tmp_path, "output/Table D1.txt", ESTTAB_TXT_NONUMBERS)) == "regression-table"
+
+
+def test_summary_rtf_and_unnumbered_summary_text_are_kept(tmp_path):
+    # Means with SDs in parentheses and an N row, no legends: summary statistics stay.
+    assert content_reason(_write(tmp_path, "Table 1.rtf", SUMMARY_RTF)) is None
+    no_legends = ESTTAB_TXT_NONUMBERS.replace("Standard errors in parentheses\n", "").replace(
+        "* p<0.1, ** p<0.05, *** p<0.01\n", ""
+    )
+    assert content_reason(_write(tmp_path, "summary.txt", no_legends)) is None
