@@ -1,0 +1,408 @@
+# Original paper: Laouénan, M., & Rathelot, R. (2022). "Can Information
+#   Reduce Ethnic Discrimination? Evidence from Airbnb." American Economic
+#   Journal: Applied Economics, 14(1), 107-132.  doi:10.1257/app.20190188
+#   (January 2022 issue; accepted 2021-01-06 per the WRAP record).
+#
+# Reproduction report: I4R First Meta Database replication team 8 (26
+#   rows, entered 2023-09-15).  No I4R discussion paper is listed for this
+#   report (candidates-2026-11-07 row T8; none found by web search
+#   2026-11-10), so i4r_report_url is the meta-database.  Verdict:
+#   computationally reproducible with minor discrepancies —
+#   computational_reproduction = 1, perfect_reproduction = No,
+#   why_not_perfect_repro "Third-decimal place discrepancies for Tables 1,
+#   2, and 5. Replicators translate Stata code to R.", and
+#   best_describe_compreprod "Analysis and cleaning code produce the same
+#   output as presented in the paper".  The schema has no "minor
+#   discrepancies" label, so outcome_label is reproducible (as for
+#   leeson-2022).  The 26 rows: 24 pair a Table 5 original value with a
+#   replicator value, one is Figure 2 (no numbers) and one is blank.
+#   Every paired row is a ROBUSTNESS variant, not a recomputation of the
+#   published specification: 22 widen the Table 5 review-count sample
+#   (the paper's columns use fewer than 40 / 80 reviews; the replicators
+#   use up to 99, 119, 139 reviews or the full sample) and 2 are
+#   heterogeneity splits.  result_same is blank on every paired row and
+#   coding_correction reads "Not done by replicators".  So no row records a
+#   reproduced published number and i4r_replicator_findings is empty.
+#   The recorded originals are three Table 5 cells, each equal to the
+#   open copy's printed value in its own cell: column 1 Minority x K/100
+#   0.090 (0.036), column 3 Minority x K/100 0.120 (0.045), column 3
+#   Minority x (K/100)^2 -0.122 (0.053).
+#
+# Why this paper:
+#   1. The largest analysis file in the catalog: one 2.4 GB Stata file
+#      (3,683,378 listing-wave rows, 183 variables), a stress test of the
+#      sandbox's 300 s / 4 GB budget (see notes, "Compute budget").
+#   2. A manually placed openICPSR package whose nested data zip uses
+#      Deflate64; the entry points at a re-deflated derived copy.
+#   3. High-dimensional fixed-effects OLS on a listing panel (city-wave,
+#      neighbourhood and block fixed effects, listing fixed effects) plus a
+#      non-linear least-squares model with a bootstrap.
+#
+# What original_claims pins: Table 2 (ethnic price gap by specification),
+#   the Minority coefficient in all four columns with SEs and the common
+#   N; Table 1's four within-city-wave gaps by group (Blacks and
+#   Arabic/Muslim hosts in North America and Europe); Table 4's Minority x
+#   f(K) coefficient in both columns with bootstrap SEs (the abstract's
+#   statistical-discrimination and inaccurate-beliefs gaps); Table 5's
+#   Minority x K/100 coefficient in columns 1 and 3 with SEs (the cells the
+#   meta-database records).  13 claims, values exactly as printed.
+#
+# Paper text.  The open copy is the Warwick WRAP deposit, which the WRAP
+#   record (https://wrap.warwick.ac.uk/146995/, read 2026-11-10) and the
+#   PDF's cover page both label "Author's Accepted Manuscript" ("Accepted
+#   Version"); every I4R-recorded original value (the three Table 5 cells
+#   above) matches the same cell of the copy's Table 5.
+
+id: laouenan-2022-airbnb-ethnic-discrimination
+i4r_report_url: https://github.com/I4Replication/I4R-First-Meta-Paper
+# Target language for regeneration (the original is Stata 16, with two
+# small R scripts for Figure 2 and Appendix Figure A4 and Python scraping
+# scripts; Retally generates R and reads the .dta with haven).
+language: r
+outcome_label: reproducible
+# Pipeline tuning is frozen; this is an evaluation paper.
+split: holdout
+# Contamination bookkeeping.  publication_date is the first public
+# version with the paper's analysis: CAGE Online Working Paper No. 318
+# (University of Warwick), "Ethnic Discrimination on an Online Marketplace
+# of Vacation Rental", 2017 (RePEc cge:wacage:318; also HAL hal-01514713,
+# April 2017), whose abstract already reports the 3.2% gap and the 2.5
+# points; found by web search 2026-11-10 (the month is from the search
+# summary, not from the PDF, which was not opened).  A 2016 IZA
+# Transatlantic Meeting draft marked "Please do not quote" and a February
+# 2015 UC Irvine seminar ("The Price is (not) Right") precede it and are
+# not counted.  The journal version: Crossref issued 2022-01 (DOI created
+# 2021-12-29).  package_release_date is the DataCite registration of
+# doi:10.3886/E120078V1 (registered 2021-12-17T18:46:04Z, DataCite API
+# 2026-11-10); the openICPSR page itself needs a login.
+publication_date: "2017-03"
+package_release_date: "2021-12-17"
+
+paper:
+  # The author's accepted manuscript in the University of Warwick's WRAP
+  # repository (record 146995, "Accepted Version", deposited 2021-01-11);
+  # checked 2026-11-10: 200 application/pdf, 920,188 bytes, md5
+  # b1b32fb0a2f0ec2a6f19b82cf6e9556d, 32 pp. (a WRAP cover page plus the
+  # AEJ-template manuscript with the online appendix).  The AEA PDF is
+  # paywalled.  A typeset copy is mirrored at gwern.net
+  # (doc/economics/2022-laouenan.pdf, seen in search results, not opened).
+  source: https://wrap.warwick.ac.uk/146995/1/WRAP-Can-information-reduce-ethnic-discrimination-evidence-Airbnb-2020.pdf
+  title: "Can Information Reduce Ethnic Discrimination? Evidence from Airbnb"
+  authors:
+    - Morgane Laouénan
+    - Roland Rathelot
+
+dataset:
+  source: benchmark/manual-packages/T8/120078-V1-redeflated.zip
+  data_access: manual
+  access_notes: >
+    AEA Data and Code Repository on openICPSR, project 120078, version V1
+    (doi:10.3886/E120078V1); login and terms-of-use click-through required,
+    so the zip was downloaded by hand (2026-11-09) and placed unchanged at
+    benchmark/manual-packages/T8/120078-V1.zip (139,139,866 bytes, md5
+    4a498d334c1ec6b068880f96176f3a5f; SOURCE.txt beside it).  V1 is the
+    only version.  The source this entry points at is a DERIVED copy beside
+    it, 120078-V1-redeflated.zip (149,245,513 bytes, md5
+    d21deeb49904a97bb342f938b38994ab), made 2026-11-10 because the nested
+    data/base_airbnb_AEJ.zip inside the original is compressed with
+    Deflate64 (zip method 9), which Python's zipfile (and so the
+    downloader) cannot read: the original was extracted with Info-ZIP
+    unzip, the one member base_airbnb_AEJ.dta (2,405,397,122 bytes, CRC-32
+    601ca912, equal to the CRC recorded in the original inner zip) was
+    re-zipped with standard deflate, and every other file is
+    byte-identical (SOURCE.txt records the steps).  45 entries.  Contents:
+    README.pdf (2 pp.; folder layout, script-to-table map, software,
+    "took 20 days to run" for the bootstrap script; no estimates);
+    data/base_airbnb_AEJ.zip (the analysis file, extracted by the
+    downloader to data/base_airbnb_AEJ/base_airbnb_AEJ.dta, not the
+    data/base_airbnb_AEJ.dta path the do-files use) and
+    data/arab_muslim_names.xlsx (the first-name list); code/ with 14 Stata
+    do-files (0_masterfile_analysis.do, 1_statdes.do, 2_reg.do,
+    3_structural.do, 4_addresults.do, 5_appendix.do, cleaning_code.do and
+    helper programs), two R scripts (graphs_price_reviews.R,
+    theory_K_price.R), and the scraping code twice, as a folder
+    code/code_scraping/ and as code/code_scraping.zip (two Python scripts
+    and 19 cntr_<city>.txt neighbourhood URL lists); an empty results/
+    folder and an empty file "here".  No logs, tables or manuscript ship.
+    The downloader extracts the nested scraping zip into
+    code/code_scraping/code_scraping/.  The script-free copy (independent
+    / blind) withholds 20 files, all by suffix: the 14 .do files, the two
+    .R scripts and the four .py scraping scripts (both copies); kept are
+    README.pdf, the data, the names spreadsheet and the 38 neighbourhood
+    lists, none of which prints a pinned value.  Project page:
+    https://www.openicpsr.org/openicpsr/project/120078/version/V1/view
+
+original_claims:
+  # ---- Table 2: ethnic price gap by specification ----
+  - description: minority_table2_col1_citywave_fe
+    value: -0.169
+    claim_type: coefficient
+    standard_error: 0.008
+    unit: log points of the daily price
+    location: "Table 2 (Ethnic price gap, by specification), column (1), Minority"
+    context: >
+      Table 2, column (1).  OLS regression of the daily log-price (the
+      nightly price plus a sixth of the cleaning fee, after dropping the
+      top and bottom 1% of the price distribution) on a minority-host
+      indicator (a Black host identified from the profile picture, or a
+      host with an Arabic, Muslim or Sub-Saharan African first name) with
+      city-by-wave fixed effects only.  Sample: listing-wave observations
+      of Airbnb listings in 19 cities in North America and Europe, 21
+      collection waves (June 2014 to June 2015 plus November 2017),
+      restricted to listings that gained at least one review over the
+      observation period.  Robust standard errors clustered at the
+      property level.
+  - description: minority_table2_col2_characteristics
+    value: -0.111
+    claim_type: coefficient
+    standard_error: 0.005
+    unit: log points of the daily price
+    location: "Table 2, column (2), Minority"
+    context: >
+      Table 2, column (2): the column (1) regression adding all property
+      and host characteristics (the paper's Appendix Table A4 list: size,
+      type of property and bed, amenities, rules, host profile
+      information, the number of pictures and of professional pictures,
+      with indicators for missing values).  City-by-wave fixed effects;
+      robust standard errors clustered at the property level.
+  - description: minority_table2_col3_location_fe
+    value: -0.067
+    claim_type: coefficient
+    standard_error: 0.009
+    unit: log points of the daily price
+    location: "Table 2, column (3), Minority"
+    context: >
+      Table 2, column (3): the column (1) regression adding neighbourhood
+      fixed effects (Airbnb's neighbourhoods) and block fixed effects (a
+      grid of squares 0.6 miles wide, each listing assigned to the block
+      holding the centre of its displayed location circle), without
+      property characteristics.  The table notes say standard errors are
+      clustered at the property level.
+  - description: minority_table2_col4_location_fe_characteristics
+    value: -0.032
+    claim_type: coefficient
+    standard_error: 0.006
+    unit: log points of the daily price
+    location: "Table 2, column (4), Minority"
+    context: >
+      Table 2, column (4): city-by-wave, neighbourhood and block fixed
+      effects plus all property and host characteristics; the residual
+      ethnic price gap the abstract reports for comparable listings in the
+      same neighbourhood.  The table notes say standard errors are
+      clustered at the property level.
+  - description: n_obs_table2
+    value: 2474551
+    claim_type: count
+    unit: listing-wave observations
+    location: "Table 2, N obs. (all four columns)"
+    context: >
+      Number of observations in every column of Table 2: listing-wave
+      observations of listings that gained at least one review over the
+      observation period (the same sample in all four columns).
+
+  # ---- Table 1: within-city-wave gaps by group ----
+  - description: gap_blacks_us_canada_table1
+    value: 31.3
+    claim_type: coefficient
+    unit: percent (the within-city-wave price gap, i.e. minus 100 times the log-price coefficient)
+    location: "Table 1 (Raw price gaps by ethnic groups), Blacks (US/Can), Within-city-wave gap"
+    context: >
+      Table 1, row Blacks (US/Can), column Within-city-wave gap.  One
+      linear regression of the daily log-price on indicators for four
+      minority groups (Blacks in the US and Canada, Blacks in Europe,
+      Arabic/Muslim hosts in the US and Canada, Arabic/Muslim hosts in
+      Europe; majority hosts the omitted group) and dummies for each city
+      interacted with each wave, on the Table 2 sample.  The table prints
+      the gap as a positive percentage: the coefficient on the group's
+      indicator, sign reversed, times 100.
+  - description: gap_blacks_europe_table1
+    value: 26.3
+    claim_type: coefficient
+    unit: percent (the within-city-wave price gap, i.e. minus 100 times the log-price coefficient)
+    location: "Table 1, Blacks (Europe), Within-city-wave gap"
+    context: >
+      Table 1, row Blacks (Europe): the same regression as the Blacks
+      (US/Can) row; the gap for Black hosts in European cities, printed
+      as a positive percentage.
+  - description: gap_arabic_muslim_us_canada_table1
+    value: 4.7
+    claim_type: coefficient
+    unit: percent (the within-city-wave price gap, i.e. minus 100 times the log-price coefficient)
+    location: "Table 1, Arabic/Muslim (US/Can), Within-city-wave gap"
+    context: >
+      Table 1, row Arabic/Muslim (US/Can): the same regression; the gap
+      for hosts with an Arabic, Muslim or Sub-Saharan African first name
+      in the US and Canada, printed as a positive percentage.
+  - description: gap_arabic_muslim_europe_table1
+    value: 6.8
+    claim_type: coefficient
+    unit: percent (the within-city-wave price gap, i.e. minus 100 times the log-price coefficient)
+    location: "Table 1, Arabic/Muslim (Europe), Within-city-wave gap"
+    context: >
+      Table 1, row Arabic/Muslim (Europe): the same regression; the gap
+      for hosts with an Arabic, Muslim or Sub-Saharan African first name
+      in European cities, printed as a positive percentage.
+
+  # ---- Table 4: non-linear model, the abstract's decomposition ----
+  - description: minority_x_fK_table4_col1_statistical_discrimination
+    value: 0.034
+    claim_type: coefficient
+    standard_error: 0.006
+    unit: log points of the daily price
+    location: "Table 4 (Non-linear model of log-prices as a function of the number of reviews), column (1), Minority x f(K)"
+    context: >
+      Table 4, column (1): non-linear least squares of equation (3), the
+      daily log-price on f(K) = K/(K + rho) interacted with indicators for
+      the listing's last known average rating (5, 4.5, 4 and 3.5 stars or
+      fewer) and with the minority indicator, with listing fixed effects,
+      city-by-wave dummies and property and host characteristics; K is the
+      listing's number of reviews at the wave and rho is estimated jointly
+      (one rho for all terms).  The entry is the coefficient on minority x
+      f(K), read as the total ethnic gap due to statistical
+      discrimination.  Table 2 sample.  Standard error by block bootstrap
+      at the listing level.
+  - description: minority_x_fK_table4_col2_inaccurate_beliefs
+    value: 0.025
+    claim_type: coefficient
+    standard_error: 0.006
+    unit: log points of the daily price
+    location: "Table 4, column (2), Minority x f(K)"
+    context: >
+      Table 4, column (2): non-linear least squares of equation (4), as
+      column (1) but with a single f(K) term in place of the
+      rating-specific ones, so the coefficient on minority x f(K) is read
+      as the part of statistical discrimination due to inaccurate beliefs.
+      Listing fixed effects, city-by-wave dummies, property and host
+      characteristics; Table 2 sample; standard error by block bootstrap
+      at the listing level.
+
+  # ---- Table 5: within-listing linear and quadratic models ----
+  - description: minority_x_K100_table5_col1_linear_under40
+    value: 0.090
+    claim_type: coefficient
+    standard_error: 0.036
+    unit: log points of the daily price per 100 reviews
+    location: "Table 5 (Robustness: Linear and quadratic models of price with listing fixed effects), column (1), Minority x K/100"
+    context: >
+      Table 5, column (1): OLS with listing fixed effects of the daily
+      log-price on the number of reviews divided by 100 (K/100)
+      interacted with indicators for the listing's last known average
+      rating (3.5 stars or fewer, 4, 4.5, 5) and with the minority
+      indicator, controlling for city-by-wave fixed effects and property
+      characteristics.  Sample: observations with fewer than 40 reviews.
+      The entry is the coefficient on minority x K/100.  Robust standard
+      errors clustered at the property level.
+  - description: minority_x_K100_table5_col3_quadratic_under80
+    value: 0.120
+    claim_type: coefficient
+    standard_error: 0.045
+    unit: log points of the daily price per 100 reviews
+    location: "Table 5, column (3), Minority x K/100"
+    context: >
+      Table 5, column (3): the quadratic specification of equation (5),
+      the column (1) model adding the squares of K/100 interacted with the
+      rating indicators and with the minority indicator, on observations
+      with fewer than 80 reviews.  The entry is the linear minority x K/100
+      coefficient.  Listing fixed effects, city-by-wave fixed effects,
+      property characteristics; robust standard errors clustered at the
+      property level.
+
+notes: >
+  Headline findings: within the same neighbourhood, minority hosts charge
+  3.2% less for comparable listings (Table 2 col 4, -0.032 (0.006)); the
+  raw within-city-wave gap is -0.169 (0.008), -0.111 (0.005) with
+  property characteristics and -0.067 (0.009) with location fixed
+  effects, N 2,474,551 in every column.  Table 1's gaps: Blacks 31.3%
+  (US/Can) and 26.3% (Europe), Arabic/Muslim 4.7% (US/Can) and 6.8%
+  (Europe).  The non-linear model attributes the whole initial gap to
+  statistical discrimination (Table 4 col 1 minority x f(K) 0.034
+  (0.006)), of which the inaccurate-beliefs part is 0.025 (0.006) (col 2;
+  the abstract's "three quarters (2.5 points)"); rho 13.7 (0.30), not
+  pinned.  Table 5: minority x K/100 0.090 (0.036) for K < 40 and 0.120
+  (0.045) in the quadratic K < 80 model (minority x (K/100)^2 -0.122
+  (0.053), not pinned).
+
+  Curation pass (2026-11-10).  13 claims from Tables 1, 2, 4 and 5,
+  values exactly as printed in the accepted manuscript.  Cross-check
+  against the meta-database: its three distinct original cells (Table 5
+  col 1 0.090 / 0.036, col 3 0.120 / 0.045, col 3 squared term -0.122 /
+  0.053) equal the copy's Table 5 cells.  The other pinned values have no
+  I4R row.  Left out: Table 1 sample sizes and shares (they sum to the
+  Table 2 N), Table 2 adjusted R2s, Table 3 (Minority by review-count
+  segment, -0.034 (0.009), -0.026 (0.007), -0.023 (0.009), -0.022
+  (0.011), -0.021 (0.015); five more regressions with the full control
+  set and ratings), Table 4's rating x f(K) terms and rho, Table 5 col 2
+  (K < 60, 0.060 (0.027)) and its rating terms, the Table 5 squared
+  minority term, Tables 6-10 (subsamples, matching, ratings, upgrading,
+  review accumulation) and the appendix.
+
+  Paper vs package (package-only facts; never in contexts).  (1) Table 2
+  cols 3-4 and Table 3 are run with areg ... absorb(blockID)
+  cl(blockID), i.e. standard errors clustered by BLOCK, while the table
+  notes say "clustered at the property level"; the contexts say "the
+  table notes say".  Cols 1-2 cluster by listing (newid).  (2) Table 5's
+  xtreg ... fe also includes minority x wave dummies
+  (c.minodummy#ib10.wave), which the paper's equation (5) and table notes
+  do not mention, and restricts every column to review > 0 (K between 1
+  and 39 in col 1, the I4R rows' "1 to 39 reviews").  (3) Table 1's gaps
+  are the coefficients on i.mino in reg log_price i.citywaveID i.mino
+  (1_statdes.do); the package's estout prints them as signed log points
+  (-0.313 etc.); the paper prints the magnitudes as percentages.
+  (4) Table 4 is 3_structural.do / fun_structural_fe.do / nlstructfe.do:
+  NLS with listing fixed effects, 400 block-bootstrap replications for
+  the full sample (README: the bootstrap script "took 20 days to run").
+  Analysis sample: keep if Drev100 > 0 (the listing's review count rose
+  over the panel); 2,474,551 of 3,683,378 rows.  Variables: log_price,
+  minodummy (mino = 1 majority, 2 Arabic/Muslim Europe, 3 Arabic/Muslim
+  US/Can, 4 Blacks Europe, 5 Blacks US/Can), citywaveID, hoodcityID,
+  blockID, newid, wave, review, rev100 (review/100), lastrat7-lastrat10
+  (last-rating indicators), and the $lesX control list in
+  global_vars.do (79 variables).
+
+  Compute budget (measured 2026-11-10 in the retally-sandbox-r image with
+  the runner's limits: --memory 4g, --cpus 1, 300 s timeout, the
+  dataset bind-mounted read-only from the worktree cache).  Reading the
+  .dta with haven::read_dta and col_select (9 columns or 93 columns, the
+  time is the same: the file is read whole) took 111-132 s on an idle
+  host and 250 s while other benchmark containers were running.  On the
+  filtered sample (fixest): Table 1 and Table 2 col 1 (city-wave FE, a
+  handful of regressors) take about 1 s each and reproduce the printed
+  values (-0.0684, -0.0466, -0.2626, -0.3134; -0.1686 (0.0079)); Table 2
+  col 3 (three FE sets, block-clustered) takes about 28 s and gives
+  -0.0671 (0.0093).  Table 2 col 4 (three FE sets plus the 79 controls)
+  was killed for memory (out of the 4 GB) even with integer storage
+  and lean = TRUE.  Table 3 col 1 (the 350,916 zero-review observations
+  fixest keeps, three FE sets plus the controls) took 109 s and gives
+  -0.0344 (0.0085), the printed -0.034 (0.009) (read 128 s, total 249
+  s).  Table 5 col 1 (listing and city-wave FE, the controls and the
+  minority x wave terms, on the fewer-than-40-reviews rows) was killed
+  for memory.  So on an idle host a careful
+  script reaches Table 1, Table 2 cols 1 and 3 and the N inside the
+  budget; the controls-heavy columns, Table 4 (NLS plus a 400-replication
+  bootstrap) and Table 5 (listing FE on about 1.9 to 2.1 million rows
+  with the controls) are not expected to finish in one 300 s, 4 GB
+  sandbox run.  They are pinned anyway as the paper's headline numbers;
+  a failure on them measures the budget as much as the model.
+
+  What was read.  The accepted manuscript (all 32 pp., Tables 1-5 in
+  detail); the WRAP record page; the 26 meta-database rows; README.pdf;
+  0_masterfile_analysis.do, global_vars.do, 2_reg.do and its three
+  helpers, the Table 1 section of 1_statdes.do, 3_structural.do; the .dta
+  header (183 variables); the strip-rule classification of the extracted
+  package.
+
+  Paper parsing.  The WRAP PDF opens with a repository cover page, so the
+  pipeline's parsed title is "warwick.ac.uk/lib-publications" and its
+  "abstract" snippet is a mid-paper fragment (seen in the 2026-11-10
+  oracle prompts); the full manuscript text and the curated claims are
+  still in the prompt.
+
+  What could not be verified.  The authors' Stata code was not run;
+  Table 2 col 2 and 4, Tables 4 and 5 were not recomputed (budget above).
+  The CAGE working paper PDF and the published AEA typeset version were
+  not opened, so publication_date's month and the identity of the
+  accepted manuscript's tables with the published ones rest on the WRAP
+  "Accepted Version" label and the I4R Table 5 cells.
+
+  Original analysis in Stata 16 (with R for two figures and Python for
+  the scraping); language: r is the reproduction target.
