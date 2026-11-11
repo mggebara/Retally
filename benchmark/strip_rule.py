@@ -7,7 +7,8 @@ by file, what that copy leaves out.  Two layers:
 
 1. **By name** (:func:`name_reason`): script suffixes (``.do``, ``.R``,
    ``.py``, ``.ipynb``, ``.log``, ``.smcl``, ...), ``.Rhistory`` and
-   ``log_*.txt`` console sessions.  Cheap and unconditional.
+   ``log_*.txt`` console sessions, and Stata saved estimates (``.ster``).
+   Cheap and unconditional.
 2. **By content** (:func:`content_reason`), for every other text file
    under :data:`SIZE_CAP_BYTES`, whatever its extension — packages ship
    Stata logs as ``.txt``, do-files copied to ``.txt``, R sessions with no
@@ -21,7 +22,9 @@ by file, what that copy leaves out.  Two layers:
      script saved as ``.txt``): most non-comment lines are commands.
    * Regression tables: ``.tex`` (esttab/estout fragments, stargazer, any
      tabular with ``Observations``/``R-squared``/standard-error rows),
-     ``.html``, plain-text ``esttab``/``outreg2`` output, regression-shaped
+     ``.html``, plain-text ``esttab``/``outreg2`` output (numbered columns, or
+     all four markers when ``nonumbers`` dropped them), ``.rtf`` tables read
+     as text with the RTF control words removed, regression-shaped
      ``.csv`` (only with ``Observations``/``R-squared`` rows), and
      spreadsheets (``.xlsx`` and old binary ``.xls``) whose strings carry
      the same markers or hold a Stata ``export excel`` results matrix
@@ -47,7 +50,9 @@ by file, what that copy leaves out.  Two layers:
    * PDFs with a page that reads as a regression table (three markers on
      one page of the pymupdf text): the accepted manuscript or online
      appendix a package ships beside its data.  README / codebook PDFs
-     stay.
+     stay, unless they quote estimates cell by cell (three or more
+     "0.045, see Table 2 Panel A Column 1, coefficient on ..." citations:
+     ``result-citations``; Word documents too).
    * Word documents (``.docx``) the same way, with a window of about a
      page of consecutive paragraphs standing in for the page: the
      manuscript, its tables (OCR'd or as images with their notes) or an
@@ -102,6 +107,12 @@ SCRIPT_SUFFIXES = frozenset(
 SCRIPT_NAMES = frozenset({".rhistory", ".rapp.history"})
 SCRIPT_NAME_PATTERNS = (re.compile(r"^log[_-].*\.txt$", re.IGNORECASE),)
 
+# Saved estimation results: Stata's ``estimates save`` writes ``.ster`` files
+# holding every coefficient, its variance matrix and e(N).  They are binary (so
+# never content-tested) and never data, so they go by name (Cohen 2022 ships
+# 125, one per regression of the paper's tables).
+ESTIMATE_SUFFIXES = frozenset({".ster"})
+
 # Data formats: never stripped, never content-tested (R workspaces aside: see
 # :func:`_r_workspace_reason`).
 DATA_SUFFIXES = frozenset(
@@ -134,9 +145,10 @@ class StrippedFile:
     """POSIX path relative to the package root."""
 
     reason: str
-    """``script-suffix``, ``transcript-name``, ``stata-log``, ``smcl``,
+    """``script-suffix``, ``saved-estimates``, ``transcript-name``, ``stata-log``, ``smcl``,
     ``r-transcript``, ``python-output``, ``script-content:stata|r|python``,
-    ``regression-table``, ``table-fragment``, ``result-macros`` or ``duplicate-of-script``."""
+    ``regression-table``, ``table-fragment``, ``result-macros``, ``result-citations`` or
+    ``duplicate-of-script``."""
 
 
 def name_reason(path: Path) -> str | None:
@@ -144,6 +156,8 @@ def name_reason(path: Path) -> str | None:
     name = path.name.lower()
     if path.suffix.lower() in SCRIPT_SUFFIXES:
         return "script-suffix"
+    if path.suffix.lower() in ESTIMATE_SUFFIXES:
+        return "saved-estimates"
     if name in SCRIPT_NAMES or any(pat.match(name) for pat in SCRIPT_NAME_PATTERNS):
         return "transcript-name"
     return None
@@ -197,6 +211,20 @@ def _decode(sample: bytes) -> str | None:
         if exc.start >= len(sample) - 4:  # a multi-byte char cut by the sample boundary
             return sample[: exc.start].decode("utf-8", errors="replace")
         return sample.decode("latin-1")
+
+
+_RTF_CELL_END = re.compile(r"\\(?:cell|row|par|line)\b ?")
+_RTF_CONTROL = re.compile(r"\\[a-zA-Z]+-?\d* ?|\\[^a-zA-Z]")
+
+
+def _rtf_text(text: str) -> str:
+    """The plain text of an RTF document, one table row per line (``esttab ... using x.rtf``)."""
+
+    def _sep(m: re.Match[str]) -> str:
+        return "  " if m.group(0).startswith("\\cell") else "\n"
+
+    text = _RTF_CELL_END.sub(_sep, text)
+    return _RTF_CONTROL.sub("", text).replace("{", "").replace("}", "")
 
 
 def _lines(text: str) -> list[str]:
@@ -580,15 +608,47 @@ manuscript / online appendix 3 or more.
 """
 
 
+# A cell reference, "Table 2 Panel A Column 1" / "Table A5, column (2)".
+_CELL_REFERENCE = re.compile(
+    r"\bTable\s+[A-Z]?\d+[a-z]?\s*,?\s*(?:Panel\s+[A-Z\d]+\s*,?\s*)?Col(?:umn|\.)?\s*\(?\d+\)?", re.I
+)
+_DECIMAL = re.compile(r"(?<![\w.])-?\d*\.\d+")
+_CITED_CELLS = 3
+"""Cell references that quote a value before them and name a coefficient after them."""
+
+
+def _cites_result_cells(text: str) -> bool:
+    """Text that quotes estimates by table cell: "=14.7%-0.045 (for 0.045, see Table 2 Panel A
+    Column 1, coefficient on ...)", three or more times.
+
+    A README's "numbers in the text" provenance table (AEA template) does
+    this, and so hands over the values it maps; a README that only maps
+    tables to scripts, or a codebook, cites no value next to a cell.
+    """
+    text = " ".join(text.split())
+    cited = 0
+    for m in _CELL_REFERENCE.finditer(text):
+        before, after = text[max(0, m.start() - 80) : m.start()], text[m.end() : m.end() + 60]
+        if _DECIMAL.search(before) and re.search(r"coefficient", after, re.I):
+            cited += 1
+            if cited >= _CITED_CELLS:
+                return True
+    return False
+
+
 def _pdf_reason(path: Path) -> str | None:
-    """A ``.pdf`` with a page that reads as a regression table (a manuscript, an appendix, a results PDF).
+    """A ``.pdf`` with a page that reads as a regression table (a manuscript, an appendix, a results PDF),
+    or a document that quotes estimates by table cell (:func:`_cites_result_cells`).
 
     Packages ship the accepted manuscript or online appendix as a PDF
     beside their data (the EJ layout: ``1 paper/..._accepted.pdf``), which
     prints every result table.  One page carrying three of the markers
     (``Observations``, an R² row, a standard-errors note, a significance-star
     legend, three or more parenthesised SEs) is the same evidence a ``.tex``
-    table is stripped on; a codebook or README PDF does not reach it.
+    table is stripped on; a codebook or README PDF does not reach it.  A
+    README whose provenance table quotes the paper's coefficients cell by
+    cell (Henry et al. 2022: "0.045, see Table 2 Panel A Column 1,
+    coefficient on ...") is stripped as ``result-citations``.
     """
     try:
         import fitz  # pymupdf, the pipeline's own PDF parser
@@ -596,13 +656,16 @@ def _pdf_reason(path: Path) -> str | None:
         return None
     try:
         with fitz.open(path) as doc:
+            texts = []
             for page in doc.pages(0, min(doc.page_count, PDF_MAX_PAGES)):
-                n, _ = _table_evidence(page.get_text())
+                text = page.get_text()
+                n, _ = _table_evidence(text)
                 if n >= _PDF_PAGE_MARKERS:
                     return "regression-table"
+                texts.append(text)
     except Exception:  # noqa: BLE001 - an unreadable or encrypted PDF is kept, as any binary
         return None
-    return None
+    return "result-citations" if _cites_result_cells("\n".join(texts)) else None
 
 
 DOCX_WINDOW_CHARS = 3000
@@ -648,7 +711,7 @@ def _docx_reason(path: Path) -> str | None:
         n, _ = _table_evidence("\n".join(window))
         if n >= _PDF_PAGE_MARKERS:
             return "regression-table"
-    return None
+    return "result-citations" if _cites_result_cells("\n".join(paragraphs)) else None
 
 
 R_WORKSPACE_SUFFIXES = frozenset({".rdata", ".rda"})
@@ -754,6 +817,8 @@ def content_reason(path: Path, *, size_cap: int = SIZE_CAP_BYTES) -> str | None:
         return _html_reason(text)
     if suffix in {".csv", ".tsv", ".tab"}:
         return _csv_reason(text)
+    if suffix == ".rtf":
+        text = _rtf_text(text)
     lines = _lines(text)
     if _smcl_score(text) >= 3:
         return "smcl"
@@ -766,7 +831,9 @@ def content_reason(path: Path, *, size_cap: int = SIZE_CAP_BYTES) -> str | None:
     code = _code_reason(lines)
     if code:
         return code
-    if _is_regression_table(text) and _NUMBERED_COLUMNS.search(text):
+    if _is_regression_table(text) and (_NUMBERED_COLUMNS.search(text) or _table_evidence(text)[0] >= 4):
+        # Numbered columns, or (esttab's ``nonumbers``) all four of an observations row,
+        # the standard-errors legend, the significance legend and three or more SE cells.
         return "regression-table"
     if suffix == ".txt" and _table_fragment(lines):
         return "table-fragment"
