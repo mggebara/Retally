@@ -37,6 +37,7 @@ table).
 from __future__ import annotations
 
 import json
+import re
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
@@ -51,6 +52,9 @@ PENDING_DIRNAME = "pending"
 
 ANSWER_FILENAME = "answer.md"
 """Where an answering agent writes its reply, next to ``prompt.md``, for ``benchmark.oracle install``."""
+
+_ADDRESS_RE = re.compile(r"<pointer: 0x[0-9a-fA-F]+>")
+"""A memory address as R prints it (``str()`` of a data.table); differs on every run."""
 
 _EXTRACTION_MAX_TOKENS = 16384
 _EXTRACTION_EFFORT = "medium"
@@ -139,6 +143,24 @@ def single_user_prompt(kwargs: dict[str, Any]) -> str:
     return content
 
 
+def oracle_request_key(kwargs: dict[str, Any]) -> str:
+    """The store key for a request: the real cache's key, made insensitive to memory addresses.
+
+    The oracle replays a cell from its first call on every run.  A script
+    whose stdout carries a memory address (R prints ``<pointer: 0x...>``
+    for a data.table) puts a different address into the next refinement
+    prompt each time, so under the plain key that prompt would be a new
+    miss on every replay and the cell could never advance.  Addresses are
+    therefore masked before hashing.  A request with no address in it
+    keeps exactly ``retally.llm_cache._request_key``; the prompt written
+    for the answering agent is always the verbatim one.
+    """
+    raw = json.dumps(kwargs, default=str)
+    if not _ADDRESS_RE.search(raw):
+        return _request_key(kwargs)
+    return _request_key(json.loads(_ADDRESS_RE.sub("<pointer: 0xADDR>", raw)))
+
+
 def write_answer(root: Path, key: str, text: str, label: str, answered_by: str) -> Path:
     """Write ``answers/<key>.json`` under ``root`` and return its path (the driver's install step)."""
     path = Path(root) / ANSWERS_DIRNAME / f"{key}.json"
@@ -161,7 +183,7 @@ class _OracleMessages:
         self._label = label
 
     def create(self, **kwargs: Any) -> Any:
-        key = _request_key(kwargs)
+        key = oracle_request_key(kwargs)
         text = self._read_answer(key)
         if text is not None:
             return _OracleResponse(text, self._label)
