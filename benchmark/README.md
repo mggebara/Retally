@@ -97,7 +97,9 @@ downloaded package (`benchmark/strip_rule.py`, applied by
 `script_free_copy` / `script_free_dataset`).  It leaves out:
 
 - **By name:** `.do .ado .R .Rmd .py .ipynb .sas .sps .m` scripts,
-  `.log .smcl .Rout` transcripts, `.Rhistory` and `log_*.txt` consoles.
+  `.log .smcl .Rout` transcripts, `.Rhistory` and `log_*.txt` consoles,
+  and Stata saved estimates (`.ster`, written by `estimates save`: every
+  coefficient, its variance matrix and N; Cohen 2022 ships 125).
 - **By content**, for every other text file up to 50 MB (the first
   64 KB is read; 2 MB for `.tex`/`.html`), whatever its extension:
   Stata logs (`log type:` header, `Stata/MP` banner, `. reg`-style
@@ -115,7 +117,12 @@ downloaded package (`benchmark/strip_rule.py`, applied by
   stars column `--0.005&***`) plus two or more `(0.20)` rows, which
   catches one-column tables with no `N` row — Brouwer 2022's
   `TableA14.tex`, Carrera 2022's `DailyAttIncr.tex` — while balance
-  tables, with SDs but no stars, stay), `.html`, plain-text esttab/outreg2 output,
+  tables, with SDs but no stars, stay), `.html`, plain-text esttab/outreg2 output
+  (with `(1) (2)` column numbers, or without them — esttab's `nonumbers` —
+  when it carries all four of an observations row, a standard-errors
+  legend, a significance legend and three or more `(se)` cells), `.rtf`
+  tables judged the same way on their text with the RTF control words
+  removed (`esttab ... using Table5.rtf`; Cohen 2022 ships nine),
   `.csv` only with `Observations`/`R-squared` row labels plus `(1)`/
   coefficient/`(se)` columns, `.xlsx` whose strings read the same way;
   result macros — a `.tex` made mostly of numeric `\newcommand` / `\def`
@@ -158,7 +165,7 @@ stay.
 
 Every copy writes a manifest **beside** it, never inside the mounted
 tree: `<name>.script-free.retally-stripped.json`, listing each withheld
-path with its reason (`script-suffix`, `transcript-name`, `stata-log`,
+path with its reason (`script-suffix`, `saved-estimates`, `transcript-name`, `stata-log`,
 `smcl`, `r-transcript`, `python-output`, `script-content:stata|r|python`,
 `regression-table`, `table-fragment`, `result-macros`, `duplicate-of-script`).  The benchmark row records
 the count as `n_files_stripped` (None in seeded mode).  No prompt names

@@ -7,7 +7,8 @@ by file, what that copy leaves out.  Two layers:
 
 1. **By name** (:func:`name_reason`): script suffixes (``.do``, ``.R``,
    ``.py``, ``.ipynb``, ``.log``, ``.smcl``, ...), ``.Rhistory`` and
-   ``log_*.txt`` console sessions.  Cheap and unconditional.
+   ``log_*.txt`` console sessions, and Stata saved estimates (``.ster``).
+   Cheap and unconditional.
 2. **By content** (:func:`content_reason`), for every other text file
    under :data:`SIZE_CAP_BYTES`, whatever its extension — packages ship
    Stata logs as ``.txt``, do-files copied to ``.txt``, R sessions with no
@@ -21,7 +22,9 @@ by file, what that copy leaves out.  Two layers:
      script saved as ``.txt``): most non-comment lines are commands.
    * Regression tables: ``.tex`` (esttab/estout fragments, stargazer, any
      tabular with ``Observations``/``R-squared``/standard-error rows),
-     ``.html``, plain-text ``esttab``/``outreg2`` output, regression-shaped
+     ``.html``, plain-text ``esttab``/``outreg2`` output (numbered columns, or
+     all four markers when ``nonumbers`` dropped them), ``.rtf`` tables read
+     as text with the RTF control words removed, regression-shaped
      ``.csv`` (only with ``Observations``/``R-squared`` rows), and
      spreadsheets (``.xlsx`` and old binary ``.xls``) whose strings carry
      the same markers or hold a Stata ``export excel`` results matrix
@@ -102,6 +105,12 @@ SCRIPT_SUFFIXES = frozenset(
 SCRIPT_NAMES = frozenset({".rhistory", ".rapp.history"})
 SCRIPT_NAME_PATTERNS = (re.compile(r"^log[_-].*\.txt$", re.IGNORECASE),)
 
+# Saved estimation results: Stata's ``estimates save`` writes ``.ster`` files
+# holding every coefficient, its variance matrix and e(N).  They are binary (so
+# never content-tested) and never data, so they go by name (Cohen 2022 ships
+# 125, one per regression of the paper's tables).
+ESTIMATE_SUFFIXES = frozenset({".ster"})
+
 # Data formats: never stripped, never content-tested (R workspaces aside: see
 # :func:`_r_workspace_reason`).
 DATA_SUFFIXES = frozenset(
@@ -134,7 +143,7 @@ class StrippedFile:
     """POSIX path relative to the package root."""
 
     reason: str
-    """``script-suffix``, ``transcript-name``, ``stata-log``, ``smcl``,
+    """``script-suffix``, ``saved-estimates``, ``transcript-name``, ``stata-log``, ``smcl``,
     ``r-transcript``, ``python-output``, ``script-content:stata|r|python``,
     ``regression-table``, ``table-fragment``, ``result-macros`` or ``duplicate-of-script``."""
 
@@ -144,6 +153,8 @@ def name_reason(path: Path) -> str | None:
     name = path.name.lower()
     if path.suffix.lower() in SCRIPT_SUFFIXES:
         return "script-suffix"
+    if path.suffix.lower() in ESTIMATE_SUFFIXES:
+        return "saved-estimates"
     if name in SCRIPT_NAMES or any(pat.match(name) for pat in SCRIPT_NAME_PATTERNS):
         return "transcript-name"
     return None
@@ -197,6 +208,20 @@ def _decode(sample: bytes) -> str | None:
         if exc.start >= len(sample) - 4:  # a multi-byte char cut by the sample boundary
             return sample[: exc.start].decode("utf-8", errors="replace")
         return sample.decode("latin-1")
+
+
+_RTF_CELL_END = re.compile(r"\\(?:cell|row|par|line)\b ?")
+_RTF_CONTROL = re.compile(r"\\[a-zA-Z]+-?\d* ?|\\[^a-zA-Z]")
+
+
+def _rtf_text(text: str) -> str:
+    """The plain text of an RTF document, one table row per line (``esttab ... using x.rtf``)."""
+
+    def _sep(m: re.Match[str]) -> str:
+        return "  " if m.group(0).startswith("\\cell") else "\n"
+
+    text = _RTF_CELL_END.sub(_sep, text)
+    return _RTF_CONTROL.sub("", text).replace("{", "").replace("}", "")
 
 
 def _lines(text: str) -> list[str]:
@@ -754,6 +779,8 @@ def content_reason(path: Path, *, size_cap: int = SIZE_CAP_BYTES) -> str | None:
         return _html_reason(text)
     if suffix in {".csv", ".tsv", ".tab"}:
         return _csv_reason(text)
+    if suffix == ".rtf":
+        text = _rtf_text(text)
     lines = _lines(text)
     if _smcl_score(text) >= 3:
         return "smcl"
@@ -766,7 +793,9 @@ def content_reason(path: Path, *, size_cap: int = SIZE_CAP_BYTES) -> str | None:
     code = _code_reason(lines)
     if code:
         return code
-    if _is_regression_table(text) and _NUMBERED_COLUMNS.search(text):
+    if _is_regression_table(text) and (_NUMBERED_COLUMNS.search(text) or _table_evidence(text)[0] >= 4):
+        # Numbered columns, or (esttab's ``nonumbers``) all four of an observations row,
+        # the standard-errors legend, the significance legend and three or more SE cells.
         return "regression-table"
     if suffix == ".txt" and _table_fragment(lines):
         return "table-fragment"
