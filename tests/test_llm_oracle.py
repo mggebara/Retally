@@ -8,7 +8,13 @@ import pytest
 
 from retally.llm import response_text
 from retally.llm_cache import CachingLLMClient, _request_key
-from retally.llm_oracle import OracleAnswerPending, OracleLLMClient, request_kind, write_answer
+from retally.llm_oracle import (
+    OracleAnswerPending,
+    OracleLLMClient,
+    oracle_request_key,
+    request_kind,
+    write_answer,
+)
 from retally.usage import UsageTrackingClient
 from tests._loaders import REPO_ROOT, load_module_from_path
 
@@ -163,6 +169,23 @@ def test_keys_are_the_real_caches_request_key(tmp_path):
     keys = [_miss(client, kw).key for kw in variants]
     assert keys == [_request_key(kw) for kw in variants]
     assert len(set(keys)) == len(keys)
+
+
+def test_key_ignores_memory_addresses_and_only_those(tmp_path):
+    """A replayed script prints a new address each run; the prompt must still hit its answer."""
+    client = OracleLLMClient(tmp_path, LABEL)
+    first = _kwargs(prompt=PROMPT + " attr=<pointer: 0xaaaaec070a70> ")
+    second = _kwargs(prompt=PROMPT + " attr=<pointer: 0xaaaab09eaa70> ")
+    other = _kwargs(prompt=PROMPT + " attr=<pointer: 0xaaaab09eaa70> x")
+    miss = _miss(client, first)
+    assert miss.key == oracle_request_key(second) != oracle_request_key(other)
+    assert miss.key != _request_key(first)
+    # The answering agent still sees the verbatim prompt, address included.
+    assert "0xaaaaec070a70" in miss.prompt_path.read_text(encoding="utf-8")
+    write_answer(tmp_path, miss.key, "the answer", LABEL, "tester")
+    assert client.messages.create(**second).content[0].text == "the answer"
+    # No address in the request: exactly the real cache's key.
+    assert oracle_request_key(_kwargs()) == _request_key(_kwargs())
 
 
 def test_nothing_is_ever_written_to_the_real_llm_cache(tmp_path):
