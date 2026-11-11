@@ -47,7 +47,9 @@ by file, what that copy leaves out.  Two layers:
    * PDFs with a page that reads as a regression table (three markers on
      one page of the pymupdf text): the accepted manuscript or online
      appendix a package ships beside its data.  README / codebook PDFs
-     stay.
+     stay, unless they quote estimates cell by cell (three or more
+     "0.045, see Table 2 Panel A Column 1, coefficient on ..." citations:
+     ``result-citations``; Word documents too).
    * Word documents (``.docx``) the same way, with a window of about a
      page of consecutive paragraphs standing in for the page: the
      manuscript, its tables (OCR'd or as images with their notes) or an
@@ -136,7 +138,8 @@ class StrippedFile:
     reason: str
     """``script-suffix``, ``transcript-name``, ``stata-log``, ``smcl``,
     ``r-transcript``, ``python-output``, ``script-content:stata|r|python``,
-    ``regression-table``, ``table-fragment``, ``result-macros`` or ``duplicate-of-script``."""
+    ``regression-table``, ``table-fragment``, ``result-macros``, ``result-citations`` or
+    ``duplicate-of-script``."""
 
 
 def name_reason(path: Path) -> str | None:
@@ -580,15 +583,47 @@ manuscript / online appendix 3 or more.
 """
 
 
+# A cell reference, "Table 2 Panel A Column 1" / "Table A5, column (2)".
+_CELL_REFERENCE = re.compile(
+    r"\bTable\s+[A-Z]?\d+[a-z]?\s*,?\s*(?:Panel\s+[A-Z\d]+\s*,?\s*)?Col(?:umn|\.)?\s*\(?\d+\)?", re.I
+)
+_DECIMAL = re.compile(r"(?<![\w.])-?\d*\.\d+")
+_CITED_CELLS = 3
+"""Cell references that quote a value before them and name a coefficient after them."""
+
+
+def _cites_result_cells(text: str) -> bool:
+    """Text that quotes estimates by table cell: "=14.7%-0.045 (for 0.045, see Table 2 Panel A
+    Column 1, coefficient on ...)", three or more times.
+
+    A README's "numbers in the text" provenance table (AEA template) does
+    this, and so hands over the values it maps; a README that only maps
+    tables to scripts, or a codebook, cites no value next to a cell.
+    """
+    text = " ".join(text.split())
+    cited = 0
+    for m in _CELL_REFERENCE.finditer(text):
+        before, after = text[max(0, m.start() - 80) : m.start()], text[m.end() : m.end() + 60]
+        if _DECIMAL.search(before) and re.search(r"coefficient", after, re.I):
+            cited += 1
+            if cited >= _CITED_CELLS:
+                return True
+    return False
+
+
 def _pdf_reason(path: Path) -> str | None:
-    """A ``.pdf`` with a page that reads as a regression table (a manuscript, an appendix, a results PDF).
+    """A ``.pdf`` with a page that reads as a regression table (a manuscript, an appendix, a results PDF),
+    or a document that quotes estimates by table cell (:func:`_cites_result_cells`).
 
     Packages ship the accepted manuscript or online appendix as a PDF
     beside their data (the EJ layout: ``1 paper/..._accepted.pdf``), which
     prints every result table.  One page carrying three of the markers
     (``Observations``, an R² row, a standard-errors note, a significance-star
     legend, three or more parenthesised SEs) is the same evidence a ``.tex``
-    table is stripped on; a codebook or README PDF does not reach it.
+    table is stripped on; a codebook or README PDF does not reach it.  A
+    README whose provenance table quotes the paper's coefficients cell by
+    cell (Henry et al. 2022: "0.045, see Table 2 Panel A Column 1,
+    coefficient on ...") is stripped as ``result-citations``.
     """
     try:
         import fitz  # pymupdf, the pipeline's own PDF parser
@@ -596,13 +631,16 @@ def _pdf_reason(path: Path) -> str | None:
         return None
     try:
         with fitz.open(path) as doc:
+            texts = []
             for page in doc.pages(0, min(doc.page_count, PDF_MAX_PAGES)):
-                n, _ = _table_evidence(page.get_text())
+                text = page.get_text()
+                n, _ = _table_evidence(text)
                 if n >= _PDF_PAGE_MARKERS:
                     return "regression-table"
+                texts.append(text)
     except Exception:  # noqa: BLE001 - an unreadable or encrypted PDF is kept, as any binary
         return None
-    return None
+    return "result-citations" if _cites_result_cells("\n".join(texts)) else None
 
 
 DOCX_WINDOW_CHARS = 3000
@@ -648,7 +686,7 @@ def _docx_reason(path: Path) -> str | None:
         n, _ = _table_evidence("\n".join(window))
         if n >= _PDF_PAGE_MARKERS:
             return "regression-table"
-    return None
+    return "result-citations" if _cites_result_cells("\n".join(paragraphs)) else None
 
 
 R_WORKSPACE_SUFFIXES = frozenset({".rdata", ".rda"})

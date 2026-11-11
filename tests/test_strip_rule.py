@@ -777,6 +777,54 @@ def test_docx_markers_must_sit_within_one_window_and_broken_docx_is_kept(tmp_pat
     assert content_reason(broken) is None
 
 
+# A README's "numbers cited in the text" provenance table, as pymupdf extracts
+# it (Henry, Zhuravskaya and Guriev 2022, README.pdf p. 4): each in-text number
+# is derived from a quoted coefficient and the table cell it sits in.
+README_RESULT_CITATIONS = "\n".join(
+    [
+        "Table B. Replicating numbers cited in the text:",
+        "10.2% ",
+        "=14.7%-0.045 (for 0.045, see ",
+        "Table 2 Panel A Column 1, ",
+        "coefficient on “Imposed Fact-",
+        "Check”) ",
+        "10.8% ",
+        "=14.7%-0.038 (for 0.038, see ",
+        "Table 2 Panel A Column 1, ",
+        "coefficient on “Voluntary Fact-",
+        "Check”) ",
+        "11.5% ",
+        "=0.143-0.028 (for 0.028, see ",
+        "Table 2 Panel B Column 1, ",
+        "coefficient on “Voluntary Fact-",
+    ]
+)
+
+# A README that maps tables to scripts and cites cells without quoting a value.
+README_TABLE_MAP = "\n".join(
+    [
+        "Table A. The lines of the code for replicating tables and figures:",
+        "Table 2, Column 1: coefficient on treatment, 2.analysis.do lines 763-1070",
+        "Table 2, Column 2: coefficient on treatment, 2.analysis.do lines 763-1070",
+        "Table A3, Column 1: coefficient on treatment, 2.analysis.do lines 765-848",
+        "Run time: 0.5 hours.",
+    ]
+)
+
+
+def test_readme_quoting_estimates_by_table_cell_is_stripped(tmp_path):
+    readme = _pdf(tmp_path / "README.pdf", [PDF_README_PAGE, README_RESULT_CITATIONS])
+    assert content_reason(readme) == "result-citations"
+    word = _docx(tmp_path / "README.docx", README_RESULT_CITATIONS.splitlines())
+    assert content_reason(word) == "result-citations"
+    # Two citations are not enough; a table-to-script map quotes no value.
+    two = _pdf(tmp_path / "two" / "README.pdf", ["\n".join(README_RESULT_CITATIONS.splitlines()[:11])])
+    assert content_reason(two) is None
+    table_map = _pdf(tmp_path / "map" / "README.pdf", [README_TABLE_MAP])
+    assert content_reason(table_map) is None
+    assert content_reason(_pdf(tmp_path / "plain" / "README.pdf", [PDF_README_PAGE])) is None
+
+
 # ---------------------------------------------------------------------------
 # R workspaces: a save.image() snapshot taken after the analysis keeps the
 # stargazer output (Douenne & Fabre 2022 ship after_papier.RData)

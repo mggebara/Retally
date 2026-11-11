@@ -133,7 +133,12 @@ downloaded package (`benchmark/strip_rule.py`, applied by
   stay); a `.docx` with three of those markers within about a page
   (3,000 characters) of consecutive paragraphs (the manuscript and its
   tables as Word files: Mokyr 2022 ships `1 paper/*_main.docx`,
-  `*_tables_ocr.docx`, `*_tables_image.docx`; README docx stay).  A
+  `*_tables_ocr.docx`, `*_tables_image.docx`; README docx stay); a
+  README `.pdf`/`.docx` that quotes estimates cell by cell — three or
+  more table-cell references with a decimal just before and
+  "coefficient" just after (`for 0.045, see Table 2 Panel A Column 1,
+  coefficient on ...`; Henry 2022's README maps its in-text numbers this
+  way) — as `result-citations`.  A
   significance legend counts whether printed as `* p < 0.1` or written
   out in a table note (`*** denotes statistical significance at the 1%
   level`, which is how the image-table pages of Mokyr's accepted PDF
@@ -160,7 +165,7 @@ Every copy writes a manifest **beside** it, never inside the mounted
 tree: `<name>.script-free.retally-stripped.json`, listing each withheld
 path with its reason (`script-suffix`, `transcript-name`, `stata-log`,
 `smcl`, `r-transcript`, `python-output`, `script-content:stata|r|python`,
-`regression-table`, `table-fragment`, `result-macros`, `duplicate-of-script`).  The benchmark row records
+`regression-table`, `table-fragment`, `result-macros`, `result-citations`, `duplicate-of-script`).  The benchmark row records
 the count as `n_files_stripped` (None in seeded mode).  No prompt names
 the withheld files.
 

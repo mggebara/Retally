@@ -1,0 +1,392 @@
+# Original paper: Henry, E., Zhuravskaya, E., & Guriev, S. (2022).
+#   "Checking and Sharing Alt-Facts." American Economic Journal: Economic
+#   Policy, 14(3), 55-86.  doi:10.1257/pol.20210037 (August 2022 issue;
+#   Crossref created 2022-07-29, issued 2022-08-01).  Author order as
+#   on the article and in Crossref and the I4R meta-database (the
+#   authors randomised it; the Sciences Po discussion paper's cover
+#   prints Henry, Guriev, Zhuravskaya).
+#
+# Reproduction report: Beeder, M., & Sørensen, E. Ø. (2023).
+#   "Replication Report: Checking and Sharing Alt-Facts." I4R Discussion
+#   Paper No. 34 (June 2023, report dated April 24, 2023; EconStor
+#   hdl:10419/271674; I4R First Meta Database, 57 rows under the paper
+#   title, 48 with values).  Verdict: reproducible — "We confirm that the
+#   original analysis reproduces exactly" (Sec. 4); "there are no
+#   differences between the 'In AEJ,' and the O replication variant; the
+#   results HZG reported reproduce exactly" (Sec. 3), with Stata 16.1 as
+#   the authors used; under Stata 17 the lasso step of Table 2 Panel C
+#   column 8 changes (N 2,078 to 2,018).  The DP covers ONLY published
+#   Table 2 columns 4 and 8 (intent and action, all pre-treatment
+#   controls); DP Tables 1-2 print the published value ("in AEJ") beside
+#   the exact reproduction ("O") and four variants: Stata 17 ("V"),
+#   speeders kept ("S"), double-lasso estimator ("L"), consistent controls
+#   ("C").  The meta-database rows are those variants of columns 4 and 8
+#   (the "Recode (mimic)" rows are the Stata 17 column V, not O);
+#   perfect_reproduction is "No" with why_not_perfect_repro "not perfect
+#   using stata 17 but perfect with stata 16", best_describe_compreprod
+#   "Analysis and cleaning code produce the same output as presented in
+#   the paper", result_same blank, coding_correction "Not done by
+#   replicators".
+#
+# Why this paper:
+#   1. An online randomised survey experiment (France, 2019 European
+#      election campaign) with three arms and linear probability models
+#      with robust SEs, built from RAW Qualtrics exports: four survey .csv
+#      files (one per treatment plus a follow-up wave) whose second row
+#      holds the French question text, so every number needs the full
+#      cleaning and merging chain.
+#   2. A manually placed openICPSR package (data_access: manual), 3.4 MB.
+#   3. The first entry whose paper text is a working paper that differs
+#      from the journal version in most cells (see below).
+#
+# Paper text: the published article is paywalled (AEA) and no open copy
+#   of it was found: the HAL record of the article (halshs-03761784) has
+#   no file, the LBS Research Online record (eprint 3873) has no file,
+#   CEPR DP 14738 (May 2020) and its repec.cepr.org PDF answer 403 /
+#   Cloudflare, SSRN answers a bot check, the PSE page 403; IDEAS lists
+#   no other version (searches 2026-11-09 and 2026-11-10).  The source is
+#   the June 5, 2020 Sciences Po Economics Discussion Paper 2020-06 on
+#   HAL (hal-03389187v1, the only HAL version), a WORKING PAPER.  Its
+#   tables differ from the published ones: the published Table 2 has
+#   intent and action outcomes in columns 1-4 / 5-8 and Panels A-C; the
+#   WP has the intent outcome only, as two six-column tables (WP Table 2
+#   alt-facts, WP Table 3 fact-check) with a different control sequence,
+#   and shows Panel C only as Figure 4.  Every headline cell the DP and
+#   the meta-database record (published Table 2 columns 4 and 8) differs
+#   from the WP or is absent from it, so none is pinned: column 4 Panel A
+#   -0.050 (0.017) / -0.052 (0.017), N 2,078 (WP's all-controls column 6
+#   prints -0.051 / -0.054, N 2,120); Panel B -0.039 (0.018), N 1,388 (WP
+#   Table 3 column 6 -0.038, N 1,409; column 5's -0.039 (0.018) is a
+#   token match at N 1,409, a different specification); Panel C -0.051,
+#   -0.025, -0.072 and all of column 8 (action of sharing: -0.021, -0.026,
+#   0.004, -0.021, -0.020, -0.030) are not in any WP table.
+#
+#   What IS pinned: the cells where the WP prints the published value in
+#   the same cell.  The published values come from the AEA online
+#   appendix (the package's ONLINE_APPENDIX_HZG_final_AEJ_Pol.pdf; its
+#   Tables A3-A6 are number-for-number the open aeaweb.org appendix PDF),
+#   whose Table A3 / A4 are the full versions of published Table 2 Panels
+#   A / B with every covariate shown (the authors' do-file writes both
+#   tables from the same regressions).  Columns 1-2 of A3 and A4 (no
+#   controls; stratification controls) are the WP's Table 2 / Table 3
+#   columns 1-2 to the last digit: coefficients, SEs, Male, N, R-squared
+#   and control means.  From column 3 on the specifications differ
+#   (published A3 column 3 N 2,265 vs WP 2,307).  The package README's
+#   numbers-in-text table also quotes published Table 2 Panel A column 1
+#   (-0.045, -0.038, N 2,537) and Panel B column 1 (-0.028), agreeing.
+#
+# What original_claims pins: published online Appendix Table A3 columns
+#   1-2 (intent to share alt-facts on Facebook: Imposed and Voluntary
+#   Fact-Check effects, the Male coefficient in column 2, the N) and
+#   Table A4 columns 1-2 (intent to share fact-checking: Voluntary vs
+#   Imposed Fact-Check, Male in column 2, the N).  10 claims (2 counts),
+#   values exactly as printed (3 decimals).
+
+id: henry-2022-checking-sharing-alt-facts
+i4r_report_url: https://www.econstor.eu/bitstream/10419/271674/1/I4R-DP034.pdf
+# Target language for regeneration (the original is Stata 16.1 with
+# outreg2, estout, cibar, grc1leg and lasso; Retally generates R and reads
+# the Qualtrics .csv exports and the .dta files).
+language: r
+outcome_label: reproducible
+# Pipeline tuning is frozen; this is an evaluation paper.
+split: holdout
+# Contamination bookkeeping.  publication_date is the FIRST public
+# version: CEPR Discussion Paper 14738 (IDEAS datePublished 2020-05; the
+# PDF answers 403), then Sciences Po Economics DP 2020-06 dated June 5,
+# 2020 (the catalog source; PDF ModDate 2020-06-30; deposited on HAL
+# 2021-10-20).  The journal version: Crossref issued 2022-08-01 (created
+# 2022-07-29).  package_release_date is the DataCite registration of
+# doi:10.3886/E140161V1 (registered 2022-07-26T14:31:16Z, DataCite API
+# 2026-11-10); openICPSR itself needs a login.  The package README PDF is
+# dated 2021-06-27 (CreationDate) and the online appendix 2021-05-10.
+publication_date: "2020-05"
+package_release_date: "2022-07-26"
+
+paper:
+  # Sciences Po Economics Discussion Paper 2020-06 (June 5, 2020) on HAL,
+  # hal-03389187v1, CC BY-ND 4.0; checked 2026-11-10: 200
+  # application/pdf, 65 pp. (HAL cover page + DP cover + 63 pp.),
+  # 2,836,529 bytes, md5 3090a5459b15908dafdd5f02d35c0fa6.  A WORKING
+  # PAPER, not the published article (see the header).  HAL's
+  # /document and /file URLs serve the same PDF to a plain HTTP client;
+  # a browser user agent gets an Anubis bot check instead.
+  source: https://sciencespo.hal.science/hal-03389187/file/2020-henry-guriev-zhuravskaya-checking-and-sharing-alt-facts.pdf
+  title: "Checking and Sharing Alt-Facts"
+  authors:
+    - Emeric Henry
+    - Ekaterina Zhuravskaya
+    - Sergei Guriev
+
+dataset:
+  source: benchmark/manual-packages/T13/140161-V1.zip
+  data_access: manual
+  access_notes: >
+    AEA Data and Code Repository on openICPSR, project 140161, version V1
+    (doi:10.3886/E140161V1); login and terms-of-use click-through required,
+    so the zip was downloaded by hand (2026-11-09) and placed unchanged at
+    benchmark/manual-packages/T13/140161-V1.zip (3,405,789 bytes, md5
+    44ab8cd96fc72977ecf1fdc18ef598a3; SOURCE.txt beside it).  V1 is the
+    only version.  15 entries (13 files, 5,343,470 bytes uncompressed), no
+    nested archives.  Contents: Master_replication_HZG.do; README.pdf (8
+    pp., June 2021: software (Stata 16.1, cibar, grc1leg, estout,
+    outreg2), a table-to-code-lines map, and a "numbers cited in the text"
+    table that quotes Table 2 coefficients cell by cell); dofiles/ with
+    1.infile_data.do (reads and cleans the raw surveys),
+    2.analysis_final_paper.do (every table and figure) and
+    3.numbers_in_text.do; original_data/ with four raw Qualtrics .csv
+    exports (Survey 1 Alt-Facts, Survey 2 Imposed Fact-Check, Survey 3
+    Voluntary Fact-Check, Surveys 4-6 the follow-up wave; first row
+    variable names, second row the French question text),
+    share_facebook.dta and GA_hours.dta (hourly Facebook shares and Google
+    Analytics visits, for the action-of-sharing outcomes), "Description
+    and codebook of original data files.pdf" (7 pp., file descriptions,
+    no estimates; it refers to Online Appendix D for the English
+    questionnaire) and ONLINE_APPENDIX_HZG_final_AEJ_Pol.pdf (42 pp.,
+    every appendix table, including Tables A3-A4 with the pinned values,
+    and the questionnaire).  No logs, no generated tables, no analysis
+    dataset (the do-files write generated_data/surveys.dta and results/
+    at run time).  The script-free copy (independent / blind) withholds 6
+    files (benchmark.strip_rule.classify_tree on the extracted package,
+    2026-11-10): the 4 .do files by suffix, the online appendix as a
+    regression-table PDF, and README.pdf as result-citations (the strip
+    rule was extended for this package: a README PDF / docx that quotes
+    estimates by table cell three or more times).  Kept: the codebook
+    PDF and the data, none of which prints a pinned value or SE (codebook
+    text grepped 2026-11-10).  Project page:
+    https://www.openicpsr.org/openicpsr/project/140161/version/V1/view
+
+original_claims:
+  # ---- Online Appendix Table A3 (published Table 2 Panel A in full):
+  #      intent to share alt-facts on Facebook ----
+  - description: imposed_fact_check_intent_share_altfacts_tableA3_col1
+    value: -0.045
+    claim_type: coefficient
+    standard_error: 0.016
+    unit: change in the probability of wanting to share the alt-facts on Facebook
+    location: "Online Appendix Table A3, column (1), Imposed Fact-Check (working paper: Table 2, column (1))"
+    context: >
+      Average treatment effect on sharing alt-facts in the sharing
+      experiment (Wave 1).  Linear probability model of an indicator that
+      the participant answered "yes" when asked, within the survey,
+      whether they wanted to share the alt-facts (the two false statements
+      by Rassemblement National politicians) on their Facebook page
+      ("Sharing alt-facts on FB, one click"; the published version calls
+      it the intent to share), on dummies for the Imposed Fact-Check and
+      Voluntary Fact-Check treatments; the comparison group is the
+      Alt-Facts treatment.  No controls.  Sample: all Wave 1 participants
+      in the three treatments.  The entry is the Imposed Fact-Check
+      coefficient.  Robust standard errors.
+  - description: voluntary_fact_check_intent_share_altfacts_tableA3_col1
+    value: -0.038
+    claim_type: coefficient
+    standard_error: 0.016
+    unit: change in the probability of wanting to share the alt-facts on Facebook
+    location: "Online Appendix Table A3, column (1), Voluntary Fact-Check (working paper: Table 2, column (1))"
+    context: >
+      The same regression as the Imposed Fact-Check entry of column (1):
+      wanting to share the alt-facts on Facebook on the two fact-check
+      treatment dummies, no controls, Wave 1 participants, Alt-Facts
+      treatment as the comparison group.  The entry is the Voluntary
+      Fact-Check coefficient (participants offered the choice whether to
+      view the fact-check, Viewers and Nonviewers together).  Robust
+      standard errors.
+  - description: imposed_fact_check_intent_share_altfacts_strata_tableA3_col2
+    value: -0.045
+    claim_type: coefficient
+    standard_error: 0.016
+    unit: change in the probability of wanting to share the alt-facts on Facebook
+    location: "Online Appendix Table A3, column (2), Imposed Fact-Check (working paper: Table 2, column (2))"
+    context: >
+      Column (2): the column (1) regression controlling only for the
+      variables used to stratify the sample, gender (a male dummy) and
+      education (dummies for the education groups of the sampling
+      quotas: high school and below, undergraduate degree, graduate
+      degree).  The entry is the Imposed Fact-Check coefficient.  Robust
+      standard errors.
+  - description: voluntary_fact_check_intent_share_altfacts_strata_tableA3_col2
+    value: -0.038
+    claim_type: coefficient
+    standard_error: 0.016
+    unit: change in the probability of wanting to share the alt-facts on Facebook
+    location: "Online Appendix Table A3, column (2), Voluntary Fact-Check (working paper: Table 2, column (2))"
+    context: >
+      Column (2): wanting to share the alt-facts on Facebook on the two
+      fact-check treatment dummies with the stratification controls
+      (male dummy and education-group dummies).  The entry is the
+      Voluntary Fact-Check coefficient.  Robust standard errors.
+  - description: male_intent_share_altfacts_strata_tableA3_col2
+    value: 0.040
+    claim_type: coefficient
+    standard_error: 0.014
+    unit: change in the probability of wanting to share the alt-facts on Facebook
+    location: "Online Appendix Table A3, column (2), Male (working paper: Table 2, column (2))"
+    context: >
+      Column (2), the stratification-controls regression of wanting to
+      share the alt-facts on Facebook on the fact-check treatment dummies,
+      a male dummy and education-group dummies.  The entry is the
+      coefficient on the male dummy (the paper: men share alt-facts
+      substantially more often).  Robust standard errors.
+  - description: n_obs_tableA3_cols1_2
+    value: 2537
+    claim_type: count
+    unit: participants
+    location: "Online Appendix Table A3, Observations, columns (1)-(2) (working paper: Table 2, columns (1)-(2))"
+    context: >
+      Number of observations in the alt-facts sharing regressions of
+      columns (1) and (2): all Wave 1 (sharing experiment) participants in
+      the Alt-Facts, Imposed Fact-Check and Voluntary Fact-Check
+      treatments.
+
+  # ---- Online Appendix Table A4 (published Table 2 Panel B in full):
+  #      intent to share fact-checking on Facebook ----
+  - description: voluntary_fact_check_intent_share_factcheck_tableA4_col1
+    value: -0.028
+    claim_type: coefficient
+    standard_error: 0.016
+    unit: change in the probability of wanting to share the fact-check on Facebook
+    location: "Online Appendix Table A4, column (1), Voluntary Fact-Check (working paper: Table 3, column (1))"
+    context: >
+      Average treatment effect on sharing fact-checking.  Linear
+      probability model of an indicator that the participant answered
+      "yes" when asked whether they wanted to share the fact-checking
+      information on their Facebook page ("Sharing fact-check on FB, one
+      click"), on a Voluntary Fact-Check dummy, in the sample of the two
+      fact-check treatments; the comparison group is the Imposed
+      Fact-Check treatment.  The question was put only to participants who
+      saw the fact-check, and the paper reports sharing over the whole
+      Voluntary Fact-Check group (Viewers and Nonviewers together, a
+      Nonviewer counting as not sharing).  No controls.  The entry is the
+      Voluntary Fact-Check coefficient.  Robust standard errors.
+  - description: voluntary_fact_check_intent_share_factcheck_strata_tableA4_col2
+    value: -0.028
+    claim_type: coefficient
+    standard_error: 0.016
+    unit: change in the probability of wanting to share the fact-check on Facebook
+    location: "Online Appendix Table A4, column (2), Voluntary Fact-Check (working paper: Table 3, column (2))"
+    context: >
+      Column (2): the column (1) regression of wanting to share the
+      fact-check on Facebook with the stratification controls (male dummy
+      and education-group dummies), Imposed and Voluntary Fact-Check
+      participants.  The entry is the Voluntary Fact-Check coefficient.
+      Robust standard errors.
+  - description: male_intent_share_factcheck_strata_tableA4_col2
+    value: 0.046
+    claim_type: coefficient
+    standard_error: 0.017
+    unit: change in the probability of wanting to share the fact-check on Facebook
+    location: "Online Appendix Table A4, column (2), Male (working paper: Table 3, column (2))"
+    context: >
+      Column (2), the stratification-controls regression of wanting to
+      share the fact-check on Facebook on the Voluntary Fact-Check dummy,
+      a male dummy and education-group dummies (Imposed and Voluntary
+      Fact-Check participants).  The entry is the coefficient on the male
+      dummy.  Robust standard errors.
+  - description: n_obs_tableA4_cols1_2
+    value: 1692
+    claim_type: count
+    unit: participants
+    location: "Online Appendix Table A4, Observations, columns (1)-(2) (working paper: Table 3, columns (1)-(2))"
+    context: >
+      Number of observations in the fact-check sharing regressions of
+      columns (1) and (2): all Wave 1 participants in the Imposed
+      Fact-Check and Voluntary Fact-Check treatments.
+
+# No i4r_replicator_findings.  DP34 and all 48 meta-database rows with
+# values cover published Table 2 columns 4 and 8 only (the all-controls
+# specifications), which are not pinned; no I4R row or DP table
+# recomputes columns 1-2 of Tables A3 / A4, so no pinned claim has a
+# same-specification I4R value (as lopez-2022's N claims, which have no
+# row and carry no finding).  The DP's blanket statement that the
+# original analysis "reproduces exactly" is about the columns it ran.
+notes: >
+  Headline findings (published).  The abstract: imposed and voluntary
+  fact-checking each reduce sharing of false statements by about 45
+  percent (the action-of-sharing outcome, published Table 2 Panel A
+  column 5: -0.020 and -0.021 against a mean of 0.0462), with similar
+  effects, and each extra click to share reduces sharing.  The working
+  paper's abstract (June 2020) says "by more than 25%": the intent
+  outcome, 14.7 percent sharing under Alt-Facts against about 10.2 and
+  10.8 percent under the two fact-check treatments (pinned column 1).
+  Pinned values: A3 cols 1-2 Imposed -0.045 (0.016), Voluntary -0.038
+  (0.016), Male (col 2) 0.040 (0.014), N 2,537; A4 cols 1-2 Voluntary
+  -0.028 (0.016), Male (col 2) 0.046 (0.017), N 1,692.  Not pinned but
+  equal in both versions: R-squared 0.004 / 0.010 and 0.002 / 0.038,
+  control means 0.147 and 0.143.
+
+  Paper text and how each cell was checked.  Source: Sciences Po DP
+  2020-06 (June 5, 2020), a working paper; no open copy of the published
+  article exists (see header).  Published values were taken from the
+  AEA online appendix in the package (Tables A3, A4; byte-different from
+  the aeaweb.org appendix PDF but with identical numbers in Tables
+  A3-A6) and from DP34 Tables 1-2 "in AEJ" columns (published Table 2
+  columns 4 and 8).  Cell by cell: WP Table 2 col 1 = A3 col 1 (-0.045
+  (0.016), -0.038 (0.016), N 2,537, R2 0.004, mean 0.147); WP Table 2
+  col 2 = A3 col 2 (the same coefficients, Male 0.040 (0.014), R2
+  0.010); WP Table 3 col 1 = A4 col 1 (-0.028 (0.016), N 1,692, R2
+  0.002, mean 0.143); WP Table 3 col 2 = A4 col 2 (Male 0.046 (0.017),
+  R2 0.038).  The WP's columns 3-6 add controls in a different order and
+  sample (WP Table 2 N 2,307 / 2,275 / 2,120 / 2,120 vs A3 cols 3-4 N
+  2,265 / 2,078), so none of their cells is pinned; WP Table 2 col 4's
+  -0.049 / -0.040 equal A3 col 3's values but at N 2,275 vs 2,265, a
+  different cell.  The education-group coefficients of A3 / A4 col 2 are
+  not printed in the WP, so not pinned.  Headline cells left out because
+  the WP differs or lacks them: published Table 2 col 4 Panel A -0.050
+  (0.017), -0.052 (0.017), N 2,078; Panel B -0.039 (0.018), N 1,388;
+  Panel C -0.051 (0.018), -0.025 (0.024), -0.072 (0.019), N 2,018; and
+  all of col 8 (action of sharing, not in the WP: -0.021 (0.007), -0.026
+  (0.006); 0.004 (0.007); -0.021 (0.007), -0.020 (0.008), -0.030
+  (0.007)).  The candidates file's "7 of 11 paired values exact" was a
+  token count; by cell, none of the 11 meta-database pairs is in the
+  WP.  Meta-database typos: the Panel C intent viewer row records the
+  SE as -0.024 (DP34 Table 1 prints (0.024)); one Stata 17 row records
+  r_std_err -0.00694 (DP34 Table 2 Panel A, S column, prints (0.00694))
+  and another 0.06970 (DP34 prints (0.00697)).
+
+  Package-only facts (never in contexts).  2.analysis_final_paper.do,
+  "Table 2, Panel A ... Table A3" (lines 765-848) and "Panel B ... Table
+  A4" (857-924): reg want_share_fb i.survey [male low_educ mid_educ] if
+  survey<4, r; reg want_share_facts i.survey [male low_educ mid_educ] if
+  survey<4&survey>1, r.  1.infile_data.do builds want_share_fb = (q29==1)
+  and want_share_facts = (q31==1), 0 otherwise (so "do not want to
+  answer" and, for the fact-check, Nonviewers count as 0); male from q5,
+  low_educ = q4<=7, mid_educ = q4==8; and it DROPS respondents whose
+  survey took less than 250 seconds (keep if durationinseconds >= 250 for
+  surveys 1-3), a restriction neither paper version states (DP34 Sec. 2:
+  "Neither the paper's text nor the pre-analysis plan mentions this
+  restriction"; keeping them adds 12 participants to the all-controls
+  sample).  A reproduction from the paper alone will therefore likely
+  count a few more participants than the pinned Ns.  The English
+  questionnaire (Online Appendix D) is stripped with the appendix; the
+  .csv exports carry the French question text in their second row.
+
+  Blind-mode exposure (step 6, 2026-11-10, oracle label curate-t13).
+  Both modes reached llm_answer_pending.  The blind generation prompt
+  (reached after answering the summariser and hyperparameter prompts)
+  states no pinned value or SE, as printed or rounded, and no script
+  text; its listing shows only the data and the codebook PDF.  The
+  parser takes the HAL cover line as the title ("HAL Id: hal-03389187");
+  the abstract it shows is the WP's, which states no pinned value.  The
+  paper text the methodology summariser sees states the Alt-Facts
+  sharing rate and the two fact-check rates in percent (14.7, about
+  10.2 and 10.8 percent), from which the column 1 coefficients follow by
+  subtraction, and "The 2537 respondents in Wave 2", the same number as
+  the pinned Wave 1 N; the summariser is told to leave results out, and
+  the README's blind-mode caveat covers this.
+
+  What was read.  The WP in full (Sections 3-4 and Tables 2-3 in
+  detail); DP34 in full; the 57 meta-database rows; the package README,
+  codebook and online appendix Tables A3-A6; the Table A3 / A4 blocks of
+  2.analysis_final_paper.do and the outcome / sample code of
+  1.infile_data.do; the strip-rule classification of the extracted
+  package.
+
+  What could not be verified.  The published article itself (its Table 2
+  columns 1-3 and wording) was not read; that its Panels A-B columns 1-2
+  equal A3 / A4 columns 1-2 rests on the do-file writing both from the
+  same regressions and on the README's quotes of Panel A / B column 1.
+  The authors' Stata code was not run (no Stata here) and no R
+  cross-check was made.
+
+  Original analysis in Stata 16.1; language: r is the reproduction
+  target.
